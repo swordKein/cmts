@@ -40,5 +40,5 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getArraysByTypeFromInputItems(String items);
 
-    int changeMetasArraysByTypeFromInputItems(int itemid, String items);
+    int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration);
 }

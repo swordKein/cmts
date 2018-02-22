@@ -65,5 +65,4 @@
         ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
 
-
 </mapper>

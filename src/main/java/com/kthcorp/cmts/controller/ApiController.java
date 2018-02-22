@@ -673,10 +673,38 @@ public class ApiController {
 	) {
 		logger.debug("#/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration);
 
-		JsonObject result_all = new JsonObject();
-		result_all.addProperty("RT_CODE", 1);
-		result_all.addProperty("RT_MSG", "SUCCESS");
+		int itemIdx = 0;
+		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
 
+		String hashcode = "";
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration);
+				if(rt > 0) {
+					rtcode = 1;
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "changeMetasArraysByTypeFromInputItems update fail!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
 
 		return result_all.toString();
 	}

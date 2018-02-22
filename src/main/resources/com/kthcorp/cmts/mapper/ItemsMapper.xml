@@ -570,4 +570,13 @@
         values (#{idx}, #{stat}, now())
         ON DUPLICATE KEY UPDATE stat = #{stat}, regdate = now()
     </insert>
+
+    <update id="uptItemsTagcnt" parameterType="Items">
+        /*  */
+        update items set tagcnt = tagcnt + 1, regdate = now()
+        <if test='duration != null and duration != ""'>
+            , duration = #{duration}
+        </if>
+        where idx = #{idx}
+    </update>
 </mapper>
