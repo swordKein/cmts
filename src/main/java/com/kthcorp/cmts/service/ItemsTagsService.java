@@ -455,8 +455,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
 
     @Override
-    public int changeMetasArraysByTypeFromInputItems(int itemid, String items) {
+    public int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration) {
         int rt = 0;
+        int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
 
         try {
             JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid);
@@ -481,16 +482,45 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 if (actionItemsArraysByType.get(atype) != null) {
                     changeMetaArr = (JsonArray) actionItemsArraysByType.get(atype);
+                    System.out.println("#Change type("+atype+") changing meta datas to::"+changeMetaArr);
                 }
 
                 if(changeMetaArr != null) {
-                    /* get JsonArray targetMetas */
-                    System.out.println("#changeMetaArr: for type:"+atype+" :: "+changeMetaArr.toString());
                     /* get meta data for saving */
                     JsonArray destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
+                    String destMeta = destArr.toString();
+
                     System.out.println("##DestArr cause changed for type:"+atype+" :: "+destArr.toString());
+
+                    /* 기존 메타와 추가 액션아이템들이 반영된 TYPE(ex> METASWHEN) 별 메타JsonArray가 준비되면 현재 tagIdx를 기준으로 업데이트 */
+                    ItemsTags reqMeta = new ItemsTags();
+                    reqMeta.setIdx(itemid);
+                    reqMeta.setTagidx(curTagIdx);
+                    reqMeta.setMtype(atype);
+                    reqMeta.setMeta(destMeta);
+
+                    rt = this.insItemsTagsMetas(reqMeta);
+
                 }
             }
+
+            /* 해당 items_tags_keys 를 승인으로 업데이트 한다 */
+            ItemsTags reqConfirm = new ItemsTags();
+            reqConfirm.setIdx(itemid);
+            reqConfirm.setTagidx(curTagIdx);
+            reqConfirm.setStat("S");
+            int rts = this.uptItemsTagsKeysStat(reqConfirm);
+
+            /* 해당 items_stat 를 승인으로 업데이트 한다 */
+            Items reqIt = new Items();
+            reqIt.setIdx(itemid);
+            reqIt.setStat("ST");
+            int rti = itemsMapper.insItemsStat(reqIt);
+
+            /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
+            if(!"".equals(duration)) reqIt.setDuration(duration);
+            int rtu = itemsMapper.uptItemsTagcnt(reqIt);
+            rt = 1;
 
         } catch (Exception e) {
             e.printStackTrace();

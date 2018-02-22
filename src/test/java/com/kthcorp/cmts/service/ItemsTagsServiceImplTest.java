@@ -37,9 +37,9 @@ public class ItemsTagsServiceImplTest {
 	@Test
 	public void test_changeMetasArraysByTypeFromInputItems() {
 
-		String req = "[{\"type\":\"METASWHEN\", \"meta\":\"\", \"target_meta\":\"테스트삽입\", \"action\":\"add\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"테스트삽입1\", \"action\":\"mod\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"\", \"action\":\"del\"} ,{\"type\":\"METASWHAT\", \"meta\":\"테스트삽입\", \"target_meta\":\"\", \"action\":\"del\"}]";
+		String req = "[{\"type\":\"METASWHEN\", \"meta\":\"\", \"target_meta\":\"테스트삽입\", \"action\":\"add\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"테스트삽입1\", \"action\":\"mod\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"\", \"action\":\"del\"} ,{\"type\":\"METASWHAT\", \"meta\":\"\", \"target_meta\":\"테스트삽입1\", \"action\":\"add\"}]";
 
-		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(10410, req);
+		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(10410, req, "");
 		System.out.println("#Result:"+result);
 	}
 }
