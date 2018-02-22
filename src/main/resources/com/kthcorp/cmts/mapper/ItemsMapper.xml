@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ItemsMapper">
+
+    <resultMap id="Items" type="Items">
+        <id property="idx" column="idx" />
+        <result property="cid" column="cid" />
+        <result property="type" column="type" />
+        <result property="title" column="title" />
+        <result property="title1" column="title1" />
+        <result property="title2" column="title2" />
+        <result property="regdate" column="regdate" />
+        <result property="regdate1" column="regdate1" />
+        <result property="regdate2" column="regdate2" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="director" column="director" />
+        <result property="year" column="year" />
+        <collection property="metaList" column="idx" ofType="ItemsMetas"
+                    javaType="ArrayList" resultMap="ItemsMetas"/>
+        <collection property="schedList" column="sc_id" ofType="SchedTrigger"
+                    javaType="ArrayList" resultMap="SchedTrigger"/>
+    </resultMap>
+
+    <resultMap id="ItemsMetas" type="ItemsMetas">
+        <id property="idx" column="idx" />
+        <result property="mtype" column="mtype" />
+        <result property="meta" column="meta" />
+    </resultMap>
+
+    <resultMap id="SchedTrigger" type="SchedTrigger">
+        <id property="sc_id" column="sc_id" />
+    </resultMap>
+
+
+    <select id="getItems" resultType="Items">
+        /* getItems */
+        select
+          idx, type, cid, title, title1, title2,
+          regdate, regdate1, regdate2, regid, stat, director, year
+        from items
+    </select>
+
+    <select id="getPagedItems" resultType="Items" parameterType="Items">
+        /* getPagedItems */
+        select
+        idx, type, cid, title, title1, title2,
+        regdate, regdate1, regdate2, regid, stat, director, year
+        from items
+        <where>
+            stat  != 'D'
+            <if test='cid != null and cid != ""'>
+                AND cid = #{cid}
+            </if>
+            <if test='type != null and type != ""'>
+                AND type = #{type}
+            </if>
+            <if test='title != null and title != ""'>
+                AND (title like CONCAT('%',#{title},'%') OR title1 like CONCAT('%',#{title},'%') )
+            </if>
+        </where>
+        order by regdate desc, idx desc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getItemsByIdx" resultMap="Items" parameterType="Items">
+        /* getItemsByIdx */
+        select
+            t.idx, t.cid, t.title, t.title1, t.title2,
+            t.regdate, t.regdate1, t.regdate2, t.regid, t.stat, t.director, t.year,
+            m.idx, m.mtype, m.meta
+        from items t
+        LEFT JOIN items_metas_mapping tm on tm.idx = t.idx
+        LEFT JOIN items_metas m on m.idx = tm.idx
+        where t.idx = #{idx}
+    </select>
+
+    <select id="getItemsInfoByIdx" resultMap="Items" parameterType="java.lang.Integer">
+        /* getItemsInfoByIdx */
+        select
+        t.idx, t.cid, t.title, t.title1, t.title2,
+        t.regdate, t.regdate1, t.regdate2, t.regid, t.stat, t.director, t.year,
+        t.duration, t.tagcnt
+        from items t
+        where t.idx = #{idx}
+    </select>
+
+    <select id="countItems" resultType="Integer" parameterType="Items">
+        /* countItems */
+        select count(*)
+        from items
+        <where>
+            stat  != 'D'
+            <if test='cid != null and cid != ""'>
+                AND cid = #{cid}
+            </if>
+            <if test='type != null and type != ""'>
+                AND type = #{type}
+            </if>
+            <if test='title != null and title != ""'>
+                AND (title like CONCAT('%',#{title},'%') OR title1 like CONCAT('%',#{title},'%') )
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insItems" parameterType="Items" useGeneratedKeys="true" keyProperty="idx">
+        /* insItems */
+        insert into items
+          (type, cid, title, title1, title2,
+            regdate, regdate1, regdate2, regid, stat, director, year)
+        values
+          (#{type}, #{cid}, #{title}, #{title1}, #{title2},
+          now(), #{regdate1}, #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
+    </insert>
+
+    <delete id="delItems" parameterType="Items">
+        /* delItems */
+        delete from items where idx = #{idx}
+    </delete>
+
+
+    <update id="uptItems" parameterType="Items">
+        /* uptItems */
+        update items
+        set
+        regdate = now()
+        ,regid = #{regid}
+        <if test='title != null and title != ""'>
+            , title = #{title}
+        </if>
+        <if test='title1 != null and title1 != ""'>
+            , title1 = #{title1}
+        </if>
+        <if test='title2 != null and title2 != ""'>
+            , title2 = #{title2}
+        </if>
+        <if test='regdate1 != null and regdate1 != ""'>
+            , regdate1 = #{regdate1}
+        </if>
+        <if test='regdate2 != null and regdate2 != ""'>
+            , regdate2 = #{regdate2}
+        </if>
+        <if test='stat != null and stat != ""'>
+            , stat = #{stat}
+        </if>
+        where idx = #{idx}
+    </update>
+
+    <select id="getItemsContent" resultType="ItemsContent">
+        /* getItemsContent */
+        select it.title, it.title2, it.regdate
+        , ( select stc.content from sched_target_content stc where stc.sc_id = sc.sc_id and content != '' order by regdate desc limit 1) as content
+        #, stc.content
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'R'
+        where it.idx <![CDATA[ > ]]> 129 and it.idx <![CDATA[ < ]]> 230
+        and it.stat != 'D' and it.title2 != ''
+
+        #inner join sched_target_content stc on stc.sc_id = sc.sc_id
+        #where it.regdate <![CDATA[ > ]]> '2017-12-22 00:00:00'
+
+    </select>
+
+    <select id="getItemsCine21Second520" resultType="ItemsContent">
+        /* getItemsCine21Second520 */
+        select it.title, it.title2, stc.content from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A'
+        #inner join sched_target_mapping_hist stmh on stmh.sc_id = sc.sc_id
+        inner join sched_target_content stc on stc.sc_id = sc.sc_id
+        #and stc.stmh_id = stmh.stmh_id
+        where it.regdate <![CDATA[ > ]]> '2018-01-12 00:00:00' and it.idx <![CDATA[ < ]]> 2438;
+    </select>
+
+
+    <select id="getItemsCine21SecondFor10AndContentall" resultType="ItemsContent">
+        /* getItemsCine21SecondFor10AndContentall */
+        select ism.sc_id, it.title, it.title2, stc.content
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A' and sc.stat ='S'
+        #inner join sched_target_mapping_hist stmh on stmh.sc_id = sc.sc_id
+        inner join sched_target_content stc on stc.sc_id = sc.sc_id
+        #and stc.stmh_id = stmh.stmh_id
+        where it.idx <![CDATA[ >= ]]> 2550 and it.idx <![CDATA[ <= ]]> 2560
+
+    </select>
+
+
+    <select id="getItemsYj01by01_bak_yj1_250" resultType="ItemsContent">
+        /* getItemsYj01by01 */
+        select it.idx,ism.sc_id, it.title, it.title2, stc.content
+    ,stmh.tcnt
+    , (select yj_id from in_items where purity_title = it.title order by idx desc limit 1) as cid
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A' and sc.stat ='S'
+        inner join sched_target_mapping_hist stmh on stmh.sc_id = sc.sc_id and stmh.tcnt = sc.tcnt
+        inner join sched_target_content stc on stc.sc_id = sc.sc_id and length(stc.content)  <![CDATA[ > ]]>  200
+        and stc.stmh_id = stmh.stmh_id
+        /*where it.idx <![CDATA[ >= ]]> 3568 and it.idx <![CDATA[ <= ]]> 3588 */
+        where it.idx <![CDATA[ >= ]]> 3568 and it.type = 'yj1'
+        /*and it.idx not in ( select idx from yj_items_out ) */
+        order by it.idx ASC
+        limit 250
+        /*and it.idx <![CDATA[ <= ]]> 4167 */
+
+    </select>
+
+
+    <select id="getItemsYj01by01" resultType="ItemsContent">
+        /* getItemsYj01by02_for_yj2_yj22_500 */
+        select it.idx,ism.sc_id, it.title, it.title2, stc.content
+        ,stmh.tcnt
+        , (select yj_id from in_items
+        where purity_title = it.title
+        and year = it.year
+        and director = it.director
+        order by idx desc limit 1) as cid
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A' and sc.stat ='S' and sc.regdate > '2018-02-01 23:30:00'
+        inner join sched_target_mapping_hist stmh on stmh.sc_id = sc.sc_id and stmh.tcnt = sc.tcnt
+        inner join sched_target_content stc on stc.sc_id = sc.sc_id and length(stc.content) >  200
+        and stc.stmh_id = stmh.stmh_id
+        /*where it.idx <![CDATA[ >= ]]> 3568 and it.idx <![CDATA[ <= ]]> 3588 */
+        where it.type in ('yj','yj1','yj22', 'yj3')
+        /* where it.idx <![CDATA[ >= ]]> 3568 and it.type in ('yj2','yj22') */
+        and it.idx not in ( select idx from yj_items_out )
+        order by it.idx ASC
+        limit 4000;
+
+    </select>
+
+    <select id="getItemsYj04" resultType="ItemsContent">
+        /* getItemsYj04 */
+        select it.idx,ism.sc_id, it.title, it.title2, stc.content
+        ,stmh.tcnt
+        , (select yj_id from in_items
+        where purity_title = it.title
+        and year = it.year
+        and director = it.director
+        order by idx desc limit 1) as cid
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A' and sc.stat ='S' and sc.regdate <![CDATA[ > ]]> '2018-02-20 00:00:00'
+        inner join sched_target_mapping_hist stmh on stmh.sc_id = sc.sc_id and stmh.tcnt = sc.tcnt
+        inner join sched_target_content stc on stc.sc_id = sc.sc_id and length(stc.content)  <![CDATA[ > ]]>  200
+        and stc.stmh_id = stmh.stmh_id
+        where it.type in ('yj4')
+        and it.idx not in ( select idx from yj_items_out )
+        and it.regdate <![CDATA[ > ]]> '2018-02-20 00:00:00'
+        order by it.idx ASC
+
+    </select>
+
+
+    <select id="getItemsCine21" resultType="ItemsContent">
+        /* getItemsCine21 */
+        select movieNm as title, cineKeywords as content from movie_cine21
+    </select>
+
+    <select id="getMovieCine21ByTitle" resultType="ItemsContent" parameterType="java.lang.String">
+        /* getMovieCine21ByTitle */
+        select movieNm as title, cineKeywords as content from movie_cine21
+        where title = #{title}
+        order by idx DESC
+        limit 1
+    </select>
+
+
+    <select id="getCollectSchedId" resultType="java.lang.Integer">
+        /* getCollectSchedId */
+        select sc3.sc_id
+        from sched_trigger sc3
+        where sc3.type = 'C' and sc3.stat = 'S' and sc3.sc_id in (
+        select sc2.parent_sc_id as sc_id
+        from sched_trigger sc2
+        where sc2.type = 'R' and sc2.stat = 'S' and sc2.sc_id in (
+        select sc.parent_sc_id as sc_id
+        from sched_trigger sc
+        where sc.type = 'A' and sc.stat = 'S' and sc.sc_id = #{sc_id}
+        )
+        )
+    </select>
+
+    <select id="getCollectContentList" resultType="ItemsContent" parameterType="java.lang.Integer">
+        /* getCollectContentList */
+        select stc.sc_id, stc.content
+        from sched_target_content stc
+        inner join sched_trigger sc on sc.sc_id = stc.sc_id and sc.type = 'C' and sc.stat = 'S'
+        where stc.sc_id = #{sc_id}
+    </select>
+
+    <insert id="insYjItemsOut" parameterType="Items">
+        /* insYjItemsOut */
+        insert into yj_items_out (idx, yj_id, type, purity_title, regdate, stat)
+        values (#{idx}, #{cid}, #{type}, #{title}, now(), 'Y')
+    </insert>
+
+    <select id="searchItemsPaging" parameterType="Items" resultType="Items">
+        /* searchItemsPaging */
+        select it.idx
+        ,CASE
+        WHEN (ck.series_id is not null and ck.series_id != '0')
+        THEN 'SER'
+        ELSE ( select CASE WHEN (country_of_origin = 'KOR') THEN 'KOR' ELSE 'OTH' END AS type from ccube_contents where content_id = ck.content_id limit 1 )
+        END AS type
+        , it.title, it.regdate, it.regid, it.director, it.year, it.tagcnt, it.duration
+        , iss.stat
+        , ifnull(ck.series_id, '0') as series_id
+        , ifnull(ck.content_id,'0') as cid
+        from items it
+        inner join items_stat iss on iss.idx = it.idx
+        left outer join ccube_keys ck on ck.itemidx = it.idx
+
+        where it.idx in ( select b.idx from (
+            select a.idx as idx from (
+                select it.idx
+                from items it
+                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ("RR", "SR", "FR")
+                <if test='searchStat == null or searchStat == "" or searchStat == "ALL"'>
+                    left outer join items_stat ist on ist.idx = it.idx
+                </if>
+                <if test='searchStat != null and searchStat == "FC"'>
+                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FC'
+                </if>
+                <if test='searchStat != null and searchStat == "FA"'>
+                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FA'
+                </if>
+                <if test='searchStat != null and searchStat == "RT"'>
+                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'RT'
+                </if>
+                <if test='searchStat != null and searchStat == "ST"'>
+                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'ST'
+                </if>
+                <if test='searchType != null and searchType != "ALL"'>
+                    inner join ccube_keys ck on ck.itemidx = it.idx
+                </if>
+
+                <if test='searchType != null and searchType == "KOR"'>
+                    inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN = "KOR"
+                </if>
+                <if test='searchType != null and searchType == "OTH"'>
+                    inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN != "KOR"
+                </if>
+                <if test='searchType != null and searchType == "SER"'>
+                    inner join ccube_series cser on cser.series_id = ck.series_id
+                </if>
+
+                <if test='searchKeyword != null and searchKeyword != ""'>
+                    where it.idx in (
+                        select * from (
+                            select itm.idx from items_tags_metas itm
+
+                            <if test='searchPartsArr != null'>
+                            where itm.meta like CONCAT('%',#{searchKeyword},'%')
+                                and itm.mtype in
+                                <foreach item="item" index="index" collection="searchPartsArr"
+                                         open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                            </if>
+                            group by itm.idx
+                        ) a
+                    )
+                    <if test='searchTitleYn == "Y"'>
+                        or it.title like CONCAT('%',#{searchKeyword},'%')
+                    </if>
+                    <if test='searchSdate != null and searchSdate != "" and searchEdate != "" and searchKeyword != ""'>
+                        and it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+                    </if>
+                </if>
+                <if test='searchKeyword == null or searchKeyword == ""'>
+                    <if test='searchSdate != null and searchSdate != "" and searchEdate != ""'>
+                        where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+                    </if>
+                </if>
+            ) a
+        ) b )
+        order by it.regdate desc, it.idx desc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="countItemsPaging" parameterType="Items" resultType="java.lang.Integer">
+        /* countItemsPaging */
+        select count(it.idx) as cnt
+        from items it
+        left outer join ccube_keys ck on ck.itemidx = it.idx
+
+        where it.idx in ( select b.idx from (
+        select a.idx as idx from (
+        select it.idx
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ("RR", "SR", "FR")
+        <if test='searchStat == null or searchStat == "" or searchStat == "ALL"'>
+            left outer join items_stat ist on ist.idx = it.idx
+        </if>
+        <if test='searchStat != null and searchStat == "FC"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FC'
+        </if>
+        <if test='searchStat != null and searchStat == "FA"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FA'
+        </if>
+        <if test='searchStat != null and searchStat == "RT"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'RT'
+        </if>
+        <if test='searchStat != null and searchStat == "ST"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'ST'
+        </if>
+        <if test='searchType != null and searchType != "ALL"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+        </if>
+
+        <if test='searchType != null and searchType == "KOR"'>
+            inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN = "KOR"
+        </if>
+        <if test='searchType != null and searchType == "OTH"'>
+            inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN != "KOR"
+        </if>
+        <if test='searchType != null and searchType == "SER"'>
+            inner join ccube_series cser on cser.series_id = ck.series_id
+        </if>
+
+        <if test='searchKeyword != null and searchKeyword != ""'>
+            where it.idx in (
+            select * from (
+            select itm.idx from items_tags_metas itm
+            <if test='searchPartsArr != null'>
+            where itm.meta like CONCAT('%',#{searchKeyword},'%')
+                and itm.mtype in
+                <foreach item="item" index="index" collection="searchPartsArr"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            group by itm.idx
+            ) a
+            )
+            <if test='searchTitleYn == "Y"'>
+                or it.title like CONCAT('%',#{searchKeyword},'%')
+            </if>
+            <if test='searchSdate != null and searchSdate != "" and searchEdate != "" and searchKeyword != ""'>
+                and it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+            </if>
+        </if>
+        <if test='searchKeyword == null or searchKeyword == ""'>
+            <if test='searchSdate != null and searchSdate != "" and searchEdate != ""'>
+                where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+            </if>
+        </if>
+        ) a
+        ) b )
+    </select>
+
+
+    <select id="countItemsPagingByStat" parameterType="Items" resultType="Items">
+        /* countItemsPagingByStat */
+
+        select x.stat, count(*) as cnt from (
+        select it.idx, ifnull(ist.stat, 'NONE') as stat
+
+        from items it
+        left outer join ccube_keys ck on ck.itemidx = it.idx
+
+        left outer join items_stat ist on ist.idx = it.idx
+
+        where it.idx in ( select b.idx from (
+        select a.idx as idx from (
+        select it.idx
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ("RR", "SR", "FR")
+        <if test='searchStat == null or searchStat == "" or searchStat == "ALL"'>
+            left outer join items_stat ist on ist.idx = it.idx
+        </if>
+        <if test='searchStat != null and searchStat == "FC"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FC'
+        </if>
+        <if test='searchStat != null and searchStat == "FA"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FA'
+        </if>
+        <if test='searchStat != null and searchStat == "RT"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'RT'
+        </if>
+        <if test='searchStat != null and searchStat == "ST"'>
+            inner join items_stat ist on ist.idx = it.idx and ist.stat = 'ST'
+        </if>
+        <if test='searchType != null and searchType != "ALL"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+        </if>
+
+        <if test='searchType != null and searchType == "KOR"'>
+            inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN = "KOR"
+        </if>
+        <if test='searchType != null and searchType == "OTH"'>
+            inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN != "KOR"
+        </if>
+        <if test='searchType != null and searchType == "SER"'>
+            inner join ccube_series cser on cser.series_id = ck.series_id
+        </if>
+
+        <if test='searchKeyword != null and searchKeyword != ""'>
+            where it.idx in (
+            select * from (
+            select itm.idx from items_tags_metas itm
+            <if test='searchPartsArr != null'>
+                where itm.meta like CONCAT('%',#{searchKeyword},'%')
+                and itm.mtype in
+                <foreach item="item" index="index" collection="searchPartsArr"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            group by itm.idx
+            ) a
+            )
+            <if test='searchTitleYn == "Y"'>
+                or it.title like CONCAT('%',#{searchKeyword},'%')
+            </if>
+            <if test='searchSdate != null and searchSdate != "" and searchEdate != "" and searchKeyword != ""'>
+                and it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+            </if>
+        </if>
+        <if test='searchKeyword == null or searchKeyword == ""'>
+            <if test='searchSdate != null and searchSdate != "" and searchEdate != ""'>
+                where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+            </if>
+        </if>
+        ) a
+        ) b )
+        ) x group by x.stat
+    </select>
+
+    <select id="searchTestMetas" parameterType="Items" resultType="Items">
+        select itm.idx from items_tags_metas itm
+        where itm.meta like CONCAT('%',#{searchKeyword},'%')
+        <if test='searchPartsArr != null'>
+            and itm.mtype in
+            <foreach item="item" index="index" collection="searchPartsArr"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        group by itm.idx
+    </select>
+
+    <select id="getScidByItemIdxAndType" parameterType="Items" resultType="Integer">
+        /* getScidByItemIdxAndType */
+        select ism.sc_id
+        from items_sched_mapping ism
+        inner join sched_trigger st on st.sc_id = ism.sc_id and st.type = #{type}
+        where ism.idx = #{idx}
+        order by st.regdate DESC
+        limit 1
+    </select>
+
+    <update id="uptSchedTriggerStatByScid" parameterType="Items">
+      /* uptSchedTriggerStatByScid  */
+      update sched_trigger set stat = #{stat}, regdate = now()
+      where sc_id = #{sc_id}
+    </update>
+
+    <insert id="insItemsStat" parameterType="Items">
+        /*  */
+        insert into items_stat (idx, stat, regdate)
+        values (#{idx}, #{stat}, now())
+        ON DUPLICATE KEY UPDATE stat = #{stat}, regdate = now()
+    </insert>
+</mapper>

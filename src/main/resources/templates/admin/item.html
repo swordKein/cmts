@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>OllehTV Meta Extended</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script th:src="@{/js/admin.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">OllehTV Meta</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/admin/items/list">Items</a></li>
+					<li><a href="/admin/movie_cine21/list">Cine21</a></li>
+					<li><a href="/admin/properties/list">Properties</a></li>
+					<li><a href="/admin/dic/filter/list">Dictionary</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="starter-template">
+			<h2><span class="label label-default" th:text="'영화 제목 : '+${item.title}"></span></h2>
+		</div>
+		<br/>
+		<div class="table-responsive">
+			<table id="targetListTable" class="table" border="1">
+				<thead>
+				<tr>
+					<th>스케쥴 ID</th>
+					<th>스케쥴 TYPE</th>
+					<th>스케쥴 DESCRIPT</th>
+					<th>회차</th>
+					<th>상태</th>
+					<th>등록일시</th>
+					<th>등록자ID</th>
+					<!--<th>PROGRESS</th>-->
+					<th>이력</th>
+					<th>재처리</th>
+				</tr>
+				<tr th:each="sched : ${schedList}">
+					<td width="100px"><span th:text="${sched.sc_id}"></span></td>
+					<td width="100px" th:switch="${sched.type}">
+						<span th:case="C" class="center-block label label-info">C (수집)</span>
+						<span th:case="R" class="center-block label label-primary">R (정제)</span>
+						<span th:case="A" class="center-block label label-warning">A (분석)</span>
+					</td>
+					<td width="200px"><a th:text="${sched.descript}" th:href="@{'/admin/item/content/'+${sched.type}+'/'+${sched.sc_id}}"></a></td>
+					<td width="100px"><span th:text="${sched.tcnt}"></span></td>
+					<td width="100px" th:switch="${sched.stat}">
+						<span th:case="Y">Y (준비)</span>
+						<span th:case="S">S (완료)</span>
+						<span th:case="F">F (실패)</span>
+					</td>
+					<td width="100px"><span th:text="${sched.regdate}"></span></td>
+					<td width="100px"><span th:text="${sched.regid}"></span></td>
+					<!--<td width="100px"><span th:text="${sched.progs}"></span></td>-->
+					<td width="100px"><span class="center-block label label-success"><a th:href="@{'/admin/item/history/'+${sched.type}+'/'+${sched.sc_id}}">이력보기</a></span></td>
+					<td width="100px"><span class="center-block label label-warning"><a href="#" th:onclick="|javascript:schedRetry_ajax('${sched.sc_id}')|">재처리</a></span></td>
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

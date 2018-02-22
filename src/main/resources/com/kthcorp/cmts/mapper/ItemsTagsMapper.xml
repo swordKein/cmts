@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ItemsTagsMapper">
+
+    <select id="getItemsTagsMetasByItemIdx" resultType="ItemsTags" parameterType="ItemsTags">
+        /* getItemsTagsMetasByItemIdx */
+        select
+            im.idx, im.tagidx, im.mtype, im.meta, im.regdate, im.regid
+        from items_tags_metas im
+        where im.idx = #{idx} and im.TAGIDX = (
+            select itt.tagidx from items_tags_keys itt
+            where itt.idx = im.idx and itt.stat = #{stat}
+            order by regdate desc limit 1
+        )
+        order by im.mtype asc
+    </select>
+
+    <select id="getItemsTagsMetasByItemIdxAndMtype" resultType="ItemsTags" parameterType="ItemsTags">
+        /* getItemsTagsMetasByItemIdxAndMtype */
+        select
+        im.idx, im.tagidx, im.mtype, im.meta, im.regdate, im.regid
+        from items_tags_metas im
+        where im.idx = #{idx} and im.TAGIDX = (
+        select itt.tagidx from items_tags_keys itt
+        where itt.idx = im.idx and itt.stat = #{stat}
+        order by regdate desc limit 1
+        )
+        and im.MTYPE = #{mtype}
+        limit 1
+    </select>
+
+    <select id="getMaxTagsIdxByItemIdx" resultType="java.lang.Integer" parameterType="ItemsTags">
+        /* getMaxTagsIdxByItemIdx */
+        select
+          ifnull(max(tagidx), 0) as tagidx
+        from items_tags_keys
+        where idx = #{idx}
+        <if test='stat != null and stat != ""'>
+            and stat = #{stat}
+        </if>
+    </select>
+
+    <insert id="insItemsTagsKeys" parameterType="ItemsTags">
+        /* insItemsTagsKeys */
+        insert into items_tags_keys
+          (idx, tagidx, stat, regdate)
+        values
+          (#{idx}, #{tagidx}, 'Y', now())
+    </insert>
+
+    <update id="uptItemsTagsKeysStat" parameterType="ItemsTags">
+        /* uptItemsTagsKeysStat */
+        update items_tags_keys set stat = #{stat}
+        where idx = #{idx} and tagidx = #{tagidx}
+    </update>
+
+    <insert id="insItemsTagsMetas" parameterType="ItemsTags">
+        /* insItemsMetas */
+        insert into items_tags_metas
+        (idx, tagidx, mtype, meta, regdate, regid)
+        values
+        (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid})
+        ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
+    </insert>
+
+
+</mapper>

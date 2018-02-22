@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.InItemsMapper">
+
+    <select id="get50ActiveInItems" resultType="InItems">
+        /* getActiveInItems */
+        select
+          idx, type, mcid, cid, purity_title, content_title, origin_title, titleshort,
+          regdate, regid, stat, director, year, actors_display, poster_url, country_of_origin
+        from in_items
+        where stat = 'Y'
+        order by regdate asc
+        limit 50;
+    </select>
+
+    <update id="uptInItemsStat" parameterType="InItems">
+        /* uptInItemsStat */
+        update in_items set stat = #{stat} where idx = #{idx}
+    </update>
+
+</mapper>

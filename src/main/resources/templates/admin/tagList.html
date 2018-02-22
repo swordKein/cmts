@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>OllehTV Meta Extended</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script th:src="@{/js/admin.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body >
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">OllehTV Meta</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/admin/items/list">Items</a></li>
+					<li><a href="/admin/movie_cine21/list">Cine21</a></li>
+					<li><a href="/admin/properties/list">Properties</a></li>
+					<li class="active"><a href="/admin/dic/filter/list">Dictionary</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="starter-template">
+			<h1>
+				<span th:switch="${type}">
+					<a th:case="filter"
+					   th:href="@{/admin/dic/filter/list}" th:text="'제외어 ('+ ${type} + ') 사전 리스트'"></a>
+					<a th:case="change"
+					   th:href="@{/admin/dic/change/list}" th:text="'대체어 ('+ ${type} + ') 사전 리스트'"></a>
+					<a th:case="notuse"
+					   th:href="@{/admin/dic/notuse/list}" th:text="'불용어 ('+ ${type} + ') 사전 리스트'"></a>
+					<a th:case="add"
+					   th:href="@{/admin/dic/add/list}" th:text="'추가어 ('+ ${type} + ') 사전 리스트'"></a>
+					<a th:case="keywords"
+					   th:href="@{/admin/dic/keywords}" th:text="'키워드 사전 리스트'"></a>
+					<a th:case="tags"
+					   th:href="@{/admin/dic/tags}" th:text="'키워드-태그 매핑 사전 리스트'"></a>
+				</span>
+			</h1>
+		</div>
+		<br/>
+
+		<div class="starter-template">
+			<h4>
+				<span class="label label-info">
+					<a href="/admin/dic/filter/list">제외어 사전</a>
+				</span>
+			</h4>
+			<h4>
+				<span class="label label-success">
+					<a href="/admin/dic/change/list">대체어 사전</a> |
+					<a href="/admin/dic/notuse/list">불용어 사전</a>
+				</span>
+			</h4>
+			<h4>
+				<span class="label label-warning">
+					<a href="/admin/dic/add/list">추가어 사전</a> |
+					<a href="/admin/dic/keywords">키워드 매핑 사전</a> |
+					<a href="/admin/dic/tags">키워드-태그 매핑 사전</a>
+				</span>
+			</h4>
+		</div>
+		<br/>
+
+		<div class="table-responsive1">
+			<table id="targetListTable" class="table" border="1">
+				<thead>
+				<tr th:switch="${type}">
+					<th>사전 IDX</th>
+					<th>구분타입</th>
+					<th>태그</th>
+					<th>키워드</th>
+					<th>배율</th>
+					<th>등록일시</th>
+					<th>등록자ID</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="items : ${wordsList}" th:switch="${type}">
+					<td width="200px"><span th:text="${items.idx}"></span></td>
+					<td width="200px"><span th:text="${items.type}"></span></td>
+					<td width="200px"><span th:text="${items.tag}"></span></td>
+					<td width="200px"><span th:text="${items.keyword}"></span></td>
+					<td width="200px"><span th:text="${items.ratio}"></span></td>
+					<td width="200px"><span th:text="${items.regdate}"></span></td>
+					<td width="200px"><span th:text="${items.regid}"></span></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

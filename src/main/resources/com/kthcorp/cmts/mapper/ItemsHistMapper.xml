@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ItemsHistMapper">
+
+    <select id="getItemsHist" resultType="ItemsHist">
+        /* getItemsHist */
+        select
+          hidx, type, idx, title, stat, regdate, regid, action, action_id
+        from items_hist
+    </select>
+
+    <insert id="insItemsHist" parameterType="ItemsHist" useGeneratedKeys="true" keyProperty="hidx">
+        /* insItemsHist */
+        insert into items_hist (type, idx, title, stat, regdate, regid, action, action_id)
+        values (#{type}, #{idx}, #{stat}, now() , #{regid}, #{action}, #{action_id})
+    </insert>
+
+</mapper>

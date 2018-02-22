@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ConfTargetOrigHistMapper">
+
+    <resultMap id="ConfTargetOrigHist" type="ConfTargetOrigHist">
+        <id property="tgh_id" column="tgh_id" />
+        <result property="tg_id" column="tg_id" />
+        <result property="regdate" column="regdate" />
+        <result property="stat" column="stat" />
+        <result property="rt_code" column="rt_code" />
+        <result property="rt_msg" column="rt_msg" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="summary" column="summary" />
+        <collection property="confTargetOrig" column="tg_id" ofType="ConfTargetOrig"
+                    javaType="ConfTargetOrig" resultMap="ConfTargetOrig"/>
+    </resultMap>
+
+    <resultMap id="ConfTargetOrig" type="ConfTargetOrig">
+        <id property="tg_id" column="tg_id" />
+        <result property="title" column="title" />
+        <result property="descript" column="descript" />
+        <result property="tg_url" column="tg_url" />
+        <result property="tg_url_param1" column="tg_url_param1" />
+        <result property="tg_url_param2" column="tg_url_param2" />
+        <result property="tg_url_param3" column="tg_url_param3" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="orderType" column="orderType" />
+        <result property="stattarget" column="stattarget" />
+    </resultMap>
+
+    <select id="getConfTargetOrigHistList" resultMap="ConfTargetOrigHist" parameterType="ConfTargetOrigHist">
+        /* getConfTargetOrigHistList */
+        select
+          h.tgh_id, h.tg_id, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
+          , t.tg_id, t.title, t.descript
+          , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+          , t.regdate, t.regid, t.stat
+          , t.param1, t.param2, t.param3, t.param4, t.param5
+        from conf_target_orig_hist h
+        left join conf_target_orig t on h.tg_id = t.tg_id
+        <where>
+            <if test='tg_id > 0'>
+                h.tg_id = #{tg_id}
+            </if>
+        </where>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+
+    <select id="getConfTargetOrigHistByStatList" resultMap="ConfTargetOrigHist" parameterType="ConfTargetOrigHist">
+        /* getConfTargetOrigHistByStatList */
+        select
+        h.tgh_id, h.tg_id, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        from conf_target_orig_hist h
+        left join conf_target_orig t on h.tg_id = t.tg_id
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test='stat != ""'>
+                h.stat = #{stat}
+            </if>
+            <if test='tg_id > 0'>
+                AND h.tg_id = #{tg_id}
+            </if>
+        </trim>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+    <insert id="insConfTargetOrigHist" parameterType="ConfTargetOrigHist" useGeneratedKeys="true" keyProperty="tgh_id">
+        /* insConfTargetOrigHist */
+        insert into conf_target_orig_hist (tg_id, regdate, stat, rt_code, rt_msg, summary)
+        values (#{tg_id}, NOW(), #{stat}, #{rt_code}, #{rt_msg}, #{summary})
+    </insert>
+
+</mapper>

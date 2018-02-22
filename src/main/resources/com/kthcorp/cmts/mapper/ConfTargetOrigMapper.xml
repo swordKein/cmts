@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ConfTargetOrigMapper">
+
+    <resultMap id="ConfTargetOrig" type="ConfTargetOrig">
+        <id property="tg_id" column="tg_id" />
+        <result property="title" column="title" />
+        <result property="descript" column="descript" />
+        <result property="tg_url" column="tg_url" />
+        <result property="tg_url_param1" column="tg_url_param1" />
+        <result property="tg_url_param2" column="tg_url_param2" />
+        <result property="tg_url_param3" column="tg_url_param3" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="orderType" column="orderType" />
+        <collection property="presetList" column="ps_id" ofType="ConfPresetOrig"
+                    javaType="ArrayList" resultMap="ConfPresetOrig"/>
+    </resultMap>
+
+    <resultMap id="ConfPresetOrig" type="ConfPresetOrig">
+        <id property="ps_id" column="ps_id" />
+        <result property="ps_add_url" column="ps_add_url" />
+        <result property="ps_tag" column="ps_tag" />
+        <result property="dest_field" column="dest_field" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="priority" column="priority" />
+        <result property="ps_type" column="ps_type" />
+        <result property="descriptp" column="descriptp" />
+        <result property="dest_charset" column="dest_charset" />
+    </resultMap>
+
+    <select id="getTargetListActivePage" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+        /* getTargetListActivePage */
+        select
+          t.tg_id, t.title, t.descript
+          , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+          , t.regdate, t.regid, t.stat
+          , t.param1, t.param2, t.param3, t.param4, t.param5
+          , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+          #, p.regdate, p.regid
+          , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target_orig t
+        left join conf_ps_mapping_ORIG m on m.tg_id = t.tg_id
+        left join conf_preset_ORIG p on p.ps_id = m.ps_id
+        #where t.stat = 'Y'
+        order by t.tg_id ASC, p.priority ASC
+        #limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+        /* getTargetListReadyToAnalyzePage */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target_orig t
+        left join conf_ps_mapping_ORIG m on m.tg_id = t.tg_id
+        left join conf_preset_ORIG p on p.ps_id = m.ps_id
+        where t.stat = 'Y'
+        order by t.regdate DESC, p.priority ASC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListByStat" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+        /* getTargetListByStat */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target_orig t
+        left join conf_ps_mapping_ORIG m on m.tg_id = t.tg_id
+        left join conf_preset_ORIG p on p.ps_id = m.ps_id
+        where t.stat = #{stat}
+        order by t.regdate ${orderType}, t.tg_id ${orderType}, p.priority ASC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListActiveFirst10" resultMap="ConfTargetOrig">
+        /* getTargetListActiveLast10 */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target_orig t
+        left join conf_ps_mapping_ORIG m on m.tg_id = t.tg_id
+        left join conf_preset_ORIG p on p.ps_id = m.ps_id
+        where t.stat = 'Y'
+        order by t.regdate ASC, p.priority ASC
+        limit 10 offset 0
+    </select>
+
+    <select id="getConfTargetOrigById" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+        /* getConfTargetOrigById */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid, p.ps_type
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target_orig t
+        left join conf_ps_mapping_ORIG m on m.tg_id = t.tg_id
+        left join conf_preset_ORIG p on p.ps_id = m.ps_id
+        where t.tg_id = #{tg_id}
+    </select>
+
+    <update id="uptTargetStat" parameterType="ConfTargetOrig">
+        /* uptTargetStat */
+        update conf_target_orig set stat=#{stat}
+          , regdate = now()
+          where tg_id=#{tg_id}
+    </update>
+
+    <insert id="insConfTargetOrig" parameterType="ConfTargetOrig"
+            useGeneratedKeys="true" keyProperty="tg_id">
+        /* insertConfPreset */
+        insert into conf_target_orig
+          (title, descript, tg_url, tg_url_param1, tg_url_param2, tg_url_param3
+          , regdate, regid
+          , param1, param2, param3, param4, param5
+          , stat, is_fail, is_limit, is_manual, content_min1, content_max1
+          , content_min2, content_max2, fail_count1, fail_count2)
+        VALUES
+          (#{title}, #{descript}, #{tg_url}, #{tg_url_param1}, #{tg_url_param2}, #{tg_url_param3}
+          , now(), #{regid}
+          , #{param1}, #{param2}, #{param3}, #{param4}, #{param5}
+          , #{stat}, #{is_fail}, #{is_limit}, #{is_manual}, #{content_min1}, #{content_max1}
+          , #{content_min2}, #{content_max2}, #{fail_count1}, #{fail_count2})
+    </insert>
+
+</mapper>

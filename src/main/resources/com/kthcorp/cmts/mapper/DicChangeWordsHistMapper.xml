@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicChangeWordsHistMapper">
+
+    <select id="getDicChangeWordsHist" resultType="DicChangeWordsHist">
+        /* getDicChangeWordsHist */
+        select
+          hidx, type, dic_idx, regdate, regid, action, action_id
+        from dic_change_words_hist
+    </select>
+
+    <select id="getDicChangeWordsHistByReq" resultType="DicChangeWordsHist" parameterType="DicChangeWordsHist">
+        /* getDicChangeWordsHistByReq */
+        select h.hidx, h.type, h.dic_idx, h.regdate, h.regid, h.action, h.action_id
+        from dic_change_words_hist h
+        inner join dic_change_words d on d.idx = h.dic_idx and h.regid = #{regid} and h.action_id = #{action_id}
+        where h.dic_idx = #{dic_idx} and h.regdate > DATE_SUB(now(), INTERVAL 1 MINUTE)
+    </select>
+
+    <insert id="insDicChangeWordsHist" parameterType="DicChangeWordsHist" useGeneratedKeys="true" keyProperty="hidx">
+        /* insDicChangeWordsHist */
+        insert into dic_change_words_hist (type, dic_idx, regdate, regid, action, action_id)
+        values (#{type}, #{dic_idx}, now() , #{regid}, #{action}, #{action_id})
+    </insert>
+
+</mapper>

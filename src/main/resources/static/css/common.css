@@ -1,0 +1,367 @@
+@CHARSET "UTF-8";
+
+/* Include the font files
+@font-face{font-family:'FontAwesome';
+src:url('/sp/resources/fonts/fontawesome-webfont.eot?v=4.0.3');
+src:url('/sp/resources/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'),
+url('/sp/resources/fonts/fontawesome-webfont.woff?v=4.0.3') format('woff'),
+url('/sp/resources/fonts/fontawesome-webfont.ttf?v=4.0.3') format('truetype'),
+url('/sp/resources/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomerecmtsr') format('svg');
+font-weight:normal;font-style:normal}
+*/
+
+h3.managementSubTitle {
+	padding-left:13px;
+}
+.iconMenu {
+    position: absolute; left: 0px;top:0px;
+}
+ 
+/*replace the content value with the 
+corresponding value from the list below*/
+#myinfoEditWrap {
+	font-size:10pt;
+}
+#myinfoEditWrap #tabs {
+	margin-top:25px;
+}
+.dateFullInTable {
+	font-size:9pt;
+	font-weight:600;
+}
+ 
+.iconMenu:before {
+    content: "\f00a"; 
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+/*--adjust as necessary--*/
+    color: #2F7DAD;
+    font-size: 10pt;
+    padding-right: 0.5em;
+    position: absolute;
+    top: 16.5px;
+    left: 6px;
+}
+.iconWaitUser:before {
+    content: "\f0c0"; 
+}
+.iconBanner:before {
+    content: "\f015"; 
+}
+.iconAdmin:before {
+    content: "\f007"; 
+}
+.iconCategory:before {
+    content: "\f02c"; 
+}
+.iconFood:before {
+    content: "\f181"; 
+}
+.iconOrder:before {
+    content: "\f044"; 
+}
+.iconStats:before {
+    content: "\f080"; 
+}
+.iconAttr:before {
+    content: "\f046"; 
+}
+.iconOrigin:before {
+    content: "\f180"; 
+}
+.iconDevice:before {
+    content: "\f10a"; 
+}
+
+* {
+	color:#494248;
+}
+span.iconSubMenu {
+    position: relative;
+} 
+
+.viewOrderByGruop span.iconSubMenu:before {
+	content: "\f101"; 
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color: #F1AC5F;
+    font-size: 16pt;
+    padding-right: 0.5em;
+    position: absolute;
+    top: 0px;
+    left: 2px;
+    
+}
+
+body {
+	margin:0px;
+	padding:0px;
+	font-family:"Nanum Gothic", sans-serif;
+	min-width: 1280px;
+}
+a {
+	text-decoration: none;
+}
+
+.hand {
+	cursor: pointer;
+}
+
+
+.initHide {
+	display:none;
+}
+.bold {
+	font-weight: bold;
+}
+li {
+	list-style: none;
+}
+
+/* unvisited link */
+a:link {
+    color: #317cb2;
+}
+
+/* visited link */
+a:visited {
+    color: #317cb2;
+}
+
+/* mouse over link */
+a:hover {
+    color: #225378;
+}
+/* selected link */
+a:active {
+    color: #94adbf;
+}
+/* 페이징 영역 */
+.pagingTotalWrap {
+	float:right;
+}
+ul.pageWrap {
+	float:left;
+	padding:0px;
+	margin:0px;
+	margin-top:12px;
+	right: 0px;
+}
+ul.pageWrap li {
+	margin:0px;
+	border:1px solid #ddd;
+	padding:5px;
+	height:15px;
+	width:15px;
+	text-align: center;
+	vertical-align: top;
+	font-weight: 600;
+	margin-right:4px;
+	
+}
+ul.pageWrap a {
+	text-decoration: none;
+}
+.selectedPage {
+	background:#eee;
+	color:#777;
+}
+#regUserForm .formRow {
+	float:left;
+	margin-bottom:10px;
+}
+#regUserForm .formLabel {
+	float:left;
+	font-weight: 600;
+	padding-top:5px;
+}
+#regUserForm .formValue {
+	float:left;
+}
+.clear {
+	clear:both;
+}
+
+/* 공통 타이틀 */
+h3.title {
+	border-bottom:1px solid #777;
+	padding-bottom:10px;
+	font-size:23pt;
+	color:#777;
+	font-weight: lighter;
+	cursor: default;
+}
+h4.title {
+	border-bottom:1px solid #777;
+	padding-bottom:10px;
+	font-size:18pt;
+	color:#777;
+	font-weight: lighter;
+}
+input {
+	font-size:12pt;
+	padding:5px;
+	border:1px solid #777;
+	border-radius:4px;
+	text-align: right;
+}
+/* 달력 입력 상자 */
+input.datepicker {
+	width:100px;
+	padding:6px 5px;;
+	border:1px solid #777;
+	margin-left:5px;
+	margin-right:5px;
+}
+/* 상단 검색 버튼(기간 및 키워드) */
+span.btnSearch {
+	color:#408DC4;
+	padding:4px 16px;
+	border:1px solid #408DC4;
+	border-radius:4px;
+	text-align: center;
+	cursor: pointer;
+	margin-left:5px;
+	font-weight: 300;
+}
+.searchTermByFormWrap {
+	float:right;
+	padding-top:12px;
+	padding-bottom:35px;
+}
+.blankPopup {
+	border-radius:8px;
+	z-index:100;
+	position:absolute;
+}
+#blankView {
+	border-radius:0px;
+}
+
+/* 테이블 스타일 */
+table {
+	border-spacing: 0px;
+	color:#333;
+	clear:both;
+	width:100%;
+	cursor: default;
+}
+th, td {
+	text-align:center;
+	padding:10px 15px;
+	cursor: default;
+}
+
+tr:nth-child(odd), ol.listCategory li:nth-child(odd) {
+	background:#f9f9f9;
+}
+.btnReg {
+		width:100px;
+	border:1px solid #49AD5B;
+	border-radius:5px;
+	color:#49AD5B;
+	padding:8px 16px;
+	font-weight:600;
+	cursor: pointer;
+}
+.btnClose {
+	width:100px;
+	border:1px solid #ccc;
+	border-radius:5px;
+	color:#000;
+	padding:8px 16px;
+	font-weight:600;
+	cursor: pointer;
+}
+th {
+	border-bottom:3px solid #eee;
+	font-size:13pt;
+	font-weight: 600;
+	background:#fff;
+	color:#777;
+}
+td {
+	border-bottom:1px solid #eee;
+}
+/* 주문별 보기 버튼 */
+.viewOrderByGruop {
+	display:block;
+	float:right;
+	text-align: right;
+	
+	border:1px solid #EFA04D;
+
+	
+}
+ol {
+	list-style: decimal inside;
+}
+
+.fl {
+	float:left;
+}
+.fr {
+	float:right;
+}
+
+.fontWeightW {
+	
+}
+.fontWeightM {
+	font-weight:500;
+}
+.fontWeightS {
+	font-weight:600;
+}
+/* 버튼 색상(공용) */
+.btnAdminCommon {
+	border-radius:5px;
+	padding:4px 16px;
+	cursor: pointer;
+}
+.btnAdminCommonXSmall {
+	border-radius:5px;
+	padding:2px 4px;
+	cursor: pointer;
+	font-size:9pt;
+}
+.btnAdminCommonSmall {
+	border-radius:5px;
+	padding:4px 8px;
+	cursor: pointer;
+}
+
+.btnAdminCommonLarge {
+	border-radius:5px;
+	padding:6px 17px;
+	font-size:14pt;
+	cursor: pointer;
+}
+.btnAdminSilver {
+	border:1px solid #c0c0c0;
+	color:black;
+}
+.btnAdminOrange {
+	border:1px solid #EFA04D;
+	color:#EFA04D;
+}
+.btnAdminBlue {
+	border:1px solid #408DC4;
+	color:#408DC4;
+}
+.btnAdminRed {
+	border:1px solid #DA5253;
+	color:#DA5253;
+}
+.btnAdminGreen {
+	border:1px solid #49AD5B;
+	color:#49AD5B;
+}
+.btnAdminSky {
+	border:1px solid #42B9D6;
+	color:#42B9D6;
+}

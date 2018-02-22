@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ConfTargetMapper">
+
+    <resultMap id="ConfTarget" type="ConfTarget">
+        <id property="tg_id" column="tg_id" />
+        <result property="title" column="title" />
+        <result property="descript" column="descript" />
+        <result property="tg_url" column="tg_url" />
+        <result property="tg_url_param1" column="tg_url_param1" />
+        <result property="tg_url_param2" column="tg_url_param2" />
+        <result property="tg_url_param3" column="tg_url_param3" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="orderType" column="orderType" />
+
+        <result property="is_fail" column="is_fail" />
+        <result property="is_limit" column="is_limit" />
+        <result property="is_manual" column="is_manual" />
+        <result property="content_min1" column="content_min1" />
+        <result property="content_max1" column="content_max1" />
+        <result property="content_min2" column="content_min2" />
+        <result property="content_max2" column="content_max2" />
+        <result property="fail_count1" column="fail_count1" />
+        <result property="fail_count2" column="fail_count2" />
+
+        <collection property="presetList" column="ps_id" ofType="ConfPreset"
+                    javaType="ArrayList" resultMap="ConfPreset"/>
+    </resultMap>
+
+    <resultMap id="ConfPreset" type="ConfPreset">
+        <id property="ps_id" column="ps_id" />
+        <result property="ps_add_url" column="ps_add_url" />
+        <result property="ps_tag" column="ps_tag" />
+        <result property="dest_field" column="dest_field" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="priority" column="priority" />
+        <result property="ps_type" column="ps_type" />
+        <result property="descriptp" column="descriptp" />
+        <result property="dest_charset" column="dest_charset" />
+    </resultMap>
+
+    <select id="getTargetListActivePage" resultMap="ConfTarget" parameterType="ConfTarget">
+        /* getTargetListActivePage */
+        select
+          t.tg_id, t.title, t.descript
+          , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+          , t.regdate, t.regid, t.stat
+          , t.param1, t.param2, t.param3, t.param4, t.param5
+          , t.fail_count1, t.fail_count2
+          , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+          , p.regdate, p.regid
+          , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        #where t.stat = 'Y'
+        order by t.param3 ASC, t.tg_id ASC, p.priority ASC
+        #limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTarget" parameterType="ConfTarget">
+        /* getTargetListReadyToAnalyzePage */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        where t.stat = 'Y'
+        order by t.regdate DESC, p.priority ASC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListByStat" resultMap="ConfTarget" parameterType="ConfTarget">
+        /* getTargetListByStat */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        where t.stat = #{stat}
+        order by t.regdate ${orderType}, t.tg_id ${orderType}, p.priority ASC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getTargetListByPrefix" resultMap="ConfTarget" parameterType="ConfTarget">
+        /* getTargetListByPrefix */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , t.is_fail, t.is_limit, t.is_manual, t.content_min1, t.content_max1, t.content_min2, t.content_max2
+        , t.fail_count1, t.fail_count2
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        where t.tg_url = #{tg_url}
+        order by p.ps_id asc
+    </select>
+
+    <select id="getTargetListActiveFirst10" resultMap="ConfTarget">
+        /* getTargetListActiveLast10 */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        where t.stat = 'Y'
+        order by t.regdate ASC, p.priority ASC
+        limit 10 offset 0
+    </select>
+
+    <select id="getConfTargetById" resultMap="ConfTarget" parameterType="ConfTarget">
+        /* getConfTargetById */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , t.is_fail, t.is_limit, t.is_manual, t.content_min1, t.content_max1, t.content_min2, t.content_max2
+        , t.fail_count1, t.fail_count2
+        , p.ps_id, p.ps_add_url, p.ps_tag, p.dest_field
+        , p.regdate, p.regid, p.ps_type
+        , p.priority, p.ps_type, p.descriptp, p.dest_charset
+        from conf_target t
+        left join conf_ps_mapping m on m.tg_id = t.tg_id
+        left join conf_preset p on p.ps_id = m.ps_id
+        where t.tg_id = #{tg_id}
+    </select>
+
+    <update id="uptTargetStat" parameterType="ConfTarget">
+        /* uptTargetStat */
+        update conf_target set stat=#{stat}
+          , regdate = now()
+          where tg_id=#{tg_id}
+    </update>
+
+    <delete id="delConfPreset" parameterType="ConfPreset">
+        /* delConfPreset */
+        delete from conf_preset
+        where ps_id = #{ps_id}
+    </delete>
+
+    <update id="uptConfTarget" parameterType="ConfTarget">
+        /* uptTarget */
+        update conf_target set regdate = now()
+        <if test='title != null and title != ""'>
+            , title = #{title}
+        </if>
+        <if test='descript != null and descript != ""'>
+            , descript = #{descript}
+        </if>
+        <if test='tg_url != null and tg_url != ""'>
+            , tg_url = #{tg_url}
+        </if>
+        <if test='tg_url_param1 != null and tg_url_param1 != ""'>
+            , tg_url_param1 = #{tg_url_param1}
+        </if>
+        <if test='tg_url_param2 != null and tg_url_param2 != ""'>
+            , tg_url_param2 = #{tg_url_param2}
+        </if>
+        <if test='tg_url_param3 != null and tg_url_param3 != ""'>
+            , tg_url_param3 = #{tg_url_param3}
+        </if>
+        <if test='regid != null and regid != ""'>
+            , regid = #{regid}
+        </if>
+        <if test='param1 != null and param1 != ""'>
+            , param1 = #{param1}
+        </if>
+        <if test='stat != null and stat != ""'>
+            , stat = #{stat}
+        </if>
+        <if test='fail_count1 != null and fail_count1 != ""'>
+            , fail_count1 = #{fail_count1}
+        </if>
+        <if test='fail_count2 != null and fail_count2 != ""'>
+            , fail_count2 = #{fail_count2}
+        </if>
+        where tg_id=#{tg_id}
+    </update>
+
+    <delete id="delConfTarget" parameterType="ConfTarget">
+        /* delTarget */
+        delete from conf_target where tg_id=#{tg_id}
+    </delete>
+
+    <insert id="insConfTarget" parameterType="ConfTarget"
+            useGeneratedKeys="true" keyProperty="tg_id">
+        /* insConfTarget */
+        insert into conf_target
+        (title, descript, tg_url, tg_url_param1, tg_url_param2, tg_url_param3
+        , regdate, regid
+        , param1, param2, param3, param4, param5
+        , stat, is_fail, is_limit, is_manual, content_min1, content_max1
+        , content_min2, content_max2, fail_count1, fail_count2)
+        VALUES
+        (#{title}, #{descript}, #{tg_url}, #{tg_url_param1}, #{tg_url_param2}, #{tg_url_param3}
+        , now(), #{regid}
+        , #{param1}, #{param2}, #{param3}, #{param4}, #{param5}
+        , #{stat}, #{is_fail}, #{is_limit}, #{is_manual}, #{content_min1}, #{content_max1}
+        , #{content_min2}, #{content_max2}, #{fail_count1}, #{fail_count2})
+    </insert>
+
+
+</mapper>

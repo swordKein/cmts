@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>OllehTV Meta Extended</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script th:src="@{/js/admin.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+	<link rel="stylesheet" th:href="@{/css/common.css}" />
+</head>
+<body >
+
+	<nav class="navbar navbar-inverse">
+		<div class="container" style="width:100%">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">OllehTV Meta</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/admin/items/list">Items</a></li>
+					<li><a href="/admin/movie_cine21/list">Cine21</a></li>
+					<li class="active"><a href="/admin/properties/list">Properties</a></li>
+					<li><a href="/admin/dic/filter/list">Dictionary</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container1" style="margin-left:20px; margin-top:20px;">
+
+		<div class="starter-template">
+			<h1><span class="label label-default">수집 설정 리스트</span></h1>
+		</div>
+		<br/>
+
+		<div class="table-responsive1">
+			<table id="targetListTable" class="table" border="1" style="position:absolute; overflow:auto;">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th>제목</th>
+					<th>설명</th>
+					<th>URL</th>
+					<th>URL_PARAM</th>
+					<th>검색어</th>
+					<th>일시</th>
+					<th>등록</th>
+					<th>상태</th>
+					<th>1차 cnt</th>
+					<!--<th>2차 cnt</th>-->
+					<th>&nbsp;</th>
+					<th>세부설정</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="tg : ${propertiesList}">
+					<td width="100px">
+						<span th:text="${tg.tg_id}"></span>
+					</td>
+					<td width="100px">
+						<span th:id="'tgTitle'+${tg.tg_id}" th:text="${tg.title}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgTitleInput'+${tg.tg_id}" th:value="${tg.title}" style="width:100px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px">
+						<span th:text="${tg.descript}" th:id="'tgDescript'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgDescriptInput'+${tg.tg_id}" th:value="${tg.descript}" style="width:100px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px" th:switch="${tg.tg_url}">
+						<span th:case="GOOGLE_SEARCH_IMDB" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							th:text="${tg.tg_url} + ' ( https://www.google.co.kr/search?q= )'"></span>
+						<span th:case="NAVER_BLOG" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url} + ' ( ' + ${naverblog_url} +' ) '"></span>
+						<span th:case="DAUM_NEWS" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url} + ' ( ' + ${daumnews_url} +' ) '"></span>
+						<span th:case="NAVER_NEWS" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url} + ' ( ' + ${navernews_url} +' ) '"></span>
+						<span th:case="NAVER_MOVIE" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url} + ' ( http://movie.naver.com ) '"></span>
+						<span th:case="DAUM_MOVIE" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url} + ' ( http://movie.daum.net ) '"></span>
+						<span th:case="*" th:id="'tgTg_url'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"
+							  th:text="${tg.tg_url}"></span>
+						<input th:id="'tgTg_urlInput'+${tg.tg_id}" th:value="${tg.tg_url}" style="width:100px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+
+					<td width="100px">
+						<span th:text="${tg.tg_url_param1}" th:id="'tgTg_url_param1'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgTg_url_param1Input'+${tg.tg_id}" th:value="${tg.tg_url_param1}" style="width:200px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px">
+						<span th:text="${tg.param1}" th:id="'tgParam1'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgParam1Input'+${tg.tg_id}" th:value="${tg.param1}" style="width:200px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px">
+						<span th:text="${tg.regdate}"></span>
+					</td>
+					<td width="100px">
+						<span th:text="${tg.regid}" th:id="'tgRegid'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgRegidInput'+${tg.tg_id}" th:value="${tg.regid}" style="width:50px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px">
+						<span th:text="${tg.stat}" th:id="'tgStat'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgStatInput'+${tg.tg_id}" th:value="${tg.stat}" style="width:20px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<td width="100px">
+						<span th:text="${tg.fail_count1}" th:id="'tgFail_count1'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgFail_count1Input'+${tg.tg_id}" th:value="${tg.fail_count1}" style="width:50px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					<!--
+					<td width="100px">
+						<span th:text="${tg.fail_count2}" th:id="'tgFail_count2'+${tg.tg_id}" th:class="'lables'+${tg.tg_id}"></span>
+						<input th:id="'tgFail_count2Input'+${tg.tg_id}" th:value="${tg.fail_count2}" style="width:50px;"
+							   th:class="'initHide inputes'+${tg.tg_id}" />
+					</td>
+					-->
+					<td width="100px">
+						<a href="#" th:onclick="'editTarget('+${tg.tg_id}+');'">
+							<i th:class="'glyphicon glyphicon-cog iconBefore'+${tg.tg_id}"></i>
+						</a>
+						<a href="#" th:onclick="'removeTarget('+${tg.tg_id}+');'">
+							<i th:class="'glyphicon glyphicon-trash iconBefore'+${tg.tg_id}"></i>
+						</a>
+						<br/>
+						<a href="#" th:onclick="'editSaveTarget('+${tg.tg_id}+');'">
+							<i th:class="'glyphicon glyphicon-ok initHide iconAfter'+${tg.tg_id}"></i>
+						</a>
+						<a href="#" th:onclick="'cancelEditTarget('+${tg.tg_id}+');'">
+							<i th:class="'glyphicon glyphicon-remove initHide iconAfter'+${tg.tg_id}"></i>
+						</a>
+					</td>
+					<td width="400px" id="tdPresetList">
+						<table th:id="'presetListTable'+${tg.tg_id}" class="table" border="1">
+							<thead>
+							<tr>
+								<th>세부 ID</th>
+								<th>태그</th>
+								<th>설명</th>
+								<th>저장 필드명</th>
+								<th>캐릭터셋</th>
+								<th>구분코드</th>
+								<th>&nbsp;</th>
+							</tr>
+							</thead>
+							<tr th:each="ps : ${tg.presetList}">
+								<td width="100px">
+									<span th:text="${ps.ps_id}"></span>
+								</td>
+								<td width="100px">
+									<span th:text="${ps.ps_tag}" th:id="'psPs_tag'+${ps.ps_id}" th:class="'plables'+${ps.ps_id}"></span>
+									<input th:id="'psPs_tagInput'+${ps.ps_id}" th:value="${ps.ps_tag}" style="width:150px;"
+										   th:class="'initHide pinputes'+${ps.ps_id}" />
+								</td>
+								<td width="100px">
+									<span th:text="${ps.descriptp}" th:id="'psDescriptp'+${ps.ps_id}" th:class="'plables'+${ps.ps_id}"></span>
+									<input th:id="'psDescriptpInput'+${ps.ps_id}" th:value="${ps.descriptp}" style="width:200px;"
+										   th:class="'initHide pinputes'+${ps.ps_id}" />
+
+								</td>
+								<td width="100px">
+									<span th:text="${ps.dest_field}" th:id="'psDest_field'+${ps.ps_id}" th:class="'plables'+${ps.ps_id}"></span>
+									<input th:id="'psDest_fieldInput'+${ps.ps_id}" th:value="${ps.dest_field}" style="width:150px;"
+										   th:class="'initHide pinputes'+${ps.ps_id}" />
+
+								</td>
+								<td width="100px">
+									<span th:text="${ps.dest_charset}" th:id="'psDest_charset'+${ps.ps_id}" th:class="'plables'+${ps.ps_id}"></span>
+									<input th:id="'psDest_charsetInput'+${ps.ps_id}" th:value="${ps.dest_charset}" style="width:100px;"
+										   th:class="'initHide pinputes'+${ps.ps_id}" />
+
+								</td>
+								<td width="100px">
+									<span th:text="${ps.ps_type}" th:id="'psPs_type'+${ps.ps_id}" th:class="'plables'+${ps.ps_id}"></span>
+									<input th:id="'psPs_typeInput'+${ps.ps_id}" th:value="${ps.ps_type}" style="width:100px;"
+										   th:class="'initHide pinputes'+${ps.ps_id}" />
+
+								</td>
+								<td width="100px">
+									<a th:href="'#psPs_tag'+${ps.ps_id}" th:onclick="'editPreset('+${ps.ps_id}+');'">
+										<i th:class="'glyphicon glyphicon-cog piconBefore'+${ps.ps_id}"></i>
+									</a>
+									<a th:href="'#psPs_tag'+${ps.ps_id}" th:onclick="'removePreset('+${ps.ps_id}+');'">
+										<i th:class="'glyphicon glyphicon-trash piconBefore'+${ps.ps_id}"></i>
+									</a>
+									<br/>
+									<a th:href="'#psPs_tag'+${ps.ps_id}" th:onclick="'editSavePreset('+${ps.ps_id}+');'">
+										<i th:class="'glyphicon glyphicon-ok initHide piconAfter'+${ps.ps_id}"></i>
+									</a>
+									<a th:href="'#psPs_tag'+${ps.ps_id}" th:onclick="'cancelEditPreset('+${ps.ps_id}+');'">
+										<i th:class="'glyphicon glyphicon-remove initHide piconAfter'+${ps.ps_id}"></i>
+									</a>
+								</td>
+							</tr>
+						</table>
+					</td>
+
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

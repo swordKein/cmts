@@ -1,0 +1,17 @@
+#VM OPTION : -Dspring.profiles.active=prod
+spring:
+    view:
+        prefix: /WEB-INF/jsp/
+        suffix: .jsp
+
+welcome.message: Hello spring-boot
+
+logging:
+  file: e:/logs/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{0} : %msg%n"
+  level:
+    org.springframework.web: WARN
+    guru.springframework.controllers: WARN
+    org.hibernate: WARN
+    kr.kein: INFO

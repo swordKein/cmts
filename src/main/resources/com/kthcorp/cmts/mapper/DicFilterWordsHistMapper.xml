@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicFilterWordsHistMapper">
+
+    <select id="getDicFilterWordsHist" resultType="DicFilterWordsHist">
+        /* getDicFilterWordsHist */
+        select
+          hidx, type, dic_idx, regdate, regid, action, action_id
+        from dic_filter_words_hist
+    </select>
+
+    <insert id="insDicFilterWordsHist" parameterType="DicFilterWordsHist" useGeneratedKeys="true" keyProperty="hidx">
+        /* insDicFilterWordsHist */
+        insert into dic_filter_words_hist (type, dic_idx, regdate, regid, action, action_id)
+        values (#{type}, #{dic_idx}, now() , #{regid}, #{action}, #{action_id})
+    </insert>
+
+</mapper>

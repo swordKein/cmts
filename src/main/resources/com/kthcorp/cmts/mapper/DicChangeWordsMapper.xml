@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicChangeWordsMapper">
+
+    <select id="getDicChangeWords" resultType="DicChangeWords">
+        /* getDicChangeWords */
+        select
+          idx, word, wordto, freq, regdate, regid
+        from dic_change_words
+    </select>
+
+    <select id="getDicChangeWordsPaging" resultType="DicChangeWords">
+        /* getDicChangeWordsPaging */
+        select
+        idx, word, wordto, freq, regdate, regid
+        from dic_change_words
+        order by regdate DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <insert id="insDicChangeWords" parameterType="DicChangeWords" useGeneratedKeys="true" keyProperty="idx">
+        /* insDicChangeWords */
+        insert into dic_change_words (word, wordto, freq, regdate, regid)
+        values (#{word}, #{wordto}, #{freq}, now() , #{regid})
+    </insert>
+
+    <update id="uptDicChangeWords" parameterType="DicChangeWords">
+        /* uptDicChangeWords */
+        update dic_change_words
+          set
+            regdate = now()
+            ,regid = #{regid}
+            <if test='word != null and word != ""'>
+              , word = #{word}
+            </if>
+            <if test='wordto != null and wordto != ""'>
+                , wordto = #{wordto}
+            </if>
+            <if test='freq != null and freq > 0'>
+              , freq = #{freq}
+            </if>
+          where idx = #{idx}
+    </update>
+
+    <update id="uptDicChangeWordsByWord" parameterType="DicChangeWords">
+        /* uptDicChangeWordsByWord */
+        update dic_change_words
+        set
+        regdate = now()
+        ,regid = #{regid}
+        <if test='word != null and word != ""'>
+            , word = #{word}
+        </if>
+        <if test='wordto != null and wordto != ""'>
+            , wordto = #{wordto}
+        </if>
+        <if test='freq != null and freq > 0'>
+            , freq = #{freq}
+        </if>
+        where word = #{oldword}
+    </update>
+
+    <delete id="delDicChangeWordsByWord" parameterType="DicChangeWords">
+        /* delDicChangeWordsByWord */
+        delete from dic_change_words
+        where word = #{oldword}
+    </delete>
+
+    <select id="countItems" resultType="Integer">
+        /* countItems */
+        select count(*)
+        from dic_change_words
+    </select>
+
+</mapper>

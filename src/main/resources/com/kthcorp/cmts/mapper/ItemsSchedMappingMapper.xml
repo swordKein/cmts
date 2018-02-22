@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ItemsSchedMappingMapper">
+
+    <insert id="insItemsSchedMapping" parameterType="ItemsSchedMapping">
+        /* insItemsSchedMapping */
+        insert into items_sched_mapping
+          (idx, sc_id)
+        values
+          (#{idx}, #{sc_id})
+    </insert>
+
+    <delete id="delItemsSchedMapping" parameterType="ItemsSchedMapping">
+        /* delItemsSchedMapping */
+        delete from items_sched_mapping where idx = #{idx}
+    </delete>
+
+    <select id="getItemIdxByScid" parameterType="ItemsSchedMapping" resultType="java.lang.Integer">
+        /* getItemIdxByScid */
+        select idx from items_sched_mapping
+        where sc_id = #{sc_id}
+        limit 1;
+    </select>
+</mapper>

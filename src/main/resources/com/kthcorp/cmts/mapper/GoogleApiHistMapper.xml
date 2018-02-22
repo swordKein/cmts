@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.GoogleApiHistMapper">
+
+    <select id="getGoogleApiHist" resultType="GoogleApiHist">
+        /* getGoogleApiHist */
+        select
+          hidx, type, src_lang, src_txt, src_size, target_lang, target_txt,
+          regmonth, regdate, regid, action, action_id
+        from google_api_hist
+        order by regdate desc limit 100
+    </select>
+
+    <select id="getGoogleTransSumSizeByMonth" resultType="GoogleApiHist">
+        /* getGoogleTransSumSizeByMonth */
+        select sum(src_size) as src_size
+        from google_api_hist
+        where regmonth = #{regmonth}
+    </select>
+
+    <insert id="insGoogleApiHist" parameterType="GoogleApiHist" useGeneratedKeys="true" keyProperty="hidx">
+        /* insGoogleApiHist */
+        insert into google_api_hist (
+          type, src_lang, src_txt, src_size, target_lang, target_txt,
+          regmonth, regdate, regid, action, action_id
+        )
+        values (
+          #{type}, #{src_lang}, #{src_txt}, #{src_size}, #{target_lang}, #{target_txt},
+          #{regmonth}, now() , #{regid}, #{action}, #{action_id}
+        )
+    </insert>
+
+</mapper>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.CcubeMapper">
+
+    <select id="get50ActiveCcubeContents" resultType="CcubeContent">
+        /* get50ActiveCcubeContents */
+        select
+        MASTER_CONTENT_ID,
+        CONTENT_ID,
+        PURITY_TITLE,
+        CONTENT_TITLE,
+        ENG_TITLE,
+        DIRECTOR,
+        YEAR,
+        ACTORS_DISPLAY,
+        POSTER_URL,
+        COUNTRY_OF_ORIGIN,
+        SAD_CTGRY_ID,
+        SAD_CTGRY_NM,
+        TITLE_BRIEF,
+        DOMESTIC_RELEASE_DATE,
+        KT_RATING,
+        RUNNING_TIME,
+        DETAIL_GENRE_DISPLAY_CD,
+        DETAIL_GENRE_DISPLAY_NM,
+        KMRB_ID,
+        KMRB_TITLE_NM,
+        KMRB_YEAR,
+        KMRB_DOMESTIC_RELEASE_DATE,
+        KMRB_COUNTRY_OF_ORIGIN,
+        KMRB_DIRECTOR,
+        KMRB_DIRECTOR_ENG,
+        KMRB_ACTORS_DISPLAY,
+        KMRB_ACTORS_DISPLAY_ENG,
+        REGDATE,
+        STAT
+        from ccube_contents
+        where stat = 'Y'
+        order by regdate ASC
+        limit 50
+    </select>
+
+    <update id="uptCcubeContentStat" parameterType="CcubeContent">
+        /* uptCcubeContentStat */
+        update ccube_contents set stat = #{stat}
+        where CONTENT_ID = #{content_id}
+    </update>
+
+    <select id="getCcubeContentByCid" parameterType="CcubeContent" resultType="CcubeContent">
+        /* getCcubeContentByCid */
+        select
+        MASTER_CONTENT_ID,
+        CONTENT_ID,
+        PURITY_TITLE,
+        CONTENT_TITLE,
+        ENG_TITLE,
+        DIRECTOR,
+        YEAR,
+        ACTORS_DISPLAY,
+        POSTER_URL,
+        COUNTRY_OF_ORIGIN,
+        SAD_CTGRY_ID,
+        SAD_CTGRY_NM,
+        TITLE_BRIEF,
+        DOMESTIC_RELEASE_DATE,
+        KT_RATING,
+        RUNNING_TIME,
+        DETAIL_GENRE_DISPLAY_CD,
+        DETAIL_GENRE_DISPLAY_NM,
+        KMRB_ID,
+        KMRB_TITLE_NM,
+        KMRB_YEAR,
+        KMRB_DOMESTIC_RELEASE_DATE,
+        KMRB_COUNTRY_OF_ORIGIN,
+        KMRB_DIRECTOR,
+        KMRB_DIRECTOR_ENG,
+        KMRB_ACTORS_DISPLAY,
+        KMRB_ACTORS_DISPLAY_ENG,
+        REGDATE,
+        STAT
+        from ccube_contents
+        where CONTENT_ID = #{content_id}
+        order by regdate DESC
+        limit 1
+    </select>
+
+    <select id="get50ActiveCcubeSeries" resultType="CcubeSeries">
+        /* get50ActiveCcubeSeries */
+        select
+        SERIES_ID,
+        SERIES_NM,
+        PURITY_TITLE,
+        ENG_TITLE,
+        DIRECTOR,
+        YEAR,
+        ACTORS_DISPLAY,
+        POSTER_URL,
+        COUNTRY_OF_ORIGIN,
+        SAD_CTGRY_ID,
+        SAD_CTGRY_NM,
+        KT_RATING,
+        DETAIL_GENRE_DISPLAY_CD,
+        DETAIL_GENRE_DISPLAY_NM,
+        REGDATE,
+        STAT
+        from ccube_series
+        where STAT = 'Y'
+        order by regdate ASC
+        limit 50
+    </select>
+
+    <update id="uptCcubeSeriesStat" parameterType="CcubeSeries">
+        /* uptCcubeSeriesStat */
+        update ccube_series set stat = #{stat}
+        where SERIES_ID = #{series_id}
+    </update>
+
+    <select id="getCcubeSeriesById" parameterType="CcubeSeries" resultType="CcubeSeries">
+        /* getCcubeSeriesById */
+        select
+        SERIES_ID,
+        SERIES_NM,
+        PURITY_TITLE,
+        ENG_TITLE,
+        DIRECTOR,
+        YEAR,
+        ACTORS_DISPLAY,
+        POSTER_URL,
+        COUNTRY_OF_ORIGIN,
+        SAD_CTGRY_ID,
+        SAD_CTGRY_NM,
+        KT_RATING,
+        DETAIL_GENRE_DISPLAY_CD,
+        DETAIL_GENRE_DISPLAY_NM,
+        REGDATE,
+        STAT
+        from ccube_series
+        where SERIES_ID = #{series_id}
+        order by regdate DESC
+        limit 1
+    </select>
+
+    <select id="getCcubeItemIdx" parameterType="CcubeKeys" resultType="java.lang.Integer">
+        /* getCcubeItemIdx  */
+        select ITEMIDX from ccube_keys
+        where
+        PURITY_TITLE = #{purity_title}
+        <if test='content_id != null and content_id != ""'>
+            OR CONTENT_ID = #{content_id}
+        </if>
+        <if test='kmrb_id != null and kmrb_id != ""'>
+            OR KMRB_ID = #{kmrb_id}
+        </if>
+        <if test='master_content_id != null and master_content_id != ""'>
+            OR MASTER_CONTENT_ID = #{master_content_id}
+        </if>
+        <if test='series_id != null and series_id != ""'>
+            OR SERIES_ID = #{series_id}
+        </if>
+        order by regdate DESC
+        limit 1
+    </select>
+
+    <select id="getCcubeKeysIdx" parameterType="CcubeKeys" resultType="java.lang.Integer">
+        /* getCcubeKeysIdx  */
+        select CIDX from ccube_keys
+        where
+        PURITY_TITLE = #{purity_title}
+        <if test='content_id != null and content_id != ""'>
+            OR CONTENT_ID = #{content_id}
+        </if>
+        <if test='kmrb_id != null and kmrb_id != ""'>
+            OR KMRB_ID = #{kmrb_id}
+        </if>
+        <if test='master_content_id != null and master_content_id != ""'>
+            OR MASTER_CONTENT_ID = #{master_content_id}
+        </if>
+        <if test='series_id != null and series_id != ""'>
+            OR SERIES_ID = #{series_id}
+        </if>
+        order by regdate DESC
+        limit 1
+    </select>
+
+    <insert id="insCcubeKeys" parameterType="CcubeKeys" useGeneratedKeys="true" keyProperty="cidx">
+        /* insCcubeKey */
+        insert into ccube_keys (master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx,regdate)
+        values (#{master_content_id}, #{content_id}, #{series_id}, #{purity_title}, #{kmrb_id}, #{itemidx}, now());
+
+    </insert>
+
+    <select id="getCcubeKeys" parameterType="java.lang.Integer" resultType="CcubeKeys">
+        /* getCcubeKeys  */
+        select cidx, master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx, regdate
+        from ccube_keys
+        where itemidx = #{idx}
+        order by regdate desc
+        limit 1
+    </select>
+
+    <insert id="insCcubeContent" parameterType="CcubeContent">
+        /* insCcubeContent */
+        insert into ccube_contents (
+            MASTER_CONTENT_ID, CONTENT_ID, PURITY_TITLE, CONTENT_TITLE, ENG_TITLE, DIRECTOR, YEAR,
+            ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, TITLE_BRIEF, DOMESTIC_RELEASE_DATE,
+            KT_RATING, RUNNING_TIME, DETAIL_GENRE_DISPLAY_CD, DETAIL_GENRE_DISPLAY_NM, KMRB_ID, KMRB_TITLE_NM, KMRB_YEAR,
+            KMRB_DOMESTIC_RELEASE_DATE, KMRB_COUNTRY_OF_ORIGIN, KMRB_DIRECTOR, KMRB_DIRECTOR_ENG, KMRB_ACTORS_DISPLAY, KMRB_ACTORS_DISPLAY_ENG,
+            REGDATE,
+            STAT
+            ) values (
+            #{master_content_id}, #{content_id}, #{purity_title}, #{content_title}, #{eng_title}, #{director}, #{year},
+            #{actors_display}, #{poster_url}, #{country_of_origin}, #{sad_ctgry_id}, #{sad_ctgry_nm}, #{title_brief}, #{domestic_release_date},
+            #{kt_rating}, #{running_time}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, #{kmrb_id}, #{kmrb_title_nm}, #{kmrb_year},
+            #{kmrb_domestic_release_date}, #{kmrb_country_of_origin}, #{kmrb_director}, #{kmrb_director_eng}, #{kmrb_actors_display}, #{kmrb_actors_display_eng},
+            now(),
+            'Y'
+            )
+            ON DUPLICATE KEY UPDATE
+            purity_title=#{purity_title}, content_title=#{content_title}, eng_title=#{eng_title}, director=#{director}, year=#{year},
+            actors_display=#{actors_display}, poster_url=#{poster_url}, country_of_origin=#{country_of_origin}, sad_ctgry_id=#{sad_ctgry_id}, sad_ctgry_nm=#{sad_ctgry_id},
+            title_brief=#{title_brief}, domestic_release_date=#{domestic_release_date},
+            kt_rating=#{kt_rating}, running_time=#{running_time}, detail_genre_display_cd=#{detail_genre_display_cd},
+            kmrb_id=#{kmrb_id}, kmrb_title_nm=#{kmrb_title_nm}, kmrb_year=#{kmrb_year},
+            kmrb_domestic_release_date=#{kmrb_domestic_release_date}, kmrb_country_of_origin=#{kmrb_country_of_origin}, kmrb_director=#{kmrb_director},
+            kmrb_director_eng=#{kmrb_director_eng}, kmrb_actors_display=#{kmrb_actors_display}, kmrb_actors_display_eng=#{kmrb_actors_display_eng},
+            regdate=now()
+
+    </insert>
+
+
+    <select id="getCcubeContentByYjid" resultType="CcubeContent">
+        /* getCcubeContentByYjid */
+
+        select a.yj_id as kmrb_id, a.regdate
+        , a.content_id, a.purity_title
+        from (
+            select yj.yj_id
+            #, substr(yo.regdate, 1,10) as regdate
+            , yo.regdate
+            , cc.content_id, cc.purity_title
+            from yj_items yj
+            inner join yj_items_out yo on yo.yj_id = yj.yj_id
+            inner join ccube_contents cc on cc.kmrb_id = yj.yj_id  and cc.kmrb_id != ''
+            #order by yo.regdate asc
+        ) a order by date(a.regdate) asc
+    </select>
+
+    <select id="getCcubeContentByYjidNot" resultType="CcubeContent">
+        /* getCcubeContentByYjidNot */
+
+        select a.yj_id as kmrb_id, null as regdate
+        , a.content_id, a.purity_title
+        from (
+            select yj.yj_id, null as regdate
+            , cc.content_id, cc.purity_title
+            from yj_items yj
+            inner join ccube_contents cc on cc.kmrb_id = yj.yj_id
+            where yj.yj_id not in ( select yj_id from yj_items_out )
+        ) a
+    </select>
+</mapper>

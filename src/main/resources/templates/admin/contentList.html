@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>OllehTV Meta Extended</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script th:src="@{/js/admin.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">OllehTV Meta</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/admin/items/list">Items</a></li>
+					<li><a href="/admin/movie_cine21/list">Cine21</a></li>
+					<li><a href="/admin/properties/list">Properties</a></li>
+					<li><a href="/admin/dic/filter/list">Dictionary</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="starter-template">
+			<h2><span class="label label-default" th:text="'스케쥴 내역확인 - 스케쥴 ID: '+${sc_id}"></span></h2>
+		</div>
+		<br/>
+		<div class="table-responsive">
+			<table id="targetListTable" class="table" border="1">
+				<thead>
+				<tr>
+					<th>스케쥴 ID</th>
+					<th>이력 ID</th>
+					<th>회차 SEQ</th>
+					<th>타겟 ID</th>
+					<th>타겟 항목</th>
+					<th>등록일시</th>
+					<th>컨텐츠</th>
+					<th>SUMMARY</th>
+				</tr>
+				<tr th:each="content : ${contentList}">
+					<td width="50px"><span th:text="${content.sc_id}"></span></td>
+					<td width="50px"><span th:text="${content.stmh_id}"></span></td>
+					<td width="50px"><span th:text="${content.tcnt}"></span></td>
+					<td width="50px"><span th:text="${content.tg_id}"></span></td>
+					<td width="100px"><span th:text="${content.title}"></span></td>
+					<td width="100px"><span th:text="${content.regdate}"></span></td>
+					<td width="400px">
+						<textarea width="400px" class="form-control" id="contentBox" rows="10"
+								  th:text="${content.content}"></textarea>
+					</td>
+					<td width="400px">
+						<textarea width="400px" class="form-control" id="summaryBox" rows="10"
+								  th:text="${content.summary}"></textarea>
+					</td>
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.SchedTriggerHistMapper">
+
+    <resultMap id="SchedTriggerHist" type="SchedTriggerHist">
+        <id property="sch_id" column="sch_id" />
+        <result property="sc_id" column="sc_id" />
+        <result property="type" column="type" />
+        <result property="tcnt" column="tcnt" />
+        <result property="regdate" column="regdate" />
+        <result property="stat" column="stat" />
+        <result property="rt_code" column="rt_code" />
+        <result property="rt_msg" column="rt_msg" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="summary" column="summary" />
+        <collection property="schedTrigger" column="sc_id" ofType="SchedTrigger"
+                    javaType="SchedTrigger" resultMap="SchedTrigger"/>
+    </resultMap>
+
+    <resultMap id="SchedTrigger" type="SchedTrigger">
+        <id property="sc_id" column="sc_id" />
+        <result property="type" column="type" />
+        <result property="descript" column="descript" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="progs" column="progs" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+    </resultMap>
+
+    <select id="getSchedTriggerHistList" resultMap="SchedTriggerHist" parameterType="SchedTriggerHist">
+        /* getSchedTriggerHistList */
+        select
+          h.sch_id, h.sc_id, h.tcnt, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
+          , t.sc_id, t.type, t.descript, t.regdate, t.regid, t.stat
+          , t.param1, t.param2, t.param3, t.param4, t.param5
+        from sched_trigger_hist h
+        left join sched_trigger t on h.sc_id = t.sc_id
+        <where>
+            <if test='sc_id > 0'>
+                h.sc_id = #{sc_id}
+            </if>
+        </where>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+
+    <select id="getSchedTriggerHistByStatList" resultMap="SchedTriggerHist" parameterType="SchedTriggerHist">
+        /* getSchedTriggerHistByStatList */
+        select
+        h.sch_id, h.sc_id, h.tcnt, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
+        , t.sc_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        from sched_trigger_hist h
+        left join sched_trigger t on h.sc_id = t.sc_id
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test='stat != ""'>
+                h.stat = #{stat}
+            </if>
+            <if test='sc_id > 0'>
+                AND h.sc_id = #{sc_id}
+            </if>
+        </trim>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+    <insert id="insSchedTriggerHist" parameterType="SchedTriggerHist" useGeneratedKeys="true" keyProperty="sch_id">
+        /* insSchedTriggerHist */
+        insert into sched_trigger_hist (sc_id, tcnt, type, regdate, stat, rt_code, rt_msg, summary)
+        values (#{sc_id}, #{tcnt}, #{type}, NOW(), #{stat}, #{rt_code}, #{rt_msg}, #{summary})
+    </insert>
+
+</mapper>

@@ -1,0 +1,28 @@
+#VM OPTION : -Dspring.profiles.active=dev
+spring:
+    view:
+        prefix: /WEB-INF/jsp/
+        suffix: .jsp
+    output:
+        ansi:
+            enabled: ALWAYS
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        url: jdbc:mariadb://210.122.38.85:3306/daisy_web
+        username: daisy
+        password: daisy!
+
+
+welcome.message: Hello spring-boot
+
+
+logging:
+  level:
+    #ROOT: DEBUG
+    org.springframework.web: ERROR
+    kr.kein: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    #file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: e:/logs/dev.log

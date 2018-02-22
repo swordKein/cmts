@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ConfPresetOrigMapper">
+
+    <insert id="insertConfPresetOrig" parameterType="ConfPresetOrig"
+            useGeneratedKeys="true" keyProperty="ps_id">
+        /* insertConfPreset */
+        insert into conf_preset_ORIG
+          (priority, ps_tag, descriptp, dest_field, dest_charset, ps_type, regdate, regid, ps_add_url)
+          VALUES
+          (#{priority}, #{ps_tag}, #{descriptp}, #{dest_field}, #{dest_charset}, #{ps_type}, now(), #{regid}, #{ps_add_url})
+    </insert>
+
+</mapper>

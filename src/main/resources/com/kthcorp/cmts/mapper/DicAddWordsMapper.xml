@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicAddWordsMapper">
+
+    <select id="getDicAddWords" resultType="DicAddWords">
+        /* getDicAddWords */
+        select
+          idx, word, freq, regdate, regid
+        from dic_add_words
+    </select>
+
+    <select id="getDicAddWordsPaging" resultType="DicAddWords">
+        /* getDicAddWordsPaging */
+        select
+        idx, word, freq, regdate, regid
+        from dic_add_words
+        order by regdate DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <insert id="insDicAddWords" parameterType="DicAddWords" useGeneratedKeys="true" keyProperty="idx">
+        /* insDicAddWords */
+        insert into dic_add_words (word, freq, regdate, regid)
+        values (#{word}, #{freq}, now() , #{regid})
+    </insert>
+
+    <update id="uptDicAddWords" parameterType="DicAddWords">
+        /* uptDicAddWords */
+        update dic_add_words
+          set
+            regdate = now()
+            ,regid = #{regid}
+            <if test='word != null and word != ""'>
+              , word = #{word}
+            </if>
+            <if test='freq != null and freq > 0'>
+              , freq = #{freq}
+            </if>
+          where idx = #{idx}
+    </update>
+
+    <update id="uptDicAddWordsByWord" parameterType="DicAddWords">
+        /* uptDicAddWordsByWord */
+        update dic_add_words
+        set
+        regdate = now()
+        ,regid = #{regid}
+        <if test='word != null and word != ""'>
+            , word = #{word}
+        </if>
+        <if test='freq != null and freq > 0'>
+            , freq = #{freq}
+        </if>
+        where word = #{oldword}
+    </update>
+
+    <delete id="delDicAddWordsByWord" parameterType="DicAddWords">
+        /* delDicAddWordsByWord */
+        delete from dic_add_words
+        where word = #{oldword}
+    </delete>
+
+    <select id="countItems" resultType="Integer">
+        /* countItems */
+        select count(*)
+        from dic_add_words
+    </select>
+
+</mapper>

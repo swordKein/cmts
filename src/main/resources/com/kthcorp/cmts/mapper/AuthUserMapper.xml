@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.AuthUserMapper">
+
+
+    <select id="getAuthUsers" resultType="AuthUser">
+        /* getAuthUsers */
+        select
+          idx, userid, usergrant, username, usercompany, regdate, regid, stat
+        from auth_user
+        /* where stat != 'Y' */
+        order by regdate desc
+    </select>
+
+    <select id="getAuthUserById" resultType="AuthUser">
+        /* getAuthUserById */
+        select
+        idx, userid, usergrant, username, usercompany, regdate, regid, stat
+        from auth_user
+        where userid = #{userid}
+        order by regdate DESC limit 1
+    </select>
+
+    <insert id="insAuthUser" parameterType="AuthUser" useGeneratedKeys="true" keyProperty="idx">
+        /* insAuthUser */
+        insert into auth_user
+          (userid, usergrant, username, usercompany,
+          regdate, regid, stat)
+        values
+          (#{userid}, #{usergrant}, #{username}, #{usercompany},
+          now(), #{regid}, 'Y' )
+    </insert>
+
+    <update id="uptAuthUser" parameterType="AuthUser">
+        /* uptAuthUser */
+        update auth_user
+        set
+        regdate = now()
+        ,regid = #{regid}
+        <if test='usergrant != null and usergrant != ""'>
+            , usergrant = #{usergrant}
+        </if>
+        <if test='username != null and username != ""'>
+            , username = #{username}
+        </if>
+        <if test='usercompany != null and usercompany != ""'>
+            , usercompany = #{usercompany}
+        </if>
+        <if test='stat != null and stat != ""'>
+            , stat = #{stat}
+        </if>
+        where userid = #{userid}
+    </update>
+
+    <update id="delAuthUser" parameterType="AuthUser">
+        /* delAuthUser */
+        update auth_user
+        set
+        regdate = now()
+        ,regid = #{regid}
+        , stat = 'D'
+        where userid = #{userid}
+    </update>
+
+</mapper>

@@ -1,0 +1,354 @@
+#server.context-path: /cmts
+cmts:
+  property:
+    serverid: cmts_cm01
+    running_schedule: true
+    running_job_limit: 10
+    criteria_success_ratio: 0.7
+    crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
+    #crawl_api_url: http://127.0.0.1:8080/crawl/byprefix
+    ccube_sftp:
+      ip: 14.63.170.72
+      port: 22
+      user: daisy
+      passwd: daisy!
+      #workdir: /home/daisy/ccube_work
+      workdir: e:\\ccube_work
+      #downdir: /home/daisy/service/cmts
+      downdir: /home/daisy/service/cmts
+      downext: yml
+      #downext: xml
+      end_after_movedir: /home/daisy/service/cmts/done
+      uploaddir: /home/daisy/service/cmts/upload
+  admin:
+    page_size: 20
+  collector:
+    navermovie:
+      search_url: http://movie.naver.com/movie/search/result.nhn?section=movie&query=#searchTxt
+      reply_url: http://movie.naver.com/movie/bi/mi/pointWriteFormList.nhn?type=after
+      reply_paging_limit: 3
+      reply_limit_count: 100
+    daummovie:
+      #search_url: http://movie.daum.net/search/main?returnUrl=http%3A%2F%2Fmovie.daum.net%2Fmain%2Fnew&searchText=#movietitle#searchType=movie&page=1&sortType=acc
+      search_url: http://movie.daum.net/data/movie/search/v2/movie.json?size=10&start=1&searchText=#searchTxt
+      award_url: http://movie.daum.net/moviedb/award
+      magazine_url: http://movie.daum.net/data/movie/search/v2/magazine.json?size=20&start=1
+      magazine_limit_count: 100
+      magazine_suburl: http://magazine2.movie.daum.net/movie/
+    naverblog:
+      #search_url: http://section.blog.naver.com/sub/SearchBlog.nhn?type=post&term=period&option.orderBy=sim
+      search_url: http://search.naver.com/search.naver?where=post&dup_remove=1
+      post_url: http://blog.naver.com/PostView.nhn?blogId=
+      paging_limit: 10
+    daumblog:
+      search_url: http://search.daum.net/search?w=blog&m=board&f=section&SA=daumsec&DA=PGD&lpp=10&nil_src=blog
+      #search_url: http://search.daum.net/search?nil_suggest=btn&nil_ch=&rtupcoll=&w=blog&m=board&f=&lpp=10&DA=SBC&sug=&sq=&o=&sugo=
+      #search_url: http://search.daum.net/search?nil_suggest=btn&w=blog&m=board&lpp=10&DA=PGD
+      #search_url: http://m.search.daum.net/search?nil_suggest=btn&w=blog&m=board&lpp=10&DA=PGD
+      post_url: http://blog.daum.net/
+      paging_limit: 10
+    navernews:
+      search_url: http://search.naver.com/search.naver?where=news&dup_remove=1
+      paging_limit: 10
+    daumnews:
+      search_url: http://search.daum.net/search?w=news&DA=PGD&cluster=y
+      paging_limit: 10
+
+google:
+  api:
+    translate:
+      limit_month_count: 3000000
+
+threadpool:
+  core_pool_size: 1
+  max_pool_size: 5
+  keep_alive_seconds: 600
+
+spring:
+  timerName: cmtsTimer
+  devtools:
+    livereload:
+      enabled: true
+    freemarker:
+      cache: fase
+  #profiles:
+    #active: dev
+  #view:
+  #  prefix: /WEB-INF/jsp/
+  #  suffix: .jsp
+  #aop:
+  #  proxy-target-class: true
+  #mvc:static-path-pattern: /views/**
+
+welcome:
+  message: Hello spring-boot
+keys:
+  google:
+    key: AIzaSyCnCnGF6tD5uAFmGS9wHnqjhSX6AAdeHZ8
+    #cx: 013174910392294978256:4sbazqzp7d8
+
+mybatis:
+  typeAliasesPackage: com.kthcorp.cmts
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    lazyLoadingEnabled: true
+    aggressiveLazyLoading: false
+    mapUnderscoreToCamelCase: true
+    cacheEnabled: true
+    defaultExecuterType: REUSE
+
+org.quartz.scheduler.instanceName: com.kthcorp.cmts
+org.quartz.scheduler.instanceId: AUTO
+org.quartz.threadPool.threadCount: 400
+org.quartz.jobStore.class: org.quartz.simpl.RAMJobStore
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/daisy/ometa/debug.log
+  #file: e:/home/debug.log
+
+---
+spring:
+  profiles: local
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  static:
+    resource:
+      location: D:\\UPLOAD\\
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://localhost:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: daisy
+    password: daisy!
+  thymeleaf:
+    cache: false
+    check-template: false
+    check-template-location: false
+    content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    #prefix: /views/
+schedule :
+  jobs :
+    -
+      cronExpression : 0 */30 * * * ?
+      jobType : collectService
+    -
+      cronExpression : 0 */30 * * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 */30 * * * ?
+      jobType : analyzeService
+    -
+      cronExpression : 0 */30 * * * ?
+      jobType : itemsService
+    -
+      cronExpression : 0 */30 * * * ?
+      jobType : sftpService
+elasticsearch :
+  url : http://14.63.170.72:9200/
+  idx : seunjeon-idx
+  host : 14.63.170.72
+  port : 9200
+---
+spring:
+  profiles: dev
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  static:
+    resource:
+      location: /home/daisy/upload/
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: daisy
+    password: daisy!
+  thymeleaf:
+      cache: false
+      check-template: false
+      check-template-location: false
+      content-type: text/html
+      enabled: true
+      encoding: UTF-8
+      #prefix: /resources
+schedule :
+  jobs :
+    -
+      cronExpression : 0 * * * * ?
+      jobType : collectService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : analyzeService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : itemsService
+elasticsearch :
+  url : http://14.63.170.72:9200/
+  idx : seunjeon-idx
+  host : 14.63.170.72
+  port : 9200
+---
+spring:
+  profiles: dev_no_sched
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  static:
+    resource:
+      location: /home/daisy/upload/
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: daisy
+    password: daisy!
+  thymeleaf:
+      cache: false
+      check-template: false
+      check-template-location: false
+      content-type: text/html
+      enabled: true
+      encoding: UTF-8
+      #prefix: /resources
+schedule :
+  jobs :
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : collectService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : refineService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : analyzeService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : itemsService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
+elasticsearch :
+  url : http://14.63.170.72:9200/
+  idx : seunjeon-idx
+  host : 14.63.170.72
+  port : 9200
+---
+spring:
+  profiles: staging
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  static:
+    resource:
+      location: /home/daisy/upload/
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: cmts
+    password: daisy!
+  thymeleaf:
+      cache: false
+      check-template: false
+      check-template-location: false
+      content-type: text/html
+      enabled: true
+      encoding: UTF-8
+      #prefix: /resources
+schedule :
+  jobs :
+    -
+      cronExpression : 0 * * * * ?
+      jobType : collectService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : analyzeService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : itemsService
+elasticsearch :
+  url : http://14.63.170.72:9200/
+  idx : seunjeon-idx
+  host : 14.63.170.72
+  port : 9200
+---
+spring:
+  profiles: prod
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  static:
+    resource:
+      location: /home/daisy/upload/
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://14.63.170.72:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: daisy
+    password: daisy!
+schedule :
+  jobs :
+    -
+      cronExpression : 0 * * * * ?
+      jobType : collectService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : analyzeService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : itemsService
+elasticsearch :
+  url : http://14.63.170.72:9200/
+  idx : seunjeon-idx
+  host : 14.63.170.72
+  port : 9200
+
+###TMP
+  #datasource:
+  #  driver-class-name: org.postgresql.Driver
+  #  url: jdbc:postgresql://localhost:5432/testdb
+  #  username: test
+  #  password: test!

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.SchedTriggerMapper">
+
+
+    <resultMap id="SchedTrigger" type="SchedTrigger">
+        <id property="sc_id" column="sc_id" />
+        <result property="type" column="type" />
+        <result property="descript" column="descript" />
+        <result property="tcnt" column="tcnt" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="progs" column="progs" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+
+        <result property="parent_sc_id" column="parent_sc_id" />
+        <result property="itemIdx" column="itemIdx" />
+
+        <collection property="targetList" column="tg_id" ofType="ConfTarget"
+                    javaType="ArrayList" resultMap="ConfTarget"/>
+
+    </resultMap>
+
+    <resultMap id="ConfTarget" type="ConfTarget">
+        <id property="tg_id" column="tg_id" />
+        <result property="title" column="title" />
+        <result property="descript" column="descript" />
+        <result property="tg_url" column="tg_url" />
+        <result property="tg_url_param1" column="tg_url_param1" />
+        <result property="tg_url_param2" column="tg_url_param2" />
+        <result property="tg_url_param3" column="tg_url_param3" />
+        <result property="regdate" column="regdate" />
+        <result property="regid" column="regid" />
+        <result property="stat" column="stat" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="orderType" column="orderType" />
+        <result property="stattarget" column="stattarget" />
+
+        <result property="is_fail" column="is_fail" />
+        <result property="is_limit" column="is_limit" />
+        <result property="is_manual" column="is_manual" />
+        <result property="content_min1" column="content_min1" />
+        <result property="content_max1" column="content_max1" />
+        <result property="content_min2" column="content_min2" />
+        <result property="content_max2" column="content_max2" />
+        <result property="fail_count1" column="fail_count1" />
+        <result property="fail_count2" column="fail_count2" />
+
+        <result property="movietitle" column="movietitle" />
+        <result property="moviedirector" column="moviedirector" />
+        <result property="movieyear" column="movieyear" />
+    </resultMap>
+
+    <resultMap id="SchedTargetMapping" type="SchedTargetMapping">
+        <id property="sc_id" column="sc_id" />
+        <id property="tg_id" column="tg_id" />
+    </resultMap>
+
+    <select id="getSchedTriggerList" resultMap="SchedTrigger">
+        /* getSchedTriggerList */
+        select
+		  s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+          , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+		  , t.tg_id, t.title, t.descript
+          , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+          , t.regdate, t.regid, t.stat as stattarget
+          , t.param1, t.param2, t.param3, t.param4, t.param5
+          , s.parent_sc_id
+        from sched_trigger s
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        order by s.stat desc, s.regdate desc
+        limit 50
+    </select>
+
+    <select id="getSchedTriggerListById" resultMap="SchedTrigger" parameterType="int">
+        /* getSchedTriggerList */
+        select
+        s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , s.parent_sc_id
+        from sched_trigger s
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        where s.sc_id = #{sc_id}
+    </select>
+
+    <select id="getSchedTriggerListByItemIdx" resultMap="SchedTrigger" parameterType="int">
+        /* getSchedTriggerList */
+        select
+        s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+        , s.tcnt
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , s.parent_sc_id
+        from items_sched_mapping ism
+        inner join sched_trigger s on s.sc_id = ism.sc_id
+        #and s.stat = 'Y'
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        where ism.idx = #{idx}
+        order by s.regdate asc
+        limit 50
+    </select>
+
+    <select id="getSchedTriggerById" resultMap="SchedTrigger" parameterType="int">
+        /* getSchedTriggerById */
+        select
+        s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , s.parent_sc_id
+		, it.title movietitle
+        , it.director moviedirector
+        , it.year movieyear
+        from sched_trigger s
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        inner join items_sched_mapping ism on ism.sc_id = s.sc_id
+        inner join items it on it.idx = ism.idx
+        left outer join conf_target t on t.tg_id = m.tg_id
+        where s.sc_id = #{sc_id}
+    </select>
+
+
+    <select id="getNewActive50CollectSchedTriggerList_bak" resultMap="SchedTrigger">
+        /* getNewActive50CollectSchedTriggerList */
+        select
+        s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , s.parent_sc_id
+        from sched_trigger s
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        where s.type = 'C' and s.stat = 'Y' and t.stat = 'Y'
+        order by s.regdate asc
+        limit 50
+    </select>
+
+    <select id="getNewActive50AnalyzeSchedTriggerList_bak" resultMap="SchedTrigger">
+        /* getNewActive50AnalyzeSchedTriggerList */
+        select
+        s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.param1, t.param2, t.param3, t.param4, t.param5
+        , s.parent_sc_id
+        from sched_trigger s
+        inner join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        where s.stat = 'Y' and t.stat = 'S'
+        order by s.regdate asc
+        limit 50
+    </select>
+
+    <select id="get50ByTypeStatSchedTriggerList_bak" resultMap="SchedTrigger" parameterType="SchedTrigger">
+        /* get50ByTypeStatSchedTriggerList_bak */
+        select
+        s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.is_fail, t.is_limit, t.is_manual, t.content_min1, t.content_max1, t.content_min2, t.content_max2
+        , t.fail_count1, t.fail_count2
+
+        , s.parent_sc_id
+        , ism.idx as itemIdx
+        , it.title as movietitle
+        , it.director as moviedirector
+        , it.year as movieyear
+        /*
+        , ( select title from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movietitle
+        , ( select director from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as moviedirector
+        , ( select year from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movieyear
+        */
+        from sched_trigger s
+        inner join items_sched_mapping ism on ism.sc_id = s.sc_id
+        inner join items it on it.idx = ism.idx
+        left outer join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        /* and t.stat = 'Y' */
+        where s.type = #{type} and s.stat = #{stat}
+        order by s.regdate asc
+        limit 10
+    </select>
+
+
+    <select id="get50ByTypeStatSchedTriggerList" resultMap="SchedTrigger" parameterType="SchedTrigger">
+        /* get50ByTypeStatSchedTriggerList */
+        select
+        s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , s.parent_sc_id
+        , ism.idx as itemIdx
+        , it.title as movietitle
+        , it.director as moviedirector
+        , it.year as movieyear
+        from sched_trigger s
+        inner join items_sched_mapping ism on ism.sc_id = s.sc_id
+        inner join items it on it.idx = ism.idx
+        where s.type = #{type} and s.stat = #{stat}
+        order by s.regdate asc
+        limit 10
+    </select>
+
+    <select id="getConfTargetListByScid" resultMap="ConfTarget" parameterType="SchedTrigger">
+        /* getConfTargetListByScid */
+        select
+        t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.is_fail, t.is_limit, t.is_manual, t.content_min1, t.content_max1, t.content_min2, t.content_max2
+        , t.fail_count1, t.fail_count2
+        , it.title as movietitle
+        , it.director as moviedirector
+        , it.year as movieyear
+        from sched_trigger s
+        inner join items_sched_mapping ism on ism.sc_id = s.sc_id
+        inner join items it on it.idx = ism.idx
+        left outer join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id and t.stat = 'Y'
+        where s.sc_id = #{sc_id}
+    </select>
+
+    <select id="getSchedTriggerOneByScid" resultMap="SchedTrigger" parameterType="SchedTrigger">
+        /* getSchedTriggerOneByScid */
+        select
+        s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
+        , s.param1, s.param2, s.param2, s.param3, s.param4, s.param5
+        , t.tg_id, t.title, t.descript
+        , t.tg_url, t.tg_url_param1, t.tg_url_param2, t.tg_url_param3
+        , t.regdate, t.regid, t.stat as stattarget
+        , t.is_fail, t.is_limit, t.is_manual, t.content_min1, t.content_max1, t.content_min2, t.content_max2
+        , t.fail_count1, t.fail_count2
+        , s.parent_sc_id
+        , ism.idx as itemIdx
+        , it.title as movietitle
+        , it.director as moviedirector
+        , it.year as movieyear
+        /*
+        , ( select title from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movietitle
+        , ( select director from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as moviedirector
+        , ( select year from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movieyear
+        */
+        from sched_trigger s
+        inner join items_sched_mapping ism on ism.sc_id = s.sc_id
+        inner join items it on it.idx = ism.idx
+        left outer join sched_target_mapping m on m.sc_id = s.sc_id
+        left outer join conf_target t on t.tg_id = m.tg_id
+        /*and t.stat = 'Y'*/
+        where s.sc_id = #{sc_id}
+    </select>
+
+    <update id="uptSchedTriggerProgs" parameterType="SchedTrigger">
+        /* uptSchedTriggerProgs */
+        update sched_trigger
+          set regdate = now()
+            <if test='tcnt != null and tcnt > 0'>
+            , tcnt = #{tcnt}
+            </if>
+            <if test='stat != null and stat != ""'>
+            , stat = #{stat}
+            </if>
+
+            <if test='stat != "D" and progs > 0'>
+                <if test='stat != "S"'>
+                    , progs = progs + 1
+                </if>
+                <if test='stat == "S"'>
+                    , progs =
+                </if>
+            </if>
+            <if test='stat == "D" and progs > 0'>
+            , progs = #{progs}
+            </if>
+        where sc_id = #{sc_id}
+    </update>
+
+    <select id="getSchedTriggerOne" resultType="SchedTrigger" parameterType="SchedTrigger">
+        /* selectSchedTriggerOne */
+        select parent_sc_id, type, sc_id, stat, regdate from sched_trigger
+        where parent_sc_id = #{parent_sc_id} and type = #{type}
+        limit 1;
+    </select>
+
+    <update id="uptOldSchedTriggerRetry" parameterType="SchedTrigger">
+        /* upSchedTriggerRetry */
+        update sched_trigger
+        set regdate = now()
+        , stat = "Y"
+        , tcnt = tcnt + 1
+        where parent_sc_id = #{parent_sc_id} and type = #{type}
+    </update>
+
+    <update id="uptSchedTriggerOldItemsByTypeStat" parameterType="SchedTrigger">
+    /* uptSchedTriggerOldItemsByTypeStat */
+      update sched_trigger
+      set regdate = now()
+          , stat = "O"
+      where parent_sc_id = #{parent_sc_id} and type = #{type} and stat = #{stat}
+    </update>
+
+    <insert id="insSchedTriggerForStart" parameterType="SchedTrigger" useGeneratedKeys="true" keyProperty="sc_id">
+        /* insSchedTrigger */
+        insert into sched_trigger (parent_sc_id, type, descript, regdate, regid, stat, progs, tcnt)
+        values (#{parent_sc_id}, #{type}, #{descript}, now(), #{regid}, "Y", 0, 0)
+    </insert>
+
+    <select id="getParentSchedTargetMapping" parameterType="java.lang.Integer" resultType="SchedTargetMapping">
+        /* getSchedTargetMapping */
+        select sc_id, tg_id from sched_target_mapping
+        where sc_id =#{sc_id}
+        order by tg_id asc
+    </select>
+
+    <insert id="insSchedTargetMapping" parameterType="SchedTargetMapping">
+        /* insSchedTargetMapping */
+        insert into sched_target_mapping (sc_id, tg_id)
+        values (#{sc_id}, #{tg_id})
+    </insert>
+
+    <update id="uptSchedTriggerRetry" parameterType="SchedTrigger">
+        /* uptSchedTriggerRetry */
+        update sched_trigger
+          set tcnt = tcnt + 1, stat = 'Y'
+          where sc_id = #{sc_id}
+    </update>
+
+    <delete id="delSchedTargetMapping" parameterType="SchedTargetMapping">
+        /* delSchedTargetMapping */
+        delete from sched_target_mapping where tg_id=#{tg_id}
+    </delete>
+
+    <update id="uptStoppedProcessingJobsStat">
+        /* uptStoppedProcessingJobsStat */
+        update sched_trigger set stat = 'Y'
+        where regdate <![CDATA[ > ]]> (CURDATE()-INTERVAL 10 DAY)
+        and stat = 'P'
+    </update>
+
+</mapper>

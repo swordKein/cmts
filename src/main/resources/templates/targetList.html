@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout/default">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container" style="width:1200px;">
+	<br/>
+	<div>
+
+
+		<button type="button" class="btn btn-primary navbar-right"
+			onclick="$('#regTargetForm').show();" style="margin-left:30px"
+			><span
+			class="glyphicon glyphicon-plus" style="margin-left:5px; height:20px; width:20px"/>수집대상 추가</button></div>
+
+	<div>
+
+		<button type="button" class="btn btn-primary navbar-right "
+				onclick="window.location.reload();" style="margin-left:30px"
+		><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
+	</div>
+	<br/>
+	<br/>
+	<br/>
+
+	<div class="table-responsive">
+	<table id="targetListTable" class="table" border="1">
+		<thead>
+		<tr>
+			<th>수집대상ID</th>
+			<th>제목</th>
+			<th>요약</th>
+			<th>수집대상URL</th>
+			<th>수집대상URL_PARAM1</th>
+			<th>수집대상 등록일시</th>
+			<th>수집대상 등록자ID</th>
+			<th width="400px">수집대상 PRESET</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="target : ${targetList}">
+			<td width="100px" th:text="${target.tg_id}"> tg_id!! </td>
+			<td width="100px" th:text="${target.title}"></td>
+			<td width="100px" th:text="${target.descript}"></td>
+			<td width="100px" th:text="${target.tg_url}"></td>
+			<td width="100px" th:text="${target.tg_url_param1}"></td>
+			<td width="100px" th:text="${target.regdate}"></td>
+			<td width="100px" th:text="${target.regid}"></td>
+			<td width="400px">
+
+			<table class="table" border="1" width="100%">
+				<thead class="thead-inverse">
+				<th>priority</th>
+				<th>ps_id</th>
+				<th>add_url</th>
+				<th>TAG</th>
+				<th>save FIELD</th>
+				<th>&nbsp;</th>
+				</thead>
+				<tbody>
+
+				<tr th:each="preset : ${target.presetList}">
+
+					<td width="40px">
+						<span th:id="'priority'+${preset.ps_id}" th:text="${preset.priority}" th:class="'presetLabel'+${preset.ps_id}"></span>
+						<input type="text" th:id="'priorityInput'+${preset.ps_id }" th:value="${preset.priority}" name="priority"
+								class="initHide form-control" th:classappend="'presetInput'+${preset.ps_id}" />
+					</td>
+					<td width="40px" th:text="${preset.ps_id}"><input type="hidden" name="ps_id" th:value="${preset.ps_id}"/></td>
+					<td width="120px">
+						<span th:id="'psaddurl'+${preset.ps_id}" th:text="${preset.ps_add_url}" th:class="'presetLabel'+${preset.ps_id}"></span>
+						<input type="text" th:id="'psaddurlInput'+${preset.ps_id }" th:value="${preset.ps_add_url}" name="ps_add_url"
+							   class="initHide form-control" th:classappend="'presetInput'+${preset.ps_id}" style="width:120px" />
+					</td>
+					<td width="80px">
+						<span th:id="'pstag'+${preset.ps_id}" th:text="${preset.ps_tag}" th:class="'presetLabel'+${preset.ps_id}"></span>
+						<input type="text" th:id="'pstagInput'+${preset.ps_id }" th:value="${preset.ps_tag}" name="ps_tag"
+							   class="initHide form-control" th:classappend="'presetInput'+${preset.ps_id}" style="width:80px" />
+					</td>
+					<td width="80px">
+						<span th:id="'destfield'+${preset.ps_id}" th:text="${preset.dest_field}" th:class="'presetLabel'+${preset.ps_id}"></span>
+						<input type="text" th:id="'destfieldInput'+${preset.ps_id }" th:value="${preset.dest_field}" name="dest_field"
+							   class="initHide form-control" th:classappend="'presetInput'+${preset.ps_id}" style="width:80px" />
+					</td>
+					<td width="40px">
+						<div th:id="'btnEditPreset'+${preset.ps_id}">
+							<a href="#" th:onclick="'javascirpt:viewEditPreset(' + ${preset.ps_id} + ')'">
+								<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+							</a>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</div>
+						<div th:id="'btnOkPreset'+${preset.ps_id}">
+							<a href="#" th:onclick="'javascirpt:viewEditPreset(' + ${preset.ps_id} + ')'">
+								<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+							</a>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	</div>
+	<form class="form-inline" id="regTargetForm" name="regTargetForm" method="POST" style="display:none;">
+		<pre class="h3">수집대상 정보입력</pre>
+		<div class="form-group">
+			<label for="title">제 목 :&nbsp;</label>
+			<input type="text" class="form-control" id="title" placeholder="제목 입력" size="80" />
+		</div>
+		<div class="form-group">
+			<label for="descript">설 명 :&nbsp;</label>
+			<input type="text" class="form-control" id="descript" placeholder="설명 입력" size="80"/>
+		</div>
+		<div class="form-group">
+			<label for="tg_url">URL :&nbsp;&nbsp;</label>
+			<input type="text" class="form-control" id="tg_url" placeholder="URL 입력" size="80"/>
+		</div>
+		<div class="form-group">
+			<label for="tg_url_param1">PARAM1 :&nbsp;&nbsp;</label>
+			<input type="text" class="form-control" id="tg_url_param1" placeholder="URL 파라미터 입력 (구글 검색 우선일 경우 GOOGLE_SEARCH 입력)" size="76"/>
+		</div>
+		<br/>
+		<br/>
+		<div style="margin-left:80px" id="divPresetList">
+			<pre class="h4" size="40"
+				 onclick="addPresetSubForm();" >+ Preset # <span id="ps_id" class="h4 idxNum">1</span><button type="button"
+					class="glyphicon glyphicon-plus" style="margin-left:40px; height:30px; width:30px" aria-hidden="true"></button></pre>
+			<p class="h5">
+				<div class="form-group">
+					<label for="ps_add_url">URL 추가 :&nbsp;&nbsp;</label>
+					<input type="text" class="form-control" id="ps_add_url" name="ps_add_url" placeholder="수집 URL 추가 파라미터 입력" size="70"/>
+				</div>
+				<div class="form-group">
+					<label for="ps_tag">수집 TAG :&nbsp;&nbsp;</label>
+					<input type="text" class="form-control" id="ps_tag" name="ps_id" placeholder="수집 TAG 입력" size="70"/>
+				</div>
+				<div class="form-group">
+					<label for="dest_field">저장 필드 :&nbsp;&nbsp;</label>
+					<input type="text" class="form-control" id="dest_field" name="dest_field" placeholder="저장될 필드명 입력" size="70"/>
+				</div>
+			</p>
+		</div>
+		<br/><br/><button type="button" class="btn btn-primary navbar-right">Send invitation</button>
+	</form>
+
+	<br/>
+</div>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicNotuseWordsMapper">
+
+    <select id="getDicNotuseWords" resultType="DicNotuseWords">
+        /* getDicNotuseWords */
+        select
+          idx, word, freq, regdate, regid
+        from dic_notuse_words
+    </select>
+
+    <select id="getDicNotuseWordsPaging" resultType="DicNotuseWords">
+        /* getDicNotuseWordsPaging */
+        select
+        idx, word, freq, regdate, regid
+        from dic_notuse_words
+        order by regdate DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <insert id="insDicNotuseWords" parameterType="DicNotuseWords" useGeneratedKeys="true" keyProperty="idx">
+        /* insDicNotuseWords */
+        insert into dic_notuse_words (word, freq, regdate, regid)
+        values (#{word}, #{freq}, now(), #{regid})
+    </insert>
+
+    <update id="uptDicNotuseWords" parameterType="DicNotuseWords">
+        /* uptDicNotuseWords */
+        update dic_notuse_words
+          set
+            regdate = now()
+            ,regid = #{regid}
+            <if test='word != null and word != ""'>
+              , word = #{word}
+            </if>
+            <if test='freq != null and freq > 0'>
+              , freq = #{freq}
+            </if>
+          where idx = #{idx}
+    </update>
+
+    <update id="uptDicNotuseWordsByWord" parameterType="DicNotuseWords">
+        /* uptDicNotuseWordsByWord */
+        update dic_notuse_words
+        set
+        regdate = now()
+        ,regid = #{regid}
+        <if test='word != null and word != ""'>
+            , word = #{word}
+        </if>
+        <if test='freq != null and freq > 0'>
+            , freq = #{freq}
+        </if>
+        where word = #{oldword}
+    </update>
+
+    <delete id="delDicNotuseWordsByWord" parameterType="DicNotuseWords">
+        /* delDicNotuseWordsByWord */
+        delete from dic_notuse_words
+        where word = #{oldword}
+    </delete>
+
+    <select id="countItems" resultType="Integer">
+        /* countItems */
+        select count(*)
+        from dic_notuse_words
+    </select>
+
+</mapper>

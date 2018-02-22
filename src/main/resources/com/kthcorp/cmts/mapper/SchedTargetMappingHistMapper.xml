@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.SchedTargetMappingHistMapper">
+
+    <resultMap id="SchedTargetMappingHist" type="SchedTargetMappingHist">
+        <id property="stmh_id" column="stmh_id" />
+        <result property="sc_id" column="sc_id" />
+        <result property="tg_id" column="tg_id" />
+        <result property="tcnt" column="tcnt" />
+        <result property="title" column="title" />
+        <result property="type" column="type" />
+        <result property="regdate" column="regdate" />
+        <result property="stat" column="stat" />
+        <result property="rt_code" column="rt_code" />
+        <result property="rt_msg" column="rt_msg" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="content" column="content" />
+        <result property="summary" column="summary" />
+        <collection property="contentList" column="stmh_id" ofType="SchedTargetContent"
+                    javaType="ArrayList" resultMap="SchedTargetContent"/>
+    </resultMap>
+
+    <resultMap id="SchedTargetContent" type="SchedTargetContent">
+        <id property="stc_id" column="stc_id" />
+        <result property="sc_id" column="sc_id" />
+        <result property="tg_id" column="tg_id" />
+        <result property="stmh_id" column="stmh_id" />
+        <result property="regdate" column="regdate" />
+        <result property="param1" column="param1" />
+        <result property="param2" column="param2" />
+        <result property="param3" column="param3" />
+        <result property="param4" column="param4" />
+        <result property="param5" column="param5" />
+        <result property="content" column="content" />
+    </resultMap>
+
+    <select id="getSchedTargetMappingHistList" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+        /* getSchedTargetMappingHistList */
+        select
+          h.stmh_id, h.sc_id, h.tg_id, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
+          , h.param1, h.param2, h.param3, h.param4, h.param5
+          , c.stc_id, c.content
+        from sched_target_mapping_hist h
+        left outer join sched_target_content c on c.stmh_id = h.stmh_id
+        <where>
+            <if test='sc_id > 0'>
+                h.sc_id = #{sc_id}
+            </if>
+        </where>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+    <select id="getSchedTargetMappingHistListAll" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+        /* getSchedTargetMappingHistListForLast */
+        select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
+        , stc.content, stmh.summary
+        , st.tcnt
+        , ct.title
+        from sched_trigger st
+        inner join sched_target_mapping stm on st.sc_id = stm.sc_id
+        left outer join sched_target_mapping_hist stmh on stmh.sc_id = stm.sc_id
+        left outer join sched_target_content stc on stc.sc_id = stmh.sc_id and stc.tg_id = stmh.tg_id and stc.stmh_id = stmh.stmh_id
+        left outer join conf_target ct on ct.tg_id = stm.tg_id
+        where stm.sc_id = #{sc_id}
+        order by stmh.regdate DESC
+    </select>
+
+
+    <select id="getSchedTargetMappingHistListForLast" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+        /* getSchedTargetMappingHistListForLast */
+        select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
+        , stc.content, stmh.summary
+        , st.tcnt
+        , ct.title
+        from sched_trigger st
+        inner join sched_target_mapping stm on st.sc_id = stm.sc_id
+        left outer join sched_target_mapping_hist stmh on stmh.sc_id = stm.sc_id and stmh.tg_id = stm.tg_id and stmh.tcnt = st.tcnt
+        left outer join sched_target_content stc on stc.sc_id = stmh.sc_id and stc.tg_id = stmh.tg_id and stc.stmh_id = stmh.stmh_id
+        left outer join conf_target ct on ct.tg_id = stm.tg_id
+        where stm.sc_id = #{sc_id}
+        order by stmh.regdate DESC
+    </select>
+
+    <select id="getSchedTargetMappingHistListForLast2" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+        /* getSchedTargetMappingHistListForLast2 */
+        select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
+        , stc.content, stmh.summary
+        from sched_trigger st
+        left outer join sched_target_mapping_hist stmh on stmh.sc_id = st.sc_id
+        left outer join sched_target_content stc on stc.sc_id = stmh.sc_id and stc.stmh_id = stmh.stmh_id
+        where st.sc_id = #{sc_id}
+        order by stmh.regdate DESC
+    </select>
+
+
+    <select id="getSchedTargetMappingHistByStatList" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+        /* getSchedTargetMappingHistByStatList */
+        select
+        h.stmh_id, h.sch_id, h.sc_id, h.tg_id, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.content, h.summary
+        , h.param1, h.param2, h.param3, h.param4, h.param5
+        from sched_target_mapping_hist h
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test='stat != ""'>
+                h.stat = #{stat}
+            </if>
+            <if test='sc_id > 0'>
+                AND h.sc_id = #{sc_id}
+            </if>
+        </trim>
+        order by h.regdate DESC
+        limit ${startIdx}, ${pageSize}
+    </select>
+
+    <insert id="insSchedTargetMappingHist" parameterType="SchedTargetMappingHist" useGeneratedKeys="true" keyProperty="stmh_id">
+        /* insSchedTargetMappingHist */
+        insert into sched_target_mapping_hist (sc_id, tg_id, type, tcnt, regdate, stat, rt_code, rt_msg, content, summary
+        , param1)
+        values (#{sc_id}, #{tg_id}, #{type}, #{tcnt}, NOW(), #{stat}, #{rt_code}, #{rt_msg}, #{content}, #{summary}
+        , #{param1})
+    </insert>
+
+</mapper>

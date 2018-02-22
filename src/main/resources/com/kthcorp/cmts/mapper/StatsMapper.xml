@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.StatsMapper">
+    <cache eviction="LRU" flushInterval="300000" size="512" readOnly="true"/>
+
+    <select id="top_countInItems" resultType="java.lang.Integer" useCache="true">
+      /* -------- 상단 통계 ---------*/
+        /* 입수 완료 */
+        /* top_countInItems */
+        select count(*) from items
+    </select>
+
+
+    <select id="top_countEndTagged" resultType="java.lang.Integer" useCache="true">
+        /* 태깅 완료 */
+        /* top_countEndTagged */
+        select count(*) from items where stat = 'S'
+    </select>
+
+    <select id="top_countCollecting" resultType="java.lang.Integer" useCache="true">
+        /* 수집 진행 */
+        /* top_countCollecting */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'C'
+        group by ism.idx
+        ) a
+    </select>
+
+
+    <select id="top_countCollected" resultType="java.lang.Integer" useCache="true">
+        /* 수집 완료 */
+        /* top_countCollected */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'C' and st.stat in ('S','F')
+        group by ism.idx
+        ) a
+    </select>
+
+
+    <select id="top_countAnalyzing" resultType="java.lang.Integer" useCache="true">
+        /* 추출 진행 */
+        /* top_countAnalyzing */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'A'
+        group by ism.idx
+        ) a
+    </select>
+
+    <select id="top_countAnalyzed" resultType="java.lang.Integer" useCache="true">
+        /* 추출 완료 */
+        /* top_countAnalyzed */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'A' and st.stat in ('S')
+        group by ism.idx
+        ) a
+    </select>
+
+    <select id="top_countTagging" resultType="java.lang.Integer" useCache="true">
+        /* 승인 진행 */
+        /* top_countTagging */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'A' and st.stat in ('S')
+        group by ism.idx
+        ) a
+    </select>
+
+    <select id="top_countTagged" resultType="java.lang.Integer" useCache="true">
+        /* 승인 완료 */
+        /* top_countTagged */
+        select count(*) from items_tags_keys where stat = 'S' group by idx
+    </select>
+
+    <select id="mid_countReady" resultType="java.lang.Integer" useCache="true">
+    /* -------- 중단 통계 ---------*/
+        /* 처리대기 건수 */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type in ('C','R','A') and st.stat = 'Y'
+        ) a
+    </select>
+
+    <select id="mid_countFailCollect" resultType="java.lang.Integer" useCache="true">
+        /* 수집실패 건수 */
+        /* mid_countFailCollect */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'C' and st.stat = 'F'
+        ) a
+    </select>
+
+    <select id="mid_countFailAnalyze" resultType="java.lang.Integer" useCache="true">
+        /* 추출실패 건수 */
+        /* mid_countFailAnalyze */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type in ('R', 'A') and st.stat = 'F'
+        ) a
+    </select>
+
+    <select id="mid_countReadyTagging" resultType="java.lang.Integer" useCache="true">
+        /* 승인대기 건수 */
+        /* mid_countReadyTagging */
+        select count(*) from (
+        select ism.idx from sched_trigger st
+        inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+        inner join items it on it.idx = ism.idx
+        where st.type = 'A' and st.stat = 'S'
+        ) a
+    </select>
+
+    <select id="mid_down_stats" resultType="java.lang.Integer" useCache="true">
+
+    /* ------ 좌측하단 ------ */
+    /* 태깅 비율 */
+    /* 승인대기건 / 입수완료건 */
+
+    /* 수집 비율 */
+    /* 수집완료건 / 입수완료건 */
+
+    /* 추출비율 */
+    /* 추출완료건 / 입수완료건 */
+
+    /* 승인비율 */
+    /* 승인완료건 / 입수완료건 */
+    select 1
+    </select>
+
+    <select id="down_stats" resultType="java.lang.Integer" useCache="true">
+    /* ---- 우측하단 통계 ----- */
+    /* 주간통계 */
+    select 1
+    </select>
+
+    <select id="down_countsInserted" resultType="Stats" parameterType="Stats" useCache="true">
+    /* 일별통계 */
+    /* 인입건수 */
+        /* down_countsInserted */
+        SELECT DATE(a.regdate) AS date,
+        sum(a.cnt) as cnt
+        FROM (
+        select it.idx, it.regdate, 1 as cnt from items it
+        where DATE(it.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+        AND DATE(it.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+        group by it.idx
+        ) a
+        GROUP BY date
+    </select>
+
+    <select id="down_countsCollected" resultType="Stats" parameterType="Stats" useCache="true">
+    /* 수집건수 */
+        /* down_countsCollected  */
+        SELECT DATE(b.regdate) AS date,
+        sum(b.cnt) as cnt
+        FROM (
+            select a.idx, a.regdate, 1 as cnt from (
+                select ism.idx, st.regdate from sched_trigger st
+                inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+                inner join items it on it.idx = ism.idx
+                where  DATE(st.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+                AND DATE(st.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                and st.type = 'C' and st.stat in ('S','F')
+                group by ism.idx
+            ) a
+        ) b
+        GROUP BY date
+    </select>
+
+    <select id="down_countsAnalyzed" resultType="Stats" parameterType="Stats" useCache="true">
+    /* 추출건수 */
+        /* down_countsAnalyzed */
+        SELECT DATE(b.regdate) AS date,
+        sum(b.cnt) as cnt
+        FROM (
+            select a.idx, a.regdate, 1 as cnt from (
+                select ism.idx, st.regdate from sched_trigger st
+                inner join items_sched_mapping ism on ism.sc_id = st.sc_id
+                inner join items it on it.idx = ism.idx
+                where  DATE(st.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+                AND DATE(st.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                and st.type = 'A' and st.stat in ('S')
+                group by ism.idx
+            ) a
+        ) b
+        GROUP BY date
+    </select>
+
+    <select id="down_countsTagged" resultType="Stats" parameterType="Stats" useCache="true">
+    /* 승인건수 */
+        /* down_countsTagged */
+        SELECT DATE(a.regdate) AS date,
+        sum(a.cnt) as cnt
+        FROM (
+            select ik.idx, ik.regdate, 1 as cnt from items_tags_keys ik
+            where DATE(ik.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+            AND DATE(ik.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+            AND ik.stat = 'S'
+            group by ik.idx
+        ) a
+        GROUP BY date
+    </select>
+
+</mapper>

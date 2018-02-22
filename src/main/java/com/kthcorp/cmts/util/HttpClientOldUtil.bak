@@ -1,0 +1,238 @@
+package com.kthcorp.cmts.util;
+
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.utils.URIBuilder;
+
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class HttpClientOldUtil {
+
+	public static String reqGetBody(String reqHost, int reqPort, String reqPath, Map<String, String> reqparamMap, String encoding) throws HttpException, IOException {
+		InputStream resultHtml;
+		String result = "";
+		
+		//String reqUrl = reqHost + ":" + reqPort + reqPath + "?query=" + reqparamMap.get("reqQuery") + "&pageno=" + reqparamMap.get("reqPageno");
+		String reqUrl = "";
+		if(reqPort > 0) { 
+			reqUrl = reqHost + ":" + reqPort + reqPath;
+		} else {
+			reqUrl = reqHost + reqPath;
+		}
+		if (reqparamMap != null) {
+			String tag = (reqPath.contains("?")) ? "&" : "?";
+			
+			String pageString = "";
+			reqUrl = reqUrl + pageString;
+			if (reqparamMap.get("reqDtDate") != null && !reqparamMap.get("reqDtDate").equals("")) {
+				pageString = tag + reqparamMap.get("reqDt") + "=" + reqparamMap.get("reqDtDate"); 
+			}
+			
+			if (reqparamMap.get("reqPageno") != null 
+					&& !"".equals(reqparamMap.get("reqPageno")) && !"0".equals(reqparamMap.get("reqPageno"))) { 
+				//pageString = tag + reqparamMap.get("reqPageKey")+"=" + reqparamMap.get("reqPageno");
+				pageString = pageString + "&" + reqparamMap.get("reqPageKey")+"=" + reqparamMap.get("reqPageno");
+			}		
+			if (reqparamMap.get("reqPageNo") != null 
+					&& !"".equals(reqparamMap.get("reqPageNo")) && !"0".equals(reqparamMap.get("reqPageNo"))) { 
+				pageString = pageString + "&" + reqparamMap.get("reqPage")+"=" + reqparamMap.get("reqPageNo");
+			}	
+			if (reqparamMap.get("reqQueryString") != null 
+					&& !"".equals(reqparamMap.get("reqQueryString")) && !"0".equals(reqparamMap.get("reqQueryString"))) { 
+				pageString = pageString + "&" + reqparamMap.get("reqQuery")+"=" + reqparamMap.get("reqQueryString");
+			}
+			if (reqparamMap.get("reqStDate") != null 
+					&& !"".equals(reqparamMap.get("reqStDate")) && !"0".equals(reqparamMap.get("reqStDate"))) { 
+				pageString = pageString + "&" + reqparamMap.get("reqSt")+"=" + reqparamMap.get("reqStDate");
+			}
+			if (reqparamMap.get("reqEdDate") != null 
+					&& !"".equals(reqparamMap.get("reqEdDate")) && !"0".equals(reqparamMap.get("reqEdDate"))) { 
+				pageString = pageString + "&" + reqparamMap.get("reqEd")+"=" + reqparamMap.get("reqEdDate");
+			}
+			
+			if(reqUrl.indexOf("daum") > 0) {
+				if(reqUrl.indexOf("finance") < 1) {
+					//System.out.println("reqUrl orig::"+reqUrl);
+					reqUrl = reqUrl + pageString + "&type=tit_cont";
+				}
+			} else {
+				reqUrl = reqUrl + pageString;
+			}
+		}
+		if(!reqUrl.contains("like.daum.net")) {
+			System.out.println("request URI: "+reqUrl); 
+		}
+		
+		MultiThreadedHttpConnectionManager manager = new MultiThreadedHttpConnectionManager();
+		try {
+		HttpClient client = new HttpClient(manager);
+		//HttpMethod get = new GetMethod("http://search.chosun.com/search/news.search?query=%EA%B9%80%EB%AC%B4%EC%84%B1&pageno=1");
+		client.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BROWSER_COMPATIBILITY);
+		client.getParams().setParameter("http.protocol.single-cookie-header", true);
+		HttpMethod get = new GetMethod(reqUrl);
+		//System.out.println("send URI: "+get.getURI());
+		get.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false)); 
+				
+		int status = client.executeMethod(get);
+		//System.out.println("HTTP response status : "+status);
+		resultHtml = get.getResponseBodyAsStream();
+				
+		if("".equals(encoding)) { encoding = "UTF-8"; }
+		result = IOUtils.toString(resultHtml,encoding);
+		//System.out.println("HTTP result ::"+result);
+
+		get.releaseConnection();		
+		//client.getHttpConnectionManager().releaseConnection(null); 
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		return result;
+	}
+	
+	public static String reqGetUrlBody(String reqHost, int reqPort, String reqPath, Map<String, String> reqparamMap, String encoding) throws HttpException, IOException {
+		InputStream resultHtml;
+		String result = "";
+		
+		//String reqUrl = reqHost + ":" + reqPort + reqPath + "?query=" + reqparamMap.get("reqQuery") + "&pageno=" + reqparamMap.get("reqPageno");
+		String tag = (reqPath.contains("?")) ? "&" : "?";
+		
+		String pageString = "";
+		String reqUrl = reqHost + ":" + reqPort + reqPath + pageString;
+		if (reqparamMap.get("reqDtDate") != null && !reqparamMap.get("reqDtDate").equals("")) {
+			pageString = tag + reqparamMap.get("reqDt") + "=" + reqparamMap.get("reqDtDate"); 
+		}
+		
+		if (reqparamMap.get("reqPageno") != null 
+				&& !"".equals(reqparamMap.get("reqPageno")) && !"0".equals(reqparamMap.get("reqPageno"))) { 
+			//pageString = tag + reqparamMap.get("reqPageKey")+"=" + reqparamMap.get("reqPageno");
+			pageString = pageString + "#" + reqparamMap.get("reqPageKey")+"=" + reqparamMap.get("reqPageno");
+		}		
+		
+		reqUrl = reqUrl + pageString + "&type=title";
+		
+		System.out.println("request URI: "+reqUrl);
+		//getwww_mod1.getURL();
+		String[] a = null;
+		//renderWeb.main(a);
+		
+		try {
+		/*
+		MultiThreadedHttpConnectionManager manager = new MultiThreadedHttpConnectionManager();
+		HttpClient client = new HttpClient(manager);
+		//HttpMethod get = new GetMethod("http://search.chosun.com/search/news.search?query=%EA%B9%80%EB%AC%B4%EC%84%B1&pageno=1");
+		client.getParams().setParameter(ClientPNames.COOKIE_POLICY,CookiePolicy.BROWSER_COMPATIBILITY);
+		client.getParams().setParameter("http.protocol.single-cookie-header", true);
+		HttpMethod get = new GetMethod(reqUrl);
+		//System.out.println("send URI: "+get.getURI());
+		get.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+		*/
+
+		URLConnection urlConnection = new URL(reqUrl).openConnection();
+		urlConnection.setUseCaches(false);
+		urlConnection.setDoOutput(true); // Triggers POST.
+		urlConnection.setRequestProperty("accept-charset", encoding);
+		urlConnection.setRequestProperty("content-type", "application/x-www-form-urlencoded");
+
+		OutputStreamWriter writer = null;
+		try {
+		    //writer = new OutputStreamWriter(urlConnection.getOutputStream(), encoding);
+		    //writer.write(query); // Write POST query string (if any needed).
+			resultHtml = urlConnection.getInputStream();
+		} finally {
+		    if (writer != null) try { writer.close(); } catch (IOException logOrIgnore) {}
+		}		
+				
+		//int status = client.executeMethod(get);
+		//System.out.println("HTTP response status : "+status);
+		//resultHtml = get.getResponseBodyAsStream();
+				
+		//if("".equals(encoding)) { encoding = "UTF-8"; }
+		result = IOUtils.toString(resultHtml,encoding);
+		//System.out.println("HTTP result ::"+result);
+
+		//get.releaseConnection();		
+		//client.getHttpConnectionManager().releaseConnection(null);
+
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		return result;
+	}
+		
+	public static String getURLBody(String reqUrl, String encoding) throws HttpException, IOException {
+		InputStream resultHtml;
+		String result = "";		
+		//System.out.println("request URI: "+reqUrl);
+		try {
+		MultiThreadedHttpConnectionManager manager = new MultiThreadedHttpConnectionManager();
+		HttpClient client = new HttpClient(manager);
+		client.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BROWSER_COMPATIBILITY);
+		//HttpMethod get = new GetMethod("http://search.chosun.com/search/news.search?query=%EA%B9%80%EB%AC%B4%EC%84%B1&pageno=1");
+		HttpMethod get = new GetMethod(reqUrl);
+		//System.out.println("send URI: "+get.getURI());
+		get.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false)); 
+				
+		int status = client.executeMethod(get);
+		//System.out.println("HTTP response status : "+status);
+		resultHtml = get.getResponseBodyAsStream();
+				
+		if("".equals(encoding)) { encoding = "UTF-8"; }
+		result = IOUtils.toString(resultHtml,encoding);
+
+		get.releaseConnection();
+		//client.getHttpConnectionManager().releaseConnection(null); 
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		return result;
+	}
+	
+	
+	private static URI setURI(String scheme, String host, int port, String path, Map<String, String> paramMap) throws URISyntaxException {
+		URIBuilder builder = new URIBuilder();
+		builder.setScheme(scheme);
+		builder.setHost(host);
+		builder.setPort(port);
+		builder.setPath(path.indexOf("/") == 0 ? path: "/"+path);
+		
+		if(paramMap != null && !paramMap.isEmpty()) {
+			Set<String> keySet = paramMap.keySet();
+			for (Iterator<String> iter = keySet.iterator(); iter.hasNext(); ) {
+				String key = iter.next();
+				String value = paramMap.get(key);
+				builder.setParameter(key, value != null ? value: "");
+			}
+		}
+		URI result = builder.build();
+		return result;
+	}
+	/*
+	private static void getURL() {
+		String result = "";
+		
+		Platform.setImplicitExit(false);
+		
+		Platform.runLater(new Runnable() {
+	        @Override
+	        public void run() {
+	        	WebView browser = new WebView();
+	    		WebEngine webEngine = browser.getEngine();
+	    		webEngine.load("http://media.daum.net/politics/all/?regdate=20141216#page=1&type=tit_cont");
+	    				
+	    		System.out.println("WebView : "+webEngine.getDocument().toString());
+	        }
+	   });
+	} */
+}

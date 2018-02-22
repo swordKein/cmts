@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.MovieCine21Mapper">
+    <select id="getMovieCine21" resultType="MovieCine21" parameterType="MovieCine21">
+        /* getMovieCine21 */
+        select
+            idx, movieId, fimsCd, movieNm, movieNmOg, runTime, prdtYear, openDt, synop, updateDt, watchGrade, countries, genres
+            , directors, actors, staffs, companies, awards, posterList, stillCutList, vodList, cineKeywords
+        from movie_cine21
+        <if test='movieNm != null and movieNm != ""'>
+            where movieNm like CONCAT('%',#{movieNm},'%')
+            OR movieNmOg like CONCAT('%',#{movieNm},'%')
+            OR actors like CONCAT('%',#{movieNm},'%')
+            OR companies like CONCAT('%',#{movieNm},'%')
+        </if>
+        order by idx ASC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntMovieCine21" resultType="Integer" parameterType="MovieCine21">
+        /* cntMovieCine21 */
+        select count(*) from movie_cine21
+        <if test='movieNm != null and movieNm != ""'>
+          where movieNm like CONCAT('%',#{movieNm},'%')
+                OR movieNmOg like CONCAT('%',#{movieNm},'%')
+                OR actors like CONCAT('%',#{movieNm},'%')
+                OR companies like CONCAT('%',#{movieNm},'%')
+        </if>
+    </select>
+
+    <insert id="insMovieCine21" parameterType="MovieCine21">
+        /* insMovieCine21 */
+        insert into movie_cine21
+            (movieId, fimsCd, movieNm, movieNmOg, runTime, prdtYear, openDt, synop, updateDt, watchGrade, countries, genres
+            , directors, actors, staffs, companies, awards, posterList, stillCutList, vodList, cineKeywords)
+        values
+            (#{movieId}, #{fimsCd}, #{movieNm}, #{movieNmOg}, #{runTime}, #{prdtYear}, #{openDt}, #{synop}, #{updateDt}, #{watchGrade}, #{countries}, #{genres}
+            , #{directors}, #{actors}, #{staffs}, #{companies}, #{awards}, #{posterList}, #{stillCutList}, #{vodList}, #{cineKeywords} )
+    </insert>
+
+    <insert id="insMovieCine21List" parameterType="java.util.Map">
+        /* insMovieCine21List */
+        insert into movie_cine21
+            (movieId, fimsCd, movieNm, movieNmOg, runTime, prdtYear, openDt, synop, updateDt, watchGrade, countries, genres
+            , directors, actors, staffs, companies, awards, posterList, stillCutList, vodList, cineKeywords)
+        values
+        <foreach collection="list" item="element" index="index" separator=",">
+            (#{element.movieId}, #{element.fimsCd}, #{element.movieNm}, #{element.movieNmOg}, #{element.runTime}, #{element.prdtYear}, #{element.openDt}, #{element.synop}, #{element.updateDt}, #{element.watchGrade}, #{element.countries}, #{element.genres}
+            , #{element.directors}, #{element.actors}, #{element.staffs}, #{element.companies}, #{element.awards}, #{element.posterList}, #{element.stillCutList}, #{element.vodList}, #{element.cineKeywords} )
+        </foreach>
+    </insert>
+
+</mapper>

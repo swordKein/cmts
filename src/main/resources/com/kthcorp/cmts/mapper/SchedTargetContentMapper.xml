@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.SchedTargetContentMapper">
+
+    <insert id="insSchedTargetContent" parameterType="SchedTargetContent" useGeneratedKeys="true" keyProperty="stc_id">
+        /* insSchedTargetContent */
+        insert into sched_target_content (sc_id, tg_id, stmh_id, regdate, content)
+        values (#{sc_id}, #{tg_id}, #{stmh_id}, NOW(), #{content})
+    </insert>
+
+    <select id="getSchedTargetContentList" resultType="SchedTargetContent" parameterType="SchedTargetContent">
+        /* getSchedTargetContentList */
+        select c.*, stmh.tcnt from sched_target_content c
+        inner join sched_trigger st on st.sc_id = c.sc_id
+        inner join sched_target_mapping_hist stmh on stmh.sc_id = c.sc_id and stmh.stmh_id = c.stmh_id and stmh.tcnt = st.tcnt
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test='sc_id > 0'>
+                c.sc_id = #{sc_id}
+            </if>
+            <if test='tg_id > 0'>
+                and c.tg_id = #{tg_id}
+            </if>
+            <if test='stc_id > 0'>
+                and c.stc_id = #{stc_id}
+            </if>
+            <if test='stmh_id > 0'>
+                and c.stmh_id = #{stmh_id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getSchedTargetContentLastOne" resultType="SchedTargetContent" parameterType="SchedTargetContent">
+        /* getSchedTargetContentLastOne */
+        select c.* from sched_target_content c
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test='sc_id > 0'>
+                c.sc_id = #{sc_id}
+            </if>
+            <if test='tg_id > 0'>
+                and c.tg_id = #{tg_id}
+            </if>
+            <if test='stc_id > 0'>
+                c.stc_id = #{stc_id}
+            </if>
+            <if test='stmh_id > 0'>
+                c.stmh_id = #{stmh_id}
+            </if>
+        </trim>
+        order by c.stmh_id desc limit 1
+    </select>
+
+</mapper>

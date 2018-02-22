@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.DicKeywordsMapper">
+
+    <select id="getDicKeywordsList" resultType="DicKeywords" parameterType="DicKeywords">
+        /* getDicKeywordsList */
+        select
+          idx, type, keyword, ratio, regdate, regid
+        from dic_keywords
+        where type = #{type}
+    </select>
+
+    <select id="getDicKeywordsPaging" resultType="DicKeywords" parameterType="DicKeywords">
+        /* getDicKeywordsPaging */
+        select
+        idx, type, keyword, ratio, regdate, regid
+        from dic_keywords
+        where type = #{type}
+        order by regdate DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getDicKeywords" resultType="DicKeywords" parameterType="DicKeywords">
+        /* getDicKeywordsList */
+        select
+        idx, type, keyword, ratio, regdate, regid
+        from dic_keywords
+        where type = #{type} and keyword = #{keyword}
+    </select>
+
+    <select id="getDicKeywordsListAll" resultType="DicKeywords">
+      /* getDicKeywordsListAll */
+        select
+        idx, type, keyword, ratio, regdate, regid
+        from dic_keywords
+        order by type asc, ratio desc
+    </select>
+
+    <select id="getKeywordTypes" resultType="String">
+        select type from dic_keywords group by type
+    </select>
+
+    <select id="countItems" resultType="Integer" parameterType="DicKeywords">
+        /* countItems */
+        select count(*)
+        from dic_keywords
+        where type = #{type}
+    </select>
+
+    <select id="countDicKeywords" parameterType="DicKeywords" resultType="java.lang.Integer">
+        /* countDicKeywords */
+        select count(*) from dic_keywords where keyword = #{keyword}
+    </select>
+
+    <insert id="insDicNotMapKeywords" parameterType="DicKeywords">
+        /* intDicNotMapKeywords */
+        insert into dic_notmap_keywords (type, keyword, ratio, regdate, regid)
+        values (#{type}, #{keyword}, #{ratio} , now(), #{regid})
+        ON DUPLICATE KEY UPDATE regdate = now()
+    </insert>
+
+    <insert id="insDicKeywords" parameterType="DicKeywords">
+      /* insDicKeywords */
+        insert into dic_keywords (type, keyword, ratio, regdate, regid)
+        values (#{type}, #{keyword}, #{ratio} , now(), #{regid});
+    </insert>
+    <select id="getDicNotMapKeywords" resultType="DicKeywords">
+        /* getDicNotMapKeywords */
+        select type,keyword,ratio,regdate,regid
+        FROM dic_notmap_keywords
+        order by regdate desc
+    </select>
+
+
+    <update id="uptDicKeywords" parameterType="DicKeywords">
+      /* uptDicKeywords */
+        update dic_keywords
+            set regdate = now()
+            ,regid = #{regid}
+            <if test='keyword != null and keyword != ""'>
+                , keyword = #{keyword}
+            </if>
+            <if test='ratio != null and ratio > 0'>
+                , ratio = #{ratio}
+            </if>
+        where type = #{type} and keyword = #{oldword}
+    </update>
+
+    <delete id="delDicKeywords" parameterType="DicKeywords">
+        /* delDicKeywords  */
+        delete from dic_keywords
+        where type = #{type} and keyword = #{oldword}
+    </delete>
+
+
+</mapper>

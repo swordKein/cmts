@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ConfPsMappingMapper">
+
+    <insert id="insConfPsMapping" parameterType="ConfPsMapping">
+        /* insConfPsMappingOrig */
+        insert into conf_ps_mapping
+        (tg_id, ps_id)
+        VALUES
+        (#{tg_id}, #{ps_id})
+    </insert>
+
+    <delete id="delConfPsMapping" parameterType="ConfPsMapping">
+        /* delConfPsMapping */
+        delete from conf_ps_mapping where tg_id=#{tg_id}
+    </delete>
+
+
+    <delete id="delConfPsMappingByPsId" parameterType="ConfPreset">
+        /* delConfPsMappingByPsId */
+        delete from conf_ps_mapping
+        where ps_id = #{ps_id}
+    </delete>
+</mapper>

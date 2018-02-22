@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.MetaKeywordMappingMapper">
+
+    <select id="getMetaKeywordMappingList" resultType="MetaKeywordMapping" parameterType="MetaKeywordMapping">
+        /* getMetaKeywordMappingList */
+        select
+          idx, type, tag, keyword, ratio, regdate, regid
+        from meta_keyword_mapping
+        where type = #{type}
+    </select>
+
+    <select id="getMetaKeywordMappingListAll" resultType="MetaKeywordMapping">
+      /* getMetaKeywordMappingListAll */
+        select
+        idx, type, tag, keyword, ratio, regdate, regid
+        from meta_keyword_mapping
+        order by type asc, tag asc
+    </select>
+
+    <select id="getMetaTypes" resultType="String">
+        select type from meta_keyword_mapping group by type
+    </select>
+
+    <insert id="insMetaKeywordMapping" parameterType="MetaKeywordMapping">
+
+    </insert>
+
+    <update id="uptMetaKeywordMapping" parameterType="MetaKeywordMapping">
+
+    </update>
+
+    <delete id="delMetaKeywordMapping" parameterType="MetaKeywordMapping">
+
+    </delete>
+
+
+</mapper>

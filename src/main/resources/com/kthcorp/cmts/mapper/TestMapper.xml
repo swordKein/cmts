@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.TestMapper">
+
+    <select id="getCurrentDateTime" resultType="String">
+        /* getCurrentDateTime */
+        select NOW()
+    </select>
+
+    <select id="getVocList" resultType="map">
+        select voc_id, question, answer from voc_list
+    </select>
+
+    <update id="uptVocListById" parameterType="map">
+        update voc_list set words = #{words}
+        where voc_id = #{voc_id}
+    </update>
+
+    <select id="getFaqList" resultType="map">
+        select faq_id, question, answer from faq_list
+    </select>
+
+    <update id="uptFaqListById" parameterType="map">
+        update faq_list set words = #{words}
+        where faq_id = #{faq_id}
+    </update>
+
+    <insert id="insYjItems" parameterType="map">
+        /* insYjItems */
+        insert into yj_items
+        (yj_id, type, purity_title, titleshort, stat, director, director_en
+        , year, openday_kr, actors_display, actors_display_en, country_of_origin, yj_grade, regdate, regid)
+        values (
+        #{yj_id}, 'yj', #{purity_title}, #{titleshort}, 'Y',  #{director}, #{director_en}
+        , #{year}, #{openday_kr}, #{actors_display}, #{actors_display_en}, #{country_of_origin}, #{yj_grade}, now(), 'ghkdwo77'
+        )
+    </insert>
+
+    <insert id="insYcDatas" parameterType="map">
+        /* insYcDatas */
+        insert into yc_datas2
+        (type, filecnt, title, words, regdate, content_id, series_id, kmrb_id, itemidx)
+        values
+        (#{type}, #{filecnt}, #{title}, #{words}, now(), #{content_id}, #{series_id}, #{kmrb_id}, #{itemidx})
+    </insert>
+
+    <select id="getYcDatas1st" resultType="map">
+        /* getYcDatas1st */
+        select * from (
+            select yc.title, yc.titlecnt, yc.kmrb_id, yc.words
+            , ( select purity_title from yj_items where yj_id = yc.kmrb_id) as purity_title
+            , ( select replace(group_concat(content_id), " ", "") from ccube_contents where kmrb_id = yc.kmrb_id ) as content_id
+            from yc_datas2 yc
+            where length(yc.words) > 2 and titlecnt = 1
+        ) c where c.content_id is not null;
+    </select>
+</mapper>
