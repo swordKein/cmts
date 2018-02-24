@@ -17,6 +17,7 @@ import java.util.Map;
 @SpringBootTest
 public class RestUtilTest {
 
+    /*
     @Test
     public void test_getES() throws Exception {
         //String result = RestUtil.getES("{\"data\":\"아버지가방에들어가신다\"}");
@@ -68,5 +69,5 @@ public class RestUtilTest {
         WordFreqUtil.countWords(reqStr);
         //System.out.println("#RESULT:" + result);
     }
-
+    */
 }

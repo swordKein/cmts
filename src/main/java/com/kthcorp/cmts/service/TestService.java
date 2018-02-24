@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
@@ -14,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TestService implements TestServiceImpl {
@@ -2337,7 +2335,7 @@ public class TestService implements TestServiceImpl {
         }
     }
 
-    public List<Map<String,Object>> getYcDatas1st() {
+    public List<Map<String, Object>> getYcDatas1st() {
         List<Map<String, Object>> result = testMapper.getYcDatas1st();
         for(Map<String, Object> im : result) {
             System.out.println("#lineMap:" + im.toString());
@@ -2665,5 +2663,150 @@ public class TestService implements TestServiceImpl {
             e.printStackTrace();
         }
 
+    }
+
+
+    private Map<String, Object> getCombinedMap(Map<String, Object> origMap, String key, String value) {
+        List<String> tmpArr = (List<String>) origMap.get(key);
+        if (tmpArr == null) tmpArr = new ArrayList();
+
+        tmpArr.add(value);
+        origMap.remove(key);
+        origMap.put(key, tmpArr);
+
+        return origMap;
+    }
+
+    private Map<String, Object> getSeperatedMetas(String words) {
+        Map<String, Object> resultMap = new HashMap();
+        try {
+            words = words.replace("{", "");
+            words = words.replace("}", "");
+            String[] words2 = words.split(",");
+            if (words2 != null && words2.length > 0) {
+                for (String w1 : words2) {
+                    w1 = w1.trim();
+
+                    String[] w1s = w1.split("=");
+                    if (w1s != null && w1s.length > 0) {
+                        if (w1s[0] != null) {
+
+                            String w1s0 = w1s[0];
+
+                            String[] w2s = w1s0.split("_");
+                            if (w2s != null && w2s.length > 1) {
+                                //System.out.println("#tmp::w2:" + w2s[0] + ":" + w2s[1]);
+                                resultMap = getCombinedMap(resultMap, w2s[0], w2s[1]);
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println("#resultMap::"+resultMap.toString());
+        return resultMap;
+    }
+
+    private JsonArray getJsonFromArray(List<String> reqArr) {
+        JsonArray result = new JsonArray();
+
+        for(String rs : reqArr) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("word", rs);
+            obj.addProperty("ratio", 0.0);
+            obj.addProperty("freq", 0.0);
+            result.add(obj);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> getYcDatas1st2() {
+        List<Map<String, Object>> result = testMapper.getYcDatas1st();
+        //for(Map<String, Object> im : result) {
+        //    System.out.println("#lineMap:" + im.toString());
+        //}
+        System.out.println("#Result.size:"+result.size());
+
+        int cnt = 0;
+        for(Map<String, Object> obj : result) {
+            //if (cnt >= 20) break;
+
+            System.out.println("#obj:"+obj.toString());
+            String purity_title = "";
+            if (obj.get("purity_title") != null) purity_title = obj.get("purity_title").toString();
+            if ("".equals(purity_title) && obj.get("title") != null) purity_title = obj.get("title").toString();
+
+            purity_title = purity_title.trim();
+            String title2 = purity_title.replace(" ", "");
+            //String yj_id = obj.get("kmrb_id").toString();
+            Items reqit = new Items();
+            reqit.setTitle2(title2);
+            Items yjidItem = itemsMapper.getYjidForInsert(reqit);
+            String yj_id = "";
+            if (yjidItem != null && yjidItem.getCid() != null) {
+                yj_id = yjidItem.getCid();
+            }
+            if (!"".equals(yj_id.trim())) {
+                String words = obj.get("words").toString();
+                words = words.replace("주제/소재", "METASWHAT");
+                words = words.replace("감성/분위기", "METASEMOTION");
+                words = words.replace("인물/캐릭터", "METASWHO");
+                words = words.replace("공간적배경", "METASWHERE");
+                words = words.replace("시간적배경", "METASWHEN");
+
+                System.out.println("#RE::" + purity_title + "__" + title2 + "___" + yj_id + "__" + words);
+
+                Map<String, Object> wordsMap = getSeperatedMetas(words);
+                Set entrySet = wordsMap.entrySet();
+                Iterator it = entrySet.iterator();
+                ItemsTags req1 = null;
+
+                while (it.hasNext()) {
+                    Map.Entry me = (Map.Entry) it.next();
+                    String atype = me.getKey().toString();
+                    List<String> wordsArr = (List<String>) me.getValue();
+                    //System.out.println("##type:"+atype+"/ARRAY:"+wordsArr.toString());
+
+                    JsonArray newArr = getJsonFromArray(wordsArr);
+
+                    System.out.println("##jsonArray:" + newArr.toString());
+
+                    req1 = new ItemsTags();
+                    req1.setTitle(purity_title);
+                    req1.setTitle2(title2);
+                    req1.setYj_id(yj_id);
+                    req1.setMtype(atype);
+                    req1.setMeta(newArr.toString());
+                    System.out.println("#insert yc_tags_metas! type:" + atype);
+                    int rt1 = itemsMapper.insYjTagsMetas(req1);
+                }
+
+                System.out.println("#insert yj_items_out2! title:" + purity_title);
+                int rt2 = itemsMapper.insYjItemsOut2(req1);
+
+                cnt++;
+            }
+        }
+        //List<List<Map<String, Object>>> result2 = this.getSeperatedMapList(result, 50);
+
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> getYcDatas2st2() {
+        List<Map<String, Object>> result = testMapper.getYcDatas2st();
+        //for(Map<String, Object> im : result) {
+        //    System.out.println("#lineMap:" + im.toString());
+        //}
+        System.out.println("#Result.size:"+result.size());
+
+        //List<List<Map<String, Object>>> result2 = this.getSeperatedMapList(result, 50);
+
+        return result;
     }
 }

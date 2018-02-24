@@ -70,10 +70,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             req2.setIdx(itemIdx);
             req2.setStat("S");
             int tagidx2 = this.getMaxTagsIdxByItemIdx(req2);
+            //System.out.println("#confirmed tagidx2:"+tagidx2);
 
-            // 승인완료된 tagidx가 없으면 1로 추가
+            // 승인완료된 tagidx가 없으면 0으로 리턴
             if (tagidx2 == 0) {
-                tagidx = 1;
+                // 승인완료된 tagidx 개수가 > 0 이면 1 증가
+                int confirmedTagCnt = this.cntConfirmedTags(req2);
+                System.out.println("#confirmedTagCnt :"+confirmedTagCnt);
+                if (confirmedTagCnt > 0) {
+                    tagidx = 1;
+                } else {
+                    tagidx = 0;
+                }
             // 승인완료된 tagidx가 있으면 1 증가하여 신규건으로 저장
             } else if (tagidx2 > 0) {
                 tagidx = tagidx2 + 1;
@@ -100,6 +108,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     public int getMaxTagsIdxByItemIdx(ItemsTags req) {
         return itemsTagsMapper.getMaxTagsIdxByItemIdx(req);
+    }
+
+    @Override
+    public int cntConfirmedTags(ItemsTags req) {
+        return itemsTagsMapper.cntConfirmedTags(req);
     }
 
     @Override
@@ -617,5 +630,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         return resultArr;
+    }
+
+    @Override
+    public List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req) {
+        return itemsTagsMapper.getYjTagsMetasByItemidx(req);
     }
 }

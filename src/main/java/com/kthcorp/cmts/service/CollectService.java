@@ -58,6 +58,8 @@ public class CollectService implements CollectServiceImpl {
     private String serverid;
     @Value("${cmts.property.crawl_api_url}")
     private String crawl_api_url;
+    @Value("${cmts.property.collect_fail_limit}")
+    private Integer collect_fail_limit;
 
     // 전체 실행 JOB 개수
     public static int runningJobCount = 0;
@@ -203,7 +205,7 @@ public class CollectService implements CollectServiceImpl {
                                 reqStmh.setRt_code(resultCollect.get("rt_code").getAsString());
                             if (resultCollect != null && resultCollect.get("rt_msg") != null)
                                 reqStmh.setRt_msg(resultCollect.get("rt_msg").getAsString());
-                            // #TODO 용량문제로 일시 제회
+                            // #TODO 용량문제로 일시 제외
                             //reqStmh.setSummary(resultCollect.toString());
 
                             int rt_tmp = schedTargetMappingHistMapper.insSchedTargetMappingHist(reqStmh);
@@ -246,7 +248,8 @@ public class CollectService implements CollectServiceImpl {
 
                     System.out.println("#STEP03 collectedCount:"+collectedCount);
 
-                    if (failCount > 0 && collectedCount < 20) {
+                    //if (failCount > 0 && collectedCount < 20) {
+                    if (collectedCount < collect_fail_limit) {
                         reqSth.setStat("F");
                         reqSth.setRt_code("FAIL");
                         reqSth.setRt_msg("FAIL");

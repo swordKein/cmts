@@ -32,6 +32,8 @@ public class ItemsService implements ItemsServiceImpl {
     private InItemsMapper inItemsMapper;
     @Autowired
     private CcubeService ccubeService;
+    @Autowired
+    private ItemsTagsService itemsTagsService;
 
     @Override
     public int checkInItems() {
@@ -162,6 +164,50 @@ public class ItemsService implements ItemsServiceImpl {
                 reqKey.setPurity_title(req.getPurity_title());
                 reqKey.setItemidx(rtitem);
                 int rtkey = ccubeService.insCcubeKeys(reqKey);
+
+                /* TODO */
+                if (rtkey > 0) {
+                    /* insert items_tags_keys by yj_items_out2 */
+                    /* 영진위 기준 수동 추출물이 있는 경우 items_tags_metas가 없을 때 승인완료 처리하면서 meta를 채워넣는다 */
+                    int tagsIdx = itemsTagsService.getCurrTagsIdxForInsert(rtitem);
+                    ItemsTags reqit = new ItemsTags();
+                    reqit.setIdx(rtitem);
+                    reqit.setTagidx(tagsIdx);
+                    req.setStat("Y");
+                    /* itemidx 로 yj_tags_metas 내역을 조회 */
+                    List<ItemsTags> metasArr = itemsTagsService.getYjTagsMetasByItemidx(reqit);
+                    int insertedCnt = 0;
+                    if (metasArr != null) {
+                        for (ItemsTags ym : metasArr) {
+                            /* 기존 승인완료된 metas가 있는지 조회 */
+                            ItemsTags tagsMetas = itemsTagsService.getItemsTagsMetasByItemIdxAndMtype(reqit);
+                            boolean exist_Items_tags_metas = false;
+                            if (tagsMetas != null && tagsMetas.getIdx() != null) {
+                                exist_Items_tags_metas = true;
+                            }
+                            /* 승인된 metas가 존재하지 않으면 ym -> items_tags_metas로 등록 */
+                            if (!exist_Items_tags_metas) {
+                                ym.setIdx(rtitem);
+                                ym.setTagidx(tagsIdx);
+                                int rtitm = itemsTagsService.insItemsTagsMetas(ym);
+                                if (rtitm > 0) {
+                                    insertedCnt++;
+                                }
+                            }
+                        }
+                    }
+                    /* items_tags_metas에 등록된 건이 있는 경우 승인완료 처리 */
+                    /* items_tags_keys(stat=S) ,  items_stat (stat=ST) , items (tagcnt++)*/
+                    if (insertedCnt > 0) {
+                        reqit.setStat("S");
+                        int rt1 = itemsTagsService.uptItemsTagsKeysStat(reqit);
+                        Items req1 = new Items();
+                        req1.setIdx(rtitem);
+                        req1.setStat("ST");
+                        int rt2 = itemsMapper.insItemsStat(req1);
+                        int rt3 = itemsMapper.uptItemsTagcnt(req1);
+                    }
+                }
             }
 
         } catch (Exception e) {

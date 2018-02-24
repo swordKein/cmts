@@ -2,6 +2,7 @@ package com.kthcorp.cmts.mapper;
 
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsContent;
+import com.kthcorp.cmts.model.ItemsTags;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +31,9 @@ public interface ItemsMapper {
     List<ItemsContent> getItemsYj04();
 
     int insYjItemsOut(Items req);
+    int insYjItemsOut2(ItemsTags req);
+    int insYjTagsMetas(ItemsTags req);
+    Items getYjidForInsert(Items req);
 
     List<ItemsContent> getItemsCine21();
     ItemsContent getMovieCine21ByTitle(String title);

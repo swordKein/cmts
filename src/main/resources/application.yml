@@ -4,6 +4,7 @@ cmts:
     serverid: cmts_cm01
     running_schedule: true
     running_job_limit: 10
+    collect_fail_limit: 20
     criteria_success_ratio: 0.7
     crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
     #crawl_api_url: http://127.0.0.1:8080/crawl/byprefix
@@ -129,9 +130,11 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://localhost:3306/cmtsdb?autoReconnect=true&useSSL=false
-    username: daisy
+    username: metataguser
     password: daisy!
   thymeleaf:
     cache: false
@@ -147,22 +150,22 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : collectService
     -
-      cronExpression : 0 */30 * * * ?
+      cronExpression : 0 * * * * ?
       jobType : refineService
     -
-      cronExpression : 0 */30 * * * ?
+      cronExpression : 0 * * * * ?
       jobType : analyzeService
     -
-      cronExpression : 0 */30 * * * ?
+      cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 */30 * * * ?
+      cronExpression : 0 * * * * ?
       jobType : sftpService
-elasticsearch :
-  url : http://14.63.170.72:9200/
-  idx : seunjeon-idx
-  host : 14.63.170.72
-  port : 9200
+#elasticsearch :
+#  url : http://14.63.170.72:9200/
+#  idx : seunjeon-idx
+#  host : 14.63.170.72
+#  port : 9200
 ---
 spring:
   profiles: dev
@@ -178,10 +181,11 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
-    username: daisy
+    username: metataguser
     password: daisy!
   thymeleaf:
       cache: false
@@ -205,11 +209,6 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : itemsService
-elasticsearch :
-  url : http://14.63.170.72:9200/
-  idx : seunjeon-idx
-  host : 14.63.170.72
-  port : 9200
 ---
 spring:
   profiles: dev_no_sched
@@ -225,10 +224,11 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
-    username: daisy
+    username: metataguser
     password: daisy!
   thymeleaf:
       cache: false
@@ -255,11 +255,6 @@ schedule :
     -
       cronExpression : 0 0 1 * * ?
       jobType : dummyService
-elasticsearch :
-  url : http://14.63.170.72:9200/
-  idx : seunjeon-idx
-  host : 14.63.170.72
-  port : 9200
 ---
 spring:
   profiles: staging
@@ -302,11 +297,6 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : itemsService
-elasticsearch :
-  url : http://14.63.170.72:9200/
-  idx : seunjeon-idx
-  host : 14.63.170.72
-  port : 9200
 ---
 spring:
   profiles: prod
@@ -340,15 +330,3 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : itemsService
-elasticsearch :
-  url : http://14.63.170.72:9200/
-  idx : seunjeon-idx
-  host : 14.63.170.72
-  port : 9200
-
-###TMP
-  #datasource:
-  #  driver-class-name: org.postgresql.Driver
-  #  url: jdbc:postgresql://localhost:5432/testdb
-  #  username: test
-  #  password: test!

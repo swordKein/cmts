@@ -99,4 +99,8 @@ public interface TestServiceImpl {
     List<ItemsContent> getItemsYj04();
 
     void writeYj04();
+
+    List<Map<String, Object>> getYcDatas1st2();
+
+    List<Map<String, Object>> getYcDatas2st2();
 }

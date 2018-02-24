@@ -22,7 +22,7 @@ public class ItemsTagsServiceImplTest {
 
 	@Test
 	public void test_getItemsTagsMetasAll() throws Exception{
-		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(10410);
+		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(21227);
 		System.out.println("#Result:"+result.toString());
 	}
 

@@ -42,12 +42,24 @@
         </if>
     </select>
 
+    <select id="cntConfirmedTags" resultType="java.lang.Integer" parameterType="ItemsTags">
+        /* cntConfirmedTags */
+        select
+        count(*) as cnt
+        from items_tags_keys
+        where idx = #{idx}
+        <if test='stat != null and stat != ""'>
+            and stat = #{stat}
+        </if>
+    </select>
+
     <insert id="insItemsTagsKeys" parameterType="ItemsTags">
         /* insItemsTagsKeys */
         insert into items_tags_keys
           (idx, tagidx, stat, regdate)
         values
           (#{idx}, #{tagidx}, 'Y', now())
+        ON DUPLICATE KEY UPDATE regdate = now(), stat = 'Y'
     </insert>
 
     <update id="uptItemsTagsKeysStat" parameterType="ItemsTags">
@@ -64,5 +76,15 @@
         (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid})
         ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
+
+    <select id="getYjTagsMetasByItemidx" parameterType="ItemsTags" resultType="ItemsTags">
+        /* getYjTagsMetasByItemidx */
+        select ym.title, ym.title2, ym.yj_id, ym.mtype, ym.meta, ym.regdate
+        from items it
+        inner join ccube_contents cc on cc.CONTENT_ID = it.cid
+        inner join yj_items_out2 yj on yj.yj_id = cc.kmrb_id
+        inner join yj_tags_metas ym on ym.yj_id = yj.yj_id
+        where it.idx = #{idx}
+    </select>
 
 </mapper>

@@ -51,9 +51,25 @@
         select * from (
             select yc.title, yc.titlecnt, yc.kmrb_id, yc.words
             , ( select purity_title from yj_items where yj_id = yc.kmrb_id) as purity_title
-            , ( select replace(group_concat(content_id), " ", "") from ccube_contents where kmrb_id = yc.kmrb_id ) as content_id
+            from yc_datas yc
+            where length(yc.words) > 2 and yc.titlecnt = 1
+        ) c
+    </select>
+
+    <select id="getYcDatas2st" resultType="map">
+        /* getYcDatas2st
+        select * from (
+        select yc.title, yc.titlecnt, yc.kmrb_id, yc.words
+        , ( select purity_title from yj_items where yj_id = yc.kmrb_id) as purity_title
+        , ( select replace(group_concat(content_id), " ", "") from ccube_contents where kmrb_id = yc.kmrb_id ) as content_id
+        from yc_datas2 yc
+        where length(yc.words) > 2 and titlecnt = 1
+        ) c where c.content_id is not null;  */
+        select * from (
+            select yc.title, yc.titlecnt, yc.kmrb_id, yc.words
+            , ( select purity_title from yj_items where yj_id = yc.kmrb_id) as purity_title
             from yc_datas2 yc
-            where length(yc.words) > 2 and titlecnt = 1
-        ) c where c.content_id is not null;
+            where length(yc.words) > 2 and yc.titlecnt = 1
+        ) c
     </select>
 </mapper>
