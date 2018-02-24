@@ -25,4 +25,5 @@ public interface TestMapper {
 
     int insYcDatas(Map<String, Object> reqMap);
     List<Map<String, Object>> getYcDatas1st();
+    List<Map<String, Object>> getYcDatas2st();
 }

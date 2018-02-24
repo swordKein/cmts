@@ -302,6 +302,29 @@
         values (#{idx}, #{cid}, #{type}, #{title}, now(), 'Y')
     </insert>
 
+    <insert id="insYjItemsOut2" parameterType="ItemsTags">
+        /* insYjItemsOut2 */
+        insert into yj_items_out2 (yj_id, type, purity_title, regdate, stat, title2)
+        values (#{yj_id}, 'yc1', #{title}, now(), 'Y', #{title2})
+    </insert>
+
+    <insert id="insYjTagsMetas" parameterType="ItemsTags">
+        /* insYjTagsMetas */
+        insert into yj_tags_metas (title, title2, yj_id, mtype, meta, regdate)
+        values
+        (#{title}, #{title2}, #{yj_id}, #{mtype}, #{meta}, now());
+    </insert>
+
+    <select id="getYjidForInsert" parameterType="Items" resultType="Items">
+        /* getYjidForInsert */
+        select yj_id as cid from yj_items
+        where
+        title2 = #{title2}
+        and yj_id not in ( select yj_id from yj_items_out2 )
+        limit 1
+
+    </select>
+
     <select id="searchItemsPaging" parameterType="Items" resultType="Items">
         /* searchItemsPaging */
         select it.idx

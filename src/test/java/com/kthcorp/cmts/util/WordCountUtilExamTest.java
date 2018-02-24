@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @SpringBootTest
 public class WordCountUtilExamTest {
 
+    /*
     @Test
     public void test_getES() throws Exception {
             List<String> list = Arrays.asList(
@@ -30,4 +31,5 @@ public class WordCountUtilExamTest {
         String result = RestUtil.getES("{\"analyzer\":\"korean\",\"text\":\"아버지가방에들어가신다\"}");
         System.out.println("#RESULT:"+result);
     }
+    */
 }

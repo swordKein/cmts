@@ -333,4 +333,15 @@ public class TestServiceTestImpl {
 		//System.out.println("#result:"+result.toString());
 	}
 
+	@Test
+	public void test_getYcDatas1st2() throws Exception {
+		List<Map<String, Object>> result = testService.getYcDatas1st2();
+		System.out.println("#RESULT.size:"+result.size());
+	}
+
+	@Test
+	public void test_getYcDatas2st2() throws Exception {
+		List<Map<String, Object>> result = testService.getYcDatas2st2();
+		System.out.println("#RESULT.size:"+result.size());
+	}
 }

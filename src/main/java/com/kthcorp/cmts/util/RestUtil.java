@@ -15,6 +15,7 @@ import java.util.Collections;
 
 public class RestUtil {
     // 형태소 분석 후 단어 취득
+    /*
     public static String getES(String reqStr) throws Exception {
         String result = "";
 
@@ -38,5 +39,5 @@ public class RestUtil {
 
        return result;
     }
-
+    */
 }

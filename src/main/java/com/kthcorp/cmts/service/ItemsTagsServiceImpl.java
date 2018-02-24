@@ -24,6 +24,8 @@ public interface ItemsTagsServiceImpl {
 
     int getMaxTagsIdxByItemIdx(ItemsTags req);
 
+    int cntConfirmedTags(ItemsTags req);
+
     int insItemsTagsKeys(ItemsTags req);
 
     int uptItemsTagsKeysStat(ItemsTags req);
@@ -41,4 +43,6 @@ public interface ItemsTagsServiceImpl {
     JsonObject getArraysByTypeFromInputItems(String items);
 
     int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration);
+
+    List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
 }

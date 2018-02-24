@@ -13,9 +13,11 @@ public interface ItemsTagsMapper {
     List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req);
     ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req);
     int getMaxTagsIdxByItemIdx(ItemsTags req);
+    int cntConfirmedTags(ItemsTags req);
 
     int insItemsTagsKeys(ItemsTags req);
     int uptItemsTagsKeysStat(ItemsTags req);
 
     int insItemsTagsMetas(ItemsTags req);
+    List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
 }
