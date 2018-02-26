@@ -40,7 +40,7 @@
         <result property="content" column="content" />
     </resultMap>
 
-    <select id="getSchedTargetMappingHistList" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+    <select id="getSchedTargetMappingHistList" resultMap="SchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist">
         /* getSchedTargetMappingHistList */
         select
           h.stmh_id, h.sc_id, h.tg_id, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
@@ -57,7 +57,7 @@
         limit ${startIdx}, ${pageSize}
     </select>
 
-    <select id="getSchedTargetMappingHistListAll" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+    <select id="getSchedTargetMappingHistListAll" resultMap="SchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist">
         /* getSchedTargetMappingHistListForLast */
         select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
         , stc.content, stmh.summary
@@ -73,7 +73,7 @@
     </select>
 
 
-    <select id="getSchedTargetMappingHistListForLast" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+    <select id="getSchedTargetMappingHistListForLast" resultMap="SchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist">
         /* getSchedTargetMappingHistListForLast */
         select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
         , stc.content, stmh.summary
@@ -88,7 +88,7 @@
         order by stmh.regdate DESC
     </select>
 
-    <select id="getSchedTargetMappingHistListForLast2" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+    <select id="getSchedTargetMappingHistListForLast2" resultMap="SchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist">
         /* getSchedTargetMappingHistListForLast2 */
         select stmh.stmh_id, stmh.sc_id, stmh.tg_id, stmh.type, stmh.tcnt, stmh.regdate, stmh.stat, stmh.rt_code, stmh.rt_msg
         , stc.content, stmh.summary
@@ -100,7 +100,7 @@
     </select>
 
 
-    <select id="getSchedTargetMappingHistByStatList" resultMap="SchedTargetMappingHist" parameterType="SchedTargetMappingHist">
+    <select id="getSchedTargetMappingHistByStatList" resultMap="SchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist">
         /* getSchedTargetMappingHistByStatList */
         select
         h.stmh_id, h.sch_id, h.sc_id, h.tg_id, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.content, h.summary
@@ -118,7 +118,7 @@
         limit ${startIdx}, ${pageSize}
     </select>
 
-    <insert id="insSchedTargetMappingHist" parameterType="SchedTargetMappingHist" useGeneratedKeys="true" keyProperty="stmh_id">
+    <insert id="insSchedTargetMappingHist" parameterType="com.kthcorp.cmts.model.SchedTargetMappingHist" useGeneratedKeys="true" keyProperty="stmh_id">
         /* insSchedTargetMappingHist */
         insert into sched_target_mapping_hist (sc_id, tg_id, type, tcnt, regdate, stat, rt_code, rt_msg, content, summary
         , param1)

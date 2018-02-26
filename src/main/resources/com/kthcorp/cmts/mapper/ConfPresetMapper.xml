@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfPresetMapper">
 
-    <insert id="insertConfPreset" parameterType="ConfPreset"
+    <insert id="insertConfPreset" parameterType="com.kthcorp.cmts.model.ConfPreset"
             useGeneratedKeys="true" keyProperty="ps_id">
         /* insertConfPreset */
         insert into conf_preset
@@ -13,7 +13,7 @@
           (#{priority}, #{ps_tag}, #{descriptp}, #{dest_field}, #{dest_charset}, #{ps_type}, now(), #{regid}, #{ps_add_url})
     </insert>
 
-    <update id="uptConfPreset" parameterType="ConfPreset">
+    <update id="uptConfPreset" parameterType="com.kthcorp.cmts.model.ConfPreset">
         /* uptConfPreset */
         update conf_preset set regdate = now()
           <if test='ps_tag != null and ps_tag != ""'>

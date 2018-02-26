@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfTargetContentMapper">
 
-    <insert id="insConfTargetContent" parameterType="ConfTargetContent">
+    <insert id="insConfTargetContent" parameterType="com.kthcorp.cmts.model.ConfTargetContent">
         /* insConfTargetContent */
         insert into conf_target_content (tg_id, tgh_id, regdate, content)
         values (#{tg_id}, #{tgh_id}, NOW(), #{content})

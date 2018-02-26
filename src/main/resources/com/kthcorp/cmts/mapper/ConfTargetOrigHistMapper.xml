@@ -41,7 +41,7 @@
         <result property="stattarget" column="stattarget" />
     </resultMap>
 
-    <select id="getConfTargetOrigHistList" resultMap="ConfTargetOrigHist" parameterType="ConfTargetOrigHist">
+    <select id="getConfTargetOrigHistList" resultMap="ConfTargetOrigHist" parameterType="com.kthcorp.cmts.model.ConfTargetOrigHist">
         /* getConfTargetOrigHistList */
         select
           h.tgh_id, h.tg_id, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
@@ -61,7 +61,7 @@
     </select>
 
 
-    <select id="getConfTargetOrigHistByStatList" resultMap="ConfTargetOrigHist" parameterType="ConfTargetOrigHist">
+    <select id="getConfTargetOrigHistByStatList" resultMap="ConfTargetOrigHist" parameterType="com.kthcorp.cmts.model.ConfTargetOrigHist">
         /* getConfTargetOrigHistByStatList */
         select
         h.tgh_id, h.tg_id, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
@@ -83,7 +83,7 @@
         limit ${startIdx}, ${pageSize}
     </select>
 
-    <insert id="insConfTargetOrigHist" parameterType="ConfTargetOrigHist" useGeneratedKeys="true" keyProperty="tgh_id">
+    <insert id="insConfTargetOrigHist" parameterType="com.kthcorp.cmts.model.ConfTargetOrigHist" useGeneratedKeys="true" keyProperty="tgh_id">
         /* insConfTargetOrigHist */
         insert into conf_target_orig_hist (tg_id, regdate, stat, rt_code, rt_msg, summary)
         values (#{tg_id}, NOW(), #{stat}, #{rt_code}, #{rt_msg}, #{summary})

@@ -38,7 +38,7 @@
         <result property="dest_charset" column="dest_charset" />
     </resultMap>
 
-    <select id="getTargetListActivePage" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+    <select id="getTargetListActivePage" resultMap="ConfTargetOrig" parameterType="com.kthcorp.cmts.model.ConfTargetOrig">
         /* getTargetListActivePage */
         select
           t.tg_id, t.title, t.descript
@@ -56,7 +56,7 @@
         #limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTargetOrig" parameterType="com.kthcorp.cmts.model.ConfTargetOrig">
         /* getTargetListReadyToAnalyzePage */
         select
         t.tg_id, t.title, t.descript
@@ -74,7 +74,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getTargetListByStat" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+    <select id="getTargetListByStat" resultMap="ConfTargetOrig" parameterType="com.kthcorp.cmts.model.ConfTargetOrig">
         /* getTargetListByStat */
         select
         t.tg_id, t.title, t.descript
@@ -110,7 +110,7 @@
         limit 10 offset 0
     </select>
 
-    <select id="getConfTargetOrigById" resultMap="ConfTargetOrig" parameterType="ConfTargetOrig">
+    <select id="getConfTargetOrigById" resultMap="ConfTargetOrig" parameterType="com.kthcorp.cmts.model.ConfTargetOrig">
         /* getConfTargetOrigById */
         select
         t.tg_id, t.title, t.descript
@@ -126,14 +126,14 @@
         where t.tg_id = #{tg_id}
     </select>
 
-    <update id="uptTargetStat" parameterType="ConfTargetOrig">
+    <update id="uptTargetStat" parameterType="com.kthcorp.cmts.model.ConfTargetOrig">
         /* uptTargetStat */
         update conf_target_orig set stat=#{stat}
           , regdate = now()
           where tg_id=#{tg_id}
     </update>
 
-    <insert id="insConfTargetOrig" parameterType="ConfTargetOrig"
+    <insert id="insConfTargetOrig" parameterType="com.kthcorp.cmts.model.ConfTargetOrig"
             useGeneratedKeys="true" keyProperty="tg_id">
         /* insertConfPreset */
         insert into conf_target_orig

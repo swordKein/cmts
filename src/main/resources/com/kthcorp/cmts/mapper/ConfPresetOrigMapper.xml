@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfPresetOrigMapper">
 
-    <insert id="insertConfPresetOrig" parameterType="ConfPresetOrig"
+    <insert id="insertConfPresetOrig" parameterType="com.kthcorp.cmts.model.ConfPresetOrig"
             useGeneratedKeys="true" keyProperty="ps_id">
         /* insertConfPreset */
         insert into conf_preset_ORIG

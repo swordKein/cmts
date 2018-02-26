@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfPsMappingMapper">
 
-    <insert id="insConfPsMapping" parameterType="ConfPsMapping">
+    <insert id="insConfPsMapping" parameterType="com.kthcorp.cmts.model.ConfPsMapping">
         /* insConfPsMappingOrig */
         insert into conf_ps_mapping
         (tg_id, ps_id)
@@ -12,13 +12,13 @@
         (#{tg_id}, #{ps_id})
     </insert>
 
-    <delete id="delConfPsMapping" parameterType="ConfPsMapping">
+    <delete id="delConfPsMapping" parameterType="com.kthcorp.cmts.model.ConfPsMapping">
         /* delConfPsMapping */
         delete from conf_ps_mapping where tg_id=#{tg_id}
     </delete>
 
 
-    <delete id="delConfPsMappingByPsId" parameterType="ConfPreset">
+    <delete id="delConfPsMappingByPsId" parameterType="com.kthcorp.cmts.model.ConfPreset">
         /* delConfPsMappingByPsId */
         delete from conf_ps_mapping
         where ps_id = #{ps_id}

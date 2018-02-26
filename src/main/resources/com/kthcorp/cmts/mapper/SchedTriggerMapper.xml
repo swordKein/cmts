@@ -179,7 +179,7 @@
         limit 50
     </select>
 
-    <select id="get50ByTypeStatSchedTriggerList_bak" resultMap="SchedTrigger" parameterType="SchedTrigger">
+    <select id="get50ByTypeStatSchedTriggerList_bak" resultMap="SchedTrigger" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* get50ByTypeStatSchedTriggerList_bak */
         select
         s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
@@ -213,7 +213,7 @@
     </select>
 
 
-    <select id="get50ByTypeStatSchedTriggerList" resultMap="SchedTrigger" parameterType="SchedTrigger">
+    <select id="get50ByTypeStatSchedTriggerList" resultMap="SchedTrigger" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* get50ByTypeStatSchedTriggerList */
         select
         s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
@@ -231,7 +231,7 @@
         limit 10
     </select>
 
-    <select id="getConfTargetListByScid" resultMap="ConfTarget" parameterType="SchedTrigger">
+    <select id="getConfTargetListByScid" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* getConfTargetListByScid */
         select
         t.tg_id, t.title, t.descript
@@ -250,7 +250,7 @@
         where s.sc_id = #{sc_id}
     </select>
 
-    <select id="getSchedTriggerOneByScid" resultMap="SchedTrigger" parameterType="SchedTrigger">
+    <select id="getSchedTriggerOneByScid" resultMap="SchedTrigger" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* getSchedTriggerOneByScid */
         select
         s.sc_id, s.type, s.descript, s.tcnt, s.regdate, s.regid, s.stat, s.progs
@@ -279,7 +279,7 @@
         where s.sc_id = #{sc_id}
     </select>
 
-    <update id="uptSchedTriggerProgs" parameterType="SchedTrigger">
+    <update id="uptSchedTriggerProgs" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* uptSchedTriggerProgs */
         update sched_trigger
           set regdate = now()
@@ -304,14 +304,14 @@
         where sc_id = #{sc_id}
     </update>
 
-    <select id="getSchedTriggerOne" resultType="SchedTrigger" parameterType="SchedTrigger">
+    <select id="getSchedTriggerOne" resultType="SchedTrigger" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* selectSchedTriggerOne */
         select parent_sc_id, type, sc_id, stat, regdate from sched_trigger
         where parent_sc_id = #{parent_sc_id} and type = #{type}
         limit 1;
     </select>
 
-    <update id="uptOldSchedTriggerRetry" parameterType="SchedTrigger">
+    <update id="uptOldSchedTriggerRetry" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* upSchedTriggerRetry */
         update sched_trigger
         set regdate = now()
@@ -320,7 +320,7 @@
         where parent_sc_id = #{parent_sc_id} and type = #{type}
     </update>
 
-    <update id="uptSchedTriggerOldItemsByTypeStat" parameterType="SchedTrigger">
+    <update id="uptSchedTriggerOldItemsByTypeStat" parameterType="com.kthcorp.cmts.model.SchedTrigger">
     /* uptSchedTriggerOldItemsByTypeStat */
       update sched_trigger
       set regdate = now()
@@ -328,7 +328,7 @@
       where parent_sc_id = #{parent_sc_id} and type = #{type} and stat = #{stat}
     </update>
 
-    <insert id="insSchedTriggerForStart" parameterType="SchedTrigger" useGeneratedKeys="true" keyProperty="sc_id">
+    <insert id="insSchedTriggerForStart" parameterType="com.kthcorp.cmts.model.SchedTrigger" useGeneratedKeys="true" keyProperty="sc_id">
         /* insSchedTrigger */
         insert into sched_trigger (parent_sc_id, type, descript, regdate, regid, stat, progs, tcnt)
         values (#{parent_sc_id}, #{type}, #{descript}, now(), #{regid}, "Y", 0, 0)
@@ -341,20 +341,20 @@
         order by tg_id asc
     </select>
 
-    <insert id="insSchedTargetMapping" parameterType="SchedTargetMapping">
+    <insert id="insSchedTargetMapping" parameterType="com.kthcorp.cmts.model.SchedTargetMapping">
         /* insSchedTargetMapping */
         insert into sched_target_mapping (sc_id, tg_id)
         values (#{sc_id}, #{tg_id})
     </insert>
 
-    <update id="uptSchedTriggerRetry" parameterType="SchedTrigger">
+    <update id="uptSchedTriggerRetry" parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* uptSchedTriggerRetry */
         update sched_trigger
           set tcnt = tcnt + 1, stat = 'Y'
           where sc_id = #{sc_id}
     </update>
 
-    <delete id="delSchedTargetMapping" parameterType="SchedTargetMapping">
+    <delete id="delSchedTargetMapping" parameterType="com.kthcorp.cmts.model.SchedTargetMapping">
         /* delSchedTargetMapping */
         delete from sched_target_mapping where tg_id=#{tg_id}
     </delete>
