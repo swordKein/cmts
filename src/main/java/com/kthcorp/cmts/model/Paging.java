@@ -1,7 +1,10 @@
 package com.kthcorp.cmts.model;
 
+import org.apache.ibatis.type.Alias;
+
 import java.io.Serializable;
 
+@Alias("Paging")
 public class Paging implements Serializable {
     private int pageNo;
     private int pageSize;

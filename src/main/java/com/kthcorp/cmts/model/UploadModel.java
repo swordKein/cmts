@@ -1,9 +1,11 @@
 package com.kthcorp.cmts.model;
 
+import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
+@Alias("UploadModel")
 public class UploadModel {
 
     private String extraField;

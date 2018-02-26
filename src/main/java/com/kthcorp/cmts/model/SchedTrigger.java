@@ -2,10 +2,12 @@ package com.kthcorp.cmts.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.ibatis.type.Alias;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Alias("SchedTrigger")
 public class SchedTrigger extends Paging {
     @Override
     public String toString() {
