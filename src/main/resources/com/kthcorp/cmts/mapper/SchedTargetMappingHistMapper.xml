@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.SchedTargetMappingHistMapper">
 
-    <resultMap id="SchedTargetMappingHist" type="SchedTargetMappingHist">
+    <resultMap id="SchedTargetMappingHist" type="com.kthcorp.cmts.model.SchedTargetMappingHist">
         <id property="stmh_id" column="stmh_id" />
         <result property="sc_id" column="sc_id" />
         <result property="tg_id" column="tg_id" />
@@ -26,7 +26,7 @@
                     javaType="ArrayList" resultMap="SchedTargetContent"/>
     </resultMap>
 
-    <resultMap id="SchedTargetContent" type="SchedTargetContent">
+    <resultMap id="SchedTargetContent" type="com.kthcorp.cmts.model.SchedTargetContent">
         <id property="stc_id" column="stc_id" />
         <result property="sc_id" column="sc_id" />
         <result property="tg_id" column="tg_id" />

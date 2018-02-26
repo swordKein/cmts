@@ -30,7 +30,7 @@
         <result property="meta" column="meta" />
     </resultMap>
 
-    <resultMap id="SchedTrigger" type="SchedTrigger">
+    <resultMap id="SchedTrigger" type="com.kthcorp.cmts.model.SchedTrigger">
         <id property="sc_id" column="sc_id" />
     </resultMap>
 

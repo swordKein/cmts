@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfTargetOrigMapper">
 
-    <resultMap id="ConfTargetOrig" type="ConfTargetOrig">
+    <resultMap id="ConfTargetOrig" type="com.kthcorp.cmts.model.ConfTargetOrig">
         <id property="tg_id" column="tg_id" />
         <result property="title" column="title" />
         <result property="descript" column="descript" />
@@ -25,7 +25,7 @@
                     javaType="ArrayList" resultMap="ConfPresetOrig"/>
     </resultMap>
 
-    <resultMap id="ConfPresetOrig" type="ConfPresetOrig">
+    <resultMap id="ConfPresetOrig" type="com.kthcorp.cmts.model.ConfPresetOrig">
         <id property="ps_id" column="ps_id" />
         <result property="ps_add_url" column="ps_add_url" />
         <result property="ps_tag" column="ps_tag" />
