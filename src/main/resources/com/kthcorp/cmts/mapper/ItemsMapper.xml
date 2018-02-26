@@ -20,7 +20,7 @@
         <result property="year" column="year" />
         <collection property="metaList" column="idx" ofType="ItemsMetas"
                     javaType="ArrayList" resultMap="ItemsMetas"/>
-        <collection property="schedList" column="sc_id" ofType="SchedTrigger"
+        <collection property="schedList" column="sc_id" ofType="com.kthcorp.cmts.model.SchedTrigger"
                     javaType="ArrayList" resultMap="SchedTrigger"/>
     </resultMap>
 

@@ -19,7 +19,7 @@
         <result property="param4" column="param4" />
         <result property="param5" column="param5" />
         <result property="summary" column="summary" />
-        <collection property="schedTrigger" column="sc_id" ofType="SchedTrigger"
+        <collection property="schedTrigger" column="sc_id" ofType="com.kthcorp.cmts.model.SchedTrigger"
                     javaType="SchedTrigger" resultMap="SchedTrigger"/>
     </resultMap>
 
