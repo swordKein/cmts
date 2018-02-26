@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfTargetMapper">
 
-    <resultMap id="ConfTarget" type="ConfTarget">
+    <resultMap id="ConfTarget" type="com.kthcorp.cmts.model.ConfTarget">
         <id property="tg_id" column="tg_id" />
         <result property="title" column="title" />
         <result property="descript" column="descript" />
@@ -32,11 +32,11 @@
         <result property="fail_count1" column="fail_count1" />
         <result property="fail_count2" column="fail_count2" />
 
-        <collection property="presetList" column="ps_id" ofType="ConfPreset"
+        <collection property="presetList" column="ps_id" ofType="com.kthcorp.cmts.model.ConfPreset"
                     javaType="ArrayList" resultMap="ConfPreset"/>
     </resultMap>
 
-    <resultMap id="ConfPreset" type="ConfPreset">
+    <resultMap id="ConfPreset" type="com.kthcorp.cmts.model.ConfPreset">
         <id property="ps_id" column="ps_id" />
         <result property="ps_add_url" column="ps_add_url" />
         <result property="ps_tag" column="ps_tag" />
@@ -49,7 +49,7 @@
         <result property="dest_charset" column="dest_charset" />
     </resultMap>
 
-    <select id="getTargetListActivePage" resultMap="ConfTarget" parameterType="ConfTarget">
+    <select id="getTargetListActivePage" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* getTargetListActivePage */
         select
           t.tg_id, t.title, t.descript
@@ -68,7 +68,7 @@
         #limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTarget" parameterType="ConfTarget">
+    <select id="getTargetListReadyToAnalyzePage" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* getTargetListReadyToAnalyzePage */
         select
         t.tg_id, t.title, t.descript
@@ -86,7 +86,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getTargetListByStat" resultMap="ConfTarget" parameterType="ConfTarget">
+    <select id="getTargetListByStat" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* getTargetListByStat */
         select
         t.tg_id, t.title, t.descript
@@ -104,7 +104,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getTargetListByPrefix" resultMap="ConfTarget" parameterType="ConfTarget">
+    <select id="getTargetListByPrefix" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* getTargetListByPrefix */
         select
         t.tg_id, t.title, t.descript
@@ -141,7 +141,7 @@
         limit 10 offset 0
     </select>
 
-    <select id="getConfTargetById" resultMap="ConfTarget" parameterType="ConfTarget">
+    <select id="getConfTargetById" resultMap="ConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* getConfTargetById */
         select
         t.tg_id, t.title, t.descript
@@ -159,20 +159,20 @@
         where t.tg_id = #{tg_id}
     </select>
 
-    <update id="uptTargetStat" parameterType="ConfTarget">
+    <update id="uptTargetStat" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* uptTargetStat */
         update conf_target set stat=#{stat}
           , regdate = now()
           where tg_id=#{tg_id}
     </update>
 
-    <delete id="delConfPreset" parameterType="ConfPreset">
+    <delete id="delConfPreset" parameterType="com.kthcorp.cmts.model.ConfPreset">
         /* delConfPreset */
         delete from conf_preset
         where ps_id = #{ps_id}
     </delete>
 
-    <update id="uptConfTarget" parameterType="ConfTarget">
+    <update id="uptConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* uptTarget */
         update conf_target set regdate = now()
         <if test='title != null and title != ""'>
@@ -211,12 +211,12 @@
         where tg_id=#{tg_id}
     </update>
 
-    <delete id="delConfTarget" parameterType="ConfTarget">
+    <delete id="delConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget">
         /* delTarget */
         delete from conf_target where tg_id=#{tg_id}
     </delete>
 
-    <insert id="insConfTarget" parameterType="ConfTarget"
+    <insert id="insConfTarget" parameterType="com.kthcorp.cmts.model.ConfTarget"
             useGeneratedKeys="true" keyProperty="tg_id">
         /* insConfTarget */
         insert into conf_target
