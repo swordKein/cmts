@@ -23,12 +23,12 @@
         <result property="parent_sc_id" column="parent_sc_id" />
         <result property="itemIdx" column="itemIdx" />
 
-        <collection property="targetList" column="tg_id" ofType="ConfTarget"
+        <collection property="targetList" column="tg_id" ofType="com.kthcorp.cmts.model.ConfTarget"
                     javaType="ArrayList" resultMap="ConfTarget"/>
 
     </resultMap>
 
-    <resultMap id="ConfTarget" type="ConfTarget">
+    <resultMap id="ConfTarget" type="com.kthcorp.cmts.model.ConfTarget">
         <id property="tg_id" column="tg_id" />
         <result property="title" column="title" />
         <result property="descript" column="descript" />
