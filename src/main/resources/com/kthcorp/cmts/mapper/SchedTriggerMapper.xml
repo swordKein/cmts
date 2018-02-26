@@ -84,7 +84,7 @@
         limit 50
     </select>
 
-    <select id="getSchedTriggerListById" resultMap="SchedTrigger" parameterType="int">
+    <select id="getSchedTriggerListById" resultMap="SchedTrigger" parameterType="java.lang.Integer">
         /* getSchedTriggerList */
         select
         s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
@@ -100,7 +100,7 @@
         where s.sc_id = #{sc_id}
     </select>
 
-    <select id="getSchedTriggerListByItemIdx" resultMap="SchedTrigger" parameterType="int">
+    <select id="getSchedTriggerListByItemIdx" resultMap="SchedTrigger" parameterType="java.lang.Integer">
         /* getSchedTriggerList */
         select
         s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
@@ -121,7 +121,7 @@
         limit 50
     </select>
 
-    <select id="getSchedTriggerById" resultMap="SchedTrigger" parameterType="int">
+    <select id="getSchedTriggerById" resultMap="SchedTrigger" parameterType="java.lang.Integer">
         /* getSchedTriggerById */
         select
         s.sc_id, s.type, s.descript, s.regdate, s.regid, s.stat, s.progs
@@ -304,7 +304,8 @@
         where sc_id = #{sc_id}
     </update>
 
-    <select id="getSchedTriggerOne" resultType="SchedTrigger" parameterType="com.kthcorp.cmts.model.SchedTrigger">
+    <select id="getSchedTriggerOne" resultType="com.kthcorp.cmts.model.SchedTrigger"
+                                    parameterType="com.kthcorp.cmts.model.SchedTrigger">
         /* selectSchedTriggerOne */
         select parent_sc_id, type, sc_id, stat, regdate from sched_trigger
         where parent_sc_id = #{parent_sc_id} and type = #{type}
@@ -334,7 +335,7 @@
         values (#{parent_sc_id}, #{type}, #{descript}, now(), #{regid}, "Y", 0, 0)
     </insert>
 
-    <select id="getParentSchedTargetMapping" parameterType="java.lang.Integer" resultType="SchedTargetMapping">
+    <select id="getParentSchedTargetMapping" parameterType="java.lang.Integer" resultType="com.kthcorp.cmts.model.SchedTargetMapping">
         /* getSchedTargetMapping */
         select sc_id, tg_id from sched_target_mapping
         where sc_id =#{sc_id}
