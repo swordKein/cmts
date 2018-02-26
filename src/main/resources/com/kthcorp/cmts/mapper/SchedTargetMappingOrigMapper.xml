@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.SchedTargetMappingOrigMapper">
 
-    <select id="getSchedTargetMappingOrigList" resultType="SchedTargetMappingOrig" parameterType="SchedTargetMappingOrig">
+    <select id="getSchedTargetMappingOrigList" resultType="SchedTargetMappingOrig" parameterType="com.kthcorp.cmts.model.SchedTargetMappingOrig">
         /* getSchedTargetMappingOrigList */
         select
           idx, type, rank, tg_id

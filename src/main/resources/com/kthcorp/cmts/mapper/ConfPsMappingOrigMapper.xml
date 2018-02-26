@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfPsMappingOrigMapper">
 
-    <insert id="insConfPsMappingOrig" parameterType="ConfPsMappingOrig">
+    <insert id="insConfPsMappingOrig" parameterType="com.kthcorp.cmts.model.ConfPsMappingOrig">
         /* insConfPsMappingOrig */
         insert into conf_ps_mapping_ORIG
         (tg_id, ps_id)

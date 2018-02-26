@@ -4,13 +4,13 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.SchedTargetContentMapper">
 
-    <insert id="insSchedTargetContent" parameterType="SchedTargetContent" useGeneratedKeys="true" keyProperty="stc_id">
+    <insert id="insSchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent" useGeneratedKeys="true" keyProperty="stc_id">
         /* insSchedTargetContent */
         insert into sched_target_content (sc_id, tg_id, stmh_id, regdate, content)
         values (#{sc_id}, #{tg_id}, #{stmh_id}, NOW(), #{content})
     </insert>
 
-    <select id="getSchedTargetContentList" resultType="SchedTargetContent" parameterType="SchedTargetContent">
+    <select id="getSchedTargetContentList" resultType="SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
         /* getSchedTargetContentList */
         select c.*, stmh.tcnt from sched_target_content c
         inner join sched_trigger st on st.sc_id = c.sc_id
@@ -31,7 +31,7 @@
         </trim>
     </select>
 
-    <select id="getSchedTargetContentLastOne" resultType="SchedTargetContent" parameterType="SchedTargetContent">
+    <select id="getSchedTargetContentLastOne" resultType="SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
         /* getSchedTargetContentLastOne */
         select c.* from sched_target_content c
         <trim prefix="WHERE" prefixOverrides="AND">

@@ -38,7 +38,7 @@
         <result property="param5" column="param5" />
     </resultMap>
 
-    <select id="getSchedTriggerHistList" resultMap="SchedTriggerHist" parameterType="SchedTriggerHist">
+    <select id="getSchedTriggerHistList" resultMap="SchedTriggerHist" parameterType="com.kthcorp.cmts.model.SchedTriggerHist">
         /* getSchedTriggerHistList */
         select
           h.sch_id, h.sc_id, h.tcnt, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
@@ -56,7 +56,7 @@
     </select>
 
 
-    <select id="getSchedTriggerHistByStatList" resultMap="SchedTriggerHist" parameterType="SchedTriggerHist">
+    <select id="getSchedTriggerHistByStatList" resultMap="SchedTriggerHist" parameterType="com.kthcorp.cmts.model.SchedTriggerHist">
         /* getSchedTriggerHistByStatList */
         select
         h.sch_id, h.sc_id, h.tcnt, h.type, h.regdate, h.stat, h.rt_code, h.rt_msg, h.summary
@@ -78,7 +78,7 @@
         limit ${startIdx}, ${pageSize}
     </select>
 
-    <insert id="insSchedTriggerHist" parameterType="SchedTriggerHist" useGeneratedKeys="true" keyProperty="sch_id">
+    <insert id="insSchedTriggerHist" parameterType="com.kthcorp.cmts.model.SchedTriggerHist" useGeneratedKeys="true" keyProperty="sch_id">
         /* insSchedTriggerHist */
         insert into sched_trigger_hist (sc_id, tcnt, type, regdate, stat, rt_code, rt_msg, summary)
         values (#{sc_id}, #{tcnt}, #{type}, NOW(), #{stat}, #{rt_code}, #{rt_msg}, #{summary})
