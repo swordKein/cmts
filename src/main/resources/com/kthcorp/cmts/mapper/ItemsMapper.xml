@@ -18,7 +18,7 @@
         <result property="stat" column="stat" />
         <result property="director" column="director" />
         <result property="year" column="year" />
-        <collection property="metaList" column="idx" ofType="ItemsMetas"
+        <collection property="metaList" column="idx" ofType="com.kthcorp.cmts.model.ItemsMetas"
                     javaType="ArrayList" resultMap="ItemsMetas"/>
         <collection property="schedList" column="sc_id" ofType="com.kthcorp.cmts.model.SchedTrigger"
                     javaType="ArrayList" resultMap="SchedTrigger"/>
@@ -35,7 +35,7 @@
     </resultMap>
 
 
-    <select id="getItems" resultType="Items">
+    <select id="getItems" resultType="com.kthcorp.cmts.model.Items">
         /* getItems */
         select
           idx, type, cid, title, title1, title2,
@@ -43,7 +43,7 @@
         from items
     </select>
 
-    <select id="getPagedItems" resultType="Items" parameterType="Items">
+    <select id="getPagedItems" resultType="com.kthcorp.cmts.model.Items" parameterType="com.kthcorp.cmts.model.Items">
         /* getPagedItems */
         select
         idx, type, cid, title, title1, title2,
@@ -65,7 +65,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getItemsByIdx" resultMap="Items" parameterType="Items">
+    <select id="getItemsByIdx" resultMap="Items" parameterType="com.kthcorp.cmts.model.Items">
         /* getItemsByIdx */
         select
             t.idx, t.cid, t.title, t.title1, t.title2,
@@ -87,7 +87,7 @@
         where t.idx = #{idx}
     </select>
 
-    <select id="countItems" resultType="Integer" parameterType="Items">
+    <select id="countItems" resultType="Integer" parameterType="com.kthcorp.cmts.model.Items">
         /* countItems */
         select count(*)
         from items
@@ -106,7 +106,7 @@
 
     </select>
 
-    <insert id="insItems" parameterType="Items" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insItems" parameterType="com.kthcorp.cmts.model.Items" useGeneratedKeys="true" keyProperty="idx">
         /* insItems */
         insert into items
           (type, cid, title, title1, title2,
@@ -116,13 +116,13 @@
           now(), #{regdate1}, #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
     </insert>
 
-    <delete id="delItems" parameterType="Items">
+    <delete id="delItems" parameterType="com.kthcorp.cmts.model.Items">
         /* delItems */
         delete from items where idx = #{idx}
     </delete>
 
 
-    <update id="uptItems" parameterType="Items">
+    <update id="uptItems" parameterType="com.kthcorp.cmts.model.Items">
         /* uptItems */
         update items
         set
@@ -149,7 +149,7 @@
         where idx = #{idx}
     </update>
 
-    <select id="getItemsContent" resultType="ItemsContent">
+    <select id="getItemsContent" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsContent */
         select it.title, it.title2, it.regdate
         , ( select stc.content from sched_target_content stc where stc.sc_id = sc.sc_id and content != '' order by regdate desc limit 1) as content
@@ -165,7 +165,7 @@
 
     </select>
 
-    <select id="getItemsCine21Second520" resultType="ItemsContent">
+    <select id="getItemsCine21Second520" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsCine21Second520 */
         select it.title, it.title2, stc.content from items it
         inner join items_sched_mapping ism on ism.idx = it.idx
@@ -177,7 +177,7 @@
     </select>
 
 
-    <select id="getItemsCine21SecondFor10AndContentall" resultType="ItemsContent">
+    <select id="getItemsCine21SecondFor10AndContentall" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsCine21SecondFor10AndContentall */
         select ism.sc_id, it.title, it.title2, stc.content
         from items it
@@ -191,7 +191,7 @@
     </select>
 
 
-    <select id="getItemsYj01by01_bak_yj1_250" resultType="ItemsContent">
+    <select id="getItemsYj01by01_bak_yj1_250" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsYj01by01 */
         select it.idx,ism.sc_id, it.title, it.title2, stc.content
     ,stmh.tcnt
@@ -212,7 +212,7 @@
     </select>
 
 
-    <select id="getItemsYj01by01" resultType="ItemsContent">
+    <select id="getItemsYj01by01" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsYj01by02_for_yj2_yj22_500 */
         select it.idx,ism.sc_id, it.title, it.title2, stc.content
         ,stmh.tcnt
@@ -236,7 +236,7 @@
 
     </select>
 
-    <select id="getItemsYj04" resultType="ItemsContent">
+    <select id="getItemsYj04" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsYj04 */
         select it.idx,ism.sc_id, it.title, it.title2, stc.content
         ,stmh.tcnt
@@ -259,12 +259,12 @@
     </select>
 
 
-    <select id="getItemsCine21" resultType="ItemsContent">
+    <select id="getItemsCine21" resultType="com.kthcorp.cmts.model.ItemsContent">
         /* getItemsCine21 */
         select movieNm as title, cineKeywords as content from movie_cine21
     </select>
 
-    <select id="getMovieCine21ByTitle" resultType="ItemsContent" parameterType="java.lang.String">
+    <select id="getMovieCine21ByTitle" resultType="com.kthcorp.cmts.model.ItemsContent" parameterType="java.lang.String">
         /* getMovieCine21ByTitle */
         select movieNm as title, cineKeywords as content from movie_cine21
         where title = #{title}
@@ -288,7 +288,7 @@
         )
     </select>
 
-    <select id="getCollectContentList" resultType="ItemsContent" parameterType="java.lang.Integer">
+    <select id="getCollectContentList" resultType="com.kthcorp.cmts.model.ItemsContent" parameterType="java.lang.Integer">
         /* getCollectContentList */
         select stc.sc_id, stc.content
         from sched_target_content stc
@@ -296,26 +296,26 @@
         where stc.sc_id = #{sc_id}
     </select>
 
-    <insert id="insYjItemsOut" parameterType="Items">
+    <insert id="insYjItemsOut" parameterType="com.kthcorp.cmts.model.Items">
         /* insYjItemsOut */
         insert into yj_items_out (idx, yj_id, type, purity_title, regdate, stat)
         values (#{idx}, #{cid}, #{type}, #{title}, now(), 'Y')
     </insert>
 
-    <insert id="insYjItemsOut2" parameterType="ItemsTags">
+    <insert id="insYjItemsOut2" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insYjItemsOut2 */
         insert into yj_items_out2 (yj_id, type, purity_title, regdate, stat, title2)
         values (#{yj_id}, 'yc1', #{title}, now(), 'Y', #{title2})
     </insert>
 
-    <insert id="insYjTagsMetas" parameterType="ItemsTags">
+    <insert id="insYjTagsMetas" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insYjTagsMetas */
         insert into yj_tags_metas (title, title2, yj_id, mtype, meta, regdate)
         values
         (#{title}, #{title2}, #{yj_id}, #{mtype}, #{meta}, now());
     </insert>
 
-    <select id="getYjidForInsert" parameterType="Items" resultType="Items">
+    <select id="getYjidForInsert" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         /* getYjidForInsert */
         select yj_id as cid from yj_items
         where
@@ -325,7 +325,7 @@
 
     </select>
 
-    <select id="searchItemsPaging" parameterType="Items" resultType="Items">
+    <select id="searchItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         /* searchItemsPaging */
         select it.idx
         ,CASE
@@ -409,7 +409,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="countItemsPaging" parameterType="Items" resultType="java.lang.Integer">
+    <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer">
         /* countItemsPaging */
         select count(it.idx) as cnt
         from items it
@@ -481,7 +481,7 @@
     </select>
 
 
-    <select id="countItemsPagingByStat" parameterType="Items" resultType="Items">
+    <select id="countItemsPagingByStat" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         /* countItemsPagingByStat */
 
         select x.stat, count(*) as cnt from (
@@ -558,7 +558,7 @@
         ) x group by x.stat
     </select>
 
-    <select id="searchTestMetas" parameterType="Items" resultType="Items">
+    <select id="searchTestMetas" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         select itm.idx from items_tags_metas itm
         where itm.meta like CONCAT('%',#{searchKeyword},'%')
         <if test='searchPartsArr != null'>
@@ -571,7 +571,7 @@
         group by itm.idx
     </select>
 
-    <select id="getScidByItemIdxAndType" parameterType="Items" resultType="Integer">
+    <select id="getScidByItemIdxAndType" parameterType="com.kthcorp.cmts.model.Items" resultType="Integer">
         /* getScidByItemIdxAndType */
         select ism.sc_id
         from items_sched_mapping ism
@@ -581,20 +581,20 @@
         limit 1
     </select>
 
-    <update id="uptSchedTriggerStatByScid" parameterType="Items">
+    <update id="uptSchedTriggerStatByScid" parameterType="com.kthcorp.cmts.model.Items">
       /* uptSchedTriggerStatByScid  */
       update sched_trigger set stat = #{stat}, regdate = now()
       where sc_id = #{sc_id}
     </update>
 
-    <insert id="insItemsStat" parameterType="Items">
+    <insert id="insItemsStat" parameterType="com.kthcorp.cmts.model.Items">
         /*  */
         insert into items_stat (idx, stat, regdate)
         values (#{idx}, #{stat}, now())
         ON DUPLICATE KEY UPDATE stat = #{stat}, regdate = now()
     </insert>
 
-    <update id="uptItemsTagcnt" parameterType="Items">
+    <update id="uptItemsTagcnt" parameterType="com.kthcorp.cmts.model.Items">
         /*  */
         update items set tagcnt = tagcnt + 1, regdate = now()
         <if test='duration != null and duration != ""'>

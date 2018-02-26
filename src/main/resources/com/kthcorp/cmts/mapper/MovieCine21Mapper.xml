@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kthcorp.cmts.mapper.MovieCine21Mapper">
-    <select id="getMovieCine21" resultType="MovieCine21" parameterType="MovieCine21">
+    <select id="getMovieCine21" resultType="com.kthcorp.cmts.model.MovieCine21" parameterType="com.kthcorp.cmts.model.MovieCine21">
         /* getMovieCine21 */
         select
             idx, movieId, fimsCd, movieNm, movieNmOg, runTime, prdtYear, openDt, synop, updateDt, watchGrade, countries, genres
@@ -19,7 +19,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="cntMovieCine21" resultType="Integer" parameterType="MovieCine21">
+    <select id="cntMovieCine21" resultType="Integer" parameterType="com.kthcorp.cmts.model.MovieCine21">
         /* cntMovieCine21 */
         select count(*) from movie_cine21
         <if test='movieNm != null and movieNm != ""'>
@@ -30,7 +30,7 @@
         </if>
     </select>
 
-    <insert id="insMovieCine21" parameterType="MovieCine21">
+    <insert id="insMovieCine21" parameterType="com.kthcorp.cmts.model.MovieCine21">
         /* insMovieCine21 */
         insert into movie_cine21
             (movieId, fimsCd, movieNm, movieNmOg, runTime, prdtYear, openDt, synop, updateDt, watchGrade, countries, genres

@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicFilterWordsHistMapper">
 
-    <select id="getDicFilterWordsHist" resultType="DicFilterWordsHist">
+    <select id="getDicFilterWordsHist" resultType="com.kthcorp.cmts.model.DicFilterWordsHist">
         /* getDicFilterWordsHist */
         select
           hidx, type, dic_idx, regdate, regid, action, action_id
         from dic_filter_words_hist
     </select>
 
-    <insert id="insDicFilterWordsHist" parameterType="DicFilterWordsHist" useGeneratedKeys="true" keyProperty="hidx">
+    <insert id="insDicFilterWordsHist" parameterType="com.kthcorp.cmts.model.DicFilterWordsHist" useGeneratedKeys="true" keyProperty="hidx">
         /* insDicFilterWordsHist */
         insert into dic_filter_words_hist (type, dic_idx, regdate, regid, action, action_id)
         values (#{type}, #{dic_idx}, now() , #{regid}, #{action}, #{action_id})

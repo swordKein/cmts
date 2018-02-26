@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsMetasMapper">
 
-    <select id="getItemsMetas" resultType="ItemsMetas">
+    <select id="getItemsMetas" resultType="com.kthcorp.cmts.model.ItemsMetas">
         /* getMetas */
         select
           idx, mtype, meta, regdate, regid
@@ -12,7 +12,7 @@
         where idx = #{idx} and mtype = #{mtype}
     </select>
 
-    <select id="getItemsMetasByIdx" resultType="ItemsMetas" parameterType="ItemsMetas">
+    <select id="getItemsMetasByIdx" resultType="com.kthcorp.cmts.model.ItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
         /* getItemsMetasByIdx */
         select
         idx, mtype, meta, regdate, regid
@@ -21,7 +21,7 @@
         order by mtype asc
     </select>
 
-    <insert id="insItemsMetas" parameterType="ItemsMetas">
+    <insert id="insItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
         /* insItemsMetas */
         insert into items_metas
           (idx, mtype, meta, regdate, regid)

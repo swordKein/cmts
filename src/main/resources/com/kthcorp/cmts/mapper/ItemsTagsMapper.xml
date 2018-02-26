@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsTagsMapper">
 
-    <select id="getItemsTagsMetasByItemIdx" resultType="ItemsTags" parameterType="ItemsTags">
+    <select id="getItemsTagsMetasByItemIdx" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* getItemsTagsMetasByItemIdx */
         select
             im.idx, im.tagidx, im.mtype, im.meta, im.regdate, im.regid
@@ -17,7 +17,7 @@
         order by im.mtype asc
     </select>
 
-    <select id="getItemsTagsMetasByItemIdxAndMtype" resultType="ItemsTags" parameterType="ItemsTags">
+    <select id="getItemsTagsMetasByItemIdxAndMtype" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* getItemsTagsMetasByItemIdxAndMtype */
         select
         im.idx, im.tagidx, im.mtype, im.meta, im.regdate, im.regid
@@ -31,7 +31,7 @@
         limit 1
     </select>
 
-    <select id="getMaxTagsIdxByItemIdx" resultType="java.lang.Integer" parameterType="ItemsTags">
+    <select id="getMaxTagsIdxByItemIdx" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* getMaxTagsIdxByItemIdx */
         select
           ifnull(max(tagidx), 0) as tagidx
@@ -42,7 +42,7 @@
         </if>
     </select>
 
-    <select id="cntConfirmedTags" resultType="java.lang.Integer" parameterType="ItemsTags">
+    <select id="cntConfirmedTags" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* cntConfirmedTags */
         select
         count(*) as cnt
@@ -53,7 +53,7 @@
         </if>
     </select>
 
-    <insert id="insItemsTagsKeys" parameterType="ItemsTags">
+    <insert id="insItemsTagsKeys" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insItemsTagsKeys */
         insert into items_tags_keys
           (idx, tagidx, stat, regdate)
@@ -62,13 +62,13 @@
         ON DUPLICATE KEY UPDATE regdate = now(), stat = 'Y'
     </insert>
 
-    <update id="uptItemsTagsKeysStat" parameterType="ItemsTags">
+    <update id="uptItemsTagsKeysStat" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* uptItemsTagsKeysStat */
         update items_tags_keys set stat = #{stat}
         where idx = #{idx} and tagidx = #{tagidx}
     </update>
 
-    <insert id="insItemsTagsMetas" parameterType="ItemsTags">
+    <insert id="insItemsTagsMetas" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insItemsMetas */
         insert into items_tags_metas
         (idx, tagidx, mtype, meta, regdate, regid)
@@ -77,7 +77,7 @@
         ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
 
-    <select id="getYjTagsMetasByItemidx" parameterType="ItemsTags" resultType="ItemsTags">
+    <select id="getYjTagsMetasByItemidx" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
         /* getYjTagsMetasByItemidx */
         select ym.title, ym.title2, ym.yj_id, ym.mtype, ym.meta, ym.regdate
         from items it

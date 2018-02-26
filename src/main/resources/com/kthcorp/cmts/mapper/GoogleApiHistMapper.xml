@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.GoogleApiHistMapper">
 
-    <select id="getGoogleApiHist" resultType="GoogleApiHist">
+    <select id="getGoogleApiHist" resultType="com.kthcorp.cmts.model.GoogleApiHist">
         /* getGoogleApiHist */
         select
           hidx, type, src_lang, src_txt, src_size, target_lang, target_txt,
@@ -13,14 +13,14 @@
         order by regdate desc limit 100
     </select>
 
-    <select id="getGoogleTransSumSizeByMonth" resultType="GoogleApiHist">
+    <select id="getGoogleTransSumSizeByMonth" resultType="com.kthcorp.cmts.model.GoogleApiHist">
         /* getGoogleTransSumSizeByMonth */
         select sum(src_size) as src_size
         from google_api_hist
         where regmonth = #{regmonth}
     </select>
 
-    <insert id="insGoogleApiHist" parameterType="GoogleApiHist" useGeneratedKeys="true" keyProperty="hidx">
+    <insert id="insGoogleApiHist" parameterType="com.kthcorp.cmts.model.GoogleApiHist" useGeneratedKeys="true" keyProperty="hidx">
         /* insGoogleApiHist */
         insert into google_api_hist (
           type, src_lang, src_txt, src_size, target_lang, target_txt,

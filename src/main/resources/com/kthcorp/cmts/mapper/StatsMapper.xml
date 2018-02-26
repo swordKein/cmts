@@ -154,7 +154,7 @@
     select 1
     </select>
 
-    <select id="down_countsInserted" resultType="Stats" parameterType="Stats" useCache="true">
+    <select id="down_countsInserted" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
     /* 일별통계 */
     /* 인입건수 */
         /* down_countsInserted */
@@ -169,7 +169,7 @@
         GROUP BY date
     </select>
 
-    <select id="down_countsCollected" resultType="Stats" parameterType="Stats" useCache="true">
+    <select id="down_countsCollected" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
     /* 수집건수 */
         /* down_countsCollected  */
         SELECT DATE(b.regdate) AS date,
@@ -188,7 +188,7 @@
         GROUP BY date
     </select>
 
-    <select id="down_countsAnalyzed" resultType="Stats" parameterType="Stats" useCache="true">
+    <select id="down_countsAnalyzed" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
     /* 추출건수 */
         /* down_countsAnalyzed */
         SELECT DATE(b.regdate) AS date,
@@ -207,7 +207,7 @@
         GROUP BY date
     </select>
 
-    <select id="down_countsTagged" resultType="Stats" parameterType="Stats" useCache="true">
+    <select id="down_countsTagged" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
     /* 승인건수 */
         /* down_countsTagged */
         SELECT DATE(a.regdate) AS date,

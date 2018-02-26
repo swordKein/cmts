@@ -22,7 +22,7 @@
         <result property="param5" column="param5" />
         <result property="content" column="content" />
         <result property="summary" column="summary" />
-        <collection property="contentList" column="stmh_id" ofType="SchedTargetContent"
+        <collection property="contentList" column="stmh_id" ofType="com.kthcorp.cmts.model.SchedTargetContent"
                     javaType="ArrayList" resultMap="SchedTargetContent"/>
     </resultMap>
 

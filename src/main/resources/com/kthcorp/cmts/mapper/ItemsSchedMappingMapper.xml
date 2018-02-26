@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsSchedMappingMapper">
 
-    <insert id="insItemsSchedMapping" parameterType="ItemsSchedMapping">
+    <insert id="insItemsSchedMapping" parameterType="com.kthcorp.cmts.model.ItemsSchedMapping">
         /* insItemsSchedMapping */
         insert into items_sched_mapping
           (idx, sc_id)
@@ -12,12 +12,12 @@
           (#{idx}, #{sc_id})
     </insert>
 
-    <delete id="delItemsSchedMapping" parameterType="ItemsSchedMapping">
+    <delete id="delItemsSchedMapping" parameterType="com.kthcorp.cmts.model.ItemsSchedMapping">
         /* delItemsSchedMapping */
         delete from items_sched_mapping where idx = #{idx}
     </delete>
 
-    <select id="getItemIdxByScid" parameterType="ItemsSchedMapping" resultType="java.lang.Integer">
+    <select id="getItemIdxByScid" parameterType="com.kthcorp.cmts.model.ItemsSchedMapping" resultType="java.lang.Integer">
         /* getItemIdxByScid */
         select idx from items_sched_mapping
         where sc_id = #{sc_id}

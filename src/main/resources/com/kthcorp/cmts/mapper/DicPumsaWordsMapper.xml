@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicPumsaWordsMapper">
 
-    <select id="getDicPumsaWords" resultType="DicPumsaWords">
+    <select id="getDicPumsaWords" resultType="com.kthcorp.cmts.model.DicPumsaWords">
         /* getDicPumsaWords */
         select
           idx, word, freq, regdate, regid
