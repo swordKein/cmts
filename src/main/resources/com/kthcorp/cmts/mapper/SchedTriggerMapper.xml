@@ -5,7 +5,7 @@
 <mapper namespace="com.kthcorp.cmts.mapper.SchedTriggerMapper">
 
 
-    <resultMap id="SchedTrigger" type="SchedTrigger">
+    <resultMap id="SchedTrigger" type="com.kthcorp.cmts.model.SchedTrigger">
         <id property="sc_id" column="sc_id" />
         <result property="type" column="type" />
         <result property="descript" column="descript" />
@@ -62,7 +62,7 @@
         <result property="movieyear" column="movieyear" />
     </resultMap>
 
-    <resultMap id="SchedTargetMapping" type="SchedTargetMapping">
+    <resultMap id="SchedTargetMapping" type="com.kthcorp.cmts.model.SchedTargetMapping">
         <id property="sc_id" column="sc_id" />
         <id property="tg_id" column="tg_id" />
     </resultMap>

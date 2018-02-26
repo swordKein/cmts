@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ConfTargetHistMapper">
 
-    <resultMap id="ConfTargetHist" type="ConfTargetHist">
+    <resultMap id="ConfTargetHist" type="com.kthcorp.cmts.model.ConfTargetHist">
         <id property="tgh_id" column="tgh_id" />
         <result property="tg_id" column="tg_id" />
         <result property="regdate" column="regdate" />
@@ -21,7 +21,7 @@
                     javaType="ConfTarget" resultMap="ConfTarget"/>
     </resultMap>
 
-    <resultMap id="ConfTarget" type="ConfTarget">
+    <resultMap id="ConfTarget" type="com.kthcorp.cmts.model.ConfTarget">
         <id property="tg_id" column="tg_id" />
         <result property="title" column="title" />
         <result property="descript" column="descript" />

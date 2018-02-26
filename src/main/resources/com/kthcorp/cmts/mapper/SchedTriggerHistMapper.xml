@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.SchedTriggerHistMapper">
 
-    <resultMap id="SchedTriggerHist" type="SchedTriggerHist">
+    <resultMap id="SchedTriggerHist" type="com.kthcorp.cmts.model.SchedTriggerHist">
         <id property="sch_id" column="sch_id" />
         <result property="sc_id" column="sc_id" />
         <result property="type" column="type" />
@@ -23,7 +23,7 @@
                     javaType="SchedTrigger" resultMap="SchedTrigger"/>
     </resultMap>
 
-    <resultMap id="SchedTrigger" type="SchedTrigger">
+    <resultMap id="SchedTrigger" type="com.kthcorp.cmts.model.SchedTrigger">
         <id property="sc_id" column="sc_id" />
         <result property="type" column="type" />
         <result property="descript" column="descript" />
