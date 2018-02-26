@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsMapper">
 
-    <resultMap id="Items" type="Items">
+    <resultMap id="Items" type="com.kthcorp.cmts.model.Items">
         <id property="idx" column="idx" />
         <result property="cid" column="cid" />
         <result property="type" column="type" />
@@ -24,7 +24,7 @@
                     javaType="ArrayList" resultMap="SchedTrigger"/>
     </resultMap>
 
-    <resultMap id="ItemsMetas" type="ItemsMetas">
+    <resultMap id="ItemsMetas" type="com.kthcorp.cmts.model.ItemsMetas">
         <id property="idx" column="idx" />
         <result property="mtype" column="mtype" />
         <result property="meta" column="meta" />
