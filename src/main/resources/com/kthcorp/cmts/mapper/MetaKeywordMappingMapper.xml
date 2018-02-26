@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.MetaKeywordMappingMapper">
 
-    <select id="getMetaKeywordMappingList" resultType="MetaKeywordMapping" parameterType="MetaKeywordMapping">
+    <select id="getMetaKeywordMappingList" resultType="com.kthcorp.cmts.model.MetaKeywordMapping" parameterType="com.kthcorp.cmts.model.MetaKeywordMapping">
         /* getMetaKeywordMappingList */
         select
           idx, type, tag, keyword, ratio, regdate, regid
@@ -12,7 +12,7 @@
         where type = #{type}
     </select>
 
-    <select id="getMetaKeywordMappingListAll" resultType="MetaKeywordMapping">
+    <select id="getMetaKeywordMappingListAll" resultType="com.kthcorp.cmts.model.MetaKeywordMapping">
       /* getMetaKeywordMappingListAll */
         select
         idx, type, tag, keyword, ratio, regdate, regid
@@ -24,15 +24,15 @@
         select type from meta_keyword_mapping group by type
     </select>
 
-    <insert id="insMetaKeywordMapping" parameterType="MetaKeywordMapping">
+    <insert id="insMetaKeywordMapping" parameterType="com.kthcorp.cmts.model.MetaKeywordMapping">
 
     </insert>
 
-    <update id="uptMetaKeywordMapping" parameterType="MetaKeywordMapping">
+    <update id="uptMetaKeywordMapping" parameterType="com.kthcorp.cmts.model.MetaKeywordMapping">
 
     </update>
 
-    <delete id="delMetaKeywordMapping" parameterType="MetaKeywordMapping">
+    <delete id="delMetaKeywordMapping" parameterType="com.kthcorp.cmts.model.MetaKeywordMapping">
 
     </delete>
 

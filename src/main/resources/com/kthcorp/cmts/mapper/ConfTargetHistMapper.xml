@@ -17,8 +17,8 @@
         <result property="param4" column="param4" />
         <result property="param5" column="param5" />
         <result property="summary" column="summary" />
-        <collection property="confTarget" column="tg_id" ofType="ConfTarget"
-                    javaType="ConfTarget" resultMap="ConfTarget"/>
+        <collection property="confTarget" column="tg_id" ofType="com.kthcorp.cmts.model.ConfTarget"
+                    javaType="com.kthcorp.cmts.model.ConfTarget" resultMap="ConfTarget"/>
     </resultMap>
 
     <resultMap id="ConfTarget" type="com.kthcorp.cmts.model.ConfTarget">

@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicAddWordsMapper">
 
-    <select id="getDicAddWords" resultType="DicAddWords">
+    <select id="getDicAddWords" resultType="com.kthcorp.cmts.model.DicAddWords">
         /* getDicAddWords */
         select
           idx, word, freq, regdate, regid
         from dic_add_words
     </select>
 
-    <select id="getDicAddWordsPaging" resultType="DicAddWords">
+    <select id="getDicAddWordsPaging" resultType="com.kthcorp.cmts.model.DicAddWords">
         /* getDicAddWordsPaging */
         select
         idx, word, freq, regdate, regid
@@ -20,13 +20,13 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <insert id="insDicAddWords" parameterType="DicAddWords" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insDicAddWords" parameterType="com.kthcorp.cmts.model.DicAddWords" useGeneratedKeys="true" keyProperty="idx">
         /* insDicAddWords */
         insert into dic_add_words (word, freq, regdate, regid)
         values (#{word}, #{freq}, now() , #{regid})
     </insert>
 
-    <update id="uptDicAddWords" parameterType="DicAddWords">
+    <update id="uptDicAddWords" parameterType="com.kthcorp.cmts.model.DicAddWords">
         /* uptDicAddWords */
         update dic_add_words
           set
@@ -41,7 +41,7 @@
           where idx = #{idx}
     </update>
 
-    <update id="uptDicAddWordsByWord" parameterType="DicAddWords">
+    <update id="uptDicAddWordsByWord" parameterType="com.kthcorp.cmts.model.DicAddWords">
         /* uptDicAddWordsByWord */
         update dic_add_words
         set
@@ -56,7 +56,7 @@
         where word = #{oldword}
     </update>
 
-    <delete id="delDicAddWordsByWord" parameterType="DicAddWords">
+    <delete id="delDicAddWordsByWord" parameterType="com.kthcorp.cmts.model.DicAddWords">
         /* delDicAddWordsByWord */
         delete from dic_add_words
         where word = #{oldword}

@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsHistMapper">
 
-    <select id="getItemsHist" resultType="ItemsHist">
+    <select id="getItemsHist" resultType="com.kthcorp.cmts.model.ItemsHist">
         /* getItemsHist */
         select
           hidx, type, idx, title, stat, regdate, regid, action, action_id
         from items_hist
     </select>
 
-    <insert id="insItemsHist" parameterType="ItemsHist" useGeneratedKeys="true" keyProperty="hidx">
+    <insert id="insItemsHist" parameterType="com.kthcorp.cmts.model.ItemsHist" useGeneratedKeys="true" keyProperty="hidx">
         /* insItemsHist */
         insert into items_hist (type, idx, title, stat, regdate, regid, action, action_id)
         values (#{type}, #{idx}, #{stat}, now() , #{regid}, #{action}, #{action_id})

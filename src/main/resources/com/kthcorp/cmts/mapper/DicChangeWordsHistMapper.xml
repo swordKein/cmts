@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicChangeWordsHistMapper">
 
-    <select id="getDicChangeWordsHist" resultType="DicChangeWordsHist">
+    <select id="getDicChangeWordsHist" resultType="com.kthcorp.cmts.model.DicChangeWordsHist">
         /* getDicChangeWordsHist */
         select
           hidx, type, dic_idx, regdate, regid, action, action_id
         from dic_change_words_hist
     </select>
 
-    <select id="getDicChangeWordsHistByReq" resultType="DicChangeWordsHist" parameterType="DicChangeWordsHist">
+    <select id="getDicChangeWordsHistByReq" resultType="com.kthcorp.cmts.model.DicChangeWordsHist" parameterType="com.kthcorp.cmts.model.DicChangeWordsHist">
         /* getDicChangeWordsHistByReq */
         select h.hidx, h.type, h.dic_idx, h.regdate, h.regid, h.action, h.action_id
         from dic_change_words_hist h
@@ -19,7 +19,7 @@
         where h.dic_idx = #{dic_idx} and h.regdate > DATE_SUB(now(), INTERVAL 1 MINUTE)
     </select>
 
-    <insert id="insDicChangeWordsHist" parameterType="DicChangeWordsHist" useGeneratedKeys="true" keyProperty="hidx">
+    <insert id="insDicChangeWordsHist" parameterType="com.kthcorp.cmts.model.DicChangeWordsHist" useGeneratedKeys="true" keyProperty="hidx">
         /* insDicChangeWordsHist */
         insert into dic_change_words_hist (type, dic_idx, regdate, regid, action, action_id)
         values (#{type}, #{dic_idx}, now() , #{regid}, #{action}, #{action_id})

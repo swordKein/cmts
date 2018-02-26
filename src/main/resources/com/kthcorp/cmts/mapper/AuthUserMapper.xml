@@ -5,7 +5,7 @@
 <mapper namespace="com.kthcorp.cmts.mapper.AuthUserMapper">
 
 
-    <select id="getAuthUsers" resultType="AuthUser">
+    <select id="getAuthUsers" resultType="com.kthcorp.cmts.model.AuthUser">
         /* getAuthUsers */
         select
           idx, userid, usergrant, username, usercompany, regdate, regid, stat
@@ -14,7 +14,7 @@
         order by regdate desc
     </select>
 
-    <select id="getAuthUserById" resultType="AuthUser">
+    <select id="getAuthUserById" resultType="com.kthcorp.cmts.model.AuthUser">
         /* getAuthUserById */
         select
         idx, userid, usergrant, username, usercompany, regdate, regid, stat
@@ -23,7 +23,7 @@
         order by regdate DESC limit 1
     </select>
 
-    <insert id="insAuthUser" parameterType="AuthUser" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insAuthUser" parameterType="com.kthcorp.cmts.model.AuthUser" useGeneratedKeys="true" keyProperty="idx">
         /* insAuthUser */
         insert into auth_user
           (userid, usergrant, username, usercompany,
@@ -33,7 +33,7 @@
           now(), #{regid}, 'Y' )
     </insert>
 
-    <update id="uptAuthUser" parameterType="AuthUser">
+    <update id="uptAuthUser" parameterType="com.kthcorp.cmts.model.AuthUser">
         /* uptAuthUser */
         update auth_user
         set
@@ -54,7 +54,7 @@
         where userid = #{userid}
     </update>
 
-    <update id="delAuthUser" parameterType="AuthUser">
+    <update id="delAuthUser" parameterType="com.kthcorp.cmts.model.AuthUser">
         /* delAuthUser */
         update auth_user
         set

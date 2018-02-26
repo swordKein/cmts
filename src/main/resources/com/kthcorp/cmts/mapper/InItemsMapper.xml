@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.InItemsMapper">
 
-    <select id="get50ActiveInItems" resultType="InItems">
+    <select id="get50ActiveInItems" resultType="com.kthcorp.cmts.model.InItems">
         /* getActiveInItems */
         select
           idx, type, mcid, cid, purity_title, content_title, origin_title, titleshort,
@@ -15,7 +15,7 @@
         limit 50;
     </select>
 
-    <update id="uptInItemsStat" parameterType="InItems">
+    <update id="uptInItemsStat" parameterType="com.kthcorp.cmts.model.InItems">
         /* uptInItemsStat */
         update in_items set stat = #{stat} where idx = #{idx}
     </update>

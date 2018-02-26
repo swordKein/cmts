@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicKeywordsMapper">
 
-    <select id="getDicKeywordsList" resultType="DicKeywords" parameterType="DicKeywords">
+    <select id="getDicKeywordsList" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsList */
         select
           idx, type, keyword, ratio, regdate, regid
@@ -12,7 +12,7 @@
         where type = #{type}
     </select>
 
-    <select id="getDicKeywordsPaging" resultType="DicKeywords" parameterType="DicKeywords">
+    <select id="getDicKeywordsPaging" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsPaging */
         select
         idx, type, keyword, ratio, regdate, regid
@@ -22,7 +22,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="getDicKeywords" resultType="DicKeywords" parameterType="DicKeywords">
+    <select id="getDicKeywords" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsList */
         select
         idx, type, keyword, ratio, regdate, regid
@@ -30,7 +30,7 @@
         where type = #{type} and keyword = #{keyword}
     </select>
 
-    <select id="getDicKeywordsListAll" resultType="DicKeywords">
+    <select id="getDicKeywordsListAll" resultType="com.kthcorp.cmts.model.DicKeywords">
       /* getDicKeywordsListAll */
         select
         idx, type, keyword, ratio, regdate, regid
@@ -42,31 +42,31 @@
         select type from dic_keywords group by type
     </select>
 
-    <select id="countItems" resultType="Integer" parameterType="DicKeywords">
+    <select id="countItems" resultType="Integer" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* countItems */
         select count(*)
         from dic_keywords
         where type = #{type}
     </select>
 
-    <select id="countDicKeywords" parameterType="DicKeywords" resultType="java.lang.Integer">
+    <select id="countDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords" resultType="java.lang.Integer">
         /* countDicKeywords */
         select count(*) from dic_keywords where keyword = #{keyword}
     </select>
 
-    <insert id="insDicNotMapKeywords" parameterType="DicKeywords">
+    <insert id="insDicNotMapKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* intDicNotMapKeywords */
         insert into dic_notmap_keywords (type, keyword, ratio, regdate, regid)
         values (#{type}, #{keyword}, #{ratio} , now(), #{regid})
         ON DUPLICATE KEY UPDATE regdate = now()
     </insert>
 
-    <insert id="insDicKeywords" parameterType="DicKeywords">
+    <insert id="insDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
       /* insDicKeywords */
         insert into dic_keywords (type, keyword, ratio, regdate, regid)
         values (#{type}, #{keyword}, #{ratio} , now(), #{regid});
     </insert>
-    <select id="getDicNotMapKeywords" resultType="DicKeywords">
+    <select id="getDicNotMapKeywords" resultType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicNotMapKeywords */
         select type,keyword,ratio,regdate,regid
         FROM dic_notmap_keywords
@@ -74,7 +74,7 @@
     </select>
 
 
-    <update id="uptDicKeywords" parameterType="DicKeywords">
+    <update id="uptDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
       /* uptDicKeywords */
         update dic_keywords
             set regdate = now()
@@ -88,7 +88,7 @@
         where type = #{type} and keyword = #{oldword}
     </update>
 
-    <delete id="delDicKeywords" parameterType="DicKeywords">
+    <delete id="delDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* delDicKeywords  */
         delete from dic_keywords
         where type = #{type} and keyword = #{oldword}

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.NlpProgsMapper">
 
-    <select id="getTest1" resultType="TestVO">
+    <select id="getTest1" resultType="com.kthcorp.cmts.model.TestVO">
         select
         st.sc_id, st.type, st.descript, sc.content
         from sched_trigger st
@@ -21,7 +21,7 @@
         -->
     </select>
 
-    <select id="getNlpProgs" resultType="NlpProgs">
+    <select id="getNlpProgs" resultType="com.kthcorp.cmts.model.NlpProgs">
         /* getNlpProgs */
         select
           idx
@@ -33,7 +33,7 @@
         order by regdate desc
     </select>
 
-    <insert id="insNlpProgs" parameterType="NlpProgs" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insNlpProgs" parameterType="com.kthcorp.cmts.model.NlpProgs" useGeneratedKeys="true" keyProperty="idx">
         /* insNlpProgs */
         insert into nlp_progs
           (filename, filelines, linecnt, filecharset, stat, regdate, outfilename)
@@ -41,7 +41,7 @@
           (#{filename}, #{filelines}, 0, #{filecharset}, #{stat}, now(), #{outfilename})
     </insert>
 
-    <update id="uptNlpProgs" parameterType="NlpProgs">
+    <update id="uptNlpProgs" parameterType="com.kthcorp.cmts.model.NlpProgs">
         /* uptNlpProgs */
         update nlp_progs
           set

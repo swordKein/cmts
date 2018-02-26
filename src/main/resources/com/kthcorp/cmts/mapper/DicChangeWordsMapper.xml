@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicChangeWordsMapper">
 
-    <select id="getDicChangeWords" resultType="DicChangeWords">
+    <select id="getDicChangeWords" resultType="com.kthcorp.cmts.model.DicChangeWords">
         /* getDicChangeWords */
         select
           idx, word, wordto, freq, regdate, regid
         from dic_change_words
     </select>
 
-    <select id="getDicChangeWordsPaging" resultType="DicChangeWords">
+    <select id="getDicChangeWordsPaging" resultType="com.kthcorp.cmts.model.DicChangeWords">
         /* getDicChangeWordsPaging */
         select
         idx, word, wordto, freq, regdate, regid
@@ -20,13 +20,13 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <insert id="insDicChangeWords" parameterType="DicChangeWords" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insDicChangeWords" parameterType="com.kthcorp.cmts.model.DicChangeWords" useGeneratedKeys="true" keyProperty="idx">
         /* insDicChangeWords */
         insert into dic_change_words (word, wordto, freq, regdate, regid)
         values (#{word}, #{wordto}, #{freq}, now() , #{regid})
     </insert>
 
-    <update id="uptDicChangeWords" parameterType="DicChangeWords">
+    <update id="uptDicChangeWords" parameterType="com.kthcorp.cmts.model.DicChangeWords">
         /* uptDicChangeWords */
         update dic_change_words
           set
@@ -44,7 +44,7 @@
           where idx = #{idx}
     </update>
 
-    <update id="uptDicChangeWordsByWord" parameterType="DicChangeWords">
+    <update id="uptDicChangeWordsByWord" parameterType="com.kthcorp.cmts.model.DicChangeWords">
         /* uptDicChangeWordsByWord */
         update dic_change_words
         set
@@ -62,7 +62,7 @@
         where word = #{oldword}
     </update>
 
-    <delete id="delDicChangeWordsByWord" parameterType="DicChangeWords">
+    <delete id="delDicChangeWordsByWord" parameterType="com.kthcorp.cmts.model.DicChangeWords">
         /* delDicChangeWordsByWord */
         delete from dic_change_words
         where word = #{oldword}

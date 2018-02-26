@@ -10,7 +10,7 @@
         values (#{sc_id}, #{tg_id}, #{stmh_id}, NOW(), #{content})
     </insert>
 
-    <select id="getSchedTargetContentList" resultType="SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
+    <select id="getSchedTargetContentList" resultType="com.kthcorp.cmts.model.SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
         /* getSchedTargetContentList */
         select c.*, stmh.tcnt from sched_target_content c
         inner join sched_trigger st on st.sc_id = c.sc_id
@@ -31,7 +31,7 @@
         </trim>
     </select>
 
-    <select id="getSchedTargetContentLastOne" resultType="SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
+    <select id="getSchedTargetContentLastOne" resultType="com.kthcorp.cmts.model.SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
         /* getSchedTargetContentLastOne */
         select c.* from sched_target_content c
         <trim prefix="WHERE" prefixOverrides="AND">

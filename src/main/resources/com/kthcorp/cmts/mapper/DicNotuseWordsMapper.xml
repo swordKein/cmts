@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicNotuseWordsMapper">
 
-    <select id="getDicNotuseWords" resultType="DicNotuseWords">
+    <select id="getDicNotuseWords" resultType="com.kthcorp.cmts.model.DicNotuseWords">
         /* getDicNotuseWords */
         select
           idx, word, freq, regdate, regid
         from dic_notuse_words
     </select>
 
-    <select id="getDicNotuseWordsPaging" resultType="DicNotuseWords">
+    <select id="getDicNotuseWordsPaging" resultType="com.kthcorp.cmts.model.DicNotuseWords">
         /* getDicNotuseWordsPaging */
         select
         idx, word, freq, regdate, regid
@@ -20,13 +20,13 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <insert id="insDicNotuseWords" parameterType="DicNotuseWords" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insDicNotuseWords" parameterType="com.kthcorp.cmts.model.DicNotuseWords" useGeneratedKeys="true" keyProperty="idx">
         /* insDicNotuseWords */
         insert into dic_notuse_words (word, freq, regdate, regid)
         values (#{word}, #{freq}, now(), #{regid})
     </insert>
 
-    <update id="uptDicNotuseWords" parameterType="DicNotuseWords">
+    <update id="uptDicNotuseWords" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
         /* uptDicNotuseWords */
         update dic_notuse_words
           set
@@ -41,7 +41,7 @@
           where idx = #{idx}
     </update>
 
-    <update id="uptDicNotuseWordsByWord" parameterType="DicNotuseWords">
+    <update id="uptDicNotuseWordsByWord" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
         /* uptDicNotuseWordsByWord */
         update dic_notuse_words
         set
@@ -56,7 +56,7 @@
         where word = #{oldword}
     </update>
 
-    <delete id="delDicNotuseWordsByWord" parameterType="DicNotuseWords">
+    <delete id="delDicNotuseWordsByWord" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
         /* delDicNotuseWordsByWord */
         delete from dic_notuse_words
         where word = #{oldword}

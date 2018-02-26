@@ -21,7 +21,7 @@
         <result property="param4" column="param4" />
         <result property="param5" column="param5" />
         <result property="orderType" column="orderType" />
-        <collection property="presetList" column="ps_id" ofType="ConfPresetOrig"
+        <collection property="presetList" column="ps_id" ofType="com.kthcorp.cmts.model.ConfPresetOrig"
                     javaType="ArrayList" resultMap="ConfPresetOrig"/>
     </resultMap>
 

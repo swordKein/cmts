@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.CcubeMapper">
 
-    <select id="get50ActiveCcubeContents" resultType="CcubeContent">
+    <select id="get50ActiveCcubeContents" resultType="com.kthcorp.cmts.model.CcubeContent">
         /* get50ActiveCcubeContents */
         select
         MASTER_CONTENT_ID,
@@ -42,13 +42,13 @@
         limit 50
     </select>
 
-    <update id="uptCcubeContentStat" parameterType="CcubeContent">
+    <update id="uptCcubeContentStat" parameterType="com.kthcorp.cmts.model.CcubeContent">
         /* uptCcubeContentStat */
         update ccube_contents set stat = #{stat}
         where CONTENT_ID = #{content_id}
     </update>
 
-    <select id="getCcubeContentByCid" parameterType="CcubeContent" resultType="CcubeContent">
+    <select id="getCcubeContentByCid" parameterType="com.kthcorp.cmts.model.CcubeContent" resultType="com.kthcorp.cmts.model.CcubeContent">
         /* getCcubeContentByCid */
         select
         MASTER_CONTENT_ID,
@@ -86,7 +86,7 @@
         limit 1
     </select>
 
-    <select id="get50ActiveCcubeSeries" resultType="CcubeSeries">
+    <select id="get50ActiveCcubeSeries" resultType="com.kthcorp.cmts.model.CcubeSeries">
         /* get50ActiveCcubeSeries */
         select
         SERIES_ID,
@@ -111,13 +111,13 @@
         limit 50
     </select>
 
-    <update id="uptCcubeSeriesStat" parameterType="CcubeSeries">
+    <update id="uptCcubeSeriesStat" parameterType="com.kthcorp.cmts.model.CcubeSeries">
         /* uptCcubeSeriesStat */
         update ccube_series set stat = #{stat}
         where SERIES_ID = #{series_id}
     </update>
 
-    <select id="getCcubeSeriesById" parameterType="CcubeSeries" resultType="CcubeSeries">
+    <select id="getCcubeSeriesById" parameterType="com.kthcorp.cmts.model.CcubeSeries" resultType="com.kthcorp.cmts.model.CcubeSeries">
         /* getCcubeSeriesById */
         select
         SERIES_ID,
@@ -142,7 +142,7 @@
         limit 1
     </select>
 
-    <select id="getCcubeItemIdx" parameterType="CcubeKeys" resultType="java.lang.Integer">
+    <select id="getCcubeItemIdx" parameterType="com.kthcorp.cmts.model.CcubeKeys" resultType="java.lang.Integer">
         /* getCcubeItemIdx  */
         select ITEMIDX from ccube_keys
         where
@@ -163,7 +163,7 @@
         limit 1
     </select>
 
-    <select id="getCcubeKeysIdx" parameterType="CcubeKeys" resultType="java.lang.Integer">
+    <select id="getCcubeKeysIdx" parameterType="com.kthcorp.cmts.model.CcubeKeys" resultType="java.lang.Integer">
         /* getCcubeKeysIdx  */
         select CIDX from ccube_keys
         where
@@ -184,14 +184,14 @@
         limit 1
     </select>
 
-    <insert id="insCcubeKeys" parameterType="CcubeKeys" useGeneratedKeys="true" keyProperty="cidx">
+    <insert id="insCcubeKeys" parameterType="com.kthcorp.cmts.model.CcubeKeys" useGeneratedKeys="true" keyProperty="cidx">
         /* insCcubeKey */
         insert into ccube_keys (master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx,regdate)
         values (#{master_content_id}, #{content_id}, #{series_id}, #{purity_title}, #{kmrb_id}, #{itemidx}, now());
 
     </insert>
 
-    <select id="getCcubeKeys" parameterType="java.lang.Integer" resultType="CcubeKeys">
+    <select id="getCcubeKeys" parameterType="java.lang.Integer" resultType="com.kthcorp.cmts.model.CcubeKeys">
         /* getCcubeKeys  */
         select cidx, master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx, regdate
         from ccube_keys
@@ -200,7 +200,7 @@
         limit 1
     </select>
 
-    <insert id="insCcubeContent" parameterType="CcubeContent">
+    <insert id="insCcubeContent" parameterType="com.kthcorp.cmts.model.CcubeContent">
         /* insCcubeContent */
         insert into ccube_contents (
             MASTER_CONTENT_ID, CONTENT_ID, PURITY_TITLE, CONTENT_TITLE, ENG_TITLE, DIRECTOR, YEAR,
@@ -230,7 +230,7 @@
     </insert>
 
 
-    <select id="getCcubeContentByYjid" resultType="CcubeContent">
+    <select id="getCcubeContentByYjid" resultType="com.kthcorp.cmts.model.CcubeContent">
         /* getCcubeContentByYjid */
 
         select a.yj_id as kmrb_id, a.regdate
@@ -247,7 +247,7 @@
         ) a order by date(a.regdate) asc
     </select>
 
-    <select id="getCcubeContentByYjidNot" resultType="CcubeContent">
+    <select id="getCcubeContentByYjidNot" resultType="com.kthcorp.cmts.model.CcubeContent">
         /* getCcubeContentByYjidNot */
 
         select a.yj_id as kmrb_id, null as regdate

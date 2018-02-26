@@ -4,14 +4,14 @@
 
 <mapper namespace="com.kthcorp.cmts.mapper.DicFilterWordsMapper">
 
-    <select id="getDicFilterWords" resultType="DicFilterWords">
+    <select id="getDicFilterWords" resultType="com.kthcorp.cmts.model.DicFilterWords">
         /* getDicFilterWords */
         select
           idx, word, freq, regdate, regid
         from dic_filter_words
     </select>
 
-    <select id="getDicFilterWordsPaging" resultType="DicFilterWords">
+    <select id="getDicFilterWordsPaging" resultType="com.kthcorp.cmts.model.DicFilterWords">
         /* getDicFilterWordsPaging */
         select
         idx, word, freq, regdate, regid
@@ -20,13 +20,13 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <insert id="insDicFilterWords" parameterType="DicFilterWords" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insDicFilterWords" parameterType="com.kthcorp.cmts.model.DicFilterWords" useGeneratedKeys="true" keyProperty="idx">
         /* insDicFilterWords */
         insert into dic_filter_words (word, freq, regdate, regid)
         values (#{word}, #{freq}, now() , #{regid})
     </insert>
 
-    <update id="uptDicFilterWords" parameterType="DicFilterWords">
+    <update id="uptDicFilterWords" parameterType="com.kthcorp.cmts.model.DicFilterWords">
         /* uptDicFilterWords */
         update dic_filter_words
           set
@@ -41,7 +41,7 @@
           where idx = #{idx}
     </update>
 
-    <update id="uptDicFilterWordsByWord" parameterType="DicFilterWords">
+    <update id="uptDicFilterWordsByWord" parameterType="com.kthcorp.cmts.model.DicFilterWords">
         /* uptDicFilterWordsByWord */
         update dic_filter_words
         set
@@ -56,7 +56,7 @@
         where word = #{oldword}
     </update>
 
-    <delete id="delDicFilterWordsByWord" parameterType="DicFilterWords">
+    <delete id="delDicFilterWordsByWord" parameterType="com.kthcorp.cmts.model.DicFilterWords">
         /* delDicFilterWordsByWord */
         delete from dic_filter_words
         where word = #{oldword}
