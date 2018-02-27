@@ -67,7 +67,7 @@ public class DicService implements DicServiceImpl {
                 if(fw.getWord().equals(req.getWord())) {
                     isExist = true;
                     req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
                     int rtupt = dicFilterWordsMapper.uptDicFilterWords(req);
                     result = 0;
                     break;
@@ -75,7 +75,7 @@ public class DicService implements DicServiceImpl {
             }
         }
         if (!isExist) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             result = dicFilterWordsMapper.insDicFilterWords(req);
         }
         return result;
@@ -94,7 +94,7 @@ public class DicService implements DicServiceImpl {
     public int insDicFilterWordsHist(DicFilterWordsHist req) {
         int result = -1;
         if (req != null) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             req.setType("use");
             result = dicFilterWordsHistMapper.insDicFilterWordsHist(req);
         }
@@ -174,7 +174,7 @@ public class DicService implements DicServiceImpl {
                 if(fw.getWord().equals(req.getWord())) {
                     isExist = true;
                     req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
                     int rtupt = dicNotuseWordsMapper.uptDicNotuseWords(req);
                     result = 0;
                     break;
@@ -182,7 +182,7 @@ public class DicService implements DicServiceImpl {
             }
         }
         if (!isExist) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             result = dicNotuseWordsMapper.insDicNotuseWords(req);
         }
         return result;
@@ -286,7 +286,7 @@ public class DicService implements DicServiceImpl {
                 if(fw.getWord().equals(req.getWord()) && fw.getWordto().equals(req.getWordto())) {
                     isExist = true;
                     req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
                     int rtupt = dicChangeWordsMapper.uptDicChangeWords(req);
                     result = 0;
                     break;
@@ -294,7 +294,7 @@ public class DicService implements DicServiceImpl {
             }
         }
         if (!isExist) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             result = dicChangeWordsMapper.insDicChangeWords(req);
         }
         return result;
@@ -416,7 +416,7 @@ public class DicService implements DicServiceImpl {
                 if(fw.getWord().equals(req.getWord())) {
                     isExist = true;
                     req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
                     int rtupt = dicAddWordsMapper.uptDicAddWords(req);
                     result = 0;
                     break;
@@ -424,7 +424,7 @@ public class DicService implements DicServiceImpl {
             }
         }
         if (!isExist) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             result = dicAddWordsMapper.insDicAddWords(req);
         }
         return result;
@@ -552,10 +552,13 @@ public class DicService implements DicServiceImpl {
         boolean isExist = false;
         for (DicKeywords fw : dicKeywords) {
             if(fw != null && fw.getKeyword() != null && req.getKeyword() != null) {
+                System.out.println("#insDicKeywords exist keyword:"+req.getKeyword().toString());
+
                 if(fw.getKeyword().equals(req.getKeyword())) {
                     isExist = true;
                     req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
+                    if(req != null && req.getRatio() == null) req.setRatio(0.0);
                     int rtupt = dicKeywordsMapper.uptDicKeywords(req);
                     result = 0;
                     break;
@@ -563,7 +566,8 @@ public class DicService implements DicServiceImpl {
             }
         }
         if (!isExist) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
+            if(req != null && req.getRatio() == null) req.setRatio(0.0);
             result = dicKeywordsMapper.insDicKeywords(req);
         }
         return result;
@@ -576,7 +580,7 @@ public class DicService implements DicServiceImpl {
         int result = -2;
         int cnt = dicKeywordsMapper.countDicKeywords(req);
         if (cnt < 1) {
-            if(req != null && req.getRegdate() == null) req.setRegid(serverid);
+            if(req != null && req.getRegid() == null) req.setRegid(serverid);
             result = dicKeywordsMapper.insDicNotMapKeywords(req);
         }
         return result;

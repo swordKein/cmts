@@ -43,6 +43,8 @@ public interface TestServiceImpl {
 
     List<CcubeContent> loadCcubeMoviesDatas() throws Exception;
 
+    List<CcubeContent> loadCcubeMoviesDatas0226() throws Exception;
+
     void insCcubeMovies(List<CcubeContent> reqList);
 
     List<ItemsContent> getItemsCine21Second520();
@@ -103,4 +105,14 @@ public interface TestServiceImpl {
     List<Map<String, Object>> getYcDatas1st2();
 
     List<Map<String, Object>> getYcDatas2st2();
+
+    void insDicKeywords__FromYcDatas1st1() throws Exception;
+
+    void insDicKeywords__FromYcDatas1st2() throws Exception;
+
+    List<CcubeContent> loadCcubeMoviesDatas0226_2() throws Exception;
+
+    void insCcubeMovies0226(List<CcubeContent> reqList);
+
+    void writeDicEmo0227() throws Exception;
 }

@@ -2809,4 +2809,263 @@ public class TestService implements TestServiceImpl {
 
         return result;
     }
+
+    @Override
+    public void insDicKeywords__FromYcDatas1st1() throws Exception {
+        List<Map<String, Object>> result = testMapper.getYcDatas1st();
+        insDicKeywords__FromDatas(result);
+        System.out.println("#RESULT.size:"+result.size());
+    }
+
+    @Override
+    public void insDicKeywords__FromYcDatas1st2() throws Exception {
+        List<Map<String, Object>> result = testMapper.getYcDatas2st();
+        insDicKeywords__FromDatas(result);
+        System.out.println("#RESULT.size:"+result.size());
+    }
+
+
+    public void insDicKeywords__FromDatas(List<Map<String, Object>> reqMapList) throws Exception {
+        List<Map<String, Object>> result = reqMapList;
+        System.out.println("#RESULT.size:"+result.size());
+        for (Map<String, Object> nm : result) {
+            //System.out.println("#new:"+nm.toString());
+            //System.out.println("#words:"+nm.get("words").toString());
+            String tmpWord = nm.get("words").toString();
+            Map<String, Object> tmpMap = this.getSeperatedMetas(tmpWord);
+            System.out.println("#tmpMap:"+tmpMap.toString());
+
+            Set entrySet = tmpMap.entrySet();
+            Iterator it = entrySet.iterator();
+            while (it.hasNext()) {
+                Map.Entry me = (Map.Entry) it.next();
+                String atype = me.getKey().toString();
+                atype = chgDicTypes(atype);
+                List<String> akeyArr = (List<String>) me.getValue();
+
+                for (String akey : akeyArr) {
+                    System.out.println("## to insert type:" + atype + ", keyword:" + akey);
+                    DicKeywords reqDic = new DicKeywords();
+                    reqDic.setType(atype);
+                    reqDic.setKeyword(akey);
+                    reqDic.setRatio(0.0);
+                    int id1 = dicService.insDicKeywords(reqDic);
+                }
+            }
+        }
+    }
+
+
+    private String chgDicTypes(String req) {
+        String result = "";
+
+        switch (req) {
+            case "공간적배경" : result = "WHERE"; break;
+            case "공간적 배경" : result = "WHERE"; break;
+            case "시간적배경" : result = "WHEN"; break;
+            case "시간적 배경" : result = "WHEN"; break;
+            case "주제/소재" : result = "WHAT"; break;
+            case "인물/캐릭터" : result = "WHO"; break;
+            case "감성/분위기" : result = "EMOTION"; break;
+            case "캐릭터명" : result = "CHARACTER"; break;
+            default : result = req; break;
+        }
+
+        return result;
+    }
+
+
+    private String removeF(String req) {
+        String result = "";
+        result = req.trim();
+        result = result.replace("\"_\"", "");
+        result = result.replace("\"", "");
+        result = result.replace("\'", "");
+        return result;
+    }
+
+    @Override
+    public List<CcubeContent> loadCcubeMoviesDatas0226() throws Exception {
+        String fileName = "E:\\yj1_0226.txt";
+        return loadCcubeMoviesDatas0226_14770_2262(fileName);
+    }
+
+    @Override
+    public List<CcubeContent> loadCcubeMoviesDatas0226_2() throws Exception {
+        String fileName = "E:\\yj2_0226.txt";
+        return loadCcubeMoviesDatas0226_14770_2262(fileName);
+    }
+
+
+    private List<CcubeContent> loadCcubeMoviesDatas0226_14770_2262(String fileName) throws Exception {
+        //String fileName = "E:\\yj1_0226.txt";
+        //String fileName = "E:\\yj1_0226.csv";
+        String seperator = "\t";
+        List<CcubeContent> result = new ArrayList();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > 0) {
+                    if (!"".equals(line.trim())) {
+                    String lines[] = line.trim().split(seperator);
+
+/*
+                    for (String ss : lines) {
+                         System.out.print("___" + ss);
+                    }
+                    System.out.println("");
+                            */
+
+                    CcubeContent newItem = null;
+                        newItem = new CcubeContent();
+                        newItem.setContent_id(this.removeF(lines[0]));
+                        newItem.setMaster_content_id(this.removeF(lines[1]));
+                        newItem.setPurity_title(this.removeF(lines[2]));
+                        newItem.setContent_title(this.removeF(lines[2]));
+                        newItem.setEng_title(this.removeF(lines[3]));
+                        newItem.setActors_display(this.removeF(lines[4]));
+                        newItem.setDirector(this.removeF(lines[5]));
+                        newItem.setYear(this.removeF(lines[6]));
+                        newItem.setCountry_of_origin(this.removeF(lines[7]));
+                        newItem.setKt_rating(this.removeF(lines[8]));
+                        newItem.setKmrb_id(this.removeF(lines[9]));
+                        newItem.setSad_ctgry_id(this.removeF(lines[10]));
+                        newItem.setSad_ctgry_nm(this.removeF(lines[11]));
+                        newItem.setPoster_url(this.removeF(lines[12]));
+
+                        //if(newItem.getPoster_url().length() < 3) {
+                        if(newItem.getYear().length() != 0 && newItem.getYear().length() != 4
+                                ) {
+                            System.out.println("## getYear:"+newItem.getYear() + " // "+ newItem.toString());
+                            errCnt++;
+                        }
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void insCcubeMovies0226(List<CcubeContent> reqList) {
+        int rt = 0;
+
+        for(CcubeContent cc : reqList) {
+            //System.out.println("#req cc:" + cc.toString());
+            if (cc.getKmrb_id().length() < 9) {
+                int rt1 = ccubeMapper.insCcubeContent(cc);
+            }
+
+
+            //System.out.println("#req cc:" + cc.toString());
+            //System.out.println(" / year:" + Integer.parseInt(cc.getYear()));
+
+            //if (cc.getYear().length() > 4
+            //        || cc.getSad_ctgry_id().length() > 5
+            //        || ( cc.getDirector().length() < 2 && (cc.getPoster_url() != null && cc.getPoster_url().length() < 10))
+            //        || cc.getKmrb_id().length() > 8
+            //        )  {
+                //System.out.println("#error! req cc:" + cc.toString());
+                //System.out.println("#error! year size"+cc.getYear().length() + "  /  ctgry_id.size:"+cc.getSad_ctgry_id().length()+" / year:" + cc.getYear());
+            //}
+        }
+    }
+
+    @Override
+    public void writeDicEmo0227() throws Exception {
+        List<Map<String,Object>> rmap = this.loadDicEmo0227("E:\\dic_emo.txt");
+        //System.out.println("#allArr:"+rmap.toString());
+        System.out.println("#RESULT.size:"+rmap.size());
+
+        List<String> dicEmoArr = StringUtil.getCombinedWordsArrayFromToWords(rmap);
+        //System.out.println("#dicEmoArr:"+dicEmoArr.toString());
+        //System.out.println("#dicEmoArr.size:"+dicEmoArr.size());
+        for(String emo : dicEmoArr) {
+            DicKeywords newItem = new DicKeywords();
+            newItem.setType("EMOTION");
+            newItem.setKeyword(emo);
+            //int rte = dicService.insDicKeywords(newItem);
+        }
+
+        List<Map<String,Object>> dicChangeArr = StringUtil.getFilteredWordsArrayFromByWords(rmap);
+        System.out.println("#dicChangeArr:"+dicChangeArr.toString());
+        System.out.println("#dicChangeArr.size:"+dicChangeArr.size());
+        for(Map<String, Object> nmap : dicChangeArr) {
+            DicChangeWords nitem = new DicChangeWords();
+            nitem.setWord(nmap.get("word").toString());
+            nitem.setWordto(nmap.get("toword").toString());
+            int rtc = dicService.insDicChangeWords(nitem);
+        }
+
+    }
+
+    private List<Map<String,Object>> loadDicEmo0227(String fileName) throws Exception {
+        String seperator = "\t";
+        List<Map<String, Object>> result = new ArrayList();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+/*
+                    for (String ss : lines) {
+                         System.out.print("___" + ss);
+                    }
+                    System.out.println("");
+                            */
+
+                        Map<String, Object> newItem = new HashMap();
+                        newItem.put("word", (this.removeF(lines[0])));
+                        if (lines.length > 1) newItem.put("toword", (this.removeF(lines[1])));
+
+
+                        result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

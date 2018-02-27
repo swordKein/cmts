@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.ItemsMapper;
+import com.kthcorp.cmts.mapper.TestMapper;
 import com.kthcorp.cmts.model.CcubeContent;
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsContent;
@@ -38,6 +39,8 @@ public class TestServiceTestImpl {
 	private TestService testService;
 	@Autowired
 	private ItemsMapper itemsMapper;
+	@Autowired
+	private TestMapper testMapper;
 
 	@Test
 	public void test_insMovieCine21List() throws Exception {
@@ -344,4 +347,43 @@ public class TestServiceTestImpl {
 		List<Map<String, Object>> result = testService.getYcDatas2st2();
 		System.out.println("#RESULT.size:"+result.size());
 	}
+
+	@Test
+	public void test_insDicKeywords__FromYcDatas1st1() throws Exception {
+		testService.insDicKeywords__FromYcDatas1st1();
+		//System.out.println("#RESULT.size:"+result.size());
+	}
+	@Test
+	public void test_insDicKeywords__FromYcDatas1st2() throws Exception {
+		testService.insDicKeywords__FromYcDatas1st2();
+		//System.out.println("#RESULT.size:"+result.size());
+	}
+
+	@Test
+	public void test_loadCcubeMoviesDatas_0226() throws Exception {
+		testService.loadCcubeMoviesDatas0226();
+	}
+
+	@Test
+	public void test_insCcubeMoviesDatas_0226() throws Exception {
+		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0226();
+		testService.insCcubeMovies0226(reqList);
+	}
+
+	@Test
+	public void test_loadCcubeMoviesDatas_0226_2() throws Exception {
+		testService.loadCcubeMoviesDatas0226_2();
+	}
+	@Test
+	public void test_insCcubeMoviesDatas_0226_2() throws Exception {
+		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0226_2();
+		testService.insCcubeMovies0226(reqList);
+	}
+
+	@Test
+	public void test_writeDicEmo0227() throws Exception {
+		testService.writeDicEmo0227();
+
+	}
+
 }
