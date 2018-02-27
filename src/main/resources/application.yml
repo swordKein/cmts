@@ -257,6 +257,52 @@ schedule :
       jobType : dummyService
 ---
 spring:
+  profiles: crawl
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  static:
+    resource:
+      location: /home/daisy/upload/
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
+    username: metataguser
+    password: daisy!
+  thymeleaf:
+      cache: false
+      check-template: false
+      check-template-location: false
+      content-type: text/html
+      enabled: true
+      encoding: UTF-8
+      #prefix: /resources
+schedule :
+  jobs :
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : collectService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : refineService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : analyzeService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : itemsService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
+---
+spring:
   profiles: staging
   http:
     multipart:
