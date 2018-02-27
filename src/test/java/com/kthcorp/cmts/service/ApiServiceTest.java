@@ -38,8 +38,11 @@ public class ApiServiceTest {
 	public void test_searchItemsPaging() throws Exception {
 		Items req = new Items();
 
+		//JsonObject result = apiService.getItemsSearch(50, 1, "", ""
+		//		, "", "", "최근", "title,METASWHEN");
+
 		JsonObject result = apiService.getItemsSearch(50, 1, "", ""
-				, "", "", "최근", "title,METASWHEN");
+				, "", "", "", "");
 
 		System.out.println("#result:"+result.toString());
 	}
