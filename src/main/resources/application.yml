@@ -270,7 +270,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
