@@ -84,7 +84,7 @@
     <select id="top_countTagged" resultType="java.lang.Integer" useCache="true">
         /* 승인 완료 */
         /* top_countTagged */
-        select count(*) from items_tags_keys where stat = 'S' group by idx
+        select ifnull(count(*), 0) from items_tags_keys where stat = 'S'
     </select>
 
     <select id="mid_countReady" resultType="java.lang.Integer" useCache="true">

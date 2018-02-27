@@ -147,19 +147,19 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 */25 * * * ?
       jobType : collectService
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 */25 * * * ?
       jobType : refineService
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 */25 * * * ?
       jobType : analyzeService
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : itemsService
     -
-      cronExpression : 0 * * * * ?
-      jobType : itemsService
-    -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 */25 * * * ?
       jobType : sftpService
 #elasticsearch :
 #  url : http://14.63.170.72:9200/

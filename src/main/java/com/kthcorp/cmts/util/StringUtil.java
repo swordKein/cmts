@@ -246,4 +246,36 @@ public class StringUtil {
         }
         return result;
     }
+
+
+    public static List<String> getCombinedWordsArrayFromToWords(List<Map<String, Object>> origArr) {
+        List<String> resultArr = new ArrayList();
+
+        for(Map<String, Object> rmap : origArr) {
+            if (rmap != null && rmap.get("word") != null) {
+                String addWord = rmap.get("word").toString();
+                if (rmap.get("toword") != null && !"".equals(rmap.get("toword").toString())) {
+                    addWord = rmap.get("toword").toString();
+                }
+                resultArr.add(addWord);
+            }
+        }
+
+        return resultArr;
+    }
+
+
+    public static List<Map<String, Object>> getFilteredWordsArrayFromByWords(List<Map<String, Object>> origArr) {
+        List<Map<String, Object>> resultArr = new ArrayList();
+
+        for(Map<String, Object> rmap : origArr) {
+            if (rmap != null && rmap.get("word") != null) {
+                if (rmap.get("toword") != null && !"".equals(rmap.get("toword").toString())) {
+                    resultArr.add(rmap);
+                }
+            }
+        }
+
+        return resultArr;
+    }
 }
