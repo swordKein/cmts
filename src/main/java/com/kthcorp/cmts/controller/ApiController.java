@@ -46,7 +46,7 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "authkey", required = false, defaultValue = "sdjnfio2390dsvjklwwe90jf2") String authkey
 	) {
-		logger.debug("#/auth/hash get");
+		logger.info("#CLOG:API/auth/hash get");
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -81,7 +81,7 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 	) {
-		logger.debug("#/auth/user/list get by hash:"+hash);
+		logger.info("#CLOG:API/auth/user/list get by hash:"+hash);
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -140,7 +140,7 @@ public class ApiController {
 			, @RequestParam(value = "target_company", required = false, defaultValue = "") String target_company
 			, @RequestParam(value = "target_name", required = false, defaultValue = "") String target_name
 	) {
-		logger.debug("#/auth/user/add input userid:" + target_userid);
+		logger.info("#CLOG:API/auth/user/add input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -188,7 +188,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "userid") String userid
 	) {
-		logger.debug("#/auth/user/login input userid:" + userid);
+		logger.info("#CLOG:API/auth/user/login input userid:" + userid);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -237,7 +237,7 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 	) {
-		logger.debug("#/dash/list get");
+		logger.info("#CLOG:API/dash/list get");
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -290,7 +290,9 @@ public class ApiController {
 			, @RequestParam(value = "searchkeyword", required = false, defaultValue = "") String searchKeyword
 			, @RequestParam(value = "searchparts", required = false, defaultValue = "") String searchParts
 	) {
-		logger.debug("#/item/list get /pageSize:"+spagesize+"/pageno:"+spageno);
+		logger.info("#CLOG:API/item/list get /pageSize:"+spagesize+"/pageno:"+spageno
+		+"/type:"+searchType+"/stat:"+searchStat+"/sdate:"+searchSdate+"/edate:"+searchEdate
+		+"/keyword:"+searchKeyword+"/parts:"+searchParts);
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -345,7 +347,8 @@ public class ApiController {
 			, @RequestParam(value = "itemid") String itemid
 			, @RequestParam(value = "target_type") String targetType
 	) {
-		logger.debug("#/item/upt/one input itemid:" + itemid +" / type:"+targetType);
+		logger.info("#CLOG:API/item/upt/one input itemid:" + itemid +" /type:"+targetType);
+
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
 
@@ -389,7 +392,7 @@ public class ApiController {
 			, @RequestParam(value = "items") String items
 			, @RequestParam(value = "target_type") String targetType
 	) {
-		logger.debug("#/item/upt/array input items:" + items + "/target_type:" + targetType);
+		logger.info("#CLOG:API/item/upt/array input items:" + items + "/target_type:" + targetType);
 
 		if(!"".equals(items)) {
 			items = items.trim().replace("[","");
@@ -441,7 +444,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") Integer itemid
 	) {
-		logger.debug("#/pop/movie get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/movie get for itemid:"+itemid);
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -486,7 +489,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") String itemid
 	) {
-		logger.debug("#/pop/movie get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/meta get for itemid:"+itemid);
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
 
@@ -531,7 +534,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") Integer itemid
 	) {
-		logger.debug("#/pop/award get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/award get for itemid:"+itemid);
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -575,7 +578,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") String itemid
 	) {
-		logger.debug("#/pop/c_cube get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/c_cube get for itemid:"+itemid);
 
 		int itemIdx = 0;
 		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -622,7 +625,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") String itemid
 	) {
-		logger.debug("#/pop/cine21 get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/cine21 get for itemid:"+itemid);
 
 		int itemIdx = 0;
 		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -671,7 +674,7 @@ public class ApiController {
 			, @RequestParam(value = "duration", required = false, defaultValue = "") String duration
 			, @RequestParam(value = "itemid") String itemid
 	) {
-		logger.debug("#/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration);
+		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration);
 
 		int itemIdx = 0;
 		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -718,7 +721,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") String itemid
 	) {
-		logger.debug("#/pop/meta/restore input itemid:" + itemid);
+		logger.info("#CLOG:API/pop/meta/restore input itemid:" + itemid);
 
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -766,7 +769,7 @@ public class ApiController {
 			, @RequestParam(value = "itemid") String itemid
 			, @RequestParam(value = "stat") String stat
 	) {
-		logger.debug("#/pop/meta/uptstat input itemid:" + itemid+"/stat:"+stat);
+		logger.info("#CLOG:API/pop/meta/uptstat input itemid:" + itemid+"/stat:"+stat);
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
 
@@ -820,7 +823,7 @@ public class ApiController {
 			, @RequestParam(value = "pagesize", required = false, defaultValue = "500") String spagesize
 			, @RequestParam(value = "pageno") String spageno
 	) {
-		logger.debug("#/dic/list get for type:"+type+"/pageSize:"+spagesize+"/pageno:"+spageno);
+		logger.info("#CLOG:API/dic/list get for type:"+type+"/pageSize:"+spagesize+"/pageno:"+spageno);
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -870,7 +873,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "items") String items
 	) {
-		logger.debug("#/dic/upt/array input items:" + items);
+		logger.info("#CLOG:API/dic/upt/array input items:" + items);
 
 		int rtcode = -1;
 		String rtmsg = "";
@@ -918,7 +921,7 @@ public class ApiController {
 			, @RequestParam(value = "target_company", required = false) String target_company
 			, @RequestParam(value = "target_name", required = false) String target_name
 	) {
-		logger.debug("#/auth/user/mod input userid:" + target_userid);
+		logger.info("#CLOG:API/auth/user/mod input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -967,7 +970,7 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "target_userid") String target_userid
 	) {
-		logger.debug("#/auth/user/del input userid:" + target_userid);
+		logger.info("#CLOG:API/auth/user/del input userid:" + target_userid);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -1011,7 +1014,7 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 	) {
-		logger.debug("#/social get");
+		logger.info("#CLOG:API/social get");
 
 		JsonObject result_all = new JsonObject();
 
@@ -1071,7 +1074,8 @@ public class ApiController {
 			, @RequestParam(value = "searchsdate", required = false, defaultValue = "") String searchsdate
 			, @RequestParam(value = "searchedate", required = false, defaultValue = "") String searchedate
 	) {
-		logger.debug("#/stat/list get");
+		logger.info("#CLOG:API/stat/list get pageno:"+spageno+"/pagesize:"+spagesize+"/stat:"
+				+searchstat+"/sdate:"+searchsdate+"/edate:"+searchedate);
 
 		JsonObject result_all = new JsonObject();
 
