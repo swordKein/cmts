@@ -184,8 +184,9 @@ public class DicServiceTest {
 	public void test_insDicKeywords() {
 		DicKeywords req = new DicKeywords();
 		req.setType("WHAT");
-		req.setKeyword("외모리뷰");
-		req.setRegid("ghkdwo77");
+		req.setKeyword("외모리뷰1");
+		req.setToword("외모리뷰");
+		req.setRegid("ghkdwo777");
 
 		int result = dicService.insDicKeywords(req);
 		System.out.println("#insert RESULT:"+result);
@@ -193,6 +194,20 @@ public class DicServiceTest {
 		List<DicKeywords> result2 = dicService.getDicKeywords(req);
 		System.out.println("#RESLT:"+result2.toString());
 	}
+
+
+	@Test
+	public void test_getDicKeywords() {
+		DicKeywords req = new DicKeywords();
+		req.setType("WHAT");
+		req.setKeyword("외모리뷰1");
+		req.setToword("외모리뷰");
+		req.setRegid("ghkdwo777");
+
+		List<DicKeywords> result2 = dicService.getDicKeywords(req);
+		System.out.println("#RESLT:"+result2.toString());
+	}
+
 
 	@Test
 	public void test_modifyDicsByTypesFromArrayList() throws Exception {
