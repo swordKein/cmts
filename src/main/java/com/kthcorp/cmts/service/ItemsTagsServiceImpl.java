@@ -36,6 +36,10 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByItemIdx(int itemIdx);
 
+    JsonObject getItemsMetasByItemIdxForInsert(int itemIdx);
+
+    JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx);
+
     JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx);
 
     int restorePrevTag(int itemIdx);
@@ -45,4 +49,8 @@ public interface ItemsTagsServiceImpl {
     int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration);
 
     List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
+
+    ItemsTags getLastTagCntInfo(Integer itemid);
+
+    List<ItemsTags> getTagCntInfo(Integer itemid);
 }
