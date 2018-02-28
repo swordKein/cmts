@@ -20,4 +20,6 @@ public interface ItemsTagsMapper {
 
     int insItemsTagsMetas(ItemsTags req);
     List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
+    ItemsTags getLastTagCntInfo(Integer req);
+    List<ItemsTags> getTagCntInfo(Integer req);
 }

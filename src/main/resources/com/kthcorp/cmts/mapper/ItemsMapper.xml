@@ -442,7 +442,11 @@
                 <if test='searchType != null and searchType == "SER"'>
                     and it.type = 'CcubeSeries'
                 </if>
-                order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
+                <if test='searchDirectorYn != null and searchDirectorYn != ""'>
+                    and it.director like CONCAT('%', #{searchKeyword} '%')
+                </if>
+
+        order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
                 )
 
                 <if test='searchPartsArr != null'>
@@ -471,6 +475,9 @@
                 </if>
                 <if test='searchType != null and searchType == "SER"'>
                     and it.type = 'CcubeSeries'
+                </if>
+                <if test='searchDirectorYn != null and searchDirectorYn != ""'>
+                    and it.director like CONCAT('%', #{searchKeyword} '%')
                 </if>
                 order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
                 )

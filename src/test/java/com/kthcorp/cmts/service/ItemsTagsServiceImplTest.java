@@ -22,7 +22,7 @@ public class ItemsTagsServiceImplTest {
 
 	@Test
 	public void test_getItemsTagsMetasAll() throws Exception{
-		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(21227);
+		JsonObject result = itemsTagsService.getItemsMetasByItemIdxForInsert(1);
 		System.out.println("#Result:"+result.toString());
 	}
 
@@ -37,9 +37,9 @@ public class ItemsTagsServiceImplTest {
 	@Test
 	public void test_changeMetasArraysByTypeFromInputItems() {
 
-		String req = "[{\"type\":\"METASWHEN\", \"meta\":\"\", \"target_meta\":\"테스트삽입\", \"action\":\"add\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"테스트삽입1\", \"action\":\"mod\"} ,{\"type\":\"METASWHEN\", \"meta\":\"테스트삽입\", \"target_meta\":\"\", \"action\":\"del\"} ,{\"type\":\"METASWHAT\", \"meta\":\"\", \"target_meta\":\"테스트삽입1\", \"action\":\"add\"}]";
+		String req = "[{\"meta\":\"압도적인\",\"type\":\"emotion\",\"target_meta\":\"압도적인\",\"action\":\"del\"}]";
 
-		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(10410, req, "");
+		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "");
 		System.out.println("#Result:"+result);
 	}
 }

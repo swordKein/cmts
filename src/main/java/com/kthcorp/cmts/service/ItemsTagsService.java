@@ -59,6 +59,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Override
     public int getCurrTagsIdxForInsert(int itemIdx) {
+        /*
+        1. 처음 등록할 경우 = 0
+        2. 승인된 건이 있고 수정할 경우 = last tagIdx
+        3. 승인된 건이 없고 수정할 경우 = last tagIdx
+         */
         ItemsTags req = new ItemsTags();
         req.setIdx(itemIdx);
         req.setStat("Y");
@@ -72,15 +77,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             int tagidx2 = this.getMaxTagsIdxByItemIdx(req2);
             //System.out.println("#confirmed tagidx2:"+tagidx2);
 
-            // 승인완료된 tagidx가 없으면 0으로 리턴
+            // 승인완료된 tagidx2가 없으면 승인미완료인 tagidx를 리턴
             if (tagidx2 == 0) {
                 // 승인완료된 tagidx 개수가 > 0 이면 1 증가
                 int confirmedTagCnt = this.cntConfirmedTags(req2);
                 System.out.println("#confirmedTagCnt :"+confirmedTagCnt);
                 if (confirmedTagCnt > 0) {
                     tagidx = 1;
-                } else {
-                    tagidx = 0;
                 }
             // 승인완료된 tagidx가 있으면 1 증가하여 신규건으로 저장
             } else if (tagidx2 > 0) {
@@ -166,12 +169,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return result;
     }
 
-    private JsonObject getItemsMetasByIdx(int itemIdx, ArrayList<String> origTypes) {
+    private JsonObject getItemsMetasByIdx(int itemIdx, ArrayList<String> origTypes, String getStat) {
         JsonObject result = new JsonObject();
 
         ItemsTags itReq = new ItemsTags();
         itReq.setIdx(itemIdx);
-        itReq.setStat("Y");
+        itReq.setStat(getStat);
 
         List<ItemsTags> metasList = this.getItemsTagsMetasByItemIdx(itReq);
         //System.out.println("#listMetas"+listMetas.toString());
@@ -207,7 +210,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         itReq.setStat("S");
 
         List<ItemsTags> metasList = this.getItemsTagsMetasByItemIdx(itReq);
-        //System.out.println("#listMetas"+listMetas.toString());
+        //System.out.println("#metasList"+metasList.toString());
 
         if (metasList != null && metasList.size() > 0) {
             for (ItemsTags it : metasList) {
@@ -260,10 +263,56 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_RECO_TARGET");
         origTypes.add("LIST_RECO_SITUATION");
 
-        JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes);
+        JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
         return resultObj2;
+    }
+
+    @Override
+    public JsonObject getItemsMetasByItemIdxForInsert(int itemIdx) {
+        ArrayList<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("LIST_NOT_MAPPED");
+        origTypes.add("WORDS_GENRE");
+        origTypes.add("WORDS_SNS");
+        origTypes.add("WORDS_ASSOC");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
+
+        JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
+
+        JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
+        return resultObj2;
+    }
+
+    @Override
+    public JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx) {
+        ArrayList<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("LIST_NOT_MAPPED");
+        origTypes.add("WORDS_GENRE");
+        origTypes.add("WORDS_SNS");
+        origTypes.add("WORDS_ASSOC");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
+
+        JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "S");
+
+        //JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
+        return resultObj;
     }
 
     private JsonObject setEmptyMetas(JsonObject reqObj, ArrayList<String> origTypes) {
@@ -290,79 +339,107 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+        origTypes.add("LIST_NOT_MAPPED");
+        //origTypes.add("WORDS_GENRE");
+        //origTypes.add("WORDS_SNS");
+        //origTypes.add("WORDS_ASSOC");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
 
         JsonObject oldResultObj = getOldItemsMetasByIdx(itemIdx, origTypes);
-
-        System.out.println("#oldItemsMetas:" + oldResultObj.toString());
+        //System.out.println("#oldItemsMetas:" + oldResultObj.toString());
 
         for (String type : origTypes) {
-            JsonArray oldTypesArr = (JsonArray) oldResultObj.get(type);
-            JsonArray newTypesArr = (JsonArray) resultObj.get(type);
-            JsonArray typeResultArr = getCombinedJsonArray(oldTypesArr, newTypesArr);
+            JsonArray oldTypesArr = null;
+            if (oldResultObj != null && oldResultObj.get(type) != null) oldTypesArr = (JsonArray) oldResultObj.get(type);
+            JsonArray newTypesArr = null;
+            if (resultObj != null && resultObj.get(type) != null) newTypesArr = (JsonArray) resultObj.get(type);
 
-            System.out.println("#typeResultArr:"+typeResultArr.toString());
+            JsonArray typeResultArr = getCombinedJsonArray(type, oldTypesArr, newTypesArr);
+            System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr.toString());
 
-            resultObj.remove(type);
+            if (resultObj.get(type) != null) resultObj.remove(type);
             resultObj.add(type, typeResultArr);
         }
 
         return resultObj;
     }
 
-    private JsonArray getCombinedJsonArray(JsonArray oldArr, JsonArray newArr) {
+    private JsonArray getCombinedJsonArray(String type, JsonArray oldArr, JsonArray newArr) {
+        //System.out.println("#TLOG:oldArr:"+oldArr.toString());
         JsonArray resultArr = new JsonArray();
 
-        for (JsonElement oje : oldArr) {
-            JsonObject ojo = (JsonObject) oje;
-            String oldWord = ojo.get("word").getAsString();
+        if (!"LIST_SEARCHKEYWORDS".equals(type)) {
+            for (JsonElement oje : oldArr) {
+                //System.out.println("#TOLOG:oje:" + oje.toString());
+                JsonObject ojo = (JsonObject) oje;
+                String oldWord = ojo.get("word").getAsString();
 
-            boolean isMatch = false;
-            for (JsonElement nje : newArr) {
-                JsonObject njo = (JsonObject) nje;
-                String newWord = njo.get("word").getAsString();
-                if (oldWord.equals(newWord)) {
-                    // OLD:NEW 같은 것이 있으면 type=dup 로 저장
-                    //System.out.println("#njo:"+njo.toString());
+                boolean isMatch = false;
+                for (JsonElement nje : newArr) {
+                    JsonObject njo = (JsonObject) nje;
+                    String newWord = njo.get("word").getAsString();
+                    if (oldWord.equals(newWord)) {
+                        // OLD:NEW 같은 것이 있으면 type=dup 로 저장
+                        //System.out.println("#njo:"+njo.toString());
+
+                        JsonObject newItem = new JsonObject();
+                        newItem.addProperty("word", newWord);
+                        //if ("get".equals(when)) {
+                        newItem.addProperty("type", "dup");
+                        //} else {
+                        //    newItem.addProperty("type", "ext");
+                        //}
+                        newItem.addProperty("ratio", njo.get("ratio").getAsDouble());
+                        resultArr.add(newItem);
+                        isMatch = true;
+                    }
+                }
+                if (!isMatch) {
+                    // OLD:NEW 같은 것이 없으면 type=ext 로 저장
+                    JsonObject newItem = new JsonObject();
+                    newItem.addProperty("word", oldWord);
+                    //if ("get".equals(when)) {
+                    newItem.addProperty("type", "ext");
+                    //} else {
+                    //    newItem.addProperty("type", "new");
+                    //}
+                    newItem.addProperty("ratio", ojo.get("ratio").getAsDouble());
+                    resultArr.add(newItem);
+                }
+            }
+
+            for (JsonElement njje : newArr) {
+                JsonObject njjo = (JsonObject) njje;
+                String nj_word = njjo.get("word").getAsString();
+
+                boolean isExist = false;
+                for (JsonElement re : resultArr) {
+                    JsonObject ro = (JsonObject) re;
+                    String re_word = ro.get("word").getAsString();
+                    if (nj_word.equals(re_word)) {
+                        isExist = true;
+                    }
+                }
+                if (!isExist) {
+                    // NEW:RESLT 같은 것이 없으면 type=new 로 저장
+                    //System.out.println("#njjo:"+njjo.toString());
 
                     JsonObject newItem = new JsonObject();
-                    newItem.addProperty("word", newWord);
-                    newItem.addProperty("type", "dup");
-                    newItem.addProperty("ratio", njo.get("ratio").getAsDouble());
+                    newItem.addProperty("word", nj_word);
+                    newItem.addProperty("type", "new");
+                    newItem.addProperty("ratio", njjo.get("ratio").getAsDouble());
                     resultArr.add(newItem);
-                    isMatch = true;
                 }
             }
-            if(!isMatch) {
-                // OLD:NEW 같은 것이 없으면 type=est 로 저장
-                JsonObject newItem = new JsonObject();
-                newItem.addProperty("word", oldWord);
-                newItem.addProperty("type", "ext");
-                newItem.addProperty("ratio", ojo.get("ratio").getAsDouble());
-                resultArr.add(newItem);
-            }
-        }
-
-        for(JsonElement njje : newArr) {
-            JsonObject njjo = (JsonObject) njje;
-            String nj_word = njjo.get("word").getAsString();
-
-            boolean isExist = false;
-            for(JsonElement re : resultArr) {
-                JsonObject ro = (JsonObject) re;
-                String re_word = ro.get("word").getAsString();
-                if (nj_word.equals(re_word)) {
-                    isExist = true;
-                }
-            }
-            if(!isExist) {
-                // NEW:RESLT 같은 것이 없으면 type=new 로 저장
-                //System.out.println("#njjo:"+njjo.toString());
-
-                JsonObject newItem = new JsonObject();
-                newItem.addProperty("word", nj_word);
-                newItem.addProperty("type", "new");
-                newItem.addProperty("ratio", njjo.get("ratio").getAsDouble());
-                resultArr.add(newItem);
+        } else {
+            /* 검색어는 단순 JsonArray */
+            //System.out.println("#TLOG:LIST_SEARCHKEYWORDS :: oldArr:"+oldArr.toString() + "/newArr:"+newArr.toString());
+            for(JsonElement je : oldArr) {
+                String os = je.getAsString();
+                resultArr.add(os);
             }
         }
 
@@ -435,14 +512,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonObject nitem = (JsonObject) je;
 
                     if (nitem.get("type") != null) {
-                        String tmpMapArrayName = String.valueOf(nitem.get("type").getAsString());
-                        typesArr.add(String.valueOf(nitem.get("type").getAsString()));
+                        String tmpMapArrayName = "METAS" + String.valueOf(nitem.get("type").getAsString().toUpperCase());
+                        typesArr.add(tmpMapArrayName);
 
                         List<Map<String, Object>> tmpArr = (List<Map<String, Object>>) tmpMapArrays.get(tmpMapArrayName);
                         if (tmpArr == null) tmpArr = new ArrayList();
 
                         Map<String, Object> newItem = new HashMap();
-                        newItem.put("type", nitem.get("type").getAsString().toUpperCase());
+                        newItem.put("type", tmpMapArrayName);
                         newItem.put("meta", nitem.get("meta").getAsString());
                         newItem.put("target_meta", nitem.get("target_meta").getAsString());
                         newItem.put("action", nitem.get("action").getAsString());
@@ -472,75 +549,142 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return resultObj;
     }
 
-
-    @Override
-    public int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration) {
+    public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
+            , int itemid, int curTagIdx) {
         int rt = 0;
-        int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
+        ArrayList<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("LIST_NOT_MAPPED");
+        origTypes.add("WORDS_GENRE");
+        origTypes.add("WORDS_SNS");
+        origTypes.add("WORDS_ASSOC");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
 
-        try {
-            JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid);
-            JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
-            //System.out.println("#actionItemsArraysByType:"+actionItemsArraysByType.toString());
+        if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
+            //for (JsonElement atype1 : typesArr) {
 
-            /* get action TYPE to Arrays */
-            JsonArray typesArr = null;
-            if (actionItemsArraysByType.get("typesArr") != null) typesArr = (JsonArray) actionItemsArraysByType.get("typesArr");
-            //System.out.println("#typesArr:"+typesArr.toString());
-
-            for (JsonElement atype1 : typesArr) {
-                String atype = atype1.getAsString();
-                atype = atype.replace("\"","");
+            for (String atype : origTypes) {
+                //String atype = atype1.getAsString();
+                atype = atype.replace("\"", "");
                 atype = atype.toUpperCase();
 
                 JsonArray origMetaArr = null;
                 JsonArray changeMetaArr = null;
+                String destMeta = "";
+
                 if (origMetasArraysByType.get(atype) != null) {
                     origMetaArr = (JsonArray) origMetasArraysByType.get(atype);
-                    System.out.println("#Change type("+atype+") orig meta datas::"+origMetaArr);
+                    System.out.println("#Change type(" + atype + ") orig meta datas::" + origMetaArr);
                 }
 
                 if (actionItemsArraysByType.get(atype) != null) {
                     changeMetaArr = (JsonArray) actionItemsArraysByType.get(atype);
-                    System.out.println("#Change type("+atype+") changing meta datas to::"+changeMetaArr);
+                    System.out.println("#Change type(" + atype + ") changing meta datas to::" + changeMetaArr);
                 }
 
-                if(changeMetaArr != null) {
+                if (changeMetaArr != null) {
                     /* get meta data for saving */
                     JsonArray destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
-                    String destMeta = destArr.toString();
+                    if (destArr != null) {
+                        destMeta = destArr.toString();
 
-                    System.out.println("##DestArr cause changed for type:"+atype+" :: "+destArr.toString());
+                        System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destArr.toString());
 
-                    /* 기존 메타와 추가 액션아이템들이 반영된 TYPE(ex> METASWHEN) 별 메타JsonArray가 준비되면 현재 tagIdx를 기준으로 업데이트 */
-                    ItemsTags reqMeta = new ItemsTags();
-                    reqMeta.setIdx(itemid);
-                    reqMeta.setTagidx(curTagIdx);
-                    reqMeta.setMtype(atype);
-                    reqMeta.setMeta(destMeta);
+                        /* 기존 메타와 추가 액션아이템들이 반영된 TYPE(ex> METASWHEN) 별 메타JsonArray가 준비되면 현재 tagIdx를 기준으로 업데이트 */
+                        ItemsTags reqMeta = new ItemsTags();
+                        reqMeta.setIdx(itemid);
+                        reqMeta.setTagidx(curTagIdx);
+                        reqMeta.setMtype(atype);
+                        reqMeta.setMeta(destMeta);
 
-                    rt = this.insItemsTagsMetas(reqMeta);
+                        System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
+                        rt = this.insItemsTagsMetas(reqMeta);
+                    } else {
+                        System.out.println("#MLOG DestArr null for type:" + atype);
+                    }
+                } else {
+                    if (origMetaArr != null) {
+                        destMeta = origMetaArr.toString();
+                        /* 기존 메타에서 추가 액션 아이템들이 없는 경우 기존 메타 그대로 현재 tagIdx에 업데이트 */
+                        ItemsTags reqMeta = new ItemsTags();
+                        reqMeta.setIdx(itemid);
+                        reqMeta.setTagidx(curTagIdx);
+                        reqMeta.setMtype(atype);
+                        reqMeta.setMeta(destMeta);
 
+                        //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
+                        rt = this.insItemsTagsMetas(reqMeta);
+                    }
                 }
             }
+        }
+        return rt;
+    }
 
-            /* 해당 items_tags_keys 를 승인으로 업데이트 한다 */
-            ItemsTags reqConfirm = new ItemsTags();
-            reqConfirm.setIdx(itemid);
-            reqConfirm.setTagidx(curTagIdx);
-            reqConfirm.setStat("S");
-            int rts = this.uptItemsTagsKeysStat(reqConfirm);
+    @Override
+    public int changeMetasArraysByTypeFromInputItems ( int itemid, String items, String duration) {
+        int rt = 0;
+        //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
+        //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
+        List<ItemsTags> tagIdxArr = this.getTagCntInfo(itemid);
+        int curTagIdx = 0;
+        if (tagIdxArr != null && tagIdxArr.size() > 0) {
+            curTagIdx = tagIdxArr.get(0).getTagidx();
+        }
+        System.out.println("#MLOG /pop/meta/upt/array curTagIdx:"+curTagIdx);
 
-            /* 해당 items_stat 를 승인으로 업데이트 한다 */
-            Items reqIt = new Items();
-            reqIt.setIdx(itemid);
-            reqIt.setStat("ST");
-            int rti = itemsMapper.insItemsStat(reqIt);
+        try {
+            ItemsTags lastTag = this.getLastTagCntInfo(itemid);
 
-            /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
-            if(!"".equals(duration)) reqIt.setDuration(duration);
-            int rtu = itemsMapper.uptItemsTagcnt(reqIt);
-            rt = 1;
+            /* get action TYPE to Arrays */
+            JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
+            System.out.println("#actionItemsArraysByType:"+actionItemsArraysByType.toString());
+            JsonArray typesArr = null;
+            if (actionItemsArraysByType.get("typesArr") != null)
+                typesArr = (JsonArray) actionItemsArraysByType.get("typesArr");
+            //System.out.println("#typesArr:"+typesArr.toString());
+
+            System.out.println("#lastTag:"+lastTag.toString());
+            /* 기승인된 메타가 없을 경우 (최근 tagIdx가 미승인인 경우) 메타수정 후 상태변경, 승인 처리한다 */
+            if(lastTag != null && !"S".equals(lastTag.getStat())) {
+                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid);
+                System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
+
+                /* action_item이 있는 경우 타입별 meta 수정 */
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+
+                /* 해당 items_tags_keys 를 승인으로 업데이트 한다 */
+                ItemsTags reqConfirm = new ItemsTags();
+                reqConfirm.setIdx(itemid);
+                reqConfirm.setTagidx(curTagIdx);
+                reqConfirm.setStat("S");
+                int rts = this.uptItemsTagsKeysStat(reqConfirm);
+
+                /* 해당 items_stat 를 승인으로 업데이트 한다 */
+                Items reqIt = new Items();
+                reqIt.setIdx(itemid);
+                reqIt.setStat("ST");
+                int rti = itemsMapper.insItemsStat(reqIt);
+
+                /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
+                if (!"".equals(duration)) reqIt.setDuration(duration);
+                int rtu = itemsMapper.uptItemsTagcnt(reqIt);
+                rt = 1;
+            } else {
+                /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
+                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid);
+
+                /* action_item이 있는 경우 타입별 meta 수정 */
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+                rt = 1;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -569,7 +713,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         try {
             if (jObj != null && origArray != null) {
-                String asWord = "";
+                //String asWord = "";
                 String toWord = "";
 
                 resultArr = new JsonArray();
@@ -643,4 +787,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req) {
         return itemsTagsMapper.getYjTagsMetasByItemidx(req);
     }
+
+    @Override
+    public ItemsTags getLastTagCntInfo(Integer itemid) {
+        return itemsTagsMapper.getLastTagCntInfo(itemid);
+    }
+
+    @Override
+    public List<ItemsTags> getTagCntInfo(Integer itemid) {
+        return itemsTagsMapper.getTagCntInfo(itemid);
+    }
+
 }

@@ -39,6 +39,7 @@ public class Items extends Paging {
     private String searchParts;
     private List<String> searchPartsArr;
     private String searchTitleYn;
+    private String searchDirectorYn;
 
     /* for ccube */
     private String content_id;
@@ -48,6 +49,13 @@ public class Items extends Paging {
     private Integer sc_id;
     private String itemsIdxs;
 
+    public String getSearchDirectorYn() {
+        return searchDirectorYn;
+    }
+
+    public void setSearchDirectorYn(String searchDirectorYn) {
+        this.searchDirectorYn = searchDirectorYn;
+    }
 
     public String getSearchTitleYn() {
         return searchTitleYn;

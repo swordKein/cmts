@@ -53,6 +53,25 @@
         </if>
     </select>
 
+    <select id="getLastTagCntInfo" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="java.lang.Integer">
+        /* getLastTagCntInfo */
+        select
+        idx, tagidx, stat, regdate
+        from items_tags_keys
+        where idx = #{idx}
+        order by tagidx DESC
+        limit 1
+    </select>
+
+    <select id="getTagCntInfo" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="java.lang.Integer">
+        /* getTagCntInfo */
+        select
+        idx, tagidx, stat, regdate
+        from items_tags_keys
+        where idx = #{idx}
+        order by tagidx DESC
+    </select>
+
     <insert id="insItemsTagsKeys" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insItemsTagsKeys */
         insert into items_tags_keys

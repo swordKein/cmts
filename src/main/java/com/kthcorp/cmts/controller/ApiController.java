@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.Items;
+import com.kthcorp.cmts.model.ItemsTags;
 import com.kthcorp.cmts.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -502,6 +503,8 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
+
+				ItemsTags lastTag = itemsTagsService.getLastTagCntInfo(itemIdx);
 				result1 = itemsTagsService.getItemsMetasByItemIdx(itemIdx);
 				if(result1 != null) {
 					rtmsg = "SUCCESS";

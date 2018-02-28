@@ -81,4 +81,10 @@ public class ItemsTagsMapperTest {
         int result = itemsTagsMapper.insItemsTagsMetas(req);
         System.out.println("#result:" + result);
     }
+
+    @Test
+    @Rollback(false)
+    public void test_getLastTagCntInfo() throws Exception {
+        System.out.println("#Result:" + itemsTagsMapper.getLastTagCntInfo(1));
+    }
 }
