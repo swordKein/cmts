@@ -417,7 +417,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             resultObj = new JsonObject();
             JsonParser parser = new JsonParser();
             //JsonArray reqArr = (JsonArray) parser.parse(items);
-            JsonElement tradeElement = parser.parse(items);
+            JsonElement tradeElement = null;
+            try {
+                tradeElement = parser.parse(items);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("#MLOG /pop/meta/upt/array items parse error! items:"+items);
+            }
             JsonArray reqArr = tradeElement.getAsJsonArray();
 
             Set<String> typesArr = new HashSet<String>();
