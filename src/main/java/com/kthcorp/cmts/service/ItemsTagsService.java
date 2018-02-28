@@ -436,7 +436,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         if (tmpArr == null) tmpArr = new ArrayList();
 
                         Map<String, Object> newItem = new HashMap();
-                        newItem.put("type", nitem.get("type").getAsString());
+                        newItem.put("type", nitem.get("type").getAsString().toUpperCase());
                         newItem.put("meta", nitem.get("meta").getAsString());
                         newItem.put("target_meta", nitem.get("target_meta").getAsString());
                         newItem.put("action", nitem.get("action").getAsString());
