@@ -293,6 +293,7 @@ public class ApiController {
 		logger.info("#CLOG:API/item/list get /pageSize:"+spagesize+"/pageno:"+spageno
 		+"/type:"+searchType+"/stat:"+searchStat+"/sdate:"+searchSdate+"/edate:"+searchEdate
 		+"/keyword:"+searchKeyword+"/parts:"+searchParts);
+		if("".equals(searchKeyword.trim())) searchParts = "";
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
