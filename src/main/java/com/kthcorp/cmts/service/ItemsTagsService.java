@@ -491,6 +491,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             for (JsonElement atype1 : typesArr) {
                 String atype = atype1.getAsString();
                 atype = atype.replace("\"","");
+                atype = atype.toUpperCase();
 
                 JsonArray origMetaArr = null;
                 JsonArray changeMetaArr = null;
