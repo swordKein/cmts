@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.Items;
 import org.junit.Test;
@@ -50,5 +51,11 @@ public class ApiServiceTest {
 	@Test
 	public void test_getMovieInfoByIdx() {
 		System.out.println(apiService.getMovieInfoByIdx(2));
+	}
+
+	@Test
+	public void test_getSnsKeywords() throws Exception {
+		JsonArray result = apiService.getSnsKeywords("신과함께");
+		//System.out.println("#RESULT:"+result.toString());
 	}
 }
