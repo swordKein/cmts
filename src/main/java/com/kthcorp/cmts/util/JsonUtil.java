@@ -82,6 +82,13 @@ public class JsonUtil {
 				}.getType());
 	}
 
+	/* String 을 JsonObject로 convert */
+	public static JsonObject convertStringToJsonObject(String reqStr) {
+		com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+		JsonObject jsonObj = (JsonObject) parser.parse(reqStr);
+		return jsonObj;
+	}
+
 	/* List<String> 을 JsonArray로 convert */
 	public static JsonArray convertListToJsonArray(List<String> reqList) {
 		return (JsonArray) new Gson().toJsonTree(reqList,

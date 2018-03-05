@@ -8,10 +8,7 @@ import com.kthcorp.cmts.mapper.CcubeMapper;
 import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.ItemsMetasMapper;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.util.AES256Util;
-import com.kthcorp.cmts.util.CommonUtil;
-import com.kthcorp.cmts.util.DateUtils;
-import com.kthcorp.cmts.util.JsonUtil;
+import com.kthcorp.cmts.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ApiService implements ApiServiceImpl {
@@ -31,6 +25,9 @@ public class ApiService implements ApiServiceImpl {
 
     @Value("${cmts.property.serverid}")
     private String serverid;
+    @Value("${cmts.property.sns_api_url}")
+    private String sns_api_url;
+
     @Autowired
     private AuthUserMapper authUserMapper;
     @Autowired
@@ -562,5 +559,71 @@ public class ApiService implements ApiServiceImpl {
         rt = itemsService.uptSchedTriggerStatByItemIdx(itm);
 
         return rt;
+    }
+
+    @Override
+    public JsonArray getSnsKeywords(String title) throws Exception {
+        JsonArray result = null;
+        if (!"".equals(title)) {
+            result = new JsonArray();
+
+            String target1 = "twitter";
+            String edate = DateUtils.getLocalDate();
+            String sdate = DateUtils.calculateDate(Calendar.MONTH, -1, edate);
+
+            String sns_api_url_dest1 = sns_api_url.replace("#SDATE", sdate);
+            sns_api_url_dest1 = sns_api_url_dest1.replace("#EDATE", edate);
+            sns_api_url_dest1 = sns_api_url_dest1.replace("#TARGET", target1);
+            sns_api_url_dest1 = sns_api_url_dest1.replace("#TITLE", title);
+            Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(sns_api_url_dest1, null, null,null, "bypass");
+            JsonArray childList1 = null;
+            if (resultMap1 != null && resultMap1.get("resultStr") != null) {
+                String result1 = resultMap1.get("resultStr").toString();
+                //System.out.println("#ELOG:sns_api:: result1:"+result1);
+                JsonObject resultObj1 = JsonUtil.convertStringToJsonObject(result1);
+                //System.out.println("#ELOG:sns_api:: result_jsonObj1:"+resultObj1.toString());
+                if (resultObj1 != null && resultObj1.get("childList") != null) {
+                    childList1 = (JsonArray) resultObj1.get("childList");
+                    System.out.println("#ELOG:sns_api:: childList1:"+childList1.toString());
+                }
+            }
+
+            String target2 = "insta";
+            String sns_api_url_dest2 = sns_api_url.replace("#SDATE", sdate);
+            sns_api_url_dest2 = sns_api_url_dest2.replace("#EDATE", edate);
+            sns_api_url_dest2 = sns_api_url_dest2.replace("#TARGET", target2);
+            sns_api_url_dest2 = sns_api_url_dest2.replace("#TITLE", title);
+            JsonArray childList2 = null;
+            Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(sns_api_url_dest2, null, null,null, "bypass");
+            if (resultMap2 != null && resultMap2.get("resultStr") != null) {
+                String result2 = resultMap2.get("resultStr").toString();
+                //System.out.println("#ELOG:sns_api:: result2:"+result2);
+                JsonObject resultObj2= JsonUtil.convertStringToJsonObject(result2);
+                //System.out.println("#ELOG:sns_api:: result_jsonObj2:"+resultObj2.toString());
+                if (resultObj2 != null && resultObj2.get("childList") != null) {
+                    childList2 = (JsonArray) resultObj2.get("childList");
+                    System.out.println("#ELOG:sns_api:: childList2:"+childList2.toString());
+                }
+            }
+        }
+
+
+        //result = getDuppedKeywordsArrayCutted(childList1, childList2, 10);
+
+
+        return result;
+    }
+
+    private JsonArray getDuppedKeywordsArrayCutted(JsonArray childList1, JsonArray childList2, int limit) {
+        JsonArray result = new JsonArray();
+        if (childList1 != null) {
+            for (JsonElement je1 : childList1) {
+                result.add(je1);
+            }
+        }
+        if (childList2 != null) {
+
+        }
+        return result;
     }
 }

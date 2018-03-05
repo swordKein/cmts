@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.ConfTarget;
@@ -46,4 +47,6 @@ public interface ApiServiceImpl {
     );
 
     int uptSchedTriggerStatByItemIdxAndType(int itemIdx, String type, String stat);
+
+    JsonArray getSnsKeywords(String title) throws Exception;
 }
