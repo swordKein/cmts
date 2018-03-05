@@ -645,7 +645,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 if (changeMetaArr != null) {
                     /* get meta data for saving */
-                    JsonArray destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
+                    JsonArray destArr = null;
+                    if(!"LIST_SEARCHKEYWORDS".equals(atype)) {
+                        destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
+                    } else {
+                        destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
+                    }
                     if (destArr != null) {
                         destMeta = destArr.toString();
 
@@ -762,6 +767,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return origArray;
     }
 
+    public JsonArray getTargetMetasArrayOnlyString(String type, JsonArray origArray, JsonArray changeArray) {
+        try {
+            for (JsonElement je : changeArray) {
+                JsonObject jo = (JsonObject) je;
+
+                //System.out.println("#origArry:"+origArray.toString()+" /#changeArray:"+changeArray.toString());
+                String toAction = jo.get("action").getAsString();
+                origArray = changeTargetMetasArrayOnlyString(toAction, jo, origArray);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return origArray;
+    }
+
     public JsonArray changeTargetMetasArray(String toAction, JsonObject jObj, JsonArray origArray) {
         JsonArray resultArr = null;
 
@@ -826,6 +847,66 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                                 resultArr.add(newobj3);
                             }
                         }
+                        break;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return resultArr;
+    }
+
+    public JsonArray changeTargetMetasArrayOnlyString(String toAction, JsonObject jObj, JsonArray origArray) {
+        JsonArray resultArr = null;
+
+        try {
+            if (jObj != null && origArray != null) {
+                //String asWord = "";
+                String toWord = "";
+
+                resultArr = new JsonArray();
+                switch (toAction) {
+                    case "add" :
+                        toWord = jObj.get("target_meta").getAsString().trim();
+
+                        List<String> tmpArr = JsonUtil.convertJsonArrayToList(origArray);
+
+                        tmpArr.add(toWord);
+
+                        resultArr = JsonUtil.convertListToJsonArray(tmpArr);
+                        break;
+
+                    case "mod":
+                        String fromWord = jObj.get("meta").getAsString().trim();
+                        toWord = jObj.get("target_meta").getAsString().trim();
+
+                        List<String> tmpArrU = JsonUtil.convertJsonArrayToList(origArray);
+                        List<String> newArrU = new ArrayList<String>();
+                        for(String je : tmpArrU) {
+                            if(!je.trim().equals(fromWord)) {
+                                newArrU.add(je.trim());
+                            } else {
+                                newArrU.add(toWord);
+                            }
+                        }
+
+                        resultArr = JsonUtil.convertListToJsonArray(newArrU);
+                        break;
+
+                    case "del":
+                        fromWord = jObj.get("meta").getAsString().trim();
+
+                        List<String> tmpArrD = JsonUtil.convertJsonArrayToList(origArray);
+                        List<String> newArrD = new ArrayList<String>();
+                        for(String je : tmpArrD) {
+                            if(!je.trim().equals(fromWord)) {
+                                newArrD.add(je.trim());
+                            }
+                        }
+                        resultArr = JsonUtil.convertListToJsonArray(newArrD);
+
                         break;
                 }
 
