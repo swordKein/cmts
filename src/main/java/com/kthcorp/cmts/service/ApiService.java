@@ -4,12 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.AuthUserMapper;
+import com.kthcorp.cmts.mapper.CcubeMapper;
 import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.ItemsMetasMapper;
-import com.kthcorp.cmts.model.AuthUser;
-import com.kthcorp.cmts.model.Items;
-import com.kthcorp.cmts.model.ItemsContent;
-import com.kthcorp.cmts.model.ItemsMetas;
+import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.AES256Util;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
@@ -43,6 +41,8 @@ public class ApiService implements ApiServiceImpl {
     private DicService dicService;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private CcubeMapper ccubeMapper;
 
     @Override
     public String getHashCode(String custid, String authkey) throws Exception {
@@ -176,7 +176,8 @@ public class ApiService implements ApiServiceImpl {
         origTypes.add("GENRE");
         origTypes.add("PLOT");
 
-        JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes);
+        //JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes);
+        JsonObject resultObj = getCcubeMetasByIdx(itemIdx, origTypes);
         return resultObj;
     }
 
@@ -203,6 +204,78 @@ public class ApiService implements ApiServiceImpl {
                         if(ot.equals(im.getMtype().toUpperCase())) {
                             resultObj.addProperty(im.getMtype().toUpperCase(), im.getMeta());
                         }
+                    }
+                }
+            }
+        }
+
+        resultObj = setEmptyMovieInfo(resultObj, origTypes);
+
+        return resultObj;
+    }
+
+    private JsonObject convertCcubeSeriesToJsonObject(CcubeSeries cser) {
+        JsonObject resultObj = null;
+
+        if (cser != null) {
+            resultObj = new JsonObject();
+            if (cser.getPurity_title() != null) resultObj.addProperty("TITLE", cser.getPurity_title());
+            if (cser.getEng_title() != null) resultObj.addProperty("OTITLE", cser.getEng_title());
+            resultObj.addProperty("SERIESYN", "Y");
+            if (cser.getYear() != null) resultObj.addProperty("YEAR", cser.getYear());
+            if (cser.getDirector() != null) resultObj.addProperty("DIRECTOR", cser.getDirector());
+            if (cser.getActors_display() != null) resultObj.addProperty("ACTOR", cser.getActors_display());
+        }
+
+        return resultObj;
+    }
+
+    private JsonObject convertCcubeContentToJsonObject(CcubeContent cser) {
+        JsonObject resultObj = null;
+
+        if (cser != null) {
+            resultObj = new JsonObject();
+            if (cser.getPurity_title() != null) resultObj.addProperty("TITLE", cser.getPurity_title());
+            if (cser.getEng_title() != null) resultObj.addProperty("OTITLE", cser.getEng_title());
+            resultObj.addProperty("SERIESYN", "N");
+            if (cser.getYear() != null) resultObj.addProperty("YEAR", cser.getYear());
+            if (cser.getDirector() != null) resultObj.addProperty("DIRECTOR", cser.getDirector());
+            if (cser.getActors_display() != null) resultObj.addProperty("ACTOR", cser.getActors_display());
+        }
+
+        return resultObj;
+    }
+
+    private JsonObject getCcubeMetasByIdx(int itemIdx, ArrayList<String> origTypes) {
+        JsonObject resultObj = null;
+
+        CcubeKeys ckeys = ccubeMapper.getCcubeKeys(itemIdx);
+        if (ckeys != null ) {
+            if (ckeys.getSeries_id() != null && !"0".equals(ckeys.getSeries_id())) {
+                CcubeSeries reqser = new CcubeSeries();
+                reqser.setSeries_id(ckeys.getSeries_id());
+                CcubeSeries cser = ccubeMapper.getCcubeSeriesById(reqser);
+                if (cser != null) {
+                    resultObj = convertCcubeSeriesToJsonObject(cser);
+                }
+            } else if (ckeys.getContent_id() != null && !"0".equals(ckeys.getContent_id())) {
+                CcubeContent reqcon = new CcubeContent();
+                reqcon.setContent_id(ckeys.getContent_id());
+                CcubeContent ccon = ccubeMapper.getCcubeContentByCid(reqcon);
+                if (ccon != null) {
+                    resultObj = convertCcubeContentToJsonObject(ccon);
+                }
+            }
+        }
+
+        ItemsMetas req = new ItemsMetas();
+        req.setIdx(itemIdx);
+        List<ItemsMetas> result = itemsMetasMapper.getItemsMetasByIdx(req);
+        if (result != null && result.size() > 0) {
+            for (ItemsMetas im : result) {
+                if (im != null && im.getMtype() != null && im.getMeta() != null) {
+                    if("GENRE".equals(im.getMtype().toUpperCase()) || "PLOT".equals(im.getMtype().toUpperCase())) {
+                        resultObj.addProperty(im.getMtype().toUpperCase(), im.getMeta());
                     }
                 }
             }
