@@ -27,6 +27,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private ItemsMetasMapper itemsMetasMapper;
     @Autowired
     private ItemsMapper itemsMapper;
+    @Autowired
+    private DicService dicService;
 
     @Override
     public List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req) {
@@ -567,6 +569,47 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_RECO_TARGET");
         origTypes.add("LIST_RECO_SITUATION");
 
+        /* 타입 별 액션 아이템 중 add,mod는 사전에 추가 */
+        ArrayList<String> dicTypes = new ArrayList<String>();
+        dicTypes.add("METASWHEN");
+        dicTypes.add("METASWHERE");
+        dicTypes.add("METASWHO");
+        dicTypes.add("METASWHAT");
+        dicTypes.add("METASEMOTION");
+        for (String dicType : dicTypes) {
+            JsonArray dicActionArr = null;
+            if (actionItemsArraysByType.get(dicType) != null) {
+                dicActionArr = (JsonArray) actionItemsArraysByType.get(dicType);
+                System.out.println("#TLOG:dicActionArr:"+dicActionArr.toString());
+
+                for (JsonElement je : dicActionArr) {
+                    JsonObject jo = (JsonObject) je;
+
+                    if(jo != null && jo.get("action") != null) {
+
+                        System.out.println("#TLOG:putDicKeyword:: jo:"+jo.toString());
+                        DicKeywords newKey = new DicKeywords();
+
+                        switch(jo.get("action").getAsString()) {
+                            case "add":
+                                newKey.setType(dicType.replace("METAS", ""));
+                                newKey.setKeyword(jo.get("meta").getAsString());
+                                newKey.setRatio(0.0);
+                                int rtd = dicService.insDicKeywords(newKey);
+                                break;
+                            case "mod" :
+                                newKey.setType(dicType.replace("METAS", ""));
+                                newKey.setKeyword(jo.get("meta").getAsString());
+                                newKey.setToword(jo.get("target_meta").getAsString());
+                                newKey.setRatio(0.0);
+                                int rtd2 = dicService.insDicKeywords(newKey);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
             //for (JsonElement atype1 : typesArr) {
 
@@ -604,7 +647,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         reqMeta.setMtype(atype);
                         reqMeta.setMeta(destMeta);
 
-                        System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
+                        //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
                         rt = this.insItemsTagsMetas(reqMeta);
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);

@@ -21,6 +21,15 @@ public class DicKeywords extends Paging {
     private String regid;
 
     private String oldword;
+    private String toword;
+
+    public String getToword() {
+        return toword;
+    }
+
+    public void setToword(String toword) {
+        this.toword = toword;
+    }
 
     public String getOldword() {
         return oldword;

@@ -371,7 +371,7 @@ public class ApiService implements ApiServiceImpl {
         List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
         JsonArray listItems = getListItemsFromArray(list_items);
 
-        System.out.println("#LIST_ITEMS:"+list_items.toString());
+        //System.out.println("#LIST_ITEMS:"+list_items.toString());
 
         int maxPage = countItems / pageSize + 1;
 

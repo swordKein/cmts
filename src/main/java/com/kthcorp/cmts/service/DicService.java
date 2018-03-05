@@ -552,13 +552,16 @@ public class DicService implements DicServiceImpl {
         boolean isExist = false;
         for (DicKeywords fw : dicKeywords) {
             if(fw != null && fw.getKeyword() != null && req.getKeyword() != null) {
-                System.out.println("#insDicKeywords exist keyword:"+req.getKeyword().toString());
 
                 if(fw.getKeyword().equals(req.getKeyword())) {
+                    System.out.println("#insDicKeywords exist then update keyword:"+req.getKeyword().toString()
+                            + " to toword:"+req.getToword());
                     isExist = true;
                     req.setIdx(fw.getIdx());
                     if(req != null && req.getRegid() == null) req.setRegid(serverid);
                     if(req != null && req.getRatio() == null) req.setRatio(0.0);
+                    req.setOldword(req.getKeyword());
+                    req.setKeyword(req.getToword());
                     int rtupt = dicKeywordsMapper.uptDicKeywords(req);
                     result = 0;
                     break;
