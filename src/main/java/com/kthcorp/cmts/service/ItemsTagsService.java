@@ -514,7 +514,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonObject nitem = (JsonObject) je;
 
                     if (nitem.get("type") != null) {
-                        String tmpMapArrayName = "METAS" + String.valueOf(nitem.get("type").getAsString().toUpperCase());
+                        String tmpMapArrayName = String.valueOf(nitem.get("type").getAsString().toUpperCase());
+                        String metasTypes = "WHEN, WHERE, WHAT, WHO, EMOTION";
+                        if(metasTypes.contains(tmpMapArrayName)) {
+                            tmpMapArrayName = "METAS" + tmpMapArrayName;
+                        }
+                        if(tmpMapArrayName.startsWith("LIST")) {
+                            tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
+                        }
+                        if(tmpMapArrayName.contains("RECO")) {
+                            tmpMapArrayName = tmpMapArrayName.replace("RECO", "RECO_");
+                        }
+
                         typesArr.add(tmpMapArrayName);
 
                         List<Map<String, Object>> tmpArr = (List<Map<String, Object>>) tmpMapArrays.get(tmpMapArrayName);
