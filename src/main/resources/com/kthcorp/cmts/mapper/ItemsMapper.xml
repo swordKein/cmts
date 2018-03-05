@@ -422,7 +422,7 @@
         ELSE ( select regdate from ccube_contents where content_id = ck.content_id limit 1 )
         END AS regdate
         , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
-        , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as cid
+        , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as content_id
         from
         (	select j.* from
             (
@@ -811,7 +811,7 @@
     <update id="uptItemsTagcnt" parameterType="com.kthcorp.cmts.model.Items">
         /*  */
         update items set tagcnt = tagcnt + 1
-
+        , regdate = now()
         <if test='duration != null and duration != ""'>
             , duration = #{duration}
         </if>
