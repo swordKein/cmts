@@ -490,8 +490,8 @@ public class ApiService implements ApiServiceImpl {
                 newItem.addProperty("CID", (tm.getContent_id() != null ? tm.getContent_id() : ""));
                 newItem.addProperty("TYPE", (tm.getType() != null ? tm.getType() : ""));
                 newItem.addProperty("CNT_TAG", tm.getTagcnt());
-                newItem.addProperty("REGDATE", (tm.getRegdate1() != null ? tm.getRegdate1().toString() : ""));
-                newItem.addProperty("PROCDATE", (tm.getRegdate() != null ? tm.getRegdate().toString() : "" ));
+                newItem.addProperty("REGDATE", (tm.getRegdate() != null ? tm.getRegdate().toString() : ""));
+                newItem.addProperty("PROCDATE", (tm.getProcdate() != null ? tm.getProcdate().toString() : "" ));
                 newItem.addProperty("STAT", (tm.getStat() != null ? tm.getStat() : ""));
 
                 newItem.addProperty("ITEMID", tm.getIdx());

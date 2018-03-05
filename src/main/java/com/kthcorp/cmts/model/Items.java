@@ -49,6 +49,16 @@ public class Items extends Paging {
     private Integer sc_id;
     private String itemsIdxs;
 
+    private Timestamp procdate;
+
+    public Timestamp getProcdate() {
+        return procdate;
+    }
+
+    public void setProcdate(Timestamp procdate) {
+        this.procdate = procdate;
+    }
+
     public String getSearchDirectorYn() {
         return searchDirectorYn;
     }
