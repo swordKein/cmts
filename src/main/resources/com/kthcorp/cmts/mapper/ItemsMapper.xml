@@ -127,8 +127,7 @@
         /* uptItems */
         update items
         set
-        regdate = now()
-        ,regid = #{regid}
+        regid = #{regid}
         <if test='title != null and title != ""'>
             , title = #{title}
         </if>
@@ -811,7 +810,8 @@
 
     <update id="uptItemsTagcnt" parameterType="com.kthcorp.cmts.model.Items">
         /*  */
-        update items set tagcnt = tagcnt + 1, regdate = now()
+        update items set tagcnt = tagcnt + 1
+
         <if test='duration != null and duration != ""'>
             , duration = #{duration}
         </if>

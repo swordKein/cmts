@@ -342,9 +342,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
         origTypes.add("LIST_NOT_MAPPED");
-        //origTypes.add("WORDS_GENRE");
-        //origTypes.add("WORDS_SNS");
-        //origTypes.add("WORDS_ASSOC");
+        origTypes.add("WORDS_GENRE");
+        origTypes.add("WORDS_SNS");
+        origTypes.add("WORDS_ASSOC");
         origTypes.add("LIST_SUBGENRE");
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("LIST_RECO_TARGET");
