@@ -47,4 +47,8 @@ public class ApiServiceTest {
 		System.out.println("#result:"+result.toString());
 	}
 
+	@Test
+	public void test_getMovieInfoByIdx() {
+		System.out.println(apiService.getMovieInfoByIdx(2));
+	}
 }
