@@ -404,10 +404,10 @@ public class ApiService implements ApiServiceImpl {
         String newSdate = "";
         String newEdate = "";
         if ("".equals(searchSdate) || "".equals(searchEdate)) {
-            newSdate = "2017-01-01 00:00:00"; newEdate = "2025-01-01 00:00:00";
+            newSdate = "2017-01-01 00:00:00"; newEdate = "2025-12-31 23:59:59";
         } else {
             newSdate = searchSdate + " 00:00:00";
-            newEdate = searchEdate + " 00:00:00";
+            newEdate = searchEdate + " 23:59:59";
         }
         reqIt.setSearchSdate(newSdate);
         reqIt.setSearchEdate(newEdate);
