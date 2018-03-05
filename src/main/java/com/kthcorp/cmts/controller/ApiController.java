@@ -824,13 +824,14 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "type") String type
-			, @RequestParam(value = "pagesize", required = false, defaultValue = "500") String spagesize
+			, @RequestParam(value = "pagesize", required = false, defaultValue = "200") String spagesize
 			, @RequestParam(value = "pageno") String spageno
 	) {
 		logger.info("#CLOG:API/dic/list get for type:"+type+"/pageSize:"+spagesize+"/pageno:"+spageno);
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+        pageSize = 200;
 
 		int pageNo = 0;
 		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
