@@ -338,6 +338,7 @@
         , iss.stat
         , ifnull(ck.series_id, '0') as series_id
         , ifnull(ck.content_id,'0') as cid
+
         from items it
         inner join items_stat iss on iss.idx = it.idx
         left outer join ccube_keys ck on ck.itemidx = it.idx
@@ -416,7 +417,12 @@
         , CASE WHEN (ck.series_id is not null and ck.series_id != '0') THEN 'SER' ELSE
         ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR'
         ELSE 'OTH' END AS type ) END AS type
-        , it.title, it.regdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        ,CASE
+        WHEN (ck.series_id is not null and ck.series_id != '0')
+        THEN ( select regdate from ccube_series where series_id = ck.series_id limit 1 )
+        ELSE ( select regdate from ccube_contents where content_id = ck.content_id limit 1 )
+        END AS regdate
+        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as cid
         from
         (	select j.* from
