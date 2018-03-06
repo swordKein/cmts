@@ -363,7 +363,7 @@ public class ApiController {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
 				switch(targetType) {
-					case "C": case "R": case "S":
+					case "C": case "A": case "S":
 						rtcode = apiService.uptSchedTriggerStatByItemIdxAndType(itemIdx, targetType, "Y" );
 						break;
 					case "FT":

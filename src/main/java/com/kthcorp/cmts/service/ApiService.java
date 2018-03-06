@@ -557,7 +557,10 @@ public class ApiService implements ApiServiceImpl {
         int rt = 0;
         Items itm = new Items();
         itm.setIdx(itemIdx);
-        itm.setType(type);
+
+        String toStat1 = type;
+        if(!"A".equals(type)) toStat1 = "R";
+        itm.setType(toStat1);
         itm.setStat(stat);
 
         rt = itemsService.uptSchedTriggerStatByItemIdx(itm);

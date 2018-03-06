@@ -350,7 +350,7 @@ public class ItemsService implements ItemsServiceImpl {
                 if(rt > 0) {
                     if(req.getType().equals("C")) {
                         req.setStat("RC");
-                    } else if (req.getType().equals("R")) {
+                    } else if (req.getType().equals("A")) {
                         req.setStat("RR");
                     } else if (req.getType().equals("S")) {
                         req.setStat("RA");
@@ -398,18 +398,20 @@ public class ItemsService implements ItemsServiceImpl {
                 for (String idx : itemsIdxs) {
                     req.setIdx(Integer.parseInt(idx));
                     switch(toStat) {
-                        case "C": case "R": case "S":
+                        case "C": case "A": case "S":
                             int sc_id = itemsMapper.getScidByItemIdxAndType(req);
 
                             if (sc_id > 0) {
                                 req.setSc_id(sc_id);
-                                req.setStat(toStat);
+                                String toStat1 = toStat;
+                                if(!"A".equals(toStat)) toStat1 = "R";
+                                req.setStat(toStat1);
                                 rt = itemsMapper.uptSchedTriggerStatByScid(req);
 
                                 if (rt > 0) {
                                     if (req.getType().equals("C")) {
                                         req.setStat("RC");
-                                    } else if (req.getType().equals("R")) {
+                                    } else if (req.getType().equals("A")) {
                                         req.setStat("RR");
                                     } else if (req.getType().equals("S")) {
                                         req.setStat("RA");
