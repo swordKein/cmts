@@ -108,6 +108,20 @@ public class JsonUtil {
 		return new Gson().fromJson(reqArray, new TypeToken<List<String>>(){}.getType());
 	}
 
+
+	public static List<String> convertJsonArrayToListByLabel(JsonArray reqArray, String label) {
+		List<String> result = new ArrayList();
+		if (reqArray != null && reqArray.size() > 0) {
+			for (JsonElement je : reqArray) {
+				JsonObject jo = (JsonObject) je;
+				String s = jo.get(label).getAsString();
+				s = s.trim();
+				result.add(s);
+			}
+		}
+		return result;
+	}
+
 	/* JsonObject를 Map<String, Object> 으로 convert */
 	public static Map<String, Object> convertJsonObjectToMap(JsonObject object) {
 		Map<String, Object> map = new HashMap<String, Object>();

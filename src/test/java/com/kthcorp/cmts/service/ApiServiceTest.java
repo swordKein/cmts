@@ -58,4 +58,5 @@ public class ApiServiceTest {
 		JsonArray result = apiService.getSnsKeywords("신과함께");
 		//System.out.println("#RESULT:"+result.toString());
 	}
+
 }

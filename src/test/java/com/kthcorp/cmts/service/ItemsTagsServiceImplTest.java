@@ -10,6 +10,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @WebAppConfiguration
@@ -21,8 +24,14 @@ public class ItemsTagsServiceImplTest {
 	private ItemsTagsService itemsTagsService;
 
 	@Test
+	public void test_getItemsMetasByItemIdx() throws Exception{
+		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(2);
+		System.out.println("#Result:"+result.toString());
+	}
+
+	@Test
 	public void test_getItemsTagsMetasAll() throws Exception{
-		JsonObject result = itemsTagsService.getItemsMetasByItemIdxForInsert(1);
+		JsonObject result = itemsTagsService.getItemsMetasByItemIdxForInsert(2);
 		System.out.println("#Result:"+result.toString());
 	}
 
@@ -41,5 +50,27 @@ public class ItemsTagsServiceImplTest {
 
 		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "");
 		System.out.println("#Result:"+result);
+	}
+
+
+	@Test
+	public void test_getNaverKindWords() throws Exception {
+		List<String> origArr = new ArrayList();
+		origArr.add("1");
+		List<String> result = itemsTagsService.getNaverKindWords("아름다운", origArr);
+		System.out.println("#RESULT:"+result.toString());
+	}
+
+	@Test
+	public void test_getNaverKindWordsByList() throws Exception {
+		List<String> origArr = new ArrayList();
+		origArr.add("아름다운");
+		origArr.add("이쁜");
+		origArr.add("소박한");
+		origArr.add("사랑스러운");
+		origArr.add("따뜻한");
+
+		List<String> result = itemsTagsService.getNaverKindWordsByList(origArr, 10);
+		System.out.println("#RESULT:"+result.toString());
 	}
 }

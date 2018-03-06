@@ -78,6 +78,22 @@ public class CommonUtil {
         return removeTex(str) ;
     }
 
+    public static String removeNumber(String str) {
+        String tmpStr = str;
+
+        tmpStr = tmpStr.replace("0","");
+        tmpStr = tmpStr.replace("1","");
+        tmpStr = tmpStr.replace("2","");
+        tmpStr = tmpStr.replace("3","");
+        tmpStr = tmpStr.replace("4","");
+        tmpStr = tmpStr.replace("5","");
+        tmpStr = tmpStr.replace("6","");
+        tmpStr = tmpStr.replace("7","");
+        tmpStr = tmpStr.replace("8","");
+        tmpStr = tmpStr.replace("9","");
+        return tmpStr;
+    }
+
     public static String removeTex(String str) {
         /* 제외어 로직 추가함으로 삭제
          중앙일보 태그 삭제

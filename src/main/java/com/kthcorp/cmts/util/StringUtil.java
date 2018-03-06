@@ -278,4 +278,20 @@ public class StringUtil {
 
         return resultArr;
     }
+
+    public static List<String> getCuttedArrayByLimit(List<String> origArr, int limit) {
+        List<String> result = null;
+        if (origArr != null && origArr.size() > 0) {
+            result = new ArrayList();
+            int cnt = 0;
+            for(String s : origArr) {
+                if (cnt < limit) {
+                    result.add(s);
+                }
+                cnt++;
+            }
+        }
+
+        return result;
+    }
 }

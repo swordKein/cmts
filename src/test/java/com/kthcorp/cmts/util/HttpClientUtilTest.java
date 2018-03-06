@@ -710,11 +710,14 @@ public class HttpClientUtilTest {
 
     @Test
     public void test_reqPost_naverblogss() throws Exception {
-        Map<String,Object> result = HttpClientUtil.reqGetHtml("http://blog.naver.com/PostView.nhn?blogId=hikgayon&logNo=221157407783"
-                ,"", Charset.forName("euc-kr"), null, "");
+        String requrl = "http://blog.naver.com/PostView.nhn?blogId=hikgayon&logNo=221157407783";
+        requrl = "http://krdic.naver.com/search.nhn?query=%EC%95%84%EB%A6%84%EB%8B%A4%EC%9A%B4&kind=all";
+        Map<String,Object> result = HttpClientUtil.reqGetHtml(requrl
+                ,"", Charset.forName("utf-8"), null, "");
         System.out.println("#HttpClient:test_reqGet_moviedaum returned string:"+result.toString());
 
-        String result2 = JsoupUtil.getTaggedValueAllHtml(result.get("resultStr").toString(), ".post");
+        String result2 = JsoupUtil.getTaggedValueAll(result.get("resultStr").toString(), ".syn .syno");
+        result2 = CommonUtil.removeNumber(result2);
 
         //System.out.println("#getTaggedValue size:"+result2.length());
         System.out.println("#getTaggedValue:"+result2);

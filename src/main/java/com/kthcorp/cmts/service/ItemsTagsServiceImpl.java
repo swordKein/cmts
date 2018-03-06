@@ -36,6 +36,10 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByItemIdx(int itemIdx);
 
+    List<String> getNaverKindWordsByList(List<String> keywordList, int limit) throws Exception;
+
+    List<String> getNaverKindWords(String keyword, List<String> origArr) throws Exception;
+
     JsonObject getItemsMetasByItemIdxForInsert(int itemIdx);
 
     JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx);
