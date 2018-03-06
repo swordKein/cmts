@@ -760,10 +760,17 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-                reqc.setWord(oldword);
-                reqc.setOldword(oldword);
-                reqc.setWordto(newword);
-                rt = this.insDicChangeWords(reqc);
+
+                String[] newwords = newword.trim().split("\\|");
+                if (newwords != null && newwords.length > 1) {
+                    String oldword1 = newwords[0];
+                    String newword1 = newwords[1];
+                    reqc.setWord(oldword1);
+                    reqc.setOldword(oldword1);
+                    reqc.setWordto(newword1);
+
+                    rt = this.insDicChangeWords(reqc);
+                }
                 break;
 
             case "ADD":
@@ -795,7 +802,7 @@ public class DicService implements DicServiceImpl {
         return rt;
     }
 
-    private int uptDicsByParams(String dicType, String oldword, String newword, Double freq) {
+    private int uptDicsByParams_(String dicType, String oldword, String newword, Double freq) {
         int rt = 0;
         switch(dicType) {
             case "NOTUSE":
@@ -808,10 +815,19 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-                reqc.setWord(oldword);
-                reqc.setOldword(oldword);
-                reqc.setWordto(newword);
-                rt = this.uptDicChangeWordsByWord(reqc);
+
+                String[] newwords = newword.trim().split("\\|");
+                String[] oldwords = oldword.trim().split("\\|");
+                if (newwords != null && oldwords != null) {
+                    String oldword1 = oldwords[0];
+                    String words1 = newwords[0];
+                    String newword1 = newwords[1];
+                    reqc.setWord(words1);
+                    reqc.setOldword(oldword1);
+                    reqc.setWordto(newword1);
+
+                    rt = this.uptDicChangeWordsByWord(reqc);
+                }
                 break;
 
             case "ADD":
@@ -854,10 +870,15 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-                reqc.setWord(oldword);
-                reqc.setOldword(oldword);
-                reqc.setWordto(newword);
-                rt = this.delDicChangeWordsByWord(reqc);
+                String[] oldwords = oldword.trim().split("\\|");
+                if (oldwords != null && oldwords.length > 1) {
+                    String oldword1 = oldwords[0];
+                    String newword1 = oldwords[1];
+                    reqc.setWord(oldword1);
+                    reqc.setOldword(oldword1);
+                    reqc.setWordto(newword1);
+                    rt = this.delDicChangeWordsByWord(reqc);
+                }
                 break;
 
             case "ADD":
