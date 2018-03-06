@@ -95,4 +95,10 @@
     </delete>
 
 
+    <select id="getDicGenreKeywordsByGenre" parameterType="java.lang.String" resultType="com.kthcorp.cmts.model.DicGenreWords">
+        /* getDicGenreKeywordsByGenre */
+        select idx, genre, word, regdate, regid
+        from dic_genre_words
+        where genre = #{genre}
+    </select>
 </mapper>
