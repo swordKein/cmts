@@ -87,9 +87,13 @@ public interface DicServiceImpl {
 
     int insNotMapKeywords(JsonArray reqArr);
 
-    int countItems(String type);
+    //int countItems(String type);
 
-    JsonArray getDicKeywordsByType(String type, int pageSize, int pageno);
+    int countItems(String type, String keyword);
+
+    //JsonArray getDicKeywordsByType(String type, int pageSize, int pageno);
+
+    JsonArray getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
 
     int modifyDicsByTypesFromArrayList(String items);
 }

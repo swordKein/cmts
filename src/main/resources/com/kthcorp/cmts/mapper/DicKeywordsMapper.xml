@@ -18,7 +18,10 @@
         idx, type, keyword, ratio, regdate, regid
         from dic_keywords
         where type = #{type}
-        order by regdate DESC
+        <if test='keyword != null and keyword != ""'>
+            and keyword like concat('%',#{keyword},'%')
+        </if>
+        order by regdate DESC, idx DESC
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -47,6 +50,9 @@
         select count(*)
         from dic_keywords
         where type = #{type}
+        <if test='keyword != null and keyword != ""'>
+            and keyword like concat('%',#{keyword},'%')
+        </if>
     </select>
 
     <select id="countDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords" resultType="java.lang.Integer">

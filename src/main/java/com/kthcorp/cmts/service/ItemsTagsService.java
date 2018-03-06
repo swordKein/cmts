@@ -254,7 +254,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public JsonObject getItemsMetasByItemIdx(int itemIdx) {
+    public JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode) {
         ArrayList<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
         origTypes.add("METASWHERE");
@@ -272,7 +272,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
 
-        JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
+        JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
 
         if (resultObj2 != null) {
             if (resultObj2.get("METASEMOTION") != null) {
@@ -414,7 +414,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
 
-        JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
+        JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, true);
         return resultObj2;
     }
 
@@ -458,7 +458,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx) {
+    public JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx, boolean isColorCode) {
         ArrayList<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
         origTypes.add("METASWHERE");
@@ -483,7 +483,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             JsonArray newTypesArr = null;
             if (resultObj != null && resultObj.get(type) != null) newTypesArr = (JsonArray) resultObj.get(type);
 
-            JsonArray typeResultArr = getCombinedJsonArray(type, oldTypesArr, newTypesArr);
+            JsonArray typeResultArr = getCombinedJsonArray(type, oldTypesArr, newTypesArr, isColorCode);
             System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr.toString());
 
             if (resultObj.get(type) != null) resultObj.remove(type);
@@ -493,7 +493,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return resultObj;
     }
 
-    private JsonArray getCombinedJsonArray(String type, JsonArray oldArr, JsonArray newArr) {
+    private JsonArray getCombinedJsonArray(String type, JsonArray oldArr, JsonArray newArr, boolean isColorCode) {
         //System.out.println("#TLOG:oldArr:"+oldArr.toString());
         JsonArray resultArr = new JsonArray();
 
@@ -514,8 +514,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         JsonObject newItem = new JsonObject();
                         newItem.addProperty("word", newWord);
                         //if ("get".equals(when)) {
-                        newItem.addProperty("type", "dup");
-                        //} else {
+                        if (isColorCode) { newItem.addProperty("type", "dup"); }
+                        else { newItem.addProperty("type", ""); }
+                                //} else {
                         //    newItem.addProperty("type", "ext");
                         //}
                         newItem.addProperty("ratio", njo.get("ratio").getAsDouble());
@@ -528,7 +529,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonObject newItem = new JsonObject();
                     newItem.addProperty("word", oldWord);
                     //if ("get".equals(when)) {
-                    newItem.addProperty("type", "ext");
+                    //newItem.addProperty("type", "ext");
+                    if (isColorCode) { newItem.addProperty("type", "ext"); }
+                    else { newItem.addProperty("type", ""); }
                     //} else {
                     //    newItem.addProperty("type", "new");
                     //}
@@ -555,7 +558,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     JsonObject newItem = new JsonObject();
                     newItem.addProperty("word", nj_word);
-                    newItem.addProperty("type", "new");
+                    //newItem.addProperty("type", "new");
+                    if (isColorCode) { newItem.addProperty("type", "new"); }
+                    else { newItem.addProperty("type", ""); }
                     newItem.addProperty("ratio", njjo.get("ratio").getAsDouble());
                     resultArr.add(newItem);
                 }
@@ -837,7 +842,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             System.out.println("#lastTag:"+lastTag.toString());
             /* 기승인된 메타가 없을 경우 (최근 tagIdx가 미승인인 경우) 메타수정 후 상태변경, 승인 처리한다 */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
-                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid);
+                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
                 /* action_item이 있는 경우 타입별 meta 수정 */

@@ -17,5 +17,5 @@ public interface DicNotuseWordsMapper {
     int uptDicNotuseWordsByWord(DicNotuseWords req);
     int delDicNotuseWordsByWord(DicNotuseWords req);
 
-    int countItems();
+    int countItems(DicNotuseWords req);
 }

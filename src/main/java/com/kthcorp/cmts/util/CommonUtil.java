@@ -23,7 +23,7 @@ public class CommonUtil {
 
         int currPage = startPage;
 
-        while (limit < 6 && currPage < maxPage) {
+        while (limit < 6 && currPage <= maxPage) {
             if (currPage == pageNo) {
                 listActive.add("active");
             } else {

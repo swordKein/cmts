@@ -34,7 +34,9 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsTagsMetasAll_bak(int itemIdx);
 
-    JsonObject getItemsMetasByItemIdx(int itemIdx);
+    //JsonObject getItemsMetasByItemIdx(int itemIdx);
+
+    JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode);
 
     List<String> getGenreWordsListByGenre(String genre);
 
@@ -46,7 +48,9 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx);
 
-    JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx);
+    //JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx);
+
+    JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx, boolean isColorCode);
 
     int restorePrevTag(int itemIdx);
 

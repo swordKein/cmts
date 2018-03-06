@@ -331,14 +331,14 @@ public class ApiService implements ApiServiceImpl {
     }
 
     @Override
-    public JsonObject getDicKeywordsByType(String type, int pageSize, int pageno) {
-        if(pageSize < 1) pageSize = 500;
+    public JsonObject getDicKeywordsByType(String type, String keyword, int pageSize, int pageno) {
+        if(pageSize < 1 || pageSize > 200) pageSize = 200;
 
         JsonObject result = new JsonObject();
-        int countItems = dicService.countItems(type);
+        int countItems = dicService.countItems(type, keyword);
         System.out.println("#COUNT_BY_TYPE:: type:"+type+ " / count:"+countItems);
 
-        JsonArray list_words = dicService.getDicKeywordsByType(type, pageSize, pageno);
+        JsonArray list_words = dicService.getDicKeywordsByType(type, keyword, pageSize, pageno);
         System.out.println("#LIST_WORDS:"+list_words.toString());
 
         int maxPage = countItems / pageSize + 1;
@@ -353,12 +353,13 @@ public class ApiService implements ApiServiceImpl {
         JsonArray listPageArr = JsonUtil.convertIntegerListToJsonArray(listPage);
         JsonArray listActiveArr = JsonUtil.convertListToJsonArray(listActive);
 
+        result.addProperty("COUNT_ALL", countItems);
         result.addProperty("MAXPAGE", maxPage);
         result.addProperty("TYPE", type);
         result.addProperty("PAGESIZE", pageSize);
         result.addProperty("PAGENO", pageno);
         result.add("LIST_PAGING", listPageArr);
-        //result.add("LIST_ACTIVE", listActiveArr);
+        result.add("LIST_ACTIVE", listActiveArr);
         result.add("LIST_WORDS", list_words);
 
         return result;
@@ -556,7 +557,10 @@ public class ApiService implements ApiServiceImpl {
         int rt = 0;
         Items itm = new Items();
         itm.setIdx(itemIdx);
-        itm.setType(type);
+
+        String toStat1 = type;
+        if(!"A".equals(type)) toStat1 = "R";
+        itm.setType(toStat1);
         itm.setStat(stat);
 
         rt = itemsService.uptSchedTriggerStatByItemIdx(itm);

@@ -354,13 +354,25 @@ public class ApiController {
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
 
+		targetType = targetType.trim();
+
 		int rtcode = -1;
 		String rtmsg = "";
 
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				rtcode = apiService.uptSchedTriggerStatByItemIdxAndType(itemIdx, targetType, "Y" );
+				switch(targetType) {
+					case "C": case "A": case "S":
+						rtcode = apiService.uptSchedTriggerStatByItemIdxAndType(itemIdx, targetType, "Y" );
+						break;
+					case "FT":
+						Items reqIt = new Items();
+						reqIt.setIdx(itemIdx);
+						reqIt.setStat(targetType);
+						rtcode = itemsService.insItemsStat(reqIt);
+						break;
+				}
 				if(rtcode > 0) {
 					rtmsg = "SUCCESS";
 				} else {
@@ -504,8 +516,20 @@ public class ApiController {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
 
+				/* pop/meta 조회 시 meta_list type(dup, ext, new) 넣는 조건
+  					: 현재 승인대기 이고 이전 승인완료 건 있을 경우 ( 현재 items_tags_keys.stat = Y ), ( 이전 stat = S인 건이 > 0 )
+  				*/
+				boolean isColorCode = false;
 				ItemsTags lastTag = itemsTagsService.getLastTagCntInfo(itemIdx);
-				result1 = itemsTagsService.getItemsMetasByItemIdx(itemIdx);
+				if(lastTag != null && "Y".equals(lastTag.getStat())) {
+					lastTag.setStat("S");
+					int cntSuccessTagged = itemsTagsService.cntConfirmedTags(lastTag);
+					if (cntSuccessTagged > 0) {
+						isColorCode = true;
+					}
+				}
+				result1 = itemsTagsService.getItemsMetasByItemIdx(itemIdx, isColorCode);
+
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {
@@ -825,15 +849,17 @@ public class ApiController {
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "type") String type
 			, @RequestParam(value = "pagesize", required = false, defaultValue = "200") String spagesize
+			, @RequestParam(value = "KEYWORD", required = false, defaultValue = "") String keyword
 			, @RequestParam(value = "pageno") String spageno
 	) {
-		logger.info("#CLOG:API/dic/list get for type:"+type+"/pageSize:"+spagesize+"/pageno:"+spageno);
+		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/pageSize:"+spagesize+"/pageno:"+spageno);
 
 		int pageSize = 0;
-		//if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
-        pageSize = 200;
+		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+        //pageSize = 200;
 
         type = type.trim().toUpperCase();
+		keyword = keyword.trim();
 
 		int pageNo = 0;
 		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
@@ -846,7 +872,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				result1 = apiService.getDicKeywordsByType(type, pageSize, pageNo);
+				result1 = apiService.getDicKeywordsByType(type, keyword, pageSize, pageNo);
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {

@@ -27,11 +27,11 @@ public class ApiServiceTest {
 
 	@Test
 	public void test_getDicKeywordsByType() throws Exception {
-		//JsonObject result = apiService.getDicKeywordsByType("WHEN", 10, 1);
-		//JsonObject result = apiService.getDicKeywordsByType("CHANGE", 10, 1);
-		//JsonObject result = apiService.getDicKeywordsByType("NOTUSE", 10, 1);
-		//JsonObject result = apiService.getDicKeywordsByType("ADD", 10, 1);
-		JsonObject result = apiService.getDicKeywordsByType("FILTER", 10, 1);
+		//JsonObject result = apiService.getDicKeywordsByType("WHEN", "10",10, 1);
+		//JsonObject result = apiService.getDicKeywordsByType("CHANGE", "재밌", 100, 1);
+		//JsonObject result = apiService.getDicKeywordsByType("NOTUSE", "있",10, 2);
+		//JsonObject result = apiService.getDicKeywordsByType("ADD", "인",10, 1);
+		JsonObject result = apiService.getDicKeywordsByType("FILTER", "P",10, 1);
 		System.out.println("#Result:" + result.toString());
 	}
 
