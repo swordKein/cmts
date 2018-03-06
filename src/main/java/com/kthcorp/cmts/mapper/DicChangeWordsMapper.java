@@ -18,5 +18,5 @@ public interface DicChangeWordsMapper {
     int uptDicChangeWordsByWord(DicChangeWords req);
     int delDicChangeWordsByWord(DicChangeWords req);
 
-    int countItems();
+    int countItems(DicChangeWords req);
 }

@@ -11,12 +11,16 @@
         from dic_notuse_words
     </select>
 
-    <select id="getDicNotuseWordsPaging" resultType="com.kthcorp.cmts.model.DicNotuseWords">
+    <select id="getDicNotuseWordsPaging" parameterType="com.kthcorp.cmts.model.DicNotuseWords"
+            resultType="com.kthcorp.cmts.model.DicNotuseWords">
         /* getDicNotuseWordsPaging */
         select
         idx, word, freq, regdate, regid
         from dic_notuse_words
-        order by regdate DESC
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%')
+        </if>
+        order by regdate DESC, idx DESC
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -62,10 +66,13 @@
         where word = #{oldword}
     </delete>
 
-    <select id="countItems" resultType="Integer">
+    <select id="countItems" resultType="Integer" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
         /* countItems */
         select count(*)
         from dic_notuse_words
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%')
+        </if>
     </select>
 
 </mapper>

@@ -18,5 +18,5 @@ public interface DicAddWordsMapper {
     int uptDicAddWordsByWord(DicAddWords req);
     int delDicAddWordsByWord(DicAddWords req);
 
-    int countItems();
+    int countItems(DicAddWords req);
 }

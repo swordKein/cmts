@@ -34,7 +34,9 @@ public interface ApiServiceImpl {
 
     JsonObject getCine21Datas(String title);
 
-    JsonObject getDicKeywordsByType(String type, int pageSize, int pageno);
+    //JsonObject getDicKeywordsByType(String type, int pageSize, int pageno);
+
+    JsonObject getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
 
     JsonObject getItemsSearch(
             int pageSize, int pageno

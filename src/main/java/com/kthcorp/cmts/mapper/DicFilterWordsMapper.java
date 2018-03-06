@@ -20,5 +20,5 @@ public interface DicFilterWordsMapper {
     int uptDicFilterWordsByWord(DicFilterWords req);
     int delDicFilterWordsByWord(DicFilterWords req);
 
-    int countItems();
+    int countItems(DicFilterWords req);
 }

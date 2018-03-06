@@ -11,12 +11,16 @@
         from dic_filter_words
     </select>
 
-    <select id="getDicFilterWordsPaging" resultType="com.kthcorp.cmts.model.DicFilterWords">
+    <select id="getDicFilterWordsPaging" parameterType="com.kthcorp.cmts.model.DicFilterWords"
+            resultType="com.kthcorp.cmts.model.DicFilterWords">
         /* getDicFilterWordsPaging */
         select
         idx, word, freq, regdate, regid
         from dic_filter_words
-        order by regdate DESC
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%')
+        </if>
+        order by regdate DESC, idx DESC
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -62,10 +66,14 @@
         where word = #{oldword}
     </delete>
 
-    <select id="countItems" resultType="Integer">
+    <select id="countItems" parameterType="com.kthcorp.cmts.model.DicFilterWords"
+                resultType="Integer">
         /* countItems */
         select count(*)
         from dic_filter_words
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%')
+        </if>
     </select>
 
 </mapper>

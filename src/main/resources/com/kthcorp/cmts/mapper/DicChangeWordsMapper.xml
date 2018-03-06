@@ -11,12 +11,16 @@
         from dic_change_words
     </select>
 
-    <select id="getDicChangeWordsPaging" resultType="com.kthcorp.cmts.model.DicChangeWords">
+    <select id="getDicChangeWordsPaging" parameterType="com.kthcorp.cmts.model.DicChangeWords"
+            resultType="com.kthcorp.cmts.model.DicChangeWords">
         /* getDicChangeWordsPaging */
         select
         idx, word, wordto, freq, regdate, regid
         from dic_change_words
-        order by regdate DESC
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%') or wordto like concat('%',#{word},'%')
+        </if>
+        order by regdate DESC, idx DESC
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -68,10 +72,14 @@
         where word = #{oldword}
     </delete>
 
-    <select id="countItems" resultType="Integer">
+    <select id="countItems" parameterType="com.kthcorp.cmts.model.DicChangeWords"
+            resultType="Integer">
         /* countItems */
         select count(*)
         from dic_change_words
+        <if test='word != null and word != ""'>
+            where word like concat('%',#{word},'%') or wordto like concat('%',#{word},'%')
+        </if>
     </select>
 
 </mapper>

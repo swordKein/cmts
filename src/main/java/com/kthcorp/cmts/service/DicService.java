@@ -602,29 +602,38 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public int countItems(String type) {
+    public int countItems(String type, String keyword) {
         int count = 0;
 
         switch(type) {
             case "NOTUSE" :
-                    count = dicNotuseWordsMapper.countItems();
+                    DicNotuseWords reqdnw = new DicNotuseWords();
+                    reqdnw.setWord(keyword);
+                    count = dicNotuseWordsMapper.countItems(reqdnw);
                 break;
 
             case "CHANGE" :
-                    count = dicChangeWordsMapper.countItems();
+                    DicChangeWords reqdcw = new DicChangeWords();
+                    reqdcw.setWord(keyword);
+                    count = dicChangeWordsMapper.countItems(reqdcw);
                 break;
 
             case "ADD" :
-                    count = dicAddWordsMapper.countItems();
+                    DicAddWords reqdaw = new DicAddWords();
+                    reqdaw.setWord(keyword);
+                    count = dicAddWordsMapper.countItems(reqdaw);
                     break;
 
             case "FILTER" :
-                count = dicFilterWordsMapper.countItems();
+                    DicFilterWords reqdfw = new DicFilterWords();
+                    reqdfw.setWord(keyword);
+                    count = dicFilterWordsMapper.countItems(reqdfw);
                 break;
 
             default :
                     DicKeywords req = new DicKeywords();
                     req.setType(type);
+                    req.setKeyword(keyword);
 
                     count = dicKeywordsMapper.countItems(req);
                 break;
@@ -634,8 +643,8 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public JsonArray getDicKeywordsByType(String type, int pageSize, int pageno) {
-        if (pageSize < 1) pageSize = 500;
+    public JsonArray getDicKeywordsByType(String type, String keyword, int pageSize, int pageno) {
+        if (pageSize < 1 && pageSize > 200) pageSize = 200;
 
         JsonArray result = new JsonArray();
 
@@ -644,6 +653,7 @@ public class DicService implements DicServiceImpl {
                 DicNotuseWords reqnotuse = new DicNotuseWords();
                 reqnotuse.setPageSize(pageSize);
                 reqnotuse.setPageNo(pageno);
+                reqnotuse.setWord(keyword);
                 List<DicNotuseWords> resnotuse = dicNotuseWordsMapper.getDicNotuseWordsPaging(reqnotuse);
                 if (resnotuse != null) {
                     for (DicNotuseWords dic : resnotuse) {
@@ -656,6 +666,7 @@ public class DicService implements DicServiceImpl {
                 DicChangeWords reqchange = new DicChangeWords();
                 reqchange.setPageSize(pageSize);
                 reqchange.setPageNo(pageno);
+                reqchange.setWord(keyword);
                 List<DicChangeWords> reschange = dicChangeWordsMapper.getDicChangeWordsPaging(reqchange);
                 if (reschange != null) {
                     for (DicChangeWords dic : reschange) {
@@ -668,6 +679,7 @@ public class DicService implements DicServiceImpl {
                 DicAddWords reqadd = new DicAddWords();
                 reqadd.setPageSize(pageSize);
                 reqadd.setPageNo(pageno);
+                reqadd.setWord(keyword);
                 List<DicAddWords> resadd = dicAddWordsMapper.getDicAddWordsPaging(reqadd);
                 if (resadd != null) {
                     for (DicAddWords dic : resadd) {
@@ -680,6 +692,7 @@ public class DicService implements DicServiceImpl {
                 DicFilterWords reqfilter = new DicFilterWords();
                 reqfilter.setPageSize(pageSize);
                 reqfilter.setPageNo(pageno);
+                reqfilter.setWord(keyword);
                 List<DicFilterWords> resfilter = dicFilterWordsMapper.getDicFilterWordsPaging(reqfilter);
                 if (resfilter != null) {
                     for (DicFilterWords dic : resfilter) {
@@ -693,6 +706,7 @@ public class DicService implements DicServiceImpl {
                 reqkey.setPageSize(pageSize);
                 reqkey.setPageNo(pageno);
                 reqkey.setType(type);
+                reqkey.setKeyword(keyword);
 
                 List<DicKeywords> resKeywords = dicKeywordsMapper.getDicKeywordsPaging(reqkey);
                 if (resKeywords != null) {

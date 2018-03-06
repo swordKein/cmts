@@ -397,24 +397,36 @@ public class ItemsService implements ItemsServiceImpl {
                 String itemsIdxs[] = req.getItemsIdxs().trim().split(",");
                 for (String idx : itemsIdxs) {
                     req.setIdx(Integer.parseInt(idx));
-                    int sc_id = itemsMapper.getScidByItemIdxAndType(req);
+                    switch(toStat) {
+                        case "C": case "R": case "S":
+                            int sc_id = itemsMapper.getScidByItemIdxAndType(req);
 
-                    if (sc_id > 0) {
-                        req.setSc_id(sc_id);
-                        req.setStat(toStat);
-                        rt = itemsMapper.uptSchedTriggerStatByScid(req);
+                            if (sc_id > 0) {
+                                req.setSc_id(sc_id);
+                                req.setStat(toStat);
+                                rt = itemsMapper.uptSchedTriggerStatByScid(req);
 
-                        if (rt > 0) {
-                            if (req.getType().equals("C")) {
-                                req.setStat("RC");
-                            } else if (req.getType().equals("R")) {
-                                req.setStat("RR");
-                            } else if (req.getType().equals("S")) {
-                                req.setStat("RA");
+                                if (rt > 0) {
+                                    if (req.getType().equals("C")) {
+                                        req.setStat("RC");
+                                    } else if (req.getType().equals("R")) {
+                                        req.setStat("RR");
+                                    } else if (req.getType().equals("S")) {
+                                        req.setStat("RA");
+                                    }
+
+                                    rt = itemsMapper.insItemsStat(req);
+                                }
                             }
-
-                            rt = itemsMapper.insItemsStat(req);
-                        }
+                            break;
+                        case "FT":
+                            if(!"".equals(idx)) {
+                                Items reqIt = new Items();
+                                reqIt.setIdx(Integer.parseInt(idx));
+                                reqIt.setStat(toStat);
+                                rt = this.insItemsStat(reqIt);
+                            }
+                            break;
                     }
                 }
             } catch (Exception e) {

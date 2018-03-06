@@ -429,7 +429,7 @@
                 (
                 select it.idx, iss.stat, it.regdate
                 from items it
-                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
+                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
                  /* and iss.stat = 'RT' */
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
@@ -466,7 +466,7 @@
                       #{item}
                     </foreach>
                   and itm.meta like CONCAT('%',#{searchKeyword},'%')
-                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
+                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
                 /* and iss.stat = 'RT' */
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
@@ -504,7 +504,7 @@
         (
         select it.idx, iss.stat, it.regdate
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
         /* and iss.stat = 'RT' */
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
@@ -537,7 +537,7 @@
                 #{item}
             </foreach>
             and itm.meta like CONCAT('%',#{searchKeyword},'%')
-            inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
             /* and iss.stat = 'RT' */
             <if test='searchStat != null and searchStat != "ALL"'>
                 and iss.stat = #{searchStat}
