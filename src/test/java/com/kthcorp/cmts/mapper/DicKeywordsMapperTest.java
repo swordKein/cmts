@@ -55,4 +55,9 @@ public class DicKeywordsMapperTest {
         List<DicKeywords> res = dicKeywordsMapper.getDicNotMapKeywords();
         System.out.println("#res:"+res.toString());
     }
+
+    @Test
+    public void test_getDicGenreKeywordsByGenre() throws Exception {
+        System.out.println("#RESULT:"+dicKeywordsMapper.getDicGenreKeywordsByGenre("드라마"));
+    }
 }

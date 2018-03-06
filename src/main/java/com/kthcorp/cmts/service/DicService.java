@@ -719,6 +719,8 @@ public class DicService implements DicServiceImpl {
                 System.out.println("#dicActions::"+jo.toString());
 
                 String dicType = (jo.get("target_type") != null ? jo.get("target_type").getAsString() : "");
+                dicType = dicType.trim().toUpperCase();
+
                 String dicAction = (jo.get("action") != null ? jo.get("action").getAsString() : "");
                 String oldword = (jo.get("word") != null ? jo.get("word").getAsString() : "");
                 String newword = (jo.get("target_word") != null ? jo.get("target_word").getAsString() : "");

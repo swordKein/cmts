@@ -31,6 +31,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Autowired
     private ItemsMapper itemsMapper;
     @Autowired
+    private DicKeywordsMapper dicKeywordsMapper;
+    @Autowired
     private DicService dicService;
 
     @Override
@@ -301,9 +303,48 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
         }
 
+        String movieGenre = this.getMovieGenreFromCcubeContents(itemIdx);
+        if (!"".equals(movieGenre)) {
+            List<String> listGenreWords = this.getGenreWordsListByGenre(movieGenre);
+            if (listGenreWords != null) {
+                JsonArray newListGenreWords = JsonUtil.convertListToJsonArray(listGenreWords);
+                System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/WORDS_GENRE:"+newListGenreWords.toString());
+            }
+        }
+
         return resultObj2;
     }
 
+    private String getMovieGenreFromCcubeContents(int itemIdx) {
+        ItemsMetas req = new ItemsMetas();
+        req.setIdx(itemIdx);
+        List<ItemsMetas> resultMovieMeta = itemsMetasMapper.getItemsMetasByIdx(req);
+        String movieGenre = "";
+        if (resultMovieMeta != null) {
+            for (ItemsMetas mm : resultMovieMeta) {
+                if (mm != null && mm.getMtype() != null && "GENRE".equals(mm.getMtype()) && mm.getMeta() != null) {
+                    movieGenre = mm.getMeta();
+                }
+            }
+        }
+        return movieGenre;
+    }
+
+    @Override
+    public List<String> getGenreWordsListByGenre(String genre) {
+        List<String> result = null;
+        List<DicGenreWords> dicGenreKeys = dicKeywordsMapper.getDicGenreKeywordsByGenre(genre);
+        if (dicGenreKeys != null) {
+            result = new ArrayList();
+
+            for (DicGenreWords dw : dicGenreKeys) {
+                String ts = dw.getWord();
+                result.add(ts);
+            }
+        }
+
+        return result;
+    }
 
     @Override
     public List<String> getNaverKindWordsByList(List<String> keywordList, int limit) throws Exception {

@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.mapper;
 
+import com.kthcorp.cmts.model.DicGenreWords;
 import com.kthcorp.cmts.model.DicKeywords;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,6 @@ public interface DicKeywordsMapper {
     List<DicKeywords> getDicNotMapKeywords();
 
     int countItems(DicKeywords req);
+
+    List<DicGenreWords> getDicGenreKeywordsByGenre(String genre);
 }
