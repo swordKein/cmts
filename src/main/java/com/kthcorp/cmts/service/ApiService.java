@@ -436,7 +436,9 @@ public class ApiService implements ApiServiceImpl {
         }
 
 
-        int countItems = itemsMapper.countItems(reqIt);
+        //int countItems = itemsMapper.countItems(reqIt);
+        int countItems = itemsMapper.countItemsPaging(reqIt);
+
         System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
 
         List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);

@@ -484,14 +484,15 @@
                 <if test='searchDirectorYn != null and searchDirectorYn != ""'>
                     and it.director like CONCAT('%', #{searchKeyword} '%')
                 </if>
-                order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
+                order by it.regdate desc, it.idx desc limit ${pageSize} offset ${offsetIdx}
                 )
                 </if>
             ) j
-        order by j.regdate desc limit ${pageSize} offset ${offsetIdx}
+        order by j.regdate desc, j.idx desc limit ${pageSize}
         ) a
         inner join items it on it.idx = a.idx
         left outer join ccube_keys ck on ck.itemidx = it.idx
+        order by a.regdate desc, a.idx desc
     </select>
 
     <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer" useCache="true">
@@ -521,7 +522,7 @@
         <if test='searchType != null and searchType == "SER"'>
             and it.type = 'CcubeSeries'
         </if>
-        order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
+
         )
 
         <if test='searchPartsArr != null'>
@@ -551,11 +552,11 @@
             <if test='searchType != null and searchType == "SER"'>
                 and it.type = 'CcubeSeries'
             </if>
-            order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
+
             )
         </if>
         ) j
-        order by j.regdate desc limit ${pageSize} offset ${offsetIdx}
+
         ) a
     </select>
 
