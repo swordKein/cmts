@@ -830,8 +830,10 @@ public class ApiController {
 		logger.info("#CLOG:API/dic/list get for type:"+type+"/pageSize:"+spagesize+"/pageno:"+spageno);
 
 		int pageSize = 0;
-		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+		//if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
         pageSize = 200;
+
+        type = type.trim().toUpperCase();
 
 		int pageNo = 0;
 		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
