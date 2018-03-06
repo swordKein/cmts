@@ -4,7 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.util.JsonUtil;
+import com.kthcorp.cmts.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.Charset;
 import java.util.*;
 
 @Service
@@ -20,6 +21,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Value("${cmts.property.serverid}")
     private String serverid;
+    @Value("${cmts.property.naver_kordic_url}")
+    private String naver_kordic_url;
 
     @Autowired
     private ItemsTagsMapper itemsTagsMapper;
@@ -268,7 +271,87 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
+
+        if (resultObj2 != null) {
+            if (resultObj2.get("METASEMOTION") != null) {
+                JsonArray emotionArr = (JsonArray) resultObj2.get("METASEMOTION");
+                //System.out.println("#ELOG.emotionArr:"+emotionArr.toString());
+
+                if (emotionArr != null && emotionArr.size() > 0) {
+                    List<String> emoKeys = JsonUtil.convertJsonArrayToListByLabel(emotionArr, "word");
+                    //System.out.println("#ELOG.emoKeys:"+emoKeys.toString());
+
+                    List<String> emoKindKeys = null;
+                    try {
+                        emoKindKeys = this.getNaverKindWordsByList(emoKeys, 10);
+                        if (emoKindKeys != null && emoKindKeys.size() > 0) {
+                            JsonArray newEmoKindArr = JsonUtil.convertListToJsonArray(emoKindKeys);
+                            if (newEmoKindArr != null && newEmoKindArr.size() > 0) {
+                                System.out.println("#ELOG.getItemsMetasByIdx:"+itemIdx+"/WORDS_ASSOC"+newEmoKindArr.toString());
+
+                                if (resultObj.get("WORDS_ASSOC") != null) {
+                                    resultObj.remove("WORDS_ASSOC");
+                                }
+                                resultObj.add("WORDS_ASSOC", newEmoKindArr);
+                            }
+                        }
+                    } catch (Exception e) { e.printStackTrace(); }
+                }
+
+            }
+        }
+
         return resultObj2;
+    }
+
+
+    @Override
+    public List<String> getNaverKindWordsByList(List<String> keywordList, int limit) throws Exception {
+        List<String> result = new ArrayList();
+        if (keywordList != null && keywordList.size() > 0) {
+
+            int cnt = 0;
+            for(String key : keywordList) {
+                if (cnt < limit) {
+                    result = this.getNaverKindWords(key, result);
+                    cnt = result.size();
+                }
+            }
+        }
+
+        result = StringUtil.getCuttedArrayByLimit(result, limit);
+
+        return result;
+    }
+
+    @Override
+    public List<String> getNaverKindWords(String keyword, List<String> origArr) throws Exception {
+        String reqUrl = naver_kordic_url;
+        reqUrl = reqUrl.replace("#KEYWORD", keyword);
+
+        Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null
+                , Charset.forName("utf-8"),null, "bypass");
+
+        if (resultMap2 != null && resultMap2.get("resultStr") != null) {
+            String result2 = resultMap2.get("resultStr").toString();
+            //System.out.println("#ELOG:getNaverKindWords result:"+result2);
+            String result22 = "";
+            if (!"".equals(result2.trim())) {
+                result22 = JsoupUtil.getTaggedValueAll(result2, ".syn .syno");
+                result22 = CommonUtil.removeNumber(result22.trim());
+                if (!"".equals(result22) && !"_FAIL".equals(result22)) {
+                    String[] result3 = result22.split(" ");
+                    if (result3 != null && result3.length > 0) {
+
+                        for (String rs : result3) {
+                            origArr.add(rs);
+                        }
+                    }
+                }
+            }
+        }
+
+        return origArr;
     }
 
     @Override
