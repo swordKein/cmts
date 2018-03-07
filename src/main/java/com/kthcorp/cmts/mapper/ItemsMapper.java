@@ -48,4 +48,5 @@ public interface ItemsMapper {
     int uptSchedTriggerStatByScid(Items req);
     int insItemsStat(Items req);
     int uptItemsTagcnt(Items req);
+    int uptItemsTagcntMinus(Items req);
 }

@@ -810,12 +810,19 @@
     </insert>
 
     <update id="uptItemsTagcnt" parameterType="com.kthcorp.cmts.model.Items">
-        /*  */
+        /* uptItemsTagcnt */
         update items set tagcnt = tagcnt + 1
         , regdate = now()
         <if test='duration != null and duration != ""'>
             , duration = #{duration}
         </if>
+        where idx = #{idx}
+    </update>
+
+    <update id="uptItemsTagcntMinus" parameterType="com.kthcorp.cmts.model.Items">
+        /* uptItemsTagcntMinus */
+        update items set tagcnt = tagcnt - 1
+        , regdate = now()
         where idx = #{idx}
     </update>
 </mapper>
