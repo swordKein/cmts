@@ -600,36 +600,44 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public int restorePrevTag(int itemIdx) {
         int rt = 0;
         if (itemIdx > 0) {
-            // S -> Y
+            // S -> C
             ItemsTags reqO = new ItemsTags();
             reqO.setIdx(itemIdx);
             reqO.setStat("S");
             int oldTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
 
-            // Y -> C
+            // Y -> D
             ItemsTags reqC = new ItemsTags();
             reqC.setIdx(itemIdx);
             reqC.setStat("Y");
             int curTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqC);
 
 
-            // S -> Y
+            // S -> C
             if (oldTagIdx > 0) {
                 ItemsTags reqOO = new ItemsTags();
                 reqOO.setIdx(itemIdx);
-                reqOO.setStat("Y");
+                reqOO.setStat("C");
                 reqOO.setTagidx(oldTagIdx);
-                rt = itemsTagsMapper.uptItemsTagsKeysStat(reqOO);
+                int rt1 = itemsTagsMapper.uptItemsTagsKeysStat(reqOO);
+                rt += rt1;
             }
 
-            // Y -> C
+            // Y -> D
             // curTagIdx는 C로 승인취소 처리
             if (curTagIdx > 0) {
                 ItemsTags reqCC = new ItemsTags();
                 reqCC.setIdx(itemIdx);
-                reqCC.setStat("C");
+                reqCC.setStat("D");
                 reqCC.setTagidx(curTagIdx);
-                rt = itemsTagsMapper.uptItemsTagsKeysStat(reqCC);
+                int rt2 = itemsTagsMapper.uptItemsTagsKeysStat(reqCC);
+                rt += rt2;
+            }
+
+            if (rt > 0) {
+                Items reqit = new Items();
+                reqit.setIdx(itemIdx);
+                int rtx = itemsMapper.uptItemsTagcntMinus(reqit);
             }
         }
         return rt;
