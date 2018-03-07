@@ -806,6 +806,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     /* get meta data for saving */
                     JsonArray destArr = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype)) {
+                            //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
                     } else {
                         destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
