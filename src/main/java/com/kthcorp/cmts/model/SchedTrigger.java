@@ -33,6 +33,24 @@ public class SchedTrigger extends Paging {
     private Integer parent_sc_id;
 
     private Integer itemIdx;
+    private String country_of_origin;
+    private String movietitle;
+
+    public String getMovietitle() {
+        return movietitle;
+    }
+
+    public void setMovietitle(String movietitle) {
+        this.movietitle = movietitle;
+    }
+
+    public String getCountry_of_origin() {
+        return country_of_origin;
+    }
+
+    public void setCountry_of_origin(String country_of_origin) {
+        this.country_of_origin = country_of_origin;
+    }
 
     public Integer getItemIdx() {
         return itemIdx;

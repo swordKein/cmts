@@ -23,6 +23,9 @@
         <result property="parent_sc_id" column="parent_sc_id" />
         <result property="itemIdx" column="itemIdx" />
 
+        <result property="movietitle" column="movietitle" />
+        <result property="country_of_origin" column="country_of_origin" />
+
         <collection property="targetList" column="tg_id" ofType="com.kthcorp.cmts.model.ConfTarget"
                     javaType="ArrayList" resultMap="ConfTarget"/>
 
@@ -196,6 +199,8 @@
         , it.title as movietitle
         , it.director as moviedirector
         , it.year as movieyear
+
+        , it.type as country_of_origin
         /*
         , ( select title from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movietitle
         , ( select director from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as moviedirector
@@ -265,18 +270,14 @@
         , it.title as movietitle
         , it.director as moviedirector
         , it.year as movieyear
-        /*
-        , ( select title from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movietitle
-        , ( select director from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as moviedirector
-        , ( select year from items where idx = ( select idx from items_sched_mapping where sc_id = s.sc_id limit 1) limit 1) as movieyear
-        */
+        , it.type as country_of_origin
         from sched_trigger s
         inner join items_sched_mapping ism on ism.sc_id = s.sc_id
         inner join items it on it.idx = ism.idx
         left outer join sched_target_mapping m on m.sc_id = s.sc_id
         left outer join conf_target t on t.tg_id = m.tg_id
-        /*and t.stat = 'Y'*/
         where s.sc_id = #{sc_id}
+        limit 1;
     </select>
 
     <update id="uptSchedTriggerProgs" parameterType="com.kthcorp.cmts.model.SchedTrigger">

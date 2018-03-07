@@ -29,6 +29,8 @@ public interface ItemsServiceImpl {
 
     List<InItems> get50ActiveInItems();
 
+    int insItemsHist(int itemIdx, String type, String stat, String title, String action_type, int action_id);
+
     int insItems(Items req);
 
     @Transactional
