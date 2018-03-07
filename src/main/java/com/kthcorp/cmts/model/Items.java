@@ -52,6 +52,8 @@ public class Items extends Paging {
 
     private Timestamp procdate;
 
+    private List<ItemsMetas> metaList;
+    private List<SchedTrigger> schedList;
 
     public String getSearchGenreYn() {
         return searchGenreYn;
@@ -220,10 +222,6 @@ public class Items extends Paging {
     public void setSchedList(List<SchedTrigger> schedList) {
         this.schedList = schedList;
     }
-
-    private List<ItemsMetas> metaList;
-    private List<SchedTrigger> schedList;
-
 
     public List<ItemsMetas> getMetaList() {
         return metaList;

@@ -54,4 +54,6 @@ public interface ItemsServiceImpl {
 
     @Transactional
     int uptSchedTriggerStatByItemIdxArray(Items req);
+
+    Items getItemsByIdx(Items req);
 }
