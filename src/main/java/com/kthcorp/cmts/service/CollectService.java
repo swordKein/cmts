@@ -84,7 +84,7 @@ public class CollectService implements CollectServiceImpl {
                     String rt_stat = "F";
                     String rt_code = "";
                     String rt_mesg = "";
-                    String movietitle = "";
+                    String movietitle = sched.getMovietitle();
 
                     int failCount = 0;
                     int sc_id = sched.getSc_id();
@@ -261,16 +261,12 @@ public class CollectService implements CollectServiceImpl {
                         reqSth.setRt_msg("FAIL");
                         rtcode = -1;
                         rt_stat = "F";
-                        //items_hist에 등록 for 통계
-                        rthist = itemsService.insItemsHist(itemIdx, "collect", "F", movietitle, "END_COLLECT", itemIdx);
                     } else {
                         reqSth.setStat("S");
                         reqSth.setRt_code("OK");
                         reqSth.setRt_msg("SUCCESS");
                         rtcode = 1;
                         rt_stat = "S";
-                        //items_hist에 등록 for 통계
-                        rthist = itemsService.insItemsHist(itemIdx, "collect", "S", movietitle, "END_COLLECT", itemIdx);
                     }
 
                     //ConfTarget tg = new ConfTarget();
@@ -284,6 +280,11 @@ public class CollectService implements CollectServiceImpl {
 
 
                     if("S".equals(rt_stat) || "F".equals(rt_stat)) {
+
+                        //items_hist에 등록 for 통계
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", itemIdx);
+
+
                         // 수집 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
                         SchedTrigger newReq = new SchedTrigger();
                         newReq.setParent_sc_id(sc_id);
@@ -1042,10 +1043,9 @@ public class CollectService implements CollectServiceImpl {
             SchedTargetMappingHist reqHist = null;
             //System.out.println("#resultCollect result:::" + resultCollect.toString());
 
-            System.out.println("#resultObj:::"+resultCollect.toString());
-
             if (resultCollect != null && (resultCollect.get("result") != null
                     || resultCollect.get("contents") != null)) {
+                //System.out.println("#resultObj:::"+resultCollect.toString());
                 if (resultCollect.get("contents") != null) {
                     JsonArray contentArr = (JsonArray) resultCollect.get("contents");
                     //System.out.println("#contentArr1:"+contentArr.toString());
