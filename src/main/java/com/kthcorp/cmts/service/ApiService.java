@@ -420,6 +420,8 @@ public class ApiService implements ApiServiceImpl {
                 for (String ps : sp) {
                     if(ps.trim().equals("title")) {
                         reqIt.setSearchTitleYn("Y");
+                    } else if (ps.trim().equals("genre")) {
+                        reqIt.setSearchGenreYn("Y");
                     } else {
                         if (searchPartsArr == null) searchPartsArr = new ArrayList();
                         searchPartsArr.add(ps.trim());
@@ -428,10 +430,13 @@ public class ApiService implements ApiServiceImpl {
             } else {
                 if(searchParts.trim().equals("title")) {
                     reqIt.setSearchTitleYn("Y");
+                } else if (searchParts.trim().equals("genre")) {
+                    reqIt.setSearchGenreYn("Y");
                 } else {
                     if (searchPartsArr == null) searchPartsArr = new ArrayList();
                     searchPartsArr.add(searchParts.trim());
-                }            }
+                }
+            }
             reqIt.setSearchParts(searchParts);
             reqIt.setSearchPartsArr(searchPartsArr);
         }

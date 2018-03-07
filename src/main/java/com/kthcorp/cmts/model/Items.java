@@ -40,6 +40,7 @@ public class Items extends Paging {
     private List<String> searchPartsArr;
     private String searchTitleYn;
     private String searchDirectorYn;
+    private String searchGenreYn;
 
     /* for ccube */
     private String content_id;
@@ -50,6 +51,15 @@ public class Items extends Paging {
     private String itemsIdxs;
 
     private Timestamp procdate;
+
+
+    public String getSearchGenreYn() {
+        return searchGenreYn;
+    }
+
+    public void setSearchGenreYn(String searchGenreYn) {
+        this.searchGenreYn = searchGenreYn;
+    }
 
     public Timestamp getProcdate() {
         return procdate;
