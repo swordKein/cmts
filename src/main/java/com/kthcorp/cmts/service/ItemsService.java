@@ -34,6 +34,8 @@ public class ItemsService implements ItemsServiceImpl {
     private CcubeService ccubeService;
     @Autowired
     private ItemsTagsService itemsTagsService;
+    @Autowired
+    private ItemsHistMapper itemsHistMapper;
 
     @Override
     public int checkInItems() {
@@ -142,8 +144,12 @@ public class ItemsService implements ItemsServiceImpl {
         int rtitem = 0;
 
         try {
+            String type = "CcubeContent";
+            if ("KOR".equals(req.getCountry_of_origin().trim())) {
+                type = "CcubeContentK";
+            }
             Items item = new Items();
-            item.setType("CcubeContent");
+            item.setType(type);
             item.setCid((req.getContent_id() != null) ? req.getContent_id() : "0");
             item.setDirector((req.getDirector() != null) ? req.getDirector() : "");
             item.setYear((req.getYear() != null) ? req.getYear() : "");
@@ -222,8 +228,12 @@ public class ItemsService implements ItemsServiceImpl {
         int rtitem = 0;
 
         try {
+            String type = "CcubeSeries";
+            if ("KOR".equals(req.getCountry_of_origin().trim())) {
+                type = "CcubeSeriesK";
+            }
             Items item = new Items();
-            item.setType("CcubeSeries");
+            item.setType(type);
             item.setCid((req.getSeries_id() != null) ? req.getSeries_id() : "0");
             item.setDirector((req.getDirector() != null) ? req.getDirector() : "");
             item.setYear((req.getYear() != null) ? req.getYear() : "");
@@ -258,6 +268,22 @@ public class ItemsService implements ItemsServiceImpl {
     }
 
     @Override
+    public int insItemsHist(int itemIdx, String type, String stat, String title, String action_type, int action_id) {
+        ItemsHist req = new ItemsHist();
+        req.setType(type);
+        req.setIdx(itemIdx);
+        req.setStat(stat);
+        req.setTitle(title);
+        req.setAction(action_type);
+        req.setAction_id(action_id);
+        req.setRegid(serverid);
+
+        int rt = itemsHistMapper.insItemsHist(req);
+
+        return rt;
+    }
+
+    @Override
     @Transactional
     public int insItems(Items req) {
 
@@ -276,9 +302,13 @@ public class ItemsService implements ItemsServiceImpl {
 
             //sched_trigger에 등록
             int rtSched = schedTriggerMapper.insSchedTriggerForStart(newReq);
+
             int newSc_id = newReq.getSc_id();
             System.out.println("#insItem insert sc_id:"+newReq.getSc_id()+ "   result:"+rtSched);
             if (newSc_id > 0) {
+                //items_hist에 등록 for 통계
+                int rthist = this.insItemsHist(newItemIdx, "items", "S", req.getTitle(), "IN_ITEMS", newItemIdx);
+
                 //item_sched_mapping에 등록
                 ItemsSchedMapping newISM = new ItemsSchedMapping();
                 newISM.setIdx(newItemIdx);

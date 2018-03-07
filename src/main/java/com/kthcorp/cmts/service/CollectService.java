@@ -84,6 +84,7 @@ public class CollectService implements CollectServiceImpl {
                     String rt_stat = "F";
                     String rt_code = "";
                     String rt_mesg = "";
+                    String movietitle = "";
 
                     int failCount = 0;
                     int sc_id = sched.getSc_id();
@@ -96,6 +97,9 @@ public class CollectService implements CollectServiceImpl {
                     System.out.println("#STEP02 before STEP03 update tcnt:: from:"+sched.getTcnt());
                     //tcnt = tcnt + 1;
                     sched.setTcnt(tcnt);
+
+                    //items_hist에 등록 for 통계
+                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", itemIdx);
 
                     int collectedCount = 0;
                     int rts = stepService.uptSchedTriggerForCollectStep02(sched);
@@ -127,7 +131,7 @@ public class CollectService implements CollectServiceImpl {
                                     +"/moviedirector:"+ ((tg.getMoviedirector() != null) ? tg.getMoviedirector() : ""));
                             System.out.println("#################################################################################");
                             param1 = tg.getParam1();
-                            String movietitle = tg.getMovietitle() != null ? tg.getMovietitle() : "";
+                            movietitle = tg.getMovietitle() != null ? tg.getMovietitle() : "";
                             String moviedirector = tg.getMoviedirector() != null ? tg.getMoviedirector() : "";
                             String movieyear = tg.getMovieyear() != null ? tg.getMovieyear() : "";
                             if (!"".equals(movietitle)) { param1 = param1.replace("#movietitle", movietitle); }
@@ -143,7 +147,7 @@ public class CollectService implements CollectServiceImpl {
                             }
 
                             if (target.getMovietitle() != null && !"".equals(target.getMovietitle().trim())) {
-                                resultCollect = run_step03(tg, sc_id, type, tcnt);
+                                resultCollect = run_step03(tg, sc_id, type, tcnt, sched.getCountry_of_origin());
                                 System.out.println("#run_stap03 resultCollect:" + resultCollect.toString());
                             }
 
@@ -180,8 +184,10 @@ public class CollectService implements CollectServiceImpl {
                                 }
 
                                 rt_stat = "S";
+
                             } else {
                                 //System.out.println("#STEP:03:: collection sub Job's return code:"+resultCollect.get("rt_code"));
+
                                 rt_stat = "F";
                                 failCount++;
                             }
@@ -255,12 +261,16 @@ public class CollectService implements CollectServiceImpl {
                         reqSth.setRt_msg("FAIL");
                         rtcode = -1;
                         rt_stat = "F";
+                        //items_hist에 등록 for 통계
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", "F", movietitle, "END_COLLECT", itemIdx);
                     } else {
                         reqSth.setStat("S");
                         reqSth.setRt_code("OK");
                         reqSth.setRt_msg("SUCCESS");
                         rtcode = 1;
                         rt_stat = "S";
+                        //items_hist에 등록 for 통계
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", "S", movietitle, "END_COLLECT", itemIdx);
                     }
 
                     //ConfTarget tg = new ConfTarget();
@@ -363,6 +373,10 @@ public class CollectService implements CollectServiceImpl {
                     int sc_id = sched.getSc_id();
                     int itemIdx = sched.getItemIdx();
                     String type = sched.getType();
+                    String movietitle = sched.getMovietitle();
+
+                    //items_hist에 등록 for 통계
+                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", itemIdx);
 
                     System.out.println("## uptSchedTriggerForCollectStep02 params:"+sched.toString());
 
@@ -401,7 +415,7 @@ public class CollectService implements CollectServiceImpl {
                                     +"/moviedirector:"+ ((tg.getMoviedirector() != null) ? tg.getMoviedirector() : ""));
                             System.out.println("#################################################################################");
                             param1 = tg.getParam1();
-                            String movietitle = tg.getMovietitle() != null ? tg.getMovietitle() : "";
+                            movietitle = tg.getMovietitle() != null ? tg.getMovietitle() : "";
                             String moviedirector = tg.getMoviedirector() != null ? tg.getMoviedirector() : "";
                             String movieyear = tg.getMovieyear() != null ? tg.getMovieyear() : "";
                             if (!"".equals(movietitle)) { param1 = param1.replace("#movietitle", movietitle); }
@@ -415,7 +429,7 @@ public class CollectService implements CollectServiceImpl {
                             }
 
                             if (target.getMovietitle() != null && !"".equals(target.getMovietitle().trim())) {
-                                resultCollect = run_step03(tg, sc_id, type, tcnt);
+                                resultCollect = run_step03(tg, sc_id, type, tcnt, sched.getCountry_of_origin());
                                 System.out.println("#run_stap03 resultCollect:" + resultCollect.toString());
                             }
 
@@ -550,6 +564,9 @@ public class CollectService implements CollectServiceImpl {
 
 
                     if("S".equals(rt_stat) || "F".equals(rt_stat)) {
+                        //items_hist에 등록 for 통계
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", itemIdx);
+
                         // 수집 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
                         SchedTrigger newReq = new SchedTrigger();
                         newReq.setParent_sc_id(sc_id);
@@ -980,7 +997,7 @@ public class CollectService implements CollectServiceImpl {
     /* STEP 3 - main
      * tg_url:STEP 3 - 데이터 수집 이후 conf_target_history와 conf_target_content를 저장
     */
-    public JsonObject run_step03(ConfTarget tg, int sc_id, String type, int tcnt) {
+    public JsonObject run_step03(ConfTarget tg, int sc_id, String type, int tcnt, String country_of_origin) {
         String statTarget = "F";
         String content = "";
 
@@ -988,28 +1005,32 @@ public class CollectService implements CollectServiceImpl {
         try {
             switch (tg.getTg_url()) {
                 case "GOOGLE_SEARCH_IMDB":
-                    System.out.println("#STEP:03:imdb:: collecting start GOOGLE_SEARCH_IMDB: by sc_id:" + sc_id);
-                    resultCollect = this.step03_ByHtml(tg);
+                    if (!country_of_origin.endsWith("K")) {
+                        logger.info("#STEP:03:imdb:: collecting start GOOGLE_SEARCH_IMDB: by sc_id:" + sc_id);
+                        resultCollect = this.step03_ByHtml(tg);
+                    } else {
+                        logger.info("#STEP:03:imdb:: skip-collecting GOOGLE_SEARCH_IMDB: by sc_id:" + sc_id +" caused country_of_origin:"+country_of_origin);
+                    }
 
                     break;
                 case "NAVER_BLOG":
-                    System.out.println("#STEP:03:naver_blog:: collecting start NAVER_BLOG: by sc_id:" + sc_id);
+                    logger.info("#STEP:03:naver_blog:: collecting start NAVER_BLOG: by sc_id:" + sc_id);
                     resultCollect = this.step03_ByHtml(tg);
 
                     break;
                 case "DAUM_BLOG":
-                    System.out.println("#STEP:03:daum_blog:: collecting start DAUM_BLOG: by sc_id:" + sc_id);
+                    logger.info("#STEP:03:daum_blog:: collecting start DAUM_BLOG: by sc_id:" + sc_id);
                     resultCollect = this.step03_ByHtml(tg);
 
                     break;
                 case "NAVER_MOVIE":
-                    System.out.println("#STEP:03:naver_movie:: collecting start NAVER_MOVIE: by sc_id:" + sc_id);
+                    logger.info("#STEP:03:naver_movie:: collecting start NAVER_MOVIE: by sc_id:" + sc_id);
                     resultCollect = this.step03_ByHtml(tg);
                     //System.out.println("#resultCollect:"+resultCollect.toString());
 
                     break;
                 case "DAUM_MOVIE":
-                    System.out.println("#STEP:03:daum_movie:: collecting start DAUM_MOVIE: by sc_id:" + sc_id);
+                    logger.info("#STEP:03:daum_movie:: collecting start DAUM_MOVIE: by sc_id:" + sc_id);
                     resultCollect = this.step03_ByHtml(tg);
 
                     break;

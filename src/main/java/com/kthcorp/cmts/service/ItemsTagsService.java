@@ -497,83 +497,102 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         //System.out.println("#TLOG:oldArr:"+oldArr.toString());
         JsonArray resultArr = new JsonArray();
 
+        System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);
         if (!"LIST_SEARCHKEYWORDS".equals(type)) {
             for (JsonElement oje : oldArr) {
                 //System.out.println("#TOLOG:oje:" + oje.toString());
-                JsonObject ojo = (JsonObject) oje;
-                String oldWord = ojo.get("word").getAsString();
+                try {
+                    JsonObject ojo = (JsonObject) oje;
+                    String oldWord = ojo.get("word").getAsString();
 
-                boolean isMatch = false;
-                for (JsonElement nje : newArr) {
-                    JsonObject njo = (JsonObject) nje;
-                    String newWord = njo.get("word").getAsString();
-                    if (oldWord.equals(newWord)) {
-                        // OLD:NEW 같은 것이 있으면 type=dup 로 저장
-                        //System.out.println("#njo:"+njo.toString());
+                    boolean isMatch = false;
+                    for (JsonElement nje : newArr) {
+                        JsonObject njo = (JsonObject) nje;
+                        String newWord = njo.get("word").getAsString();
+                        if (oldWord.equals(newWord)) {
+                            // OLD:NEW 같은 것이 있으면 type=dup 로 저장
+                            //System.out.println("#njo:"+njo.toString());
 
-                        JsonObject newItem = new JsonObject();
-                        newItem.addProperty("word", newWord);
-                        //if ("get".equals(when)) {
-                        if (isColorCode) { newItem.addProperty("type", "dup"); }
-                        else { newItem.addProperty("type", ""); }
-                                //} else {
-                        //    newItem.addProperty("type", "ext");
-                        //}
-                        newItem.addProperty("ratio", njo.get("ratio").getAsDouble());
-                        resultArr.add(newItem);
-                        isMatch = true;
+                            JsonObject newItem = new JsonObject();
+                            newItem.addProperty("word", newWord);
+                            //if ("get".equals(when)) {
+                            if (isColorCode) {
+                                newItem.addProperty("type", "dup");
+                            } else {
+                                newItem.addProperty("type", "");
+                            }
+                            //} else {
+                            //    newItem.addProperty("type", "ext");
+                            //}
+                            newItem.addProperty("ratio", njo.get("ratio").getAsDouble());
+                            resultArr.add(newItem);
+                            isMatch = true;
+                        }
                     }
-                }
-                if (!isMatch) {
-                    // OLD:NEW 같은 것이 없으면 type=ext 로 저장
-                    JsonObject newItem = new JsonObject();
-                    newItem.addProperty("word", oldWord);
-                    //if ("get".equals(when)) {
-                    //newItem.addProperty("type", "ext");
-                    if (isColorCode) { newItem.addProperty("type", "ext"); }
-                    else { newItem.addProperty("type", ""); }
-                    //} else {
-                    //    newItem.addProperty("type", "new");
-                    //}
-                    newItem.addProperty("ratio", ojo.get("ratio").getAsDouble());
-                    resultArr.add(newItem);
+                    if (!isMatch) {
+                        // OLD:NEW 같은 것이 없으면 type=ext 로 저장
+                        JsonObject newItem = new JsonObject();
+                        newItem.addProperty("word", oldWord);
+                        //if ("get".equals(when)) {
+                        //newItem.addProperty("type", "ext");
+                        if (isColorCode) {
+                            newItem.addProperty("type", "ext");
+                        } else {
+                            newItem.addProperty("type", "");
+                        }
+                        //} else {
+                        //    newItem.addProperty("type", "new");
+                        //}
+                        newItem.addProperty("ratio", ojo.get("ratio").getAsDouble());
+                        resultArr.add(newItem);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error("#ERR:getCombinedJsonArray error! oldArr(oje):"+oje.toString());
                 }
             }
 
             for (JsonElement njje : newArr) {
-                JsonObject njjo = (JsonObject) njje;
-                String nj_word = njjo.get("word").getAsString();
+                try {
+                    JsonObject njjo = (JsonObject) njje;
+                    String nj_word = njjo.get("word").getAsString();
 
-                boolean isExist = false;
-                for (JsonElement re : resultArr) {
-                    JsonObject ro = (JsonObject) re;
-                    String re_word = ro.get("word").getAsString();
-                    if (nj_word.equals(re_word)) {
-                        isExist = true;
+                    boolean isExist = false;
+                    for (JsonElement re : resultArr) {
+                        JsonObject ro = (JsonObject) re;
+                        String re_word = ro.get("word").getAsString();
+                        if (nj_word.equals(re_word)) {
+                            isExist = true;
+                        }
                     }
-                }
-                if (!isExist) {
-                    // NEW:RESLT 같은 것이 없으면 type=new 로 저장
-                    //System.out.println("#njjo:"+njjo.toString());
+                    if (!isExist) {
+                        // NEW:RESLT 같은 것이 없으면 type=new 로 저장
+                        //System.out.println("#njjo:"+njjo.toString());
 
-                    JsonObject newItem = new JsonObject();
-                    newItem.addProperty("word", nj_word);
-                    //newItem.addProperty("type", "new");
-                    if (isColorCode) { newItem.addProperty("type", "new"); }
-                    else { newItem.addProperty("type", ""); }
-                    newItem.addProperty("ratio", njjo.get("ratio").getAsDouble());
-                    resultArr.add(newItem);
+                        JsonObject newItem = new JsonObject();
+                        newItem.addProperty("word", nj_word);
+                        //newItem.addProperty("type", "new");
+                        if (isColorCode) {
+                            newItem.addProperty("type", "new");
+                        } else {
+                            newItem.addProperty("type", "");
+                        }
+                        newItem.addProperty("ratio", njjo.get("ratio").getAsDouble());
+                        resultArr.add(newItem);
+                    }
+                } catch (Exception e) {
+                    logger.error("#ERR.getCombinedJsonArray error! newArr(njje):"+njje.toString());
+                    e.printStackTrace();
                 }
             }
         } else {
             /* 검색어는 단순 JsonArray */
             //System.out.println("#TLOG:LIST_SEARCHKEYWORDS :: oldArr:"+oldArr.toString() + "/newArr:"+newArr.toString());
-            for(JsonElement je : oldArr) {
+            for (JsonElement je : oldArr) {
                 String os = je.getAsString();
                 resultArr.add(os);
             }
         }
-
         return resultArr;
     }
 
@@ -701,9 +720,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
         origTypes.add("LIST_NOT_MAPPED");
-        origTypes.add("WORDS_GENRE");
-        origTypes.add("WORDS_SNS");
-        origTypes.add("WORDS_ASSOC");
+        //origTypes.add("WORDS_GENRE");
+        //origTypes.add("WORDS_SNS");
+        //origTypes.add("WORDS_ASSOC");
         origTypes.add("LIST_SUBGENRE");
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("LIST_RECO_TARGET");

@@ -55,7 +55,7 @@ public class CollectServiceTest {
 	@Test
 	public void test_step01byScid() throws Exception{
 		SchedTrigger req = new SchedTrigger();
-		req.setSc_id(5939);
+		req.setSc_id(12);
 		List<SchedTrigger> result = collectService.step01byScid(req);
 		System.out.println("#Result:"+result);
 	}
@@ -63,9 +63,9 @@ public class CollectServiceTest {
 	@Test
 	public void test_step01_02_03() throws Exception {
 		SchedTrigger req = new SchedTrigger();
-		req.setSc_id(29442);
+		req.setSc_id(12);
 		int result = collectService.test_ollehTvMetaCollectScheduleCheck(req);
-		System.out.println("#Result:"+result);
+		//System.out.println("#Result:"+result);
 	}
 
 
@@ -84,7 +84,7 @@ public class CollectServiceTest {
 		ConfTarget tg = collectService.step02(req);
 
 		//String result = collectService.run_step03imdb(tg);
-		JsonObject result = collectService.run_step03(tg, 705, "C", 1);
+		JsonObject result = collectService.run_step03(tg, 705, "C", 1, "SK");
 		System.out.println("#Result:"+result);
 	}
 
@@ -134,7 +134,7 @@ public class CollectServiceTest {
 		ConfTarget tg = collectService.step02(req);
 		//System.out.println("#Result: step02:"+tg.toString());
 
-		JsonObject result = collectService.run_step03(tg, 2, "C", 1);
+		JsonObject result = collectService.run_step03(tg, 2, "C", 1, "SK");
 
 		System.out.println("#RESULT:"+result.toString());
 	}
