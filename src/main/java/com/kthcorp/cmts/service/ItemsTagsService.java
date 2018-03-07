@@ -261,6 +261,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+        origTypes.add("METASCHARACTER");
         origTypes.add("LIST_NOT_MAPPED");
         origTypes.add("WORDS_GENRE");
         origTypes.add("WORDS_SNS");
@@ -465,6 +466,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+        origTypes.add("METASCHARACTER");
         origTypes.add("LIST_NOT_MAPPED");
         origTypes.add("WORDS_GENRE");
         origTypes.add("WORDS_SNS");
@@ -727,6 +729,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+        origTypes.add("METASCHARACTER");
         origTypes.add("LIST_NOT_MAPPED");
         //origTypes.add("WORDS_GENRE");
         //origTypes.add("WORDS_SNS");
