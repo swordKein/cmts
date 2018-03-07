@@ -434,6 +434,9 @@
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
                 </if>
+                <if test='searchGenreYn != null and searchGenreYn == "Y"'>
+                inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
+                </if>
                 where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
                 <if test='searchTitleYn == "Y"'>
                     and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -470,6 +473,9 @@
                 /* and iss.stat = 'RT' */
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
+                </if>
+                <if test='searchGenreYn != null and searchGenreYn == "Y"'>
+                    inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
                 </if>
                 where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
                 <if test='searchType != null and searchType == "KOR"'>
@@ -509,6 +515,9 @@
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
+        <if test='searchGenreYn != null and searchGenreYn == "Y"'>
+            inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
+        </if>
         where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -541,6 +550,9 @@
             /* and iss.stat = 'RT' */
             <if test='searchStat != null and searchStat != "ALL"'>
                 and iss.stat = #{searchStat}
+            </if>
+            <if test='searchGenreYn != null and searchGenreYn == "Y"'>
+                inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
             </if>
             where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
             <if test='searchType != null and searchType == "KOR"'>
