@@ -467,4 +467,9 @@ public class ItemsService implements ItemsServiceImpl {
         }
         return rt;
     }
+
+    @Autowired
+    public Items getItemsByIdx(Items req) {
+        return itemsMapper.getItemsByIdx(req);
+    }
 }

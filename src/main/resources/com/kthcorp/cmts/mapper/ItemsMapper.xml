@@ -76,6 +76,7 @@
         LEFT JOIN items_metas_mapping tm on tm.idx = t.idx
         LEFT JOIN items_metas m on m.idx = tm.idx
         where t.idx = #{idx}
+        limit 1
     </select>
 
     <select id="getItemsInfoByIdx" resultMap="Items" parameterType="java.lang.Integer">

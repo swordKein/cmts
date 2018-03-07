@@ -68,9 +68,13 @@ public class RefineService implements RefineServiceImpl {
                     int itemIdx = sched.getItemIdx();
                     String type = sched.getType();
                     int tcnt = (sched.getTcnt() != null) ? sched.getTcnt() : 0;
+                    String movietitle = sched.getMovietitle();
                     System.out.println("#STEP05 before STEP06 update tcnt:: from:"+sched.getTcnt());
                     //tcnt = tcnt + 1;
                     sched.setTcnt(tcnt);
+
+                    //items_hist에 등록 for 통계
+                    int rthist = itemsService.insItemsHist(itemIdx, "refine", "R", movietitle, "START_REFINE", sc_id);
 
                     //System.out.println("## uptSchedTriggerForCollectStep02 params:"+sched.toString());
                     // STEP06 실행 전 sched_trigger의 stat를 P로 업데이트
@@ -107,6 +111,9 @@ public class RefineService implements RefineServiceImpl {
                     System.out.println("#STEP:06:: refine sched history writing! by "+reqSth.toString());
                     int rt1 = stepService.uptSchedTriggerProgsAfterRefineTargetOneProcess(sc_id, rt_stat);
 
+                    //items_hist에 등록 for 통계
+                    rthist = itemsService.insItemsHist(itemIdx, "refine", rt_stat, movietitle, "END_REFINE", sc_id);
+
                     logger.debug("#STEP:06:: refine sched history writing! by "+reqSth.toString());
                     // 수집 스케쥴 이력 저장
                     int rtsth = schedTriggerHistMapper.insSchedTriggerHist(reqSth);
@@ -115,7 +122,7 @@ public class RefineService implements RefineServiceImpl {
                     int rt_it_stat = itemsService.insItemsStatOne(itemIdx, "R", rt_stat);
 
                     if("S".equals(rt_stat)) {
-                        // 수집 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
+                        // 추출 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
                         SchedTrigger newReq = new SchedTrigger();
                         newReq.setParent_sc_id(sc_id);
                         newReq.setType("A");

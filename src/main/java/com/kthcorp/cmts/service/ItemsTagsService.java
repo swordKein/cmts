@@ -34,6 +34,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private DicKeywordsMapper dicKeywordsMapper;
     @Autowired
     private DicService dicService;
+    @Autowired
+    private ItemsService itemsService;
 
     @Override
     public List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req) {
@@ -637,9 +639,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
 
             if (rt > 0) {
-                Items reqit = new Items();
-                reqit.setIdx(itemIdx);
-                int rtx = itemsMapper.uptItemsTagcntMinus(reqit);
+                Items reqIt = new Items();
+                reqIt.setIdx(itemIdx);
+                int rtx = itemsMapper.uptItemsTagcntMinus(reqIt);
+
+                //items_hist에 등록 for 통계
+                Items itemInfo = itemsService.getItemsByIdx(reqIt);
+                String movietitle = "";
+                movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                int rthist = itemsService.insItemsHist(itemIdx, "meta", "RECV", movietitle, "RESTORE_META", oldTagIdx);
             }
         }
         return rt;
@@ -806,6 +814,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     /* get meta data for saving */
                     JsonArray destArr = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype)) {
+                            //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
                     } else {
                         destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
@@ -847,7 +856,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public int changeMetasArraysByTypeFromInputItems ( int itemid, String items, String duration) {
+    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration) {
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
@@ -860,6 +869,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         try {
             ItemsTags lastTag = this.getLastTagCntInfo(itemid);
+            Items reqIt = null;
 
             /* get action TYPE to Arrays */
             JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
@@ -886,14 +896,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
 
                 /* 해당 items_stat 를 승인으로 업데이트 한다 */
-                Items reqIt = new Items();
+                reqIt = new Items();
                 reqIt.setIdx(itemid);
                 reqIt.setStat("ST");
                 int rti = itemsMapper.insItemsStat(reqIt);
 
-                /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
-                if (!"".equals(duration)) reqIt.setDuration(duration);
-                int rtu = itemsMapper.uptItemsTagcnt(reqIt);
                 rt = 1;
             } else {
                 /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
@@ -902,6 +909,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 /* action_item이 있는 경우 타입별 meta 수정 */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
                 rt = 1;
+            }
+
+            if (rt > 1) {
+                //items_hist에 등록 for 통계
+                Items itemInfo = itemsService.getItemsByIdx(reqIt);
+                String movietitle = "";
+                movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                int rthist = itemsService.insItemsHist(itemid, "meta", "ST", movietitle, "CONFIRM_META", itemid);
+
+                /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
+                if (!"".equals(duration)) reqIt.setDuration(duration);
+                int rtu = itemsMapper.uptItemsTagcnt(reqIt);
             }
 
         } catch (Exception e) {
