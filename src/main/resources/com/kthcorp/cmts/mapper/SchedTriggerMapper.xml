@@ -228,6 +228,7 @@
         , it.title as movietitle
         , it.director as moviedirector
         , it.year as movieyear
+        , it.type as country_of_origin
         from sched_trigger s
         inner join items_sched_mapping ism on ism.sc_id = s.sc_id
         inner join items it on it.idx = ism.idx

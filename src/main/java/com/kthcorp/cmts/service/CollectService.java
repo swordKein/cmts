@@ -99,7 +99,7 @@ public class CollectService implements CollectServiceImpl {
                     sched.setTcnt(tcnt);
 
                     //items_hist에 등록 for 통계
-                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", itemIdx);
+                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", sc_id);
 
                     int collectedCount = 0;
                     int rts = stepService.uptSchedTriggerForCollectStep02(sched);
@@ -146,7 +146,7 @@ public class CollectService implements CollectServiceImpl {
                                 param1 = param1.replace("#moviedirector", "");
                             }
 
-                            if (target.getMovietitle() != null && !"".equals(target.getMovietitle().trim())) {
+                            if (!"".equals(movietitle)) {
                                 resultCollect = run_step03(tg, sc_id, type, tcnt, sched.getCountry_of_origin());
                                 System.out.println("#run_stap03 resultCollect:" + resultCollect.toString());
                             }
@@ -185,11 +185,16 @@ public class CollectService implements CollectServiceImpl {
 
                                 rt_stat = "S";
 
-                            } else {
-                                //System.out.println("#STEP:03:: collection sub Job's return code:"+resultCollect.get("rt_code"));
+                            }
 
+                            System.out.println("#MLOG.collect:sc_id:"+sc_id+"/collectFailCheck::collectedCount:"+collectedCount);
+
+                            if (collectedCount < collect_fail_limit) {
+                                rtcode = -1;
                                 rt_stat = "F";
-                                failCount++;
+                            } else {
+                                rtcode = 1;
+                                rt_stat = "S";
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -282,7 +287,7 @@ public class CollectService implements CollectServiceImpl {
                     if("S".equals(rt_stat) || "F".equals(rt_stat)) {
 
                         //items_hist에 등록 for 통계
-                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", itemIdx);
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", sc_id);
 
 
                         // 수집 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
@@ -377,7 +382,7 @@ public class CollectService implements CollectServiceImpl {
                     String movietitle = sched.getMovietitle();
 
                     //items_hist에 등록 for 통계
-                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", itemIdx);
+                    int rthist = itemsService.insItemsHist(itemIdx, "collect", "R", movietitle, "START_COLLECT", sc_id);
 
                     System.out.println("## uptSchedTriggerForCollectStep02 params:"+sched.toString());
 
@@ -566,7 +571,7 @@ public class CollectService implements CollectServiceImpl {
 
                     if("S".equals(rt_stat) || "F".equals(rt_stat)) {
                         //items_hist에 등록 for 통계
-                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", itemIdx);
+                        rthist = itemsService.insItemsHist(itemIdx, "collect", rt_stat, movietitle, "END_COLLECT", sc_id);
 
                         // 수집 스케쥴 종료 후 성공일 경우 분석 스케쥴 등록
                         SchedTrigger newReq = new SchedTrigger();
@@ -707,6 +712,9 @@ public class CollectService implements CollectServiceImpl {
         System.out.println("#STEP01 for Collect test! by sc_id:"+req.getSc_id());
         List<SchedTrigger> result = new ArrayList();
         SchedTrigger item1 = schedTriggerMapper.getSchedTriggerOneByScid(req);
+        List<SchedTrigger> result2 = new ArrayList();
+        List<ConfTarget> targetList = schedTriggerMapper.getConfTargetListByScid(item1);
+        item1.setTargetList(targetList);
         result.add(item1);
         System.out.println("#STEP01 for Collect! result:"+result);
         return result;

@@ -4,7 +4,7 @@ cmts:
     serverid: cmts_cm01
     running_schedule: true
     running_job_limit: 10
-    collect_fail_limit: 20
+    collect_fail_limit: 10
     criteria_success_ratio: 0.7
     crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
     #crawl_api_url: http://127.0.0.1:8080/crawl/byprefix

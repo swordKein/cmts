@@ -61,11 +61,16 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 // STEP08 진행 전 스케쥴 stat = P 로 변경
                 if (sched != null) {
                     int sc_id = sched.getSc_id();
+                    int itemIdx = sched.getItemIdx();
                     String type = sched.getType();
                     int tcnt = (sched.getTcnt() != null) ? sched.getTcnt() : 0;
+                    String movietitle = sched.getMovietitle();
                     System.out.println("#STEP08 before STEP09 update tcnt:: from:"+sched.getTcnt());
                     //tcnt = tcnt + 1;
                     sched.setTcnt(tcnt);
+
+                    //items_hist에 등록 for 통계
+                    int rthist = itemsService.insItemsHist(itemIdx, "analyze", "R", movietitle, "START_ANALYZE", sc_id);
 
                     //System.out.println("## uptSchedTriggerForAnalyzeStep07 params:"+sched.toString());
                     // STEP08 실행 전 sched_trigger의 stat를 P로 업데이트
@@ -102,8 +107,11 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                     System.out.println("#STEP:09:: analyze sched history writing! by "+reqSth.toString());
                     int rt1 = stepService.uptSchedTriggerProgsAfterAnalyzeTargetOneProcess(sc_id, rt_stat);
 
+                    //items_hist에 등록 for 통계
+                    rthist = itemsService.insItemsHist(itemIdx, "analyze", rt_stat, movietitle, "END_ANALYZE", sc_id);
+
                     // items_stat 저장
-                    int itemIdx = sched.getItemIdx();
+                    //int itemIdx = sched.getItemIdx();
                     int rt_it_stat = itemsService.insItemsStatOne(itemIdx, "A", rt_stat);
 
                     logger.debug("#STEP:09:: analyze sched history writing! by "+reqSth.toString());
