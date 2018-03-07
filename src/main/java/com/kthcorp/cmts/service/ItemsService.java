@@ -171,7 +171,6 @@ public class ItemsService implements ItemsServiceImpl {
                 reqKey.setItemidx(rtitem);
                 int rtkey = ccubeService.insCcubeKeys(reqKey);
 
-                /* TODO */
                 if (rtkey > 0) {
                     /* insert items_tags_keys by yj_items_out2 */
                     /* 영진위 기준 수동 추출물이 있는 경우 items_tags_metas가 없을 때 승인완료 처리하면서 meta를 채워넣는다 */
@@ -468,7 +467,7 @@ public class ItemsService implements ItemsServiceImpl {
         return rt;
     }
 
-    @Autowired
+    @Override
     public Items getItemsByIdx(Items req) {
         return itemsMapper.getItemsByIdx(req);
     }
