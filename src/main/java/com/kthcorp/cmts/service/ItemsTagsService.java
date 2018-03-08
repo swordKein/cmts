@@ -754,6 +754,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASWHO");
         dicTypes.add("METASWHAT");
         dicTypes.add("METASEMOTION");
+        dicTypes.add("METASCHARACTER");
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
             if (actionItemsArraysByType.get(dicType) != null) {
@@ -790,6 +791,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
             //for (JsonElement atype1 : typesArr) {
+            JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, origTypes);
 
             for (String atype : origTypes) {
                 //String atype = atype1.getAsString();
@@ -800,8 +802,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 JsonArray changeMetaArr = null;
                 String destMeta = "";
 
-                if (origMetasArraysByType.get(atype) != null) {
-                    origMetaArr = (JsonArray) origMetasArraysByType.get(atype);
+                if (origMetasArraysByType2.get(atype) != null) {
+                    origMetaArr = (JsonArray) origMetasArraysByType2.get(atype);
                     System.out.println("#Change type(" + atype + ") orig meta datas::" + origMetaArr);
                 }
 
