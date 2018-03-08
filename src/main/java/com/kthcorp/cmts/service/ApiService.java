@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -580,12 +581,17 @@ public class ApiService implements ApiServiceImpl {
         JsonArray childList1 = null;
         JsonArray childList2 = null;
 
+        title = title.trim().replace(" ","");
+        title = CommonUtil.removeAllSpec(title);
+        title = CommonUtil.removeTex(title);
+        title =  URLEncoder.encode(title, "utf-8");
+
         if (!"".equals(title)) {
             result = new JsonArray();
 
             String target1 = "twitter";
             String edate = DateUtils.getLocalDate();
-            String sdate = DateUtils.calculateDate(Calendar.MONTH, -1, edate);
+            String sdate = DateUtils.calculateDate(Calendar.MONTH, -6, edate);
 
             String sns_api_url_dest1 = sns_api_url.replace("#SDATE", sdate);
             sns_api_url_dest1 = sns_api_url_dest1.replace("#EDATE", edate);
@@ -630,14 +636,27 @@ public class ApiService implements ApiServiceImpl {
 
     private JsonArray getDuppedKeywordsArrayCutted(JsonArray childList1, JsonArray childList2, int limit) {
         JsonArray result = new JsonArray();
-        if (childList1 != null) {
-            for (JsonElement je1 : childList1) {
-                result.add(je1);
-            }
-        }
-        if (childList2 != null) {
+        Map<String, Double> addedMap = new HashMap();
 
+        if (childList1 != null) {
+            Map<String, Double> map1 = MapUtil.getParamDoubleMapFromJsonArrayByTag(childList1, "label", "score");
+            addedMap = MapUtil.getAppendedMapAndParamDouble(addedMap, map1);
         }
+
+        if (childList2 != null) {
+            Map<String, Double> map2 = MapUtil.getParamDoubleMapFromJsonArrayByTag(childList2, "label", "score");
+            addedMap = MapUtil.getAppendedMapAndParamDouble(addedMap, map2);
+        }
+        //System.out.println("#TMP.addedMap:"+addedMap.toString());
+        Map<String, Double> sortedMap = MapUtil.getSortedDescMapForDouble(addedMap);
+        //System.out.println("#TMP.sortedMap:"+sortedMap.toString());
+
+        Map<String, Double> cuttedSortedMap = MapUtil.getCuttedMapFromMapByLimit(sortedMap, 10);
+        Map<String, Double> cuttedSortedMap2 = MapUtil.getSortedDescMapForDouble(cuttedSortedMap);
+        //System.out.println("#TMP.cuttedSortedMap:"+cuttedSortedMap2.toString());
+
+        result = MapUtil.getListNotMapKeywords(cuttedSortedMap2);
+
         return result;
     }
 

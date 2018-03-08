@@ -2,6 +2,7 @@ package com.kthcorp.cmts.util;
 
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.*;
@@ -176,5 +177,39 @@ public class MapUtil {
         } catch (Exception e) { e.printStackTrace(); }
 
         return result;
+    }
+
+    public static Map<String, Double> getParamDoubleMapFromJsonArrayByTag(JsonArray origArr, String labelTag, String valueTag) {
+        Map<String, Double> resultMap = null;
+        if (origArr != null && !"".equals(labelTag) && !"".equals(valueTag)) {
+            resultMap = new HashMap();
+
+            for(JsonElement je : origArr) {
+                JsonObject jo = (JsonObject) je;
+                if (jo.get(labelTag) != null && jo.get(valueTag) != null) {
+                    String key = jo.get(labelTag).getAsString();
+                    Double value = jo.get(valueTag).getAsDouble();
+                    resultMap.put(key, value);
+                }
+            }
+        }
+        return resultMap;
+    }
+
+    public static Map<String, Double> getAppendedMapAndParamDouble(Map<String, Double> origMap, Map<String, Double> reqMap) {
+        //int lineCnt = 0;
+        if (origMap == null) origMap = new HashMap<String, Double>();
+
+        Set entrySet = reqMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            //System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+            String key = (String) me.getKey();
+            Double value = (Double) me.getValue();
+            origMap.put(key, value);
+        }
+        return origMap;
     }
 }

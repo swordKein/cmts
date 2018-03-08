@@ -55,8 +55,8 @@ public class ApiServiceTest {
 
 	@Test
 	public void test_getSnsKeywords() throws Exception {
-		JsonArray result = apiService.getSnsKeywords("신과함께");
-		//System.out.println("#RESULT:"+result.toString());
+		JsonArray result = apiService.getSnsKeywords("신과 함께");
+		System.out.println("#RESULT:"+result.toString());
 	}
 
 }
