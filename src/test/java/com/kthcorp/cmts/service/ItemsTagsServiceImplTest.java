@@ -73,4 +73,11 @@ public class ItemsTagsServiceImplTest {
 		List<String> result = itemsTagsService.getNaverKindWordsByList(origArr, 10);
 		System.out.println("#RESULT:"+result.toString());
 	}
+
+	@Test
+	public void test_getGenreWordsListByGenre() throws Exception {
+		String genres = "액션 드라마";
+		List<String> result = itemsTagsService.getGenreWordsListByGenre(genres);
+		System.out.println("#RESULT:"+result.toString());
+	}
 }
