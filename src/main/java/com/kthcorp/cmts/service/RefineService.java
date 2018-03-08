@@ -43,6 +43,8 @@ public class RefineService implements RefineServiceImpl {
     private ItemsSchedMappingMapper itemsSchedMappingMapper;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private ApiService apiService;
 
     @Value("${cmts.property.serverid}")
     private String serverid;
@@ -371,6 +373,16 @@ public class RefineService implements RefineServiceImpl {
                     statTarget = "S";
                 } else {
                     statTarget = "F";
+                }
+
+                JsonObject resultRefineObj = (JsonObject) resultRefine.get("result");
+                if (resultRefineObj != null) {
+                    String movietitle = sched.getMovietitle();
+                    if (!"".equals(movietitle)) {
+                        JsonArray wordsSnsArray = apiService.getSnsKeywords(movietitle);
+                        if (wordsSnsArray != null) wordsSnsArray = new JsonArray();
+                        
+                    }
                 }
                 contentAll = resultRefine.get("result").getAsString();
 
