@@ -576,6 +576,10 @@ public class ApiService implements ApiServiceImpl {
     @Override
     public JsonArray getSnsKeywords(String title) throws Exception {
         JsonArray result = null;
+
+        JsonArray childList1 = null;
+        JsonArray childList2 = null;
+
         if (!"".equals(title)) {
             result = new JsonArray();
 
@@ -588,7 +592,7 @@ public class ApiService implements ApiServiceImpl {
             sns_api_url_dest1 = sns_api_url_dest1.replace("#TARGET", target1);
             sns_api_url_dest1 = sns_api_url_dest1.replace("#TITLE", title);
             Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(sns_api_url_dest1, null, null,null, "bypass");
-            JsonArray childList1 = null;
+
             if (resultMap1 != null && resultMap1.get("resultStr") != null) {
                 String result1 = resultMap1.get("resultStr").toString();
                 //System.out.println("#ELOG:sns_api:: result1:"+result1);
@@ -605,7 +609,7 @@ public class ApiService implements ApiServiceImpl {
             sns_api_url_dest2 = sns_api_url_dest2.replace("#EDATE", edate);
             sns_api_url_dest2 = sns_api_url_dest2.replace("#TARGET", target2);
             sns_api_url_dest2 = sns_api_url_dest2.replace("#TITLE", title);
-            JsonArray childList2 = null;
+
             Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(sns_api_url_dest2, null, null,null, "bypass");
             if (resultMap2 != null && resultMap2.get("resultStr") != null) {
                 String result2 = resultMap2.get("resultStr").toString();
@@ -619,9 +623,7 @@ public class ApiService implements ApiServiceImpl {
             }
         }
 
-
-        //result = getDuppedKeywordsArrayCutted(childList1, childList2, 10);
-
+        result = getDuppedKeywordsArrayCutted(childList1, childList2, 10);
 
         return result;
     }

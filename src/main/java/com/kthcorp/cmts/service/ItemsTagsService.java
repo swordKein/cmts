@@ -307,6 +307,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         String movieGenre = this.getMovieGenreFromCcubeContents(itemIdx);
+        System.out.println("#ELOG.movieGenre:"+movieGenre);
         if (!"".equals(movieGenre)) {
             List<String> listGenreWords = this.getGenreWordsListByGenre(movieGenre);
             if (listGenreWords != null) {
@@ -329,7 +330,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         String movieGenre = "";
         if (resultMovieMeta != null) {
             for (ItemsMetas mm : resultMovieMeta) {
-                if (mm != null && mm.getMtype() != null && "GENRE".equals(mm.getMtype()) && mm.getMeta() != null) {
+                //System.out.println("#TMP::mm:"+mm.toString());
+                if (mm != null && mm.getMtype() != null && "genre".equals(mm.getMtype()) && mm.getMeta() != null) {
                     movieGenre = mm.getMeta();
                 }
             }
@@ -337,10 +339,30 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return movieGenre;
     }
 
+    private List<DicGenreWords> getDicGenreKeywordsOneGenre(String genre, List<DicGenreWords> origArr) {
+        List<DicGenreWords> dicGenreKeys = dicKeywordsMapper.getDicGenreKeywordsByGenre(genre);
+        if (origArr == null) origArr = new ArrayList<DicGenreWords>();
+
+        for(DicGenreWords dgw : dicGenreKeys) {
+            origArr.add(dgw);
+        }
+
+        return origArr;
+    }
+
     @Override
     public List<String> getGenreWordsListByGenre(String genre) {
         List<String> result = null;
-        List<DicGenreWords> dicGenreKeys = dicKeywordsMapper.getDicGenreKeywordsByGenre(genre);
+        List<DicGenreWords> dicGenreKeys = new ArrayList();
+        if (genre.trim().contains(" ")) {
+            String genres[] = genre.trim().split(" ");
+            for (String genreOne : genres) {
+                dicGenreKeys = this.getDicGenreKeywordsOneGenre(genreOne, dicGenreKeys);
+            }
+        } else {
+            dicGenreKeys = dicKeywordsMapper.getDicGenreKeywordsByGenre(genre);
+        }
+
         if (dicGenreKeys != null) {
             result = new ArrayList();
 
