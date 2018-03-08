@@ -286,7 +286,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         resultObj2 = getWordsGenre(itemIdx, resultObj2);
 
         /* WORDS_SNS */
-        resultObj2 = getWordsSns(itemIdx, resultObj2);
+        //resultObj2 = getWordsSns(itemIdx, resultObj2);
 
         return resultObj2;
     }
