@@ -9,82 +9,90 @@
       /* -------- 상단 통계 ---------*/
         /* 입수 완료 */
         /* top_countInItems */
-        select count(*) from items
+        /* select count(*) from items */
+        select count(*) from items_hist where type = 'ccube'
     </select>
 
 
     <select id="top_countEndTagged" resultType="java.lang.Integer" useCache="true">
         /* 태깅 완료 */
         /* top_countEndTagged */
-        select count(*) from items where stat = 'S'
+        /* select count(*) from items where stat = 'S' */
+        select count(*) from items_hist where type = 'meta' and action = 'CONFIRM_META'
     </select>
 
     <select id="top_countCollecting" resultType="java.lang.Integer" useCache="true">
         /* 수집 진행 */
         /* top_countCollecting */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'C'
         group by ism.idx
-        ) a
+        ) a */
+        select count(*) from items_hist where type = 'collect' and action = 'START_COLLECT'
     </select>
 
 
     <select id="top_countCollected" resultType="java.lang.Integer" useCache="true">
         /* 수집 완료 */
         /* top_countCollected */
-        select count(*) from (
+        /*select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'C' and st.stat in ('S','F')
         group by ism.idx
-        ) a
+        ) a*/
+        select count(*) from items_hist where type = 'collect' and action = 'END_COLLECT' and stat = 'S'
     </select>
 
 
     <select id="top_countAnalyzing" resultType="java.lang.Integer" useCache="true">
         /* 추출 진행 */
         /* top_countAnalyzing */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'A'
         group by ism.idx
-        ) a
+        ) a */
+        select count(*) from items_hist where type = 'analyze' and action = 'START_ANALYZE'
     </select>
 
     <select id="top_countAnalyzed" resultType="java.lang.Integer" useCache="true">
         /* 추출 완료 */
         /* top_countAnalyzed */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'A' and st.stat in ('S')
         group by ism.idx
-        ) a
+        ) a */
+        select count(*) from items_hist where type = 'analyze' and action = 'END_ANALYZE' and stat = 'S'
     </select>
 
     <select id="top_countTagging" resultType="java.lang.Integer" useCache="true">
         /* 승인 진행 */
         /* top_countTagging */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'A' and st.stat in ('S')
         group by ism.idx
-        ) a
+        ) a */
+        select count(*) from items_hist where type = 'analyze' and action = 'END_ANALYZE' and stat = 'S'
     </select>
 
     <select id="top_countTagged" resultType="java.lang.Integer" useCache="true">
         /* 승인 완료 */
         /* top_countTagged */
-        select ifnull(count(*), 0) from items_tags_keys where stat = 'S'
+        /* select ifnull(count(*), 0) from items_tags_keys where stat = 'S' */
+        select count(*) from items_hist where type = 'meta' and action = 'CONFIRM_META' and stat = 'S'
     </select>
 
     <select id="mid_countReady" resultType="java.lang.Integer" useCache="true">
