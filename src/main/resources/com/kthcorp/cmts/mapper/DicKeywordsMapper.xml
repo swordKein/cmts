@@ -18,7 +18,7 @@
         idx, type, keyword, ratio, regdate, regid
         from dic_keywords
         where type = #{type}
-        <if test='keyword != null and keyword != ""'>
+        <if test='word != null and word != ""'>
             and keyword like concat('%',#{keyword},'%')
         </if>
         order by regdate DESC, idx DESC
@@ -50,7 +50,7 @@
         select count(*)
         from dic_keywords
         where type = #{type}
-        <if test='keyword != null and keyword != ""'>
+        <if test='keyword != null and word != ""'>
             and keyword like concat('%',#{keyword},'%')
         </if>
     </select>
