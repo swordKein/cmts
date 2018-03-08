@@ -562,7 +562,16 @@ public class DicService implements DicServiceImpl {
                     if(req != null && req.getRatio() == null) req.setRatio(0.0);
                     req.setOldword(req.getKeyword());
                     req.setKeyword(req.getToword());
-                    int rtupt = dicKeywordsMapper.uptDicKeywords(req);
+
+                    try {
+                        int rtupt = dicKeywordsMapper.uptDicKeywords(req);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // update 시 중복일 경우 삭제 후 입력
+                        req.setOldword(req.getToword());
+                        int rtdel = dicKeywordsMapper.delDicKeywords(req);
+                        int rtins = dicKeywordsMapper.insDicKeywords(req);
+                    }
                     result = 0;
                     break;
                 }
