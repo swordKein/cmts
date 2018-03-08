@@ -36,6 +36,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private DicService dicService;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private ApiService apiService;
 
     @Override
     public List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req) {
@@ -277,6 +279,44 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
 
+        /* WORDS_ASSOC 감성유의어 - 네이버사전 */
+        resultObj2 = getWordsAssoc(itemIdx, resultObj2);
+
+        /* WORDS_GENRE */
+        resultObj2 = getWordsGenre(itemIdx, resultObj2);
+
+        /* WORDS_SNS */
+        resultObj2 = getWordsSns(itemIdx, resultObj2);
+
+        return resultObj2;
+    }
+
+    private JsonObject getWordsSns(int itemIdx, JsonObject resultObj2) {
+        Items reqIt = new Items();
+        reqIt.setIdx(itemIdx);
+        Items itemInfo = itemsService.getItemsByIdx(reqIt);
+        System.out.println("#ELOG.getWordsSns.getItemInfo:"+itemInfo.toString());
+
+        if (itemInfo != null && itemInfo.getTitle() != null) {
+            String movietitle = itemInfo.getTitle().trim();
+            if (!"".equals(movietitle)) {
+                System.out.println("#ELOG.movieTitle:"+movietitle);
+                try {
+                    JsonArray result = apiService.getSnsKeywords(movietitle);
+                    if(result == null) result = new JsonArray();
+                    if (resultObj2.get("WORDS_SNS") != null) resultObj2.remove("WORDS_SNS");
+
+                    resultObj2.add("WORDS_SNS", result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return resultObj2;
+    }
+
+    private JsonObject getWordsAssoc(int itemIdx, JsonObject resultObj2) {
         if (resultObj2 != null) {
             if (resultObj2.get("METASEMOTION") != null) {
                 JsonArray emotionArr = (JsonArray) resultObj2.get("METASEMOTION");
@@ -294,10 +334,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             if (newEmoKindArr != null && newEmoKindArr.size() > 0) {
                                 System.out.println("#ELOG.getItemsMetasByIdx:"+itemIdx+"/WORDS_ASSOC"+newEmoKindArr.toString());
 
-                                if (resultObj.get("WORDS_ASSOC") != null) {
-                                    resultObj.remove("WORDS_ASSOC");
+                                if (resultObj2.get("WORDS_ASSOC") != null) {
+                                    resultObj2.remove("WORDS_ASSOC");
                                 }
-                                resultObj.add("WORDS_ASSOC", newEmoKindArr);
+                                resultObj2.add("WORDS_ASSOC", newEmoKindArr);
                             }
                         }
                     } catch (Exception e) { e.printStackTrace(); }
@@ -305,7 +345,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             }
         }
+        return resultObj2;
+    }
 
+    private JsonObject getWordsGenre(int itemIdx, JsonObject resultObj2) {
         String movieGenre = this.getMovieGenreFromCcubeContents(itemIdx);
         System.out.println("#ELOG.movieGenre:"+movieGenre);
         if (!"".equals(movieGenre)) {
@@ -313,13 +356,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if (listGenreWords != null) {
                 JsonArray newListGenreWords = JsonUtil.convertListToJsonArray(listGenreWords);
                 System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/WORDS_GENRE:"+newListGenreWords.toString());
-                if (resultObj.get("WORDS_GENRE") != null) {
-                    resultObj.remove("WORDS_GENRE");
+                if (resultObj2.get("WORDS_GENRE") != null) {
+                    resultObj2.remove("WORDS_GENRE");
                 }
-                resultObj.add("WORDS_GENRE", newListGenreWords);
+                resultObj2.add("WORDS_GENRE", newListGenreWords);
             }
         }
-
         return resultObj2;
     }
 
