@@ -312,6 +312,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if (listGenreWords != null) {
                 JsonArray newListGenreWords = JsonUtil.convertListToJsonArray(listGenreWords);
                 System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/WORDS_GENRE:"+newListGenreWords.toString());
+                if (resultObj.get("WORDS_GENRE") != null) {
+                    resultObj.remove("WORDS_GENRE");
+                }
+                resultObj.add("WORDS_GENRE", newListGenreWords);
             }
         }
 
