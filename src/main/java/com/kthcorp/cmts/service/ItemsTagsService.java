@@ -802,7 +802,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 for (JsonElement je : dicActionArr) {
                     JsonObject jo = (JsonObject) je;
 
-                    if(jo != null && jo.get("action") != null) {
+                    if(jo != null && jo.get("action") != null
+                            && jo.get("meta") != null && !"".equals(jo.get("meta").getAsString().trim())) {
 
                         System.out.println("#TLOG:putDicKeyword:: jo:"+jo.toString());
                         DicKeywords newKey = new DicKeywords();
