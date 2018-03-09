@@ -180,7 +180,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return result;
     }
 
-    private JsonObject getItemsMetasByIdx(int itemIdx, ArrayList<String> origTypes, String getStat) {
+    private JsonObject getItemsMetasByIdx(int itemIdx, List<String> origTypes, String getStat) {
         JsonObject result = new JsonObject();
 
         ItemsTags itReq = new ItemsTags();
@@ -490,29 +490,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx) {
-        ArrayList<String> origTypes = new ArrayList<String>();
-        origTypes.add("METASWHEN");
-        origTypes.add("METASWHERE");
-        origTypes.add("METASWHO");
-        origTypes.add("METASWHAT");
-        origTypes.add("METASEMOTION");
-        origTypes.add("LIST_NOT_MAPPED");
-        origTypes.add("WORDS_GENRE");
-        origTypes.add("WORDS_SNS");
-        origTypes.add("WORDS_ASSOC");
-        origTypes.add("LIST_SUBGENRE");
-        origTypes.add("LIST_SEARCHKEYWORDS");
-        origTypes.add("LIST_RECO_TARGET");
-        origTypes.add("LIST_RECO_SITUATION");
-
+    public JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx, List<String> origTypes) {
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "S");
 
         //JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx);
         return resultObj;
     }
 
-    private JsonObject setEmptyMetas(JsonObject reqObj, ArrayList<String> origTypes) {
+    private JsonObject setEmptyMetas(JsonObject reqObj, List<String> origTypes) {
         // 빠진 type은 공백이라도 채워준다
         if(reqObj != null) {
             for(String type : origTypes) {
@@ -799,21 +784,6 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
             , int itemid, int curTagIdx) {
         int rt = 0;
-        ArrayList<String> origTypes = new ArrayList<String>();
-        origTypes.add("METASWHEN");
-        origTypes.add("METASWHERE");
-        origTypes.add("METASWHO");
-        origTypes.add("METASWHAT");
-        origTypes.add("METASEMOTION");
-        origTypes.add("METASCHARACTER");
-        origTypes.add("LIST_NOT_MAPPED");
-        //origTypes.add("WORDS_GENRE");
-        //origTypes.add("WORDS_SNS");
-        //origTypes.add("WORDS_ASSOC");
-        origTypes.add("LIST_SUBGENRE");
-        origTypes.add("LIST_SEARCHKEYWORDS");
-        origTypes.add("LIST_RECO_TARGET");
-        origTypes.add("LIST_RECO_SITUATION");
 
         /* 타입 별 액션 아이템 중 add,mod는 사전에 추가 */
         ArrayList<String> dicTypes = new ArrayList<String>();
@@ -858,10 +828,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
-            //for (JsonElement atype1 : typesArr) {
-            JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, origTypes);
+            System.out.println("#ELOG.origMetasArraysByType:"+origMetasArraysByType.toString());
 
-            for (String atype : origTypes) {
+            //for (JsonElement atype1 : typesArr) {
+            JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, this.getOrigTypes());
+
+            for (String atype : this.getOrigTypes()) {
                 //String atype = atype1.getAsString();
                 atype = atype.replace("\"", "");
                 atype = atype.toUpperCase();
@@ -925,6 +897,34 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return rt;
     }
 
+    private List<String> getOrigTypes() {
+        ArrayList<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("METASCHARACTER");
+        origTypes.add("LIST_NOT_MAPPED");
+        //origTypes.add("WORDS_GENRE");
+        //origTypes.add("WORDS_SNS");
+        //origTypes.add("WORDS_ASSOC");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
+
+        /* 타입 별 액션 아이템 중 add,mod는 사전에 추가
+        ArrayList<String> dicTypes = new ArrayList<String>();
+        dicTypes.add("METASWHEN");
+        dicTypes.add("METASWHERE");
+        dicTypes.add("METASWHO");
+        dicTypes.add("METASWHAT");
+        dicTypes.add("METASEMOTION");
+        dicTypes.add("METASCHARACTER"); */
+        return origTypes;
+    }
+
     @Override
     public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration) {
         int rt = 0;
@@ -974,7 +974,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 rt = 1;
             } else {
                 /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
-                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid);
+                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid, this.getOrigTypes());
 
                 /* action_item이 있는 경우 타입별 meta 수정 */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
