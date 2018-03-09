@@ -749,7 +749,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     if (nitem.get("type") != null) {
                         String tmpMapArrayName = String.valueOf(nitem.get("type").getAsString().toUpperCase());
-                        String metasTypes = "WHEN, WHERE, WHAT, WHO, EMOTION";
+                        String metasTypes = "WHEN, WHERE, WHAT, WHO, EMOTION, CHARACTER";
                         if(metasTypes.contains(tmpMapArrayName)) {
                             tmpMapArrayName = "METAS" + tmpMapArrayName;
                         }
