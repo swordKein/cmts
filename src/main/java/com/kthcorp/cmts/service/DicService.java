@@ -548,39 +548,41 @@ public class DicService implements DicServiceImpl {
     @Transactional
     public int insDicKeywords(DicKeywords req) {
         int result = -2;
-        List<DicKeywords> dicKeywords = this.getDicKeywords(req);
-        boolean isExist = false;
-        for (DicKeywords fw : dicKeywords) {
-            if(fw != null && fw.getKeyword() != null && req.getKeyword() != null) {
+        if (req != null && req.getKeyword() != null && !"".equals(req.getKeyword().trim())) {
+            List<DicKeywords> dicKeywords = this.getDicKeywords(req);
+            boolean isExist = false;
+            for (DicKeywords fw : dicKeywords) {
+                if (fw != null && fw.getKeyword() != null && req.getKeyword() != null) {
 
-                if(fw.getKeyword().equals(req.getKeyword())) {
-                    System.out.println("#insDicKeywords exist then update keyword:"+req.getKeyword().toString()
-                            + " to toword:"+req.getToword());
-                    isExist = true;
-                    req.setIdx(fw.getIdx());
-                    if(req != null && req.getRegid() == null) req.setRegid(serverid);
-                    if(req != null && req.getRatio() == null) req.setRatio(0.0);
-                    req.setOldword(req.getKeyword());
-                    req.setKeyword(req.getToword());
+                    if (fw.getKeyword().equals(req.getKeyword())) {
+                        System.out.println("#insDicKeywords exist then update keyword:" + req.getKeyword().toString()
+                                + " to toword:" + req.getToword());
+                        isExist = true;
+                        req.setIdx(fw.getIdx());
+                        if (req != null && req.getRegid() == null) req.setRegid(serverid);
+                        if (req != null && req.getRatio() == null) req.setRatio(0.0);
+                        req.setOldword(req.getKeyword());
+                        req.setKeyword(req.getToword());
 
-                    try {
-                        int rtupt = dicKeywordsMapper.uptDicKeywords(req);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        // update 시 중복일 경우 삭제 후 입력
-                        req.setOldword(req.getToword());
-                        int rtdel = dicKeywordsMapper.delDicKeywords(req);
-                        int rtins = dicKeywordsMapper.insDicKeywords(req);
+                        try {
+                            int rtupt = dicKeywordsMapper.uptDicKeywords(req);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // update 시 중복일 경우 삭제 후 입력
+                            req.setOldword(req.getToword());
+                            int rtdel = dicKeywordsMapper.delDicKeywords(req);
+                            int rtins = dicKeywordsMapper.insDicKeywords(req);
+                        }
+                        result = 0;
+                        break;
                     }
-                    result = 0;
-                    break;
                 }
             }
-        }
-        if (!isExist) {
-            if(req != null && req.getRegid() == null) req.setRegid(serverid);
-            if(req != null && req.getRatio() == null) req.setRatio(0.0);
-            result = dicKeywordsMapper.insDicKeywords(req);
+            if (!isExist) {
+                if (req != null && req.getRegid() == null) req.setRegid(serverid);
+                if (req != null && req.getRatio() == null) req.setRatio(0.0);
+                result = dicKeywordsMapper.insDicKeywords(req);
+            }
         }
         return result;
     }
