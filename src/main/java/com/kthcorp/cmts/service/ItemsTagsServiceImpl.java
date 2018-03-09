@@ -46,9 +46,11 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByItemIdxForInsert(int itemIdx);
 
-    JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx);
+    //JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx);
 
     //JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx);
+
+    JsonObject getItemsMetasByItemIdxForUpdate(int itemIdx, List<String> origTypes);
 
     JsonObject getItemsMetasDupByItemIdx(JsonObject resultObj, int itemIdx, boolean isColorCode);
 
