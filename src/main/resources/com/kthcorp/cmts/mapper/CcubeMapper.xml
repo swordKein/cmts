@@ -150,18 +150,11 @@
                 select ck.itemidx from ccube_keys ck
                 inner join items it on it.idx = ck.itemidx
                 where
-                ck.PURITY_TITLE = #{purity_title}
                 <if test='content_id != null and content_id != ""'>
-                    OR ck.CONTENT_ID = #{content_id}
-                </if>
-                <if test='kmrb_id != null and kmrb_id != ""'>
-                    OR ck.KMRB_ID = #{kmrb_id}
-                </if>
-                <if test='master_content_id != null and master_content_id != ""'>
-                    OR ck.MASTER_CONTENT_ID = #{master_content_id}
+                    ck.CONTENT_ID = #{content_id}
                 </if>
                 <if test='series_id != null and series_id != ""'>
-                    OR ck.SERIES_ID = #{series_id}
+                    ck.SERIES_ID = #{series_id}
                 </if>
                 order by ck.regdate ASC limit 1
             )

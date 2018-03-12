@@ -151,11 +151,10 @@ public class ItemsService implements ItemsServiceImpl {
                 type = "CcubeContentK";
             }
 
-            // 중복방지로직, 기존 title, cid 순으로 대조
+            // 중복방지로직, cid 순으로 대조
             CcubeKeys reqCk = new CcubeKeys();
-            if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
+            //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
             if (req.getContent_id() != null) reqCk.setContent_id(req.getContent_id().trim());
-
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
             if (oldItemIdx > 0) itemIdx = oldItemIdx;
             int rtkey = 0;
@@ -251,9 +250,8 @@ public class ItemsService implements ItemsServiceImpl {
 
             // 중복방지로직, 기존 title, cid 순으로 대조
             CcubeKeys reqCk = new CcubeKeys();
-            if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
+            //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
             if (req.getSeries_id() != null) reqCk.setContent_id(req.getSeries_id().trim());
-
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
             if (oldItemIdx > 0) itemIdx = oldItemIdx;
             int rtkey = 0;
