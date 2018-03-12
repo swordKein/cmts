@@ -982,12 +982,19 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 rt = 1;
             }
 
-            if (rt > 1) {
+            System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
+
+            if (rt > 0) {
                 //items_hist에 등록 for 통계
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
                 int rthist = itemsService.insItemsHist(itemid, "meta", "ST", movietitle, "CONFIRM_META", itemid);
+
+                // TagCnt 1 증가
+                //int oldTagCnt = itemInfo.getTagcnt();
+                //int newTagCnt = oldTagCnt + 1;
+                //reqIt.setTagcnt(newTagCnt);
 
                 /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
                 if (!"".equals(duration)) reqIt.setDuration(duration);
