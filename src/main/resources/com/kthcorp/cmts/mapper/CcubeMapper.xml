@@ -144,22 +144,23 @@
 
     <select id="getCcubeItemIdx" parameterType="com.kthcorp.cmts.model.CcubeKeys" resultType="java.lang.Integer">
         /* getCcubeItemIdx  */
-        select ITEMIDX from ccube_keys
-        where
-        PURITY_TITLE = #{purity_title}
-        <if test='content_id != null and content_id != ""'>
-            OR CONTENT_ID = #{content_id}
-        </if>
-        <if test='kmrb_id != null and kmrb_id != ""'>
-            OR KMRB_ID = #{kmrb_id}
-        </if>
-        <if test='master_content_id != null and master_content_id != ""'>
-            OR MASTER_CONTENT_ID = #{master_content_id}
-        </if>
-        <if test='series_id != null and series_id != ""'>
-            OR SERIES_ID = #{series_id}
-        </if>
-        order by regdate DESC
+        select a.itemidx from
+        (
+            (
+                select ck.itemidx from ccube_keys ck
+                inner join items it on it.idx = ck.itemidx
+                where
+                <if test='content_id != null and content_id != ""'>
+                    ck.CONTENT_ID = #{content_id}
+                </if>
+                <if test='series_id != null and series_id != ""'>
+                    ck.SERIES_ID = #{series_id}
+                </if>
+                order by ck.regdate ASC limit 1
+            )
+            union
+            ( select 0 as itemidx )
+        ) a
         limit 1
     </select>
 

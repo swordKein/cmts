@@ -270,11 +270,19 @@ public class ApiService implements ApiServiceImpl {
         ItemsMetas req = new ItemsMetas();
         req.setIdx(itemIdx);
         List<ItemsMetas> result = itemsMetasMapper.getItemsMetasByIdx(req);
+        //System.out.println("#ELOG.getItemsMetasByIdx by idx:"+itemIdx+"/result:"+result.toString());
+
         if (result != null && result.size() > 0) {
             for (ItemsMetas im : result) {
                 if (im != null && im.getMtype() != null && im.getMeta() != null) {
-                    if("GENRE".equals(im.getMtype().toUpperCase()) || "PLOT".equals(im.getMtype().toUpperCase())) {
+                    if("PLOT".equals(im.getMtype().toUpperCase())) {
                         resultObj.addProperty(im.getMtype().toUpperCase(), im.getMeta());
+                    } else if ("GENRE".equals(im.getMtype().toUpperCase())) {
+                        String tmpMeta = im.getMeta();
+                        System.out.println("#ELOG.getMetas GENRE:"+tmpMeta);
+                        tmpMeta = this.getFilteredGenre(tmpMeta);
+                        System.out.println("#ELOG.getMetas FILTERED-GENRE:"+tmpMeta);
+                        resultObj.addProperty(im.getMtype().toUpperCase(), tmpMeta);
                     }
                 }
             }
@@ -283,6 +291,53 @@ public class ApiService implements ApiServiceImpl {
         resultObj = setEmptyMovieInfo(resultObj, origTypes);
 
         return resultObj;
+    }
+
+    @Override
+    public String getFilteredGenre(String origGenre) {
+        String result = "";
+        if (!"".equals(origGenre.trim())) {
+            List<String> dicGenres = new ArrayList();
+            dicGenres.add("드라마");
+            dicGenres.add("판타지");
+            dicGenres.add("서부");
+            dicGenres.add("공포");
+            dicGenres.add("멜로/로맨스");
+            dicGenres.add("모험");
+            dicGenres.add("스릴러");
+            dicGenres.add("느와르");
+            dicGenres.add("컬트");
+            dicGenres.add("다큐멘터리");
+            dicGenres.add("코미디");
+            dicGenres.add("가족");
+            dicGenres.add("미스터리");
+            dicGenres.add("전쟁");
+            dicGenres.add("애니메이션");
+            dicGenres.add("범죄");
+            dicGenres.add("뮤지컬");
+            dicGenres.add("SF");
+            dicGenres.add("액션");
+            dicGenres.add("무협");
+            dicGenres.add("에로");
+            dicGenres.add("서스펜스");
+            dicGenres.add("서사");
+            dicGenres.add("블랙코미디");
+            dicGenres.add("실험");
+            dicGenres.add("공연실황");
+
+            List<String> genres = new ArrayList<>();
+            for (String dic : dicGenres) {
+                if (origGenre.contains(dic)) {
+                    genres.add(dic);
+                }
+            }
+            if (genres.size() > 0) {
+                result = genres.toString();
+                result = result.replace("[","");
+                result = result.replace("]","");
+            }
+        }
+        return result;
     }
 
     private JsonObject setEmptyMovieInfo(JsonObject reqObj, ArrayList<String> origTypes) {

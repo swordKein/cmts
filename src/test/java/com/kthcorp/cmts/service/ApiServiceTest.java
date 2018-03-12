@@ -59,4 +59,8 @@ public class ApiServiceTest {
 		System.out.println("#RESULT:"+result.toString());
 	}
 
+	@Test
+	public void test_getGenres() throws Exception {
+		System.out.println("#RESULT:"+apiService.getFilteredGenre("블랙코미디 무협"));
+	}
 }
