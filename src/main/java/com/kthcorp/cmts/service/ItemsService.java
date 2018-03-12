@@ -148,6 +148,20 @@ public class ItemsService implements ItemsServiceImpl {
             if ("KOR".equals(req.getCountry_of_origin().trim())) {
                 type = "CcubeContentK";
             }
+
+            // 중복방지로직, 기존 mid, cid, sid, kmrb_id, title 순으로 대조
+            CcubeKeys reqCk = new CcubeKeys();
+            if (req.getContent_id() != null && !req.getContent_id().trim().equals("")) reqCk.setContent_id(req.getContent_id().trim());
+            if (req.getMaster_content_id() != null && !req.getMaster_content_id().trim().equals("")) reqCk.setMaster_content_id(req.getMaster_content_id().trim());
+            if (req.getKmrb_id() != null && !req.getKmrb_id().trim().equals("")) reqCk.setKmrb_id(req.getKmrb_id().trim());
+            if (req.getPurity_title() != null && !req.getPurity_title().trim().equals("")) reqCk.setPurity_title(reqCk.getPurity_title().trim());
+            int ccubeItemsIdx = ccubeService.getCcubeCIdx(reqCk);
+
+
+
+            int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+
+
             Items item = new Items();
             item.setType(type);
             item.setCid((req.getContent_id() != null) ? req.getContent_id() : "0");

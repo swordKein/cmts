@@ -30,6 +30,8 @@ public interface ApiServiceImpl {
 
     JsonObject getAwardInfoByIdx(int itemIdx);
 
+    String getFilteredGenre(String origGenre);
+
     JsonObject getCine21DatasByIdx(int itemIdx);
 
     JsonObject getCine21Datas(String title);
