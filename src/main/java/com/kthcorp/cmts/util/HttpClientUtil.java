@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,7 @@ import org.apache.http.io.HttpMessageWriterFactory;
 import org.apache.http.io.SessionInputBuffer;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicLineParser;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.message.LineParser;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.ssl.SSLContexts;
@@ -426,7 +428,8 @@ public class HttpClientUtil {
                     HttpEntity entity = new ByteArrayEntity(tmp.getBytes("UTF-8"));
                     request.setEntity(entity);
                 } else {
-                    request.addParameter(key, (String) paramsMap.get(key));
+                    String tmp2 = paramsMap.get(key).toString();
+                    request.addParameter(key, new String(tmp2.getBytes("UTF-8")));
                 }
             }
             HttpUriRequest requestPost = request.build();
