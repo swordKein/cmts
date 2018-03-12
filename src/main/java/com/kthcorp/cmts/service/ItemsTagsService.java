@@ -989,9 +989,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
-                int rthist = itemsService.insItemsHist(itemid, "meta", "ST", movietitle, "CONFIRM_META", itemid);
+                int rthist = itemsService.insItemsHist(itemid, "meta", "S", movietitle, "CONFIRM_META", itemid);
 
-                // TagCnt 1 증가
+                // TagCnt 1 증가 // 일단 업데이트 구문으로 해결
                 //int oldTagCnt = itemInfo.getTagcnt();
                 //int newTagCnt = oldTagCnt + 1;
                 //reqIt.setTagcnt(newTagCnt);
