@@ -43,7 +43,7 @@ public class ApiServiceTest {
 		//		, "", "", "최근", "title,METASWHEN");
 
 		JsonObject result = apiService.getItemsSearch(10, 1, "ALL", "ALL"
-				, "2018-01-01", "2019-03-28", "마더!", "title");
+				, "2018-01-01", "2019-03-28", "마더", "title");
 
 		System.out.println("#result:"+result.toString());
 	}

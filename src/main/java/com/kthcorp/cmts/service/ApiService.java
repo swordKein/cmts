@@ -421,6 +421,53 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
+    private String getChangedMtypes(String searchParts) {
+        searchParts = searchParts.replace("when","METASWHEN");
+        searchParts = searchParts.replace("where","METASWHERE");
+        searchParts = searchParts.replace("who","METASWHO");
+        searchParts = searchParts.replace("what","METASWHAT");
+        searchParts = searchParts.replace("emotion","METASEMOTION");
+        searchParts = searchParts.replace("character","METASCHARACTER");
+
+        searchParts = searchParts.replace("keyword", "LIST_SEARCHKEYWORDS");
+        searchParts = searchParts.replace("subgenre", "LIST_SUBGENRE");
+        searchParts = searchParts.replace("recotarget", "LIST_RECO_TARGET");
+        searchParts = searchParts.replace("recositu", "LIST_RECO_SITUATION");
+
+        return searchParts;
+    }
+
+    private Items getSearchPartsOptions(Items reqIt, String ps) {
+        List<String> searchTagsArr = reqIt.getSearchTagsArr();
+        if (searchTagsArr == null) searchTagsArr = new ArrayList();
+
+        List<String> searchMetasArr = reqIt.getSearchMetasArr();
+        if (searchMetasArr == null) searchMetasArr = new ArrayList();
+
+        if(ps.trim().equals("title")) {
+            reqIt.setSearchTitleYn("Y");
+        } else if (ps.trim().equals("director")) {
+            reqIt.setSearchDirectorYn("Y");
+        } else if (ps.trim().equals("actor")) {
+            reqIt.setSearchActorsYn("Y");
+        } else if (ps.trim().contains("METAS")
+                || ps.trim().contains("LIST")
+                ) {
+            searchTagsArr.add(ps.trim());
+
+            reqIt.setSearchTagsArr(searchTagsArr);
+            reqIt.setSearchTagsYn("Y");
+        } else if (ps.trim().equals("plot")
+                || ps.trim().equals("genre")
+                || ps.trim().equals("award")
+                ) {
+            searchMetasArr.add(ps.trim());
+
+            reqIt.setSearchMetasArr(searchMetasArr);
+            reqIt.setSearchMetasYn("Y");
+        }
+        return reqIt;
+    }
 
     @Override
     public JsonObject getItemsSearch(
@@ -433,6 +480,7 @@ public class ApiService implements ApiServiceImpl {
             , String searchParts
     ) {
         if(pageSize < 1) pageSize = 50;
+        searchParts = getChangedMtypes(searchParts);
 
         JsonObject result = new JsonObject();
 
@@ -474,31 +522,18 @@ public class ApiService implements ApiServiceImpl {
             String sp[] = searchParts.trim().split(",");
             if (searchParts.contains(",")) {
                 for (String ps : sp) {
-                    if(ps.trim().equals("title")) {
-                        reqIt.setSearchTitleYn("Y");
-                    } else if (ps.trim().equals("genre")) {
-                        reqIt.setSearchGenreYn("Y");
-                    } else {
-                        if (searchPartsArr == null) searchPartsArr = new ArrayList();
-                        searchPartsArr.add(ps.trim());
-                    }
+                    // searchParts중 1개에 대해 검색옵션 설정
+                    reqIt = getSearchPartsOptions(reqIt, ps);
                 }
             } else {
-                if(searchParts.trim().equals("title")) {
-                    reqIt.setSearchTitleYn("Y");
-                } else if (searchParts.trim().equals("genre")) {
-                    reqIt.setSearchGenreYn("Y");
-                } else {
-                    if (searchPartsArr == null) searchPartsArr = new ArrayList();
-                    searchPartsArr.add(searchParts.trim());
-                }
+                // searchParts중 1개에 대해 검색옵션 설정
+                reqIt = getSearchPartsOptions(reqIt, searchParts);
             }
             reqIt.setSearchParts(searchParts);
-            reqIt.setSearchPartsArr(searchPartsArr);
         }
 
-
         //int countItems = itemsMapper.countItems(reqIt);
+        System.out.println("#ELOG.searchItems:: req:"+reqIt.toString());
         int countItems = itemsMapper.countItemsPaging(reqIt);
 
         System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
