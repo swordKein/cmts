@@ -738,6 +738,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         if(metasTypes.contains(tmpMapArrayName)) {
                             tmpMapArrayName = "METAS" + tmpMapArrayName;
                         }
+                        // ui에서는 listsearchkeywords 형태로 공백없이 전송됨
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
                         }
@@ -856,16 +857,21 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 if (changeMetaArr != null) {
                     /* get meta data for saving */
                     JsonArray destArr = null;
+                    JsonArray destArr2 = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype)) {
                             //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
+                        destArr2 = this.getRemoveDupTargetMetasArray(destArr);
+                        System.out.println("#ELOG.destArr(JsonObject): datas::"+destArr2.toString());
                     } else {
                         destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
+                        destArr2 = this.getRemoveDupTargetMetasArrayOnlyString(destArr);
+                        System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
                     }
                     if (destArr != null) {
-                        destMeta = destArr.toString();
+                        destMeta = destArr2.toString();
 
-                        System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destArr.toString());
+                        System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destMeta.toString());
 
                         /* 기존 메타와 추가 액션아이템들이 반영된 TYPE(ex> METASWHEN) 별 메타JsonArray가 준비되면 현재 tagIdx를 기준으로 업데이트 */
                         ItemsTags reqMeta = new ItemsTags();
@@ -1026,12 +1032,43 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return origArray;
     }
 
+    public JsonArray getRemoveDupTargetMetasArray(JsonArray origArray) {
+        Map<String, Object> wordSet = new HashMap();
+        JsonArray resultArr = null;
+
+        if (origArray != null) {
+            try {
+                resultArr = new JsonArray();;
+
+                for (JsonElement je : origArray) {
+                    JsonObject jo = (JsonObject) je;
+
+                    String word1 = jo.get("word").getAsString();
+                    word1 = word1.trim();
+
+                    // Map의 key에 word를 등록하여 중복 제거
+                    if (!"".equals(word1) && wordSet.get(word1) == null) {
+                        resultArr.add(jo);
+                        wordSet.put(word1, "exist");
+                    } else {
+                        System.out.println("#ELOG.metaChange skip by Duplicated word:"+word1);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultArr;
+    }
+
+
     public JsonArray getTargetMetasArrayOnlyString(String type, JsonArray origArray, JsonArray changeArray) {
         try {
             for (JsonElement je : changeArray) {
                 JsonObject jo = (JsonObject) je;
 
-                //System.out.println("#origArry:"+origArray.toString()+" /#changeArray:"+changeArray.toString());
+                System.out.println("#origArry:"+origArray.toString()+" /#changeArray:"+changeArray.toString());
                 String toAction = jo.get("action").getAsString();
                 origArray = changeTargetMetasArrayOnlyString(toAction, jo, origArray);
             }
@@ -1040,6 +1077,37 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         return origArray;
+    }
+
+    public JsonArray getRemoveDupTargetMetasArrayOnlyString(JsonArray origArray) {
+        JsonArray resultArr = null;
+        Map<String, Object> wordSet = new HashMap();
+
+        List<String> origStrArr = null;
+
+        if (origArray != null) {
+            try {
+                origStrArr = JsonUtil.convertJsonArrayToList(origArray);
+                resultArr = new JsonArray();
+
+                for (String word1 : origStrArr) {
+                    word1 = word1.trim();
+
+                    // Map의 key에 word를 등록하여 중복 제거
+                    if (!"".equals(word1) && wordSet.get(word1) == null) {
+                        resultArr.add(word1);
+                        wordSet.put(word1, "exist");
+                    } else {
+                        System.out.println("#ELOG.metaChange skip by Duplicated word:"+word1);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultArr;
     }
 
     public JsonArray changeTargetMetasArray(String toAction, JsonObject jObj, JsonArray origArray) {
