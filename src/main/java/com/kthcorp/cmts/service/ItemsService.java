@@ -542,4 +542,9 @@ public class ItemsService implements ItemsServiceImpl {
     public Items getItemsByIdx(Items req) {
         return itemsMapper.getItemsByIdx(req);
     }
+
+    @Override
+    public int uptItemsTagcnt(Items req) {
+        return itemsMapper.uptItemsTagcnt(req);
+    }
 }

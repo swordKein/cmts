@@ -56,4 +56,6 @@ public interface ItemsServiceImpl {
     int uptSchedTriggerStatByItemIdxArray(Items req);
 
     Items getItemsByIdx(Items req);
+
+    int uptItemsTagcnt(Items req);
 }

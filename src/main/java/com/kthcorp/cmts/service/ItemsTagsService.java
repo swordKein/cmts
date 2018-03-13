@@ -986,6 +986,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             if (rt > 0) {
                 //items_hist에 등록 for 통계
+                reqIt = new Items();
+                reqIt.setIdx(itemid);
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
@@ -998,7 +1000,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
                 if (!"".equals(duration)) reqIt.setDuration(duration);
-                int rtu = itemsMapper.uptItemsTagcnt(reqIt);
+                int rtu = itemsService.uptItemsTagcnt(reqIt);
+                logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
             }
 
         } catch (Exception e) {

@@ -327,92 +327,7 @@
     </select>
 
     <select id="searchItemsPaging_" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
-        /* searchItemsPaging */
-        select it.idx
-        ,CASE
-        WHEN (ck.series_id is not null and ck.series_id != '0')
-        THEN 'SER'
-        ELSE ( select CASE WHEN (country_of_origin = 'KOR') THEN 'KOR' ELSE 'OTH' END AS type from ccube_contents where content_id = ck.content_id limit 1 )
-        END AS type
-        , it.title, it.regdate, it.regid, it.director, it.year, it.tagcnt, it.duration
-        , iss.stat
-        , ifnull(ck.series_id, '0') as series_id
-        , ifnull(ck.content_id,'0') as cid
-
-        from items it
-        inner join items_stat iss on iss.idx = it.idx
-        left outer join ccube_keys ck on ck.itemidx = it.idx
-
-        where it.idx in ( select b.idx from (
-            select a.idx as idx from (
-                select it.idx
-                from items it
-                inner join items_stat iss on iss.idx = it.idx and iss.stat not in ("RR", "SR", "FR")
-                <if test='searchStat == null or searchStat == "" or searchStat == "ALL"'>
-                    left outer join items_stat ist on ist.idx = it.idx
-                </if>
-                <if test='searchStat != null and searchStat == "FC"'>
-                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FC'
-                </if>
-                <if test='searchStat != null and searchStat == "FA"'>
-                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'FA'
-                </if>
-                <if test='searchStat != null and searchStat == "RT"'>
-                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'RT'
-                </if>
-                <if test='searchStat != null and searchStat == "ST"'>
-                    inner join items_stat ist on ist.idx = it.idx and ist.stat = 'ST'
-                </if>
-                <if test='searchType != null and searchType != "ALL"'>
-                    inner join ccube_keys ck on ck.itemidx = it.idx
-                </if>
-
-                <if test='searchType != null and searchType == "KOR"'>
-                    inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN = "KOR"
-                </if>
-                <if test='searchType != null and searchType == "OTH"'>
-                    inner join ccube_contents ccon on ccon.content_id = ck.content_id and ccon.COUNTRY_OF_ORIGIN != "KOR"
-                </if>
-                <if test='searchType != null and searchType == "SER"'>
-                    inner join ccube_series cser on cser.series_id = ck.series_id
-                </if>
-
-                <if test='searchKeyword != null and searchKeyword != ""'>
-                    where it.idx in (
-                        select * from (
-                            select itm.idx from items_tags_metas itm
-
-                            <if test='searchPartsArr != null'>
-                            where itm.meta like CONCAT('%',#{searchKeyword},'%')
-                                and itm.mtype in
-                                <foreach item="item" index="index" collection="searchPartsArr"
-                                         open="(" separator="," close=")">
-                                    #{item}
-                                </foreach>
-                            </if>
-                            group by itm.idx
-                        ) a
-                    )
-                    <if test='searchTitleYn == "Y"'>
-                        or it.title like CONCAT('%',#{searchKeyword},'%')
-                    </if>
-                    <if test='searchSdate != null and searchSdate != "" and searchEdate != "" and searchKeyword != ""'>
-                        and it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
-                    </if>
-                </if>
-                <if test='searchKeyword == null or searchKeyword == ""'>
-                    <if test='searchSdate != null and searchSdate != "" and searchEdate != ""'>
-                        where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
-                    </if>
-                </if>
-            ) a
-        ) b )
-        order by it.regdate desc, it.idx desc
-        limit ${pageSize} offset ${offsetIdx}
-    </select>
-
-    <select id="searchItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
-        /* searchItemsPaging */
+        /* searchItemsPaging_ */
         select a.idx
         , CASE WHEN (ck.series_id is not null and ck.series_id != '0') THEN 'SER' ELSE
         ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR'
@@ -431,13 +346,10 @@
                 select it.idx, iss.stat, it.regdate
                 from items it
                 inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
-                 /* and iss.stat = 'RT' */
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
                 </if>
-                <if test='searchGenreYn != null and searchGenreYn == "Y"'>
-                inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
-                </if>
+                
                 where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
                 <if test='searchTitleYn == "Y"'>
                     and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -458,24 +370,23 @@
         order by it.regdate desc limit ${pageSize} offset ${offsetIdx}
                 )
 
-                <if test='searchPartsArr != null'>
+                <if test='searchTagsArr != null'>
                 union
                 (
                 select it.idx, iss.stat, it.regdate
                 from items it
                 inner join items_tags_metas itm on itm.idx = it.idx
                   and itm.mtype in
-                    <foreach item="item" index="index" collection="searchPartsArr"
+                    <foreach item="item" index="index" collection="searchTagsArr"
                                             open="(" separator="," close=")">
                       #{item}
                     </foreach>
                   and itm.meta like CONCAT('%',#{searchKeyword},'%')
                 inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
-                /* and iss.stat = 'RT' */
                 <if test='searchStat != null and searchStat != "ALL"'>
                     and iss.stat = #{searchStat}
                 </if>
-                <if test='searchGenreYn != null and searchGenreYn == "Y"'>
+                <if test='searchMetasYn != null and searchMetasYn == "Y"'>
                     inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
                 </if>
                 where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
@@ -502,23 +413,63 @@
         order by a.regdate desc, a.idx desc
     </select>
 
-    <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer" useCache="true">
-      /* countItemsPaging */
-        select count(*) as cnt
+
+    <select id="searchItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
+        /* searchItemsPaging */
+        select a.idx
+        , CASE WHEN (ck.series_id is not null and ck.series_id != '0') THEN 'SER' ELSE
+        ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR'
+        ELSE 'OTH' END AS type ) END AS type
+        ,CASE
+        WHEN (ck.series_id is not null and ck.series_id != '0')
+        THEN ( select regdate from ccube_series where series_id = ck.series_id limit 1 )
+        ELSE ( select regdate from ccube_contents where content_id = ck.content_id limit 1 )
+        END AS regdate
+        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as content_id
         from
         (	select j.* from
         (
         (
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            select p.* from (
+        </if>
         select it.idx, iss.stat, it.regdate
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
+        </if>
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
-        /* and iss.stat = 'RT' */
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
-        <if test='searchGenreYn != null and searchGenreYn == "Y"'>
-            inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
+        <if test='searchMetasYn != null and searchMetasYn == "Y"'>
+            inner join (
+            select distinct(idx) as idx from items_metas where mtype in
+            <foreach item="item1" index="index" collection="searchMetasArr"
+                     open="(" separator="," close=")">
+                #{item1}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) imm on imm.idx = it.idx
         </if>
+
+        <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
+        inner join (
+        select distinct(idx) as idx from items_tags_metas where mtype in
+            <foreach item="item2" index="index" collection="searchTagsArr"
+                     open="(" separator="," close=")">
+                #{item2}
+            </foreach>
+        and meta like concat('%',#{searchKeyword},'%')
+        ) itm on itm.idx = it.idx
+        </if>
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
+        left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
+        </if>
+
         where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -532,44 +483,99 @@
         <if test='searchType != null and searchType == "SER"'>
             and it.type = 'CcubeSeries'
         </if>
+        <if test='searchDirectorYn != null and searchDirectorYn != ""'>
+            and it.director like CONCAT('%', #{searchKeyword} '%')
+        </if>
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            ) p where p.cid is not null
+            order by p.regdate desc, p.idx desc limit ${pageSize} offset ${offsetIdx}
+        </if>
+
+        <if test='searchActorsYn == null or searchActorsYn != "Y"'>
+            order by it.regdate desc, it.idx desc limit ${pageSize} offset ${offsetIdx}
+        </if>
 
         )
 
-        <if test='searchPartsArr != null'>
-            union
-            (
-            select it.idx, iss.stat, it.regdate
-            from items it
-            inner join items_tags_metas itm on itm.idx = it.idx
-            and itm.mtype in
-            <foreach item="item" index="index" collection="searchPartsArr"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-            and itm.meta like CONCAT('%',#{searchKeyword},'%')
-            inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
-            /* and iss.stat = 'RT' */
-            <if test='searchStat != null and searchStat != "ALL"'>
-                and iss.stat = #{searchStat}
-            </if>
-            <if test='searchGenreYn != null and searchGenreYn == "Y"'>
-                inner join items_metas itm on itm.idx = it.idx  and itm.mtype = 'genre' and itm.meta like concat('%',#{searchKeyword},'%')
-            </if>
-            where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
-            <if test='searchType != null and searchType == "KOR"'>
-                and it.type = 'CcubeContentK'
-            </if>
-            <if test='searchType != null and searchType == "OTH"'>
-                and it.type = 'CcubeContent'
-            </if>
-            <if test='searchType != null and searchType == "SER"'>
-                and it.type = 'CcubeSeries'
-            </if>
-
-            )
-        </if>
         ) j
+        order by j.regdate desc, j.idx desc limit ${pageSize}
+        ) a
+        inner join items it on it.idx = a.idx
+        left outer join ccube_keys ck on ck.itemidx = it.idx
+        order by a.regdate desc, a.idx desc
+    </select>
 
+    <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer" useCache="true">
+      /* countItemsPaging */
+        select count(*) as cnt
+        from
+        (	select j.* from
+        (
+        (
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            select p.* from (
+        </if>
+        select it.idx, iss.stat, it.regdate
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
+        </if>
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
+        <if test='searchStat != null and searchStat != "ALL"'>
+            and iss.stat = #{searchStat}
+        </if>
+        <if test='searchMetasYn != null and searchMetasYn == "Y"'>
+            inner join (
+            select distinct(idx) as idx from items_metas where mtype in
+            <foreach item="item1" index="index" collection="searchMetasArr"
+                     open="(" separator="," close=")">
+                #{item1}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) imm on imm.idx = it.idx
+        </if>
+
+        <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
+            inner join (
+            select distinct(idx) as idx from items_tags_metas where mtype in
+            <foreach item="item2" index="index" collection="searchTagsArr"
+                     open="(" separator="," close=")">
+                #{item2}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) itm on itm.idx = it.idx
+        </if>
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
+        </if>
+
+        where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
+        <if test='searchTitleYn == "Y"'>
+            and it.title like CONCAT('%',#{searchKeyword},'%')
+        </if>
+        <if test='searchType != null and searchType == "KOR"'>
+            and it.type = 'CcubeContentK'
+        </if>
+        <if test='searchType != null and searchType == "OTH"'>
+            and it.type = 'CcubeContent'
+        </if>
+        <if test='searchType != null and searchType == "SER"'>
+            and it.type = 'CcubeSeries'
+        </if>
+        <if test='searchDirectorYn != null and searchDirectorYn != ""'>
+            and it.director like CONCAT('%', #{searchKeyword} '%')
+        </if>
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            ) p where p.cid is not null
+        </if>
+
+        )
+
+        ) j
         ) a
     </select>
 
@@ -617,12 +623,12 @@
             where it.idx in (
             select * from (
             select itm.idx from items_tags_metas itm
-            <if test='searchPartsArr != null'>
+            <if test='searchTagsArr != null'>
             where itm.meta like CONCAT('%',#{searchKeyword},'%')
                 and itm.mtype in
-                <foreach item="item" index="index" collection="searchPartsArr"
+                <foreach item="item2" index="index" collection="searchTagsArr"
                          open="(" separator="," close=")">
-                    #{item}
+                    #{item2}
                 </foreach>
             </if>
             group by itm.idx
@@ -653,13 +659,45 @@
         (	select j.* from
         (
         (
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            select p.* from (
+        </if>
         select it.idx, iss.stat, it.regdate
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
+        </if>
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
-        /* and iss.stat = 'RT' */
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
+        <if test='searchMetasYn != null and searchMetasYn == "Y"'>
+            inner join (
+            select distinct(idx) as idx from items_metas where mtype in
+            <foreach item="item1" index="index" collection="searchMetasArr"
+                     open="(" separator="," close=")">
+                #{item1}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) imm on imm.idx = it.idx
+        </if>
+
+        <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
+            inner join (
+            select distinct(idx) as idx from items_tags_metas where mtype in
+            <foreach item="item2" index="index" collection="searchTagsArr"
+                     open="(" separator="," close=")">
+                #{item2}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) itm on itm.idx = it.idx
+        </if>
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
+        </if>
+
         where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -673,37 +711,16 @@
         <if test='searchType != null and searchType == "SER"'>
             and it.type = 'CcubeSeries'
         </if>
+        <if test='searchDirectorYn != null and searchDirectorYn != ""'>
+            and it.director like CONCAT('%', #{searchKeyword} '%')
+        </if>
+
+        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+            ) p where p.cid is not null
+        </if>
+
         )
 
-        <if test='searchPartsArr != null'>
-            union
-            (
-            select it.idx, iss.stat, it.regdate
-            from items it
-            inner join items_tags_metas itm on itm.idx = it.idx
-            and itm.mtype in
-            <foreach item="item" index="index" collection="searchPartsArr"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-            and itm.meta like CONCAT('%',#{searchKeyword},'%')
-            inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RR', 'SR', 'FR')
-            /* and iss.stat = 'RT' */
-            <if test='searchStat != null and searchStat != "ALL"'>
-                and iss.stat = #{searchStat}
-            </if>
-            where it.regdate <![CDATA[ >= ]]> #{searchSdate} and it.regdate <![CDATA[ <= ]]> #{searchEdate}
-            <if test='searchType != null and searchType == "KOR"'>
-                and it.type = 'CcubeContentK'
-            </if>
-            <if test='searchType != null and searchType == "OTH"'>
-                and it.type = 'CcubeContent'
-            </if>
-            <if test='searchType != null and searchType == "SER"'>
-                and it.type = 'CcubeSeries'
-            </if>
-            )
-        </if>
         ) j
         ) a
         group by a.stat
@@ -758,10 +775,10 @@
             where it.idx in (
             select * from (
             select itm.idx from items_tags_metas itm
-            <if test='searchPartsArr != null'>
+            <if test='searchTagsArr != null'>
                 where itm.meta like CONCAT('%',#{searchKeyword},'%')
                 and itm.mtype in
-                <foreach item="item" index="index" collection="searchPartsArr"
+                <foreach item="item" index="index" collection="searchTagsArr"
                          open="(" separator="," close=")">
                     #{item}
                 </foreach>
@@ -789,9 +806,9 @@
     <select id="searchTestMetas" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         select itm.idx from items_tags_metas itm
         where itm.meta like CONCAT('%',#{searchKeyword},'%')
-        <if test='searchPartsArr != null'>
+        <if test='searchTagsArr != null'>
             and itm.mtype in
-            <foreach item="item" index="index" collection="searchPartsArr"
+            <foreach item="item" index="index" collection="searchTagsArr"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>

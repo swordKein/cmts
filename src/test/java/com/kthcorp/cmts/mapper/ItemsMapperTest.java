@@ -164,7 +164,7 @@ public class ItemsMapperTest {
         serarchPartsArr.add("genre");
         serarchPartsArr.add("METASWHEN");
         serarchPartsArr.add("METASEMOTION");
-        req.setSearchPartsArr(serarchPartsArr);
+        req.setSearchTagsArr(serarchPartsArr);
 
         List<Items> result = itemsMapper.searchTestMetas(req);
         System.out.println("#result:"+result.toString());

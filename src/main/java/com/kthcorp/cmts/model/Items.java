@@ -37,10 +37,14 @@ public class Items extends Paging {
     private String searchEdate;
     private String searchKeyword;
     private String searchParts;
-    private List<String> searchPartsArr;
     private String searchTitleYn;
     private String searchDirectorYn;
-    private String searchGenreYn;
+
+    private String searchActorsYn;
+    private String searchTagsYn;
+    private List<String> searchTagsArr;
+    private String searchMetasYn;
+    private List<String> searchMetasArr;
 
     /* for ccube */
     private String content_id;
@@ -55,181 +59,6 @@ public class Items extends Paging {
     private List<ItemsMetas> metaList;
     private List<SchedTrigger> schedList;
 
-    public String getSearchGenreYn() {
-        return searchGenreYn;
-    }
-
-    public void setSearchGenreYn(String searchGenreYn) {
-        this.searchGenreYn = searchGenreYn;
-    }
-
-    public Timestamp getProcdate() {
-        return procdate;
-    }
-
-    public void setProcdate(Timestamp procdate) {
-        this.procdate = procdate;
-    }
-
-    public String getSearchDirectorYn() {
-        return searchDirectorYn;
-    }
-
-    public void setSearchDirectorYn(String searchDirectorYn) {
-        this.searchDirectorYn = searchDirectorYn;
-    }
-
-    public String getSearchTitleYn() {
-        return searchTitleYn;
-    }
-
-    public void setSearchTitleYn(String searchTitleYn) {
-        this.searchTitleYn = searchTitleYn;
-    }
-
-    public String getItemsIdxs() {
-        return itemsIdxs;
-    }
-
-    public void setItemsIdxs(String itemsIdxs) {
-        this.itemsIdxs = itemsIdxs;
-    }
-
-    public Integer getSc_id() {
-        return sc_id;
-    }
-
-    public void setSc_id(Integer sc_id) {
-        this.sc_id = sc_id;
-    }
-
-    public Integer getCnt() {
-        return cnt;
-    }
-
-    public void setCnt(Integer cnt) {
-        this.cnt = cnt;
-    }
-
-    public List<String> getSearchPartsArr() {
-        return searchPartsArr;
-    }
-
-    public void setSearchPartsArr(List<String> searchPartsArr) {
-        this.searchPartsArr = searchPartsArr;
-    }
-
-    public String getContent_id() {
-        return content_id;
-    }
-
-    public void setContent_id(String content_id) {
-        this.content_id = content_id;
-    }
-
-    public String getSeries_id() {
-        return series_id;
-    }
-
-    public void setSeries_id(String series_id) {
-        this.series_id = series_id;
-    }
-
-    public String getSearchType() {
-        return searchType;
-    }
-
-    public void setSearchType(String searchType) {
-        this.searchType = searchType;
-    }
-
-    public String getSearchStat() {
-        return searchStat;
-    }
-
-    public void setSearchStat(String searchStat) {
-        this.searchStat = searchStat;
-    }
-
-    public String getSearchSdate() {
-        return searchSdate;
-    }
-
-    public void setSearchSdate(String searchSdate) {
-        this.searchSdate = searchSdate;
-    }
-
-    public String getSearchEdate() {
-        return searchEdate;
-    }
-
-    public void setSearchEdate(String searchEdate) {
-        this.searchEdate = searchEdate;
-    }
-
-    public String getSearchKeyword() {
-        return searchKeyword;
-    }
-
-    public void setSearchKeyword(String searchKeyword) {
-        this.searchKeyword = searchKeyword;
-    }
-
-    public String getSearchParts() {
-        return searchParts;
-    }
-
-    public void setSearchParts(String searchParts) {
-        this.searchParts = searchParts;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
-
-    public int getTagcnt() {
-        return tagcnt;
-    }
-
-    public void setTagcnt(int tagcnt) {
-        this.tagcnt = tagcnt;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public List<SchedTrigger> getSchedList() {
-        return schedList;
-    }
-
-    public void setSchedList(List<SchedTrigger> schedList) {
-        this.schedList = schedList;
-    }
-
-    public List<ItemsMetas> getMetaList() {
-        return metaList;
-    }
-
-    public void setMetaList(List<ItemsMetas> metaList) {
-        this.metaList = metaList;
-    }
 
     public Integer getIdx() {
         return idx;
@@ -317,5 +146,205 @@ public class Items extends Paging {
 
     public void setStat(String stat) {
         this.stat = stat;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public int getTagcnt() {
+        return tagcnt;
+    }
+
+    public void setTagcnt(int tagcnt) {
+        this.tagcnt = tagcnt;
+    }
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getSearchStat() {
+        return searchStat;
+    }
+
+    public void setSearchStat(String searchStat) {
+        this.searchStat = searchStat;
+    }
+
+    public String getSearchSdate() {
+        return searchSdate;
+    }
+
+    public void setSearchSdate(String searchSdate) {
+        this.searchSdate = searchSdate;
+    }
+
+    public String getSearchEdate() {
+        return searchEdate;
+    }
+
+    public void setSearchEdate(String searchEdate) {
+        this.searchEdate = searchEdate;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public String getSearchParts() {
+        return searchParts;
+    }
+
+    public void setSearchParts(String searchParts) {
+        this.searchParts = searchParts;
+    }
+
+    public String getSearchTitleYn() {
+        return searchTitleYn;
+    }
+
+    public void setSearchTitleYn(String searchTitleYn) {
+        this.searchTitleYn = searchTitleYn;
+    }
+
+    public String getSearchDirectorYn() {
+        return searchDirectorYn;
+    }
+
+    public void setSearchDirectorYn(String searchDirectorYn) {
+        this.searchDirectorYn = searchDirectorYn;
+    }
+
+    public String getSearchActorsYn() {
+        return searchActorsYn;
+    }
+
+    public void setSearchActorsYn(String searchActorsYn) {
+        this.searchActorsYn = searchActorsYn;
+    }
+
+    public String getSearchTagsYn() {
+        return searchTagsYn;
+    }
+
+    public void setSearchTagsYn(String searchTagsYn) {
+        this.searchTagsYn = searchTagsYn;
+    }
+
+    public List<String> getSearchTagsArr() {
+        return searchTagsArr;
+    }
+
+    public void setSearchTagsArr(List<String> searchTagsArr) {
+        this.searchTagsArr = searchTagsArr;
+    }
+
+    public String getSearchMetasYn() {
+        return searchMetasYn;
+    }
+
+    public void setSearchMetasYn(String searchMetasYn) {
+        this.searchMetasYn = searchMetasYn;
+    }
+
+    public List<String> getSearchMetasArr() {
+        return searchMetasArr;
+    }
+
+    public void setSearchMetasArr(List<String> searchMetasArr) {
+        this.searchMetasArr = searchMetasArr;
+    }
+
+    public String getContent_id() {
+        return content_id;
+    }
+
+    public void setContent_id(String content_id) {
+        this.content_id = content_id;
+    }
+
+    public String getSeries_id() {
+        return series_id;
+    }
+
+    public void setSeries_id(String series_id) {
+        this.series_id = series_id;
+    }
+
+    public Integer getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(Integer cnt) {
+        this.cnt = cnt;
+    }
+
+    public Integer getSc_id() {
+        return sc_id;
+    }
+
+    public void setSc_id(Integer sc_id) {
+        this.sc_id = sc_id;
+    }
+
+    public String getItemsIdxs() {
+        return itemsIdxs;
+    }
+
+    public void setItemsIdxs(String itemsIdxs) {
+        this.itemsIdxs = itemsIdxs;
+    }
+
+    public Timestamp getProcdate() {
+        return procdate;
+    }
+
+    public void setProcdate(Timestamp procdate) {
+        this.procdate = procdate;
+    }
+
+    public List<ItemsMetas> getMetaList() {
+        return metaList;
+    }
+
+    public void setMetaList(List<ItemsMetas> metaList) {
+        this.metaList = metaList;
+    }
+
+    public List<SchedTrigger> getSchedList() {
+        return schedList;
+    }
+
+    public void setSchedList(List<SchedTrigger> schedList) {
+        this.schedList = schedList;
     }
 }
