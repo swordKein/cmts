@@ -40,6 +40,8 @@ public interface ApiServiceImpl {
 
     JsonObject getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
 
+    String getChangedMtypes(String searchParts);
+
     JsonObject getItemsSearch(
             int pageSize, int pageno
             , String searchType

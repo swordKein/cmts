@@ -12,4 +12,6 @@ public interface UtilServiceImpl {
     //int runJobTask(Object className, String method, MultipartFile uploadFile);
 
     int runJobTask(Object className, String method, Object paramObj);
+
+    int runJobTask2(Object className, String method, Object paramObj);
 }

@@ -65,4 +65,12 @@ public interface ItemsTagsServiceImpl {
     ItemsTags getLastTagCntInfo(Integer itemid);
 
     List<ItemsTags> getTagCntInfo(Integer itemid);
+
+    void processManualTagsMetasChange(String target_mtype, String from_keyword, String to_keyword, String action);
+
+    ManualChange getManualJobHistLastOne();
+
+    int insManualJobHist(ManualChange req);
+
+    int uptManualJobHist(ManualChange req);
 }

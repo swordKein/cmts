@@ -569,8 +569,13 @@ public class DicService implements DicServiceImpl {
                         } catch (Exception e) {
                             e.printStackTrace();
                             // update 시 중복일 경우 삭제 후 입력
-                            req.setOldword(req.getToword());
+                            System.out.println("#ELOG.dicService:delKeywords:: req:"+req.toString());
                             int rtdel = dicKeywordsMapper.delDicKeywords(req);
+
+                            req.setOldword(req.getKeyword());
+                            req.setOldword(req.getToword());
+                            rtdel = dicKeywordsMapper.delDicKeywords(req);
+
                             int rtins = dicKeywordsMapper.insDicKeywords(req);
                         }
                         result = 0;

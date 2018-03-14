@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.ManualJobHistMapper">
+    <select id="getManualJobHistLastOne" resultType="com.kthcorp.cmts.model.ManualChange">
+        /* getManualJobHistLastOne */
+        select
+            *
+        from manual_job_hist
+        where stat = 'P'
+        order by regdate DESC
+        limit 1
+    </select>
+
+    <insert id="insManualJobHist" parameterType="com.kthcorp.cmts.model.ManualChange">
+        /* insManualJobHist */
+        insert into manual_job_hist (type, from_keyword, to_keyword, action, regdate, stat)
+        values (#{target_mtype}, #{from_keyword}, #{to_keyword}, #{action}, now(), 'P')
+    </insert>
+
+    <update id="uptManualJobHist" parameterType="com.kthcorp.cmts.model.ManualChange">
+        /* uptManualJobHist */
+        update manual_job_hist set stat = #{stat}
+        where hidx = #{hidx}
+    </update>
+
+    <update id="uptAllJobHist">
+        /* uptAllJobHist */
+        update manual_job_hist set stat = 'S'
+        where stat = 'P'
+    </update>
+</mapper>

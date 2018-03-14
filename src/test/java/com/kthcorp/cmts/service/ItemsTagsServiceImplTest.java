@@ -80,4 +80,16 @@ public class ItemsTagsServiceImplTest {
 		List<String> result = itemsTagsService.getGenreWordsListByGenre(genres);
 		System.out.println("#RESULT:"+result.toString());
 	}
+
+	@Test
+	public void test_processManualTagsMetasChange() throws Exception {
+		itemsTagsService.processManualTagsMetasChange(
+				//"METASWHEN", "18세기","18세기","add"));
+				//"METASWHEN", "1852","1852","add"));
+				//"METASWHEN", "테스트","테스트","add"));
+				//"METASWHEN", "1852","1852","add"));
+				//"METASWHEN", "1852","18세기","mod"));
+				//"METASWHEN", "테스트","테스트","del"));
+				"METASWHEN", "18세기","18세기","del");
+	}
 }

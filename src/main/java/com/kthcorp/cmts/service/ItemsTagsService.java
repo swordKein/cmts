@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.Charset;
@@ -18,6 +21,8 @@ import java.util.*;
 @Service
 public class ItemsTagsService implements ItemsTagsServiceImpl {
     static Logger logger = LoggerFactory.getLogger(ItemsTagsService.class);
+
+    public static boolean jobRuuningStat = false;
 
     @Value("${cmts.property.serverid}")
     private String serverid;
@@ -38,6 +43,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private ItemsService itemsService;
     @Autowired
     private ApiService apiService;
+
+    @Autowired
+    private ManualJobHistMapper manualJobHistMapper;
 
     @Override
     public List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req) {
@@ -1127,7 +1135,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             JsonObject jo = (JsonObject) je;
                             JsonObject newobj = new JsonObject();
                             newobj.addProperty("word", jo.get("word").getAsString());
-                            newobj.addProperty("type", jo.get("type").getAsString());
+                            newobj.addProperty("type", (jo.get("type") != null) ? jo.get("type").getAsString() : "");
                             newobj.addProperty("ratio", jo.get("ratio").getAsDouble());
                             resultArr.add(newobj);
                         }
@@ -1153,7 +1161,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             } else {
                                 JsonObject newobj2 = new JsonObject();
                                 newobj2.addProperty("word", jo.get("word").getAsString());
-                                newobj2.addProperty("type", jo.get("type").getAsString());
+                                newobj2.addProperty("type", (jo.get("type") != null) ? jo.get("type").getAsString() : "");
                                 newobj2.addProperty("ratio", jo.get("ratio").getAsDouble());
                                 resultArr.add(newobj2);
                             }
@@ -1169,7 +1177,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             if(!jo.get("word").getAsString().trim().equals(fromWord)) {
                                 JsonObject newobj3 = new JsonObject();
                                 newobj3.addProperty("word", jo.get("word").getAsString());
-                                newobj3.addProperty("type", jo.get("type").getAsString());
+                                newobj3.addProperty("type", (jo.get("type") != null) ? jo.get("type").getAsString() : "");
                                 newobj3.addProperty("ratio", jo.get("ratio").getAsDouble());
                                 resultArr.add(newobj3);
                             }
@@ -1260,4 +1268,178 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return itemsTagsMapper.getTagCntInfo(itemid);
     }
 
+    @Override
+    @Async
+    @Transactional
+    public void processManualTagsMetasChange(String target_mtype, String from_keyword, String to_keyword, String action) {
+        int rt = 0;
+        //target_mtype = apiService.getChangedMtypes(target_mtype);
+
+        if (!"".equals(target_mtype) && !"".equals(from_keyword) && !"".equals(to_keyword) && !"".equals(action)) {
+            if(jobRuuningStat == false) {
+                jobRuuningStat = true;
+                try {
+                    // running job 중복방지를 위해 이력 저장
+                    ManualChange reqm = new ManualChange();
+                    reqm.setTarget_mtype(target_mtype);
+                    reqm.setFrom_keyword(from_keyword);
+                    reqm.setTo_keyword(to_keyword);
+                    reqm.setAction(action);
+                    int rtma = this.insManualJobHist(reqm);
+
+                    ItemsTags req = new ItemsTags();
+                    req.setMtype(target_mtype);
+
+                    switch (action) {
+                        case "add":
+                            // 조회는 전체 태그메타
+                            // 읽어온 메타 구조체에 신규 키워드 추가
+                            // from_keyword 가 있을 경우 해당 키워드가 있는 row만 대상으로 선정
+                            if (!from_keyword.equals(to_keyword)) {
+                                req.setKeyword(from_keyword);
+                            }
+                            break;
+                        case "mod":
+                            // 조회는 mtype, from_keyword를 기준으로
+                            req.setKeyword(from_keyword);
+                            // 읽어온 메타 구조체에서 기존 키워드를 to_keyword로 변경
+                            break;
+                        case "del":
+                            // 조회는 mtype, from_keyword를 기준으로
+                            req.setKeyword(from_keyword);
+                            // 읽어온 메타 구조체에서 기존 키워드를 찾아 제거
+                            break;
+                    }
+
+                    // 변경 대상 조회
+                    int cnt_all = itemsTagsMapper.cntSearchTagsMetasByMtypeAndKeyword(req);
+                    System.out.println("#ELOG.searchTagsCount:" + cnt_all);
+
+                    int pageSize = 50;
+                    req.setPageSize(pageSize);
+                    if (cnt_all > 0) {
+                        int maxPage = cnt_all / pageSize + 1;
+                        System.out.println("#ELOG.maxPage:" + maxPage);
+
+                        JsonArray changeMetaArr = new JsonArray();
+                        JsonObject newChangeObj = new JsonObject();
+                        newChangeObj.addProperty("type", target_mtype);
+                        newChangeObj.addProperty("meta", from_keyword);
+                        newChangeObj.addProperty("target_meta", to_keyword);
+                        newChangeObj.addProperty("action", action);
+                        changeMetaArr.add(newChangeObj);
+
+                        for (int pageno = 1; pageno <= maxPage; pageno++) {
+                            req.setPageNo(pageno);
+                            List<ItemsTags> resCur = itemsTagsMapper.getSearchTagsMetasByMtypeAndKeywordPaging(req);
+                            //System.out.println("#ELOG.searchedItemsTags by mtype:"+target_mtype+"/pageno:"+pageno+"/datas::"+resCur.toString());
+                            for (ItemsTags itag : resCur) {
+                                // 저장 대상 생성
+                                // #TODO
+                                String origMeta = itag.getMeta();
+                                if (origMeta != null && !"".equals(origMeta) && !"[]".equals(origMeta)) {
+                                    JsonParser jsonParser = new JsonParser();
+                                    JsonArray origMetaArr = (JsonArray) jsonParser.parse(origMeta);
+                                    System.out.println("#ELOG.searchedItemsTags by mtype:" + target_mtype + "/pageno:" + pageno + "/origMetaArr::" + origMetaArr.toString());
+
+                                    JsonArray destArr = null;
+                                    JsonArray destArr2 = null;
+
+                                    if (target_mtype.contains("METAS") || target_mtype.equals("LIST_NOT_MAPPED")) {
+                                        destArr = this.getTargetMetasArray(target_mtype, origMetaArr, changeMetaArr);
+                                        destArr2 = this.getRemoveDupTargetMetasArray(destArr);
+                                        System.out.println("#ELOG.destArr(JsonObject): datas::" + destArr2.toString());
+
+                                    } else {
+                                        destArr = this.getTargetMetasArrayOnlyString(target_mtype, origMetaArr, changeMetaArr);
+                                        destArr2 = this.getRemoveDupTargetMetasArrayOnlyString(destArr);
+                                        System.out.println("#ELOG.destArr(String): datas::" + destArr2.toString());
+                                    }
+
+                                    if (destArr2 != null) {
+                                        // idx, tagidx, mtype 에 맞추어 meta 업데이트
+                                        itag.setMeta(destArr2.toString());
+                                        rt = itemsTagsMapper.uptItemsTagsByManual(itag);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    // 사전에도 반영 작업
+                    if (rt > 0) {
+                        int rtd = this.changeDicKeywordsForManual(target_mtype, from_keyword, to_keyword, action);
+                    }
+
+                    Thread.sleep(10000);
+
+                    // running job 중복방지를 위해 이력 저장 stat = S
+                    ManualChange histOne = this.getManualJobHistLastOne();
+                    histOne.setStat("S");
+                    rtma = this.uptManualJobHist(histOne);
+
+                    jobRuuningStat = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ManualChange histOne = this.getManualJobHistLastOne();
+                logger.info("#CLOG:jobRunning! skip manualChange:type:"+target_mtype+"/from:"+from_keyword+"/to:"+to_keyword+"/action:"+action);
+                       // + "     ||    "
+                       // + "runningJob::type:"+histOne.getTo_keyword()+"/from:"+histOne.getFrom_keyword()+"/to:"+histOne.getTo_keyword()+"/action:"+histOne.getAction());
+            }
+        }
+        //return rt;
+    }
+
+    private int changeDicKeywordsForManual(String target_mtype, String from_keyword, String to_keyword, String action) throws Exception {
+        int rt = 0;
+
+            // 사전에도 반영 작업
+            if (!"".equals(target_mtype) && !"".equals(to_keyword) && !"".equals(action)) {
+                DicKeywords newKey = new DicKeywords();
+
+                switch (action) {
+                    case "add":
+                        newKey.setType(target_mtype.replace("METAS", ""));
+                        newKey.setKeyword(to_keyword);
+                        newKey.setRatio(0.0);
+                        rt = dicService.insDicKeywords(newKey);
+                        break;
+                    case "mod":
+                        newKey.setType(target_mtype.replace("METAS", ""));
+                        newKey.setKeyword(from_keyword);
+                        newKey.setOldword(from_keyword);
+                        newKey.setToword(to_keyword);
+                        newKey.setRatio(0.0);
+                        rt = dicService.insDicKeywords(newKey);
+                        break;
+                    case "del":
+                        newKey.setType(target_mtype.replace("METAS", ""));
+//                    newKey.setKeyword(to_keyword);
+                        newKey.setOldword(to_keyword);
+                        newKey.setRatio(0.0);
+                        rt = dicService.delDicKeywords(newKey);
+                        break;
+                }
+            }
+
+        return rt;
+    }
+
+    @Override
+    public ManualChange getManualJobHistLastOne() {
+        return manualJobHistMapper.getManualJobHistLastOne();
+    }
+    @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public int insManualJobHist(ManualChange req) {
+        return manualJobHistMapper.insManualJobHist(req);
+    }
+    @Override
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
+    public int uptManualJobHist(ManualChange req) {
+        return manualJobHistMapper.uptManualJobHist(req);
+    }
 }
