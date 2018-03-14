@@ -814,17 +814,31 @@ public class ApiController {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
 				if ("R".equals(stat)) {
+                    // 재처리
 					rtcode = apiService.uptSchedTriggerStatByItemIdxAndType(itemIdx, "R", "Y");
 				} else if ("Y".equals(stat)) {
+				    // 승인대기
 					Items req = new Items();
 					req.setIdx(itemIdx);
 					req.setStat("RT");
 					rtcode = itemsService.insItemsStat(req);
+
+                    //items_hist에 등록 for 통계
+                    Items itemInfo = itemsService.getItemsByIdx(req);
+                    String movietitle = "";
+                    movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                    int rthist = itemsService.insItemsHist(req.getIdx(), "meta", "UPT", movietitle, "READY_TAG", itemIdx);
 				} else if ("FT".equals(stat)) {
                     Items req = new Items();
                     req.setIdx(itemIdx);
                     req.setStat(stat);
                     rtcode = itemsService.insItemsStat(req);
+
+                    //items_hist에 등록 for 통계
+                    Items itemInfo = itemsService.getItemsByIdx(req);
+                    String movietitle = "";
+                    movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                    int rthist = itemsService.insItemsHist(req.getIdx(), "meta", "F", movietitle, "FAIL_TAG", itemIdx);
                 }
 				if(rtcode > 0) {
 					rtmsg = "SUCCESS";
