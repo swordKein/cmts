@@ -820,7 +820,12 @@ public class ApiController {
 					req.setIdx(itemIdx);
 					req.setStat("RT");
 					rtcode = itemsService.insItemsStat(req);
-				}
+				} else if ("FT".equals(stat)) {
+                    Items req = new Items();
+                    req.setIdx(itemIdx);
+                    req.setStat(stat);
+                    rtcode = itemsService.insItemsStat(req);
+                }
 				if(rtcode > 0) {
 					rtmsg = "SUCCESS";
 				} else {

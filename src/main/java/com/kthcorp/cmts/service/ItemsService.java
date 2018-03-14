@@ -468,6 +468,8 @@ public class ItemsService implements ItemsServiceImpl {
         int rt = 0;
         if (req != null) {
             rt = itemsMapper.insItemsStat(req);
+
+            int rtregdate = itemsMapper.uptItemsRegdate(req);
         }
         return rt;
     }
