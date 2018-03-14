@@ -22,4 +22,8 @@ public interface ItemsTagsMapper {
     List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
     ItemsTags getLastTagCntInfo(Integer req);
     List<ItemsTags> getTagCntInfo(Integer req);
+
+    int cntSearchTagsMetasByMtypeAndKeyword(ItemsTags req);
+    List<ItemsTags> getSearchTagsMetasByMtypeAndKeywordPaging(ItemsTags req);
+    int uptItemsTagsByManual(ItemsTags req);
 }

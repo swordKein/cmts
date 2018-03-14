@@ -132,6 +132,9 @@ public class ApiService implements ApiServiceImpl {
             case -4 :
                 rtmsg = "Token expired!";
                 break;
+            case -88 :
+                rtmsg = "Job is running!";
+                break;
             case -999 :
                 rtmsg = "System error!";
                 break;
@@ -421,7 +424,8 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
-    private String getChangedMtypes(String searchParts) {
+    @Override
+    public String getChangedMtypes(String searchParts) {
         searchParts = searchParts.replace("when","METASWHEN");
         searchParts = searchParts.replace("where","METASWHERE");
         searchParts = searchParts.replace("who","METASWHO");

@@ -7,7 +7,7 @@ import org.apache.ibatis.type.Alias;
 import java.sql.Timestamp;
 
 @Alias("ItemsTags")
-public class ItemsTags {
+public class ItemsTags extends Paging{
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -24,6 +24,15 @@ public class ItemsTags {
     private String title;
     private String title2;
     private String yj_id;
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 
     public String getTitle() {
         return title;

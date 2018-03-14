@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsTags;
+import com.kthcorp.cmts.model.ManualChange;
 import com.kthcorp.cmts.service.*;
+import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +43,8 @@ public class ApiController {
 	private StatsService statsService;
 	@Autowired
 	private ItemsTagsService itemsTagsService;
+	@Autowired
+	private UtilService utilService;
 
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
@@ -1175,6 +1181,50 @@ public class ApiController {
 
 		result_all.add("RESULT", result);
 
+
+		return result_all.toString();
+	}
+
+
+	// Danger!!! only for admin, 매우조심!!!
+	@RequestMapping(value = "/manual/batchChange", method = RequestMethod.POST)
+	@ResponseBody
+	public String post__manual_batch(Map<String, Object> model
+			, @RequestParam(value = "target_mtype", required = true) String target_mtype
+			, @RequestParam(value = "from_keyword", required = true) String from_keyword
+			, @RequestParam(value = "to_keyword", required = true) String to_keyword
+			, @RequestParam(value = "action", required = true) String action
+
+	) {
+		logger.info("#CLOG:API/manual/batchChange input " +
+				"target_mtype:" + target_mtype+"/from_keyword:"+from_keyword+"/to_keyword:"+to_keyword+"/action:"+action);
+
+		//String hashcode = "";
+		int rtcode = -1;
+		String rtmsg = "";
+		//JsonArray result1 = null;
+
+		// 기존 작업중인 내역 조회 후 있으면 에러 리턴
+		ManualChange histOne = itemsTagsService.getManualJobHistLastOne();
+		if (histOne == null) {
+			try {
+				itemsTagsService.processManualTagsMetasChange(target_mtype, from_keyword, to_keyword, action);
+
+				rtcode = 1;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				rtcode = -999;
+				rtmsg = (e.getCause() != null) ? e.getCause().toString() : "Service got exceptions!";
+			}
+		} else {
+			rtcode = -88;
+		}
+
+		rtmsg = apiService.getRtmsg(rtcode);
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
 
 		return result_all.toString();
 	}

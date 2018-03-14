@@ -106,4 +106,32 @@
         where it.idx = #{idx}
     </select>
 
+    <select id="getSearchTagsMetasByMtypeAndKeywordPaging" parameterType="com.kthcorp.cmts.model.ItemsTags"
+            resultType="com.kthcorp.cmts.model.ItemsTags">
+        /* getSearchTagsMetasByMtypeAndKeywordPaging */
+          select itm.* from items_tags_metas itm
+          where itm.mtype = #{mtype}
+            <if test='keyword != null and keyword != ""'>
+                and itm.meta like concat ('%', #{keyword}, '%')
+            </if>
+            order by itm.regdate desc, itm.idx desc
+          limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntSearchTagsMetasByMtypeAndKeyword" parameterType="com.kthcorp.cmts.model.ItemsTags"
+            resultType="java.lang.Integer">
+        /* cntSearchTagsMetasByMtypeAndKeyword */
+        select count(*) as cnt from items_tags_metas itm
+        where itm.mtype = #{mtype}
+            <if test='keyword != null and keyword != ""'>
+                and itm.meta like concat ('%', #{keyword}, '%')
+            </if>
+    </select>
+
+    <update id="uptItemsTagsByManual" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* uptItemsTagsByManual */
+        update items_tags_metas set meta_orig = meta , meta = #{meta}
+        where idx = #{idx} and tagidx = #{tagidx} and mtype = #{mtype}
+    </update>
+
 </mapper>

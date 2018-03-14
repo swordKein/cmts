@@ -159,7 +159,7 @@ schedule :
       cronExpression : 0 */25 * * * ?
       jobType : analyzeService
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 */25 * * * ?
       jobType : itemsService
     -
       cronExpression : 0 */25 * * * ?
