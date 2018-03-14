@@ -563,7 +563,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonArray resultArr = new JsonArray();
 
         System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);
-        if (!"LIST_SEARCHKEYWORDS".equals(type)) {
+        if (!type.contains("LIST_") && !type.contains("WORDS_") || type.equals("LIST_NOT_MAPPED")) {
             for (JsonElement oje : oldArr) {
                 //System.out.println("#TOLOG:oje:" + oje.toString());
                 try {
