@@ -81,12 +81,13 @@ public class WordFreqUtil {
 
         if(strings != null) {
             for (String s : strings) {
-
-                if (!map.containsKey(s)) {  // first time we've seen this string
-                    map.put(s, 1.0);
-                } else {
-                    Double count = (Double) map.get(s);
-                    map.put(s, count + 1.0);
+                if (!"".equals(s.trim())) {
+                    if (!map.containsKey(s)) {  // first time we've seen this string
+                        map.put(s, 1.0);
+                    } else {
+                        Double count = (Double) map.get(s);
+                        map.put(s, count + 1.0);
+                    }
                 }
             }
         }

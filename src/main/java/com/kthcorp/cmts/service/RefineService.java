@@ -3,8 +3,6 @@ package com.kthcorp.cmts.service;
 import com.google.gson.*;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.service.crawl.ImdbService;
-import com.kthcorp.cmts.service.crawl.NaverblogService;
 import com.kthcorp.cmts.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -212,6 +209,24 @@ public class RefineService implements RefineServiceImpl {
         return result2;
     }
 
+    @Override
+    public List<SchedTrigger> step04byScid(SchedTrigger req) {
+        System.out.println("#STEP04 for Refine test! by sc_id:" + req.getSc_id());
+        SchedTrigger item1 = schedTriggerMapper.getSchedTriggerOneByScid(req);
+
+        List<SchedTrigger> result2 = new ArrayList<SchedTrigger>();
+
+
+        SchedTargetContent reqC = new SchedTargetContent();
+        reqC.setSc_id(req.getParent_sc_id());
+        //reqC.setTcnt(req.getTcnt());
+        List<SchedTargetContent> contentList = schedTargetContentMapper.getSchedTargetContentList(reqC);
+        item1.setContentList(contentList);
+        result2.add(item1);
+
+        System.out.println("#STEP04 for Refine test! result:"+result2.toString());
+        return result2;
+    }
 
     /* STEP05
      * 정제 대상 설정 조회는 bypass
@@ -306,6 +321,8 @@ public class RefineService implements RefineServiceImpl {
 
                 // WordFreq 추출
                 Map<String, Double> resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
+                logger.debug("#ELOG.resultWordFreq orig:datas::"+resultWordFreq.toString());
+
                 subContentTxt = "";
 
                 // 추가어 처리 , WordFreq 변경
@@ -362,7 +379,7 @@ public class RefineService implements RefineServiceImpl {
             int resultContentSize = 0;
             String contentAll = "";
 
-            System.out.println("#STEP06 resultRefine::"+resultRefine.toString());
+            System.out.println("#STEP06 resultRefine::"+resultRefine.get("result").toString());
 
             SchedTargetMappingHist reqHist = null;
             if (resultRefine != null && resultRefine.get("result") != null) {
@@ -375,15 +392,8 @@ public class RefineService implements RefineServiceImpl {
                     statTarget = "F";
                 }
 
-                JsonObject resultRefineObj = (JsonObject) resultRefine.get("result");
-                if (resultRefineObj != null) {
-                    String movietitle = sched.getMovietitle();
-                    if (!"".equals(movietitle)) {
-                        JsonArray wordsSnsArray = apiService.getSnsKeywords(movietitle);
-                        if (wordsSnsArray != null) wordsSnsArray = new JsonArray();
-                        
-                    }
-                }
+                //System.out.println("#ELOG.resultRefine:: datas::"+resultRefine.toString());
+
                 contentAll = resultRefine.get("result").getAsString();
 
                 //JsonObject histObj = (JsonObject) resultRefine.get("result");

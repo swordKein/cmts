@@ -49,4 +49,5 @@ public interface ItemsMapper {
     int insItemsStat(Items req);
     int uptItemsTagcnt(Items req);
     int uptItemsTagcntMinus(Items req);
+    int uptItemsRegdate(Items req);
 }

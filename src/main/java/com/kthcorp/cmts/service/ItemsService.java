@@ -447,16 +447,31 @@ public class ItemsService implements ItemsServiceImpl {
                 req.setSc_id(sc_id);
                 rt = itemsMapper.uptSchedTriggerStatByScid(req);
 
+                String histType = "";
+                String histAction = "";
                 if(rt > 0) {
                     if(req.getType().equals("C")) {
                         req.setStat("RC");
+                        histType = "re_collect";
+                        histAction = "RE_COLLECT";
                     } else if (req.getType().equals("A")) {
                         req.setStat("RR");
+                        histType = "re_refine";
+                        histAction = "RE_REFINE";
                     } else if (req.getType().equals("S")) {
                         req.setStat("RA");
+                        histType = "re_analyze";
+                        histAction = "RE_ANALYZE";
                     }
 
                     rt = itemsMapper.insItemsStat(req);
+
+                    //items_hist에 등록 for 통계
+                    Items itemInfo = this.getItemsByIdx(req);
+                    String movietitle = "";
+                    movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                    int rthist = this.insItemsHist(req.getIdx(), histType, "UPT", movietitle, histAction, sc_id);
+
                 }
             }
         }
@@ -468,6 +483,8 @@ public class ItemsService implements ItemsServiceImpl {
         int rt = 0;
         if (req != null) {
             rt = itemsMapper.insItemsStat(req);
+
+            int rtregdate = itemsMapper.uptItemsRegdate(req);
         }
         return rt;
     }

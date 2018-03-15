@@ -812,9 +812,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonObject jo = (JsonObject) je;
 
                     if(jo != null && jo.get("action") != null
-                            && jo.get("meta") != null && !"".equals(jo.get("meta").getAsString().trim())) {
-
-                        System.out.println("#TLOG:putDicKeyword:: jo:"+jo.toString());
+                            && jo.get("meta") != null && !"".equals(jo.get("meta").getAsString().trim())
+                            && jo.get("meta").getAsString().trim().length() > 0
+                    ) {
+                        //System.out.println("#TLOG:putDicKeyword:: jo:"+jo.toString());
                         DicKeywords newKey = new DicKeywords();
 
                         switch(jo.get("action").getAsString()) {

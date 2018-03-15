@@ -71,4 +71,18 @@ public class RefineServiceTest {
 		}
 	}
 
+	@Test
+	public void test_step04byScid() throws Exception {
+		SchedTrigger req = new SchedTrigger();
+		req.setSc_id(2);
+		req.setParent_sc_id(1);
+		List<SchedTrigger> res = refineService.step04byScid(req);
+
+		SchedTrigger sched = res.get(0);
+
+		JsonObject resultRefine = refineService.run_step06(sched, sched.getSc_id(), sched.getType(), sched.getTcnt());
+
+		//System.out.println("#RES:"+res.toString());
+	}
+
 }

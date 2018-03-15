@@ -17,6 +17,8 @@ public interface RefineServiceImpl {
             */
     List<SchedTrigger> step04();
 
+    List<SchedTrigger> step04byScid(SchedTrigger req);
+
     /* STEP05
          * ConfTarget & List<ConfPreset> 을 통해 정제 대상 설정 조회
          * 조회 후 stat = P 로 변경

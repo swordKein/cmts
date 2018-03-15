@@ -855,4 +855,10 @@
         , regdate = now()
         where idx = #{idx}
     </update>
+
+    <update id="uptItemsRegdate" parameterType="com.kthcorp.cmts.model.Items">
+        /* uptItemsRegdate */
+        update items set regdate = now()
+        where idx = #{idx}
+    </update>
 </mapper>
