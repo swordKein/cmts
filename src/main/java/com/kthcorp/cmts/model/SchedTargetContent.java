@@ -26,6 +26,15 @@ public class SchedTargetContent extends Paging {
     private Timestamp param5;
 
     private Integer tcnt;
+    private String tg_url;
+
+    public String getTg_url() {
+        return tg_url;
+    }
+
+    public void setTg_url(String tg_url) {
+        this.tg_url = tg_url;
+    }
 
     public Integer getTcnt() {
         return tcnt;

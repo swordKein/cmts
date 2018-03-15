@@ -12,9 +12,13 @@
 
     <select id="getSchedTargetContentList" resultType="com.kthcorp.cmts.model.SchedTargetContent" parameterType="com.kthcorp.cmts.model.SchedTargetContent">
         /* getSchedTargetContentList */
-        select c.*, stmh.tcnt from sched_target_content c
+        select c.*
+        , stmh.tcnt
+        , ct.tg_url
+        from sched_target_content c
         inner join sched_trigger st on st.sc_id = c.sc_id
         inner join sched_target_mapping_hist stmh on stmh.sc_id = c.sc_id and stmh.stmh_id = c.stmh_id and stmh.tcnt = st.tcnt
+        inner join conf_target ct on ct.tg_id = c.tg_id
         <trim prefix="WHERE" prefixOverrides="AND">
             <if test='sc_id > 0'>
                 c.sc_id = #{sc_id}

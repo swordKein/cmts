@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -251,6 +252,22 @@ public class RefineService implements RefineServiceImpl {
         return result;
     }
 
+    private Map<String, Double> getAddedWordsFreqArrays(Map<String, Double> origMap, String subContentTxt, String tg_url) throws Exception {
+        if (origMap == null) origMap = new HashMap();
+        Map<String, Double> resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
+        logger.debug("#ELOG.resultWordFreq orig:"+tg_url+"/ size:"+resultWordFreq.size()+"/datas::"+resultWordFreq.toString());
+
+        Double mutexRatio = 0.0;
+        if (tg_url.equals("NAVER_MOVIE")) mutexRatio = 500.0;
+
+        Map<String, Double> resultWordFreqMutexByRatio = MapUtil.getParamDoubleMapMutexedRatio(resultWordFreq, mutexRatio);
+        logger.debug("#ELOG.resultWordFreq:"+tg_url+"/ mutex: size:"+resultWordFreqMutexByRatio.size()+"/datas::"+resultWordFreqMutexByRatio.toString());
+
+        Map<String, Double> resultMap = MapUtil.getAppendedMapAndParamDouble(origMap, resultWordFreqMutexByRatio);
+
+        return resultMap;
+    }
+
     /* STEP06 정제 작업 - sub
     */
     @Override
@@ -261,69 +278,73 @@ public class RefineService implements RefineServiceImpl {
             logger.info("#STEP:06:: get start! contentList.size:" + req.getContentList().size());
             try {
                 String content = "";
-                for(SchedTargetContent sc : req.getContentList()) {
-                    if (sc.getContent() != null && !"".equals(sc.getContent())) {
-                        logger.info("#STEP:06:: req.getContent.size:" + content.length());
-                        content = content + " " + sc.getContent();
-                    }
-                }
-                logger.info("#STEP:06:: summary::getContent.size:" + content.length());
-                // 버리는 문자열/특수기호 제거
-                //content = CommonUtil.removeTex(content);
+                ArrayList<String> s1 = null;
+                Map<String, Double> resultWordFreq = null;
 
                 // 형태소 분석 전 품사 추가대상 조회
-                ArrayList<String> s1 = null;
                 List<DicPumsaWords> pumsaList = dicPumsaWordsMapper.getDicPumsaWords();
-
                 if (pumsaList != null) {
                     s1 = new ArrayList<String>();
                     for (DicPumsaWords dp : pumsaList) {
                         s1.add(dp.getWord());
                     }
                 }
-                //System.out.println("#step06sub by content:"+content);
 
-                // 형태소 분석
-                ArrayList<ArrayList<String>> wordsList = SeunjeonUtil.getSimpleWords2(content, null);
-                content = "";
+                for(SchedTargetContent sc : req.getContentList()) {
+                    if (sc.getContent() != null && !"".equals(sc.getContent())) {
+                        //content = content + " " + sc.getContent();
+                        content = sc.getContent().trim();
+                        String tg_url = (sc.getTg_url() != null) ? sc.getTg_url().trim() : "";
+                        logger.info("#STEP:06:: SRC:"+tg_url+"/content.size:" + content.length());
 
-                // 추가 품사 대상에 대해 형태소 분석 결과에 ADD
-                ArrayList<ArrayList<String>> resultArr = SeunjeonUtil.getArrayWordsForMatchClass2(wordsList, s1);
-                wordsList = null;
-                //String wordsAndPumsa = new Gson().toJson(resultArr);
-                System.out.println("#STEP06: getArrayWordsForMatchClass2.result:"+resultArr.toString());
+                        // 버리는 문자열/특수기호 제거
+                        //content = CommonUtil.removeTex(content);
 
-                // 문자열 Array로 변형
-                List<String> subArray = new ArrayList();
-                for(List<String> ls : resultArr) {
-                    if (ls != null && ls.get(3) != null) subArray.add(ls.get(3));
+                        // 형태소 분석 결과 중첩 modified at 2018.03.15
+                        ArrayList<ArrayList<String>> wordsList = SeunjeonUtil.getSimpleWords2(content, null);
+                        //System.out.println("#ELOG.wordsList.result:"+wordsList.toString());
+                        content = "";
+
+                        // 추가 품사 대상에 대해 형태소 분석 결과에 ADD
+                        ArrayList<ArrayList<String>> resultArr = SeunjeonUtil.getArrayWordsForMatchClass2(wordsList, s1);
+                        wordsList = null;
+                        //String wordsAndPumsa = new Gson().toJson(resultArr);
+                        //System.out.println("#STEP06: getArrayWordsForMatchClass2.result:"+resultArr.toString());
+
+                        // 문자열 Array로 변형
+                        List<String> subArray = new ArrayList();
+                        for(List<String> ls : resultArr) {
+                            if (ls != null && ls.get(3) != null) subArray.add(ls.get(3));
+                        }
+
+                        // 불용어 처리
+                        List<String> subArray2 = dicService.filterListByDicNotuseWords(subArray, req.getSc_id());
+                        subArray = null;
+
+                        // 대체어 처리
+                        List<String> subArray3 = dicService.filterListByDicChangeWords(subArray2, req.getSc_id());
+                        subArray2 = null;
+
+                        // 1글자 제외 로직 적용 added 2018-01-17
+                        // _ 로 시작하면 2개품사 조합 중 첫째 단어가 공백인 경우 - 제외
+                        List<String> subArray4 = dicService.filterListByLengthUnder2byte(subArray3);
+                        subArray3 = null;
+
+                        // 문자열 Array를 1개의 String으로 취합
+                        String subContentTxt = StringUtil.getStringFromList(subArray4);
+                        subArray4 = null;
+
+                        // 버리는 문자열/특수기호 제거
+                        subContentTxt = CommonUtil.removeTex(subContentTxt);
+
+                        // WordFreq 추출
+                        //resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
+                        resultWordFreq = this.getAddedWordsFreqArrays(resultWordFreq, subContentTxt, tg_url);
+
+                        subContentTxt = "";
+                    }
                 }
-
-                // 불용어 처리
-                List<String> subArray2 = dicService.filterListByDicNotuseWords(subArray, req.getSc_id());
-                subArray = null;
-
-                // 대체어 처리
-                List<String> subArray3 = dicService.filterListByDicChangeWords(subArray2, req.getSc_id());
-                subArray2 = null;
-
-                // 1글자 제외 로직 적용 added 2018-01-17
-                // _ 로 시작하면 2개품사 조합 중 첫째 단어가 공백인 경우 - 제외
-                List<String> subArray4 = dicService.filterListByLengthUnder2byte(subArray3);
-                subArray3 = null;
-
-                // 문자열 Array를 1개의 String으로 취합
-                String subContentTxt = StringUtil.getStringFromList(subArray4);
-                subArray4 = null;
-
-                // 버리는 문자열/특수기호 제거
-                subContentTxt = CommonUtil.removeTex(subContentTxt);
-
-                // WordFreq 추출
-                Map<String, Double> resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
-                logger.debug("#ELOG.resultWordFreq orig:datas::"+resultWordFreq.toString());
-
-                subContentTxt = "";
+                logger.debug("#ELOG.DEST.resultWordFreq orig:size:"+resultWordFreq.size()+"::datas::"+resultWordFreq.toString());
 
                 // 추가어 처리 , WordFreq 변경
                 Map<String, Double> resultAddedWordFreq = dicService.filterListByDicAddWords(resultWordFreq, req.getSc_id());
@@ -338,7 +359,7 @@ public class RefineService implements RefineServiceImpl {
                 result = new JsonObject();
                 result.addProperty("rt_code","OK");
                 result.addProperty("rt_msg","SUCCESS");
-                result.addProperty("wordsAndPumsa", resultArr.toString());
+                //result.addProperty("wordsAndPumsa", resultArr.toString());
                 //result.addProperty("subContent", subContentTxt);
                 result.addProperty("result", String.valueOf(resultWordFreqRank));
             } catch (Exception e) {

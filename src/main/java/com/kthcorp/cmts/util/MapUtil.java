@@ -196,6 +196,36 @@ public class MapUtil {
         return resultMap;
     }
 
+
+    public static Map<String, Double> getParamDoubleMapMutexedRatio(Map<String, Double> origMap, Double ratio) {
+        Map<String, Double> resultMap = null;
+
+        if (ratio > 0.0) {
+            if (origMap != null) {
+                resultMap = new HashMap();
+
+                Set entrySet = origMap.entrySet();
+                Iterator it = entrySet.iterator();
+
+                while (it.hasNext()) {
+                    Map.Entry me = (Map.Entry) it.next();
+                    //System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+                    String key = (String) me.getKey();
+                    Double value = (Double) me.getValue();
+                    value = value * ratio;
+
+                    //System.out.println("# " +" st map data:"+(me.getKey()+":"+me.getValue()+":"+value));
+
+                    resultMap.put(key, value);
+                }
+            }
+        } else {
+            resultMap = origMap;
+        }
+
+        return resultMap;
+    }
+
     public static Map<String, Double> getAppendedMapAndParamDouble(Map<String, Double> origMap, Map<String, Double> reqMap) {
         //int lineCnt = 0;
         if (origMap == null) origMap = new HashMap<String, Double>();
@@ -208,6 +238,13 @@ public class MapUtil {
             //System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
             String key = (String) me.getKey();
             Double value = (Double) me.getValue();
+
+            Double valueOrig = 0.0;
+            if(origMap.get(key) != null) {
+                valueOrig = (Double) origMap.get(key);
+                value = value + valueOrig;
+            }
+
             origMap.put(key, value);
         }
         return origMap;

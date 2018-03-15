@@ -874,7 +874,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 JsonArray wordsSnsArray = apiService.getSnsKeywords(movietitle);
                 if (wordsSnsArray != null) wordsSnsArray = new JsonArray();
                 // 저장로직 추가 필요 #TODO
-
+                int rtws = insItemsTagsMetaFromWordsSns(wordsSnsArray, sc_id);
             }
             //}
 
@@ -940,7 +940,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 e.printStackTrace();
             }
 
-            System.out.println("#notmappedKeywordsArray:"+result.toString());
+            //System.out.println("#notmappedKeywordsArray:"+result.toString());
             rt = saveItemsTagsMetas(result.toString(), itemIdx, maxTagidx, "LIST_NOT_MAPPED");
 
         }
@@ -988,10 +988,34 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             Map<String, Double> searchKeyword2 = MapUtil.getCuttedMapFromMapByLimit(searchKeyword3, 3);
             Map<String, Double> searchKeyword1 = MapUtil.getSortedDescMapForDouble(searchKeyword2);
             JsonArray searchKeyword  = MapUtil.getListNotMapKeywords(searchKeyword1);
-            System.out.println("#searchKeyword:"+searchKeyword.toString());
+            //System.out.println("#searchKeyword:"+searchKeyword.toString());
 
             // 검색 키워드 jsonArray mtype:LIST_SEARCHKEYWORDS 저장
             int resitm2 = saveItemsTagsMetas(searchKeyword.toString(), itemIdx, maxTagidx, "LIST_SEARCHKEYWORDS");
+        }
+
+        return rt;
+    }
+
+    private int insItemsTagsMetaFromWordsSns(JsonArray wordsSnsArr, int sc_id) {
+        int rt = 0;
+
+        if (wordsSnsArr != null) {
+            int itemIdx = 0;
+            int maxTagidx = 0;
+            try {
+                // 일단 sc_id를 통해 itemIdx를 취득
+                ItemsSchedMapping reqIsm = new ItemsSchedMapping();
+                reqIsm.setSc_id(sc_id);
+                itemIdx = itemsSchedMappingMapper.getItemIdxByScid(reqIsm);
+
+                // items_tags_keys를 통해 itemIdx - tagIdx 를 최신으로 추가
+                maxTagidx = itemsTagsService.getCurrTagsIdxForInsert(itemIdx);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            rt = saveItemsTagsMetas(wordsSnsArr.toString(), itemIdx, maxTagidx, "WORDS_SNS");
         }
 
         return rt;
