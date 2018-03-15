@@ -508,7 +508,13 @@ public class DicService implements DicServiceImpl {
                 e.printStackTrace();
             }
 
-            result.put(me.getKey().toString(), tmpFreq);
+            String tmpKey = me.getKey().toString();
+            tmpKey = tmpKey.trim();
+            if (!"".equals(tmpKey)) {
+                result.put(me.getKey().toString(), tmpFreq);
+            } else {
+                logger.debug("#ELOG.filterListByDicAddWords skip word is empty and freq:"+tmpFreq);
+            }
         }
 
         return result;

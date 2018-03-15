@@ -42,6 +42,8 @@ public class AnalyzeService implements AnalyzeServiceImpl {
     private ItemsTagsService itemsTagsService;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private ApiService apiService;
 
     /* 올레TV 메타 확장 - 분석 수행 STEP07~09
      */
@@ -854,15 +856,27 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             // 미분류 키워드를 dic_notmap_keywords 에 등록, dic_keywords 사전에 등록된 키워드는 제외
             int rtinmk = dicService.insNotMapKeywords(notMapKeywords);
 
-            // 미분류 키워드를 items_tags_metas에 LIST_NOT_MAPPED mtype으로 저장
+            // 미분류 키워드를 ITEMS_TAGS_METAS에 LIST_NOT_MAPPED mtype으로 저장
             int rtitmnm = insItemsTagsMetaFromNotMappedKeywordsObj(notMapKeywordList, sc_id);
 
-            // TYPE별 키워드리스트+포인트+Freq를 ITEMS_TAGS_META에 저장
+            // TYPE별 키워드리스트+포인트+Freq를 ITEMS_TAGS_METAS에 저장
             if (resultAnalyze.get("keywordPointArraysObj") != null) {
                 JsonObject keywordPointArraysObj = (JsonObject) resultAnalyze.get("keywordPointArraysObj");
 
                 int rtinsmeta = insItemsTagsMetaFromPointArraysObj(keywordPointArraysObj, sc_id);
             }
+
+            // SNS감성어를 ITEMS_TAGS_METAS에 WORDS_SNS type으로 저장
+            //JsonObject resultRefineObj = resultRefine.get("result").getAsJsonObject();
+            //if (resultRefineObj != null) {
+            String movietitle = sched.getMovietitle();
+            if (!"".equals(movietitle)) {
+                JsonArray wordsSnsArray = apiService.getSnsKeywords(movietitle);
+                if (wordsSnsArray != null) wordsSnsArray = new JsonArray();
+                // 저장로직 추가 필요 #TODO
+
+            }
+            //}
 
         } catch (Exception e) {
             statTarget = "F";
