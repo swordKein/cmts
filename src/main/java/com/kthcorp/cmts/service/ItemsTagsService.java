@@ -1380,10 +1380,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         int rtd = this.changeDicKeywordsForManual(target_mtype, from_keyword, to_keyword, action);
                     }
 
-                    //Thread.sleep(10000);
+                    Thread.sleep(3000);
 
                     // running job 중복방지를 위해 이력 저장 stat = S
+                    ManualChange histOneOld = this.getManualJobHistLastOne();
                     ManualChange histOne = this.getManualJobHistLastOne();
+                    histOne.setHidx(histOneOld.getHidx());
                     histOne.setStat("S");
                     histOne.setCnt(cnt_all);
 
@@ -1451,6 +1453,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     @Transactional(propagation= Propagation.REQUIRES_NEW)
     public int uptManualJobHist(ManualChange req) {
+
         return manualJobHistMapper.uptManualJobHist(req);
     }
 }
