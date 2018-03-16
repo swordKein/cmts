@@ -63,4 +63,27 @@ public class ApiServiceTest {
 	public void test_getGenres() throws Exception {
 		System.out.println("#RESULT:"+apiService.getFilteredGenre("블랙코미디 무협"));
 	}
+
+	@Test
+	public void test_getSnsTopKeywords() throws Exception {
+		JsonObject resultObj = apiService.getSnsTopKeywords();
+		System.out.println("#RES:"+resultObj.toString());
+	}
+
+	@Test
+	public void test_processSnsTopKeywordsByDateSched() throws Exception {
+		apiService.processSnsTopKeywordsByDateSched();
+
+	}
+
+	@Test
+	public void test_getSnsTopWordsAndGraph() throws Exception {
+		JsonObject result = apiService.getSnsTopWordsAndGraph();
+	}
+
+	@Test
+	public void test_getResultSnsMap() throws Exception {
+		List<String> result = apiService.getResultSnsMapByTag("twitter", "20180314", "word");
+		System.out.println("#RES:"+result.toString());
+	}
 }

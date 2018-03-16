@@ -7,6 +7,7 @@ import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsTags;
 import com.kthcorp.cmts.model.ManualChange;
 import com.kthcorp.cmts.service.*;
+import com.kthcorp.cmts.util.DateUtils;
 import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1244,6 +1245,44 @@ public class ApiController {
 		JsonObject result_all = new JsonObject();
 		result_all.addProperty("RT_CODE", rtcode);
 		result_all.addProperty("RT_MSG", rtmsg);
+
+		return result_all.toString();
+	}
+
+
+	// #SNS_TOP_KEYWORDS result
+	@RequestMapping(value = "/sns/topwords", method = RequestMethod.GET)
+	@ResponseBody
+	public String get__pop_award(Model model) {
+		logger.info("#CLOG:API/sns/topwords get date:"+ DateUtils.getLocalDate2());
+
+		String hashcode = "";
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+
+		try {
+			result1 = apiService.getSnsTopKeywords();
+			if(result1 != null) {
+				rtcode = 1;
+				rtmsg = "SUCCESS";
+			} else {
+				rtcode = -1;
+				rtmsg = "SnsTopKeywords is null!";
+			}
+			//rtmsg = apiService.getRtmsg(rtcode);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
 
 		return result_all.toString();
 	}

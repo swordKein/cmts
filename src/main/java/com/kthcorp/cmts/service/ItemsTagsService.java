@@ -284,14 +284,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_RECO_SITUATION");
 
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
+        //System.out.println("#ELOG.getItemsMetasByItemIdx:: old.datas::"+resultObj.toString());
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
+        System.out.println("#ELOG.getItemsMetasByItemIdx:: dupCheck.datas::"+resultObj2.toString());
 
         /* WORDS_ASSOC 감성유의어 - 네이버사전 */
         resultObj2 = getWordsAssoc(itemIdx, resultObj2);
 
+        System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsAssoc.datas::"+resultObj2.toString());
+
         /* WORDS_GENRE */
         resultObj2 = getWordsGenre(itemIdx, resultObj2);
+        System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsGenre.datas::"+resultObj2.toString());
+
 
         /* WORDS_SNS */
         // resultObj2 = getWordsSns(itemIdx, resultObj2);
@@ -563,7 +569,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonArray resultArr = new JsonArray();
 
         System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);
-        if (!type.contains("LIST_") && !type.contains("WORDS_") || type.equals("LIST_NOT_MAPPED")) {
+        if (type.contains("METAS") || !type.equals("LIST_SEARCHKEYWORD")) {
             for (JsonElement oje : oldArr) {
                 //System.out.println("#TOLOG:oje:" + oje.toString());
                 try {

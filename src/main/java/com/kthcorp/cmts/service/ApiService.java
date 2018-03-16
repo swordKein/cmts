@@ -3,10 +3,7 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.kthcorp.cmts.mapper.AuthUserMapper;
-import com.kthcorp.cmts.mapper.CcubeMapper;
-import com.kthcorp.cmts.mapper.ItemsMapper;
-import com.kthcorp.cmts.mapper.ItemsMetasMapper;
+import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
 import org.slf4j.Logger;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.*;
 
 @Service
@@ -29,6 +25,10 @@ public class ApiService implements ApiServiceImpl {
     private String serverid;
     @Value("${cmts.property.sns_api_url}")
     private String sns_api_url;
+    @Value("${cmts.property.sns_stat_url}")
+    private String sns_stat_url;
+    @Value("${cmts.property.crawl_sns_topwords_utl}")
+    private String crawl_sns_topwords_utl;
 
     @Autowired
     private AuthUserMapper authUserMapper;
@@ -42,6 +42,8 @@ public class ApiService implements ApiServiceImpl {
     private ItemsService itemsService;
     @Autowired
     private CcubeMapper ccubeMapper;
+    @Autowired
+    private SnsMapper snsMapper;
 
     @Override
     public String getHashCode(String custid, String authkey) throws Exception {
@@ -754,4 +756,216 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
+    @Override
+    public JsonObject getSnsTopKeywords() throws Exception {
+        JsonObject resultObj = null;
+
+        String target1 = "twitter";
+        String ndate = DateUtils.getLocalDate();
+        resultObj = this.getSnsTopKeywords(resultObj, target1, ndate);
+
+        ndate = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+        resultObj = this.getSnsTopKeywords(resultObj, target1, ndate);
+
+        target1 = "insta";
+        ndate = DateUtils.getLocalDate();
+        resultObj = this.getSnsTopKeywords(resultObj, target1, ndate);
+
+        ndate = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+        resultObj = this.getSnsTopKeywords(resultObj, target1, ndate);
+
+        return resultObj;
+    }
+
+    private JsonObject getSnsTopKeywords(JsonObject resultObj, String target1, String ndate) throws Exception {
+        if (resultObj == null) resultObj = new JsonObject();
+
+        JsonArray childList1 = new JsonArray();
+        // -1 : 하루전, 이틀전 수집
+        String date1 = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+        String fieldStr = target1 + "_" + date1;
+
+        String sns_stat_url_dest1 = sns_stat_url.replace("#SDATE", date1);
+        sns_stat_url_dest1 = sns_stat_url_dest1.replace("#EDATE", date1);
+        sns_stat_url_dest1 = sns_stat_url_dest1.replace("#TARGET", target1);
+        Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(sns_stat_url_dest1, null, null,null, "bypass");
+
+        if (resultMap1 != null && resultMap1.get("resultStr") != null) {
+            //System.out.println("#ELOG.resultMap:"+resultMap1.toString());
+
+            String result1 = resultMap1.get("resultStr").toString();
+            childList1 = (JsonArray) JsonUtil.getJsonArray(result1);
+            //System.out.println("#ELOG:sns_stat:"+target1+":: childList1:"+childList1.toString());
+        }
+
+        resultObj.add(fieldStr, childList1);
+        return resultObj;
+    }
+
+    @Override
+    public int processSnsTopKeywordsByDateSched() {
+        int rt = 0;
+        try {
+            Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(crawl_sns_topwords_utl, null, null,null, "bypass");
+            if (resultMap1 != null && resultMap1.get("resultStr") != null) {
+                //System.out.println("#ELOG.getAPI_result::"+resultMap1.toString());
+                String result1 = resultMap1.get("resultStr").toString();
+                JsonObject resultStr  = (JsonObject) JsonUtil.getJsonObject(result1);
+                //System.out.println("#ELOG.resultStrObj::"+resultStr.toString());
+
+                JsonObject resultObj = (JsonObject) resultStr.get("RESULT");
+                System.out.println("#ELOG.resultObj::"+resultObj.toString());
+
+
+                Iterator<String> keysItr = resultObj.keySet().iterator();
+                while(keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    JsonArray value = (JsonArray) resultObj.get(key);
+                    System.out.println("#ELOG.loop::key:" + key + "/datas::" + value.toString());
+
+                    if (!"".equals(key)) {
+                        String[] keys = key.split("_");
+                        if (keys.length > 1 && value != null) {
+                            Map<String, Object> reqMap = new HashMap();
+                            reqMap.put("target", keys[0]);
+                            reqMap.put("date1", keys[1]);
+                            reqMap.put("meta", value.toString());
+                            reqMap.put("regid", serverid);
+                            int rti = snsMapper.insSnsTopWords(reqMap);
+
+                            int rtd = snsMapper.delSnsTopWords2(reqMap);
+                            int rank = 1;
+                            for (JsonElement je : value) {
+                                JsonObject jo = (JsonObject) je;
+                                String word = jo.get("keyword").getAsString();
+                                System.out.println("#ELOG target:"+keys[0]+"/word:"+word+"/rank:"+rank);
+                                reqMap.put("word", word);
+                                reqMap.put("rank", rank);
+                                int rti2 = snsMapper.insSnsTopWords2(reqMap);
+                                rank++;
+                            }
+                        }
+                    }
+                }
+                rt = 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            rt = -1;
+        }
+
+        return rt;
+    }
+
+    @Override
+    public List<String> getResultSnsMapByTag(String target, String date1, String tag) {
+        List<String> result = null;
+
+        Map<String, Object> reqMap = new HashMap();
+        reqMap.put("target", target);
+        reqMap.put("sdate", date1);
+        reqMap.put("edate", date1);
+        List<Map<String, Object>> resultMapArr = snsMapper.getSnsTopWords2Rank(reqMap);
+        //System.out.println("#ELOG.getResultSnsMap::resultMap::"+resultMap.toString());
+
+        if (resultMapArr != null && resultMapArr.size() > 0) {
+            result = new ArrayList();
+            for (Map<String, Object> resultMap : resultMapArr) {
+                if (resultMap != null && resultMap.get(tag) != null) {
+                    try {
+                        String word = resultMap.get(tag).toString();
+                        result.add(word);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<String> getSnsTopWordsListByTarget(String target, Map<String, Object> wordsMap) {
+        List<String> resultArr = null;
+        if (wordsMap != null) {
+            resultArr = new ArrayList();
+
+        }
+        return resultArr;
+    }
+
+    private List<String> getRankArrayByTarget(String target) {
+        List<String> result = new ArrayList<>();
+        String date1 = snsMapper.getMaxDateStr();
+
+        List<String> wordsArr1 = this.getResultSnsMapByTag(target, date1, "word");
+
+        String edate = date1;
+        String sdate = DateUtils.calculateDate(Calendar.DATE, -7, date1);
+
+        Map<String, Object> reqMap = new HashMap();
+        reqMap.put("target", target);
+        reqMap.put("sdate", sdate);
+        reqMap.put("edate", edate);
+        for (String word : wordsArr1) {
+            if (!"".equals(word)) {
+                reqMap.put("word", word);
+                List<Map<String, Object>> ranksMapArr = snsMapper.getSnsTopWords2RankByWord(reqMap);
+                System.out.println("#ELOG.ranksMappArr:"+ranksMapArr.toString());
+                result = MapUtil.getListFromMapByTag(ranksMapArr, "rank", 10);
+                //System.out.println("#ELOG.result:"+result.toString());
+            }
+
+        }
+        return result;
+    }
+
+
+    @Override
+    public JsonObject getSnsTopWordsAndGraph() throws Exception {
+        JsonObject result = new JsonObject();
+
+        String ndate = DateUtils.getLocalDate();
+        String date1 = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+
+        // for Twitter
+        String target = "twitter";
+        List<String> ranksArr = this.getRankArrayByTarget(target);
+
+/*
+        JsonObject twitterWordsMap
+
+        Map<String, Object> resultWordMap = snsMapper.getSnsTopWords2Rank(reqMap);
+        System.out.println("#ELOG.resultWordMap:"+resultWordMap.toString());
+*/
+        JsonArray words_instagram = new JsonArray();
+        words_instagram.add("타투");
+        words_instagram.add("해피버스데이");
+        words_instagram.add("스케치");
+        result.add("WORDS_INSTAGRAM", words_instagram);
+
+        JsonObject graph_instagram = new JsonObject();
+        JsonArray captions = new JsonArray();
+        captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
+        graph_instagram.add("CAPTIONS", captions);
+        JsonArray item1 = new JsonArray();
+        item1.add(1);  item1.add(2); item1.add(1); item1.add(1); item1.add(1);
+        graph_instagram.add("ITEM01", item1);
+        JsonArray item2 = new JsonArray();
+        item2.add(2);  item2.add(3); item2.add(2); item2.add(2); item2.add(2);
+        graph_instagram.add("ITEM02", item2);
+        JsonArray item3 = new JsonArray();
+        item3.add(3);  item3.add(1); item3.add(3); item3.add(3); item3.add(3);
+        graph_instagram.add("ITEM03", item3);
+        result.add("GRAPH_INSTAGRAM", graph_instagram);
+
+        JsonArray words_twitter = new JsonArray();
+        words_twitter.add("7호실");
+        words_twitter.add("교환");
+        words_twitter.add("토르");
+        result.add("WORDS_TWITTER", words_twitter);
+
+        return result;
+    }
 }

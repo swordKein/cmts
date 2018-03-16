@@ -249,4 +249,21 @@ public class MapUtil {
         }
         return origMap;
     }
+
+
+    public static List<String> getListFromMapByTag(List<Map<String, Object>> reqMapArr, String tag, int limit) {
+        List<String> result = new ArrayList();
+
+        for(Map<String, Object> reqMap : reqMapArr) {
+            if (reqMap != null && reqMap.get(tag) != null) {
+                String value = reqMap.get(tag).toString();
+                if (!"".equals(value)) {
+                    result.add(value);
+                }
+
+            }
+        }
+
+        return result;
+    }
 }

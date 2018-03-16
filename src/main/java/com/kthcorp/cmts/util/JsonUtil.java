@@ -231,7 +231,7 @@ public class JsonUtil {
 		Gson gson = new Gson();
 		result = gson.fromJson(data, JsonArray.class);
 
-		System.out.println("#getJsonArray:result::"+result.getAsString());
+		//System.out.println("#getJsonArray:result::"+result.toString());
 		return result;
 	}
 
@@ -276,6 +276,27 @@ public class JsonUtil {
 			for (int i=0; i<jsonArray.size(); i++) {
 				String s = jsonArray.get(i).getAsString();
 				result.add(s);
+			}
+		}
+		return result;
+	}
+
+	public static List<String> getListFromJsonArrayByTag(JsonArray jsonArray, String tag, int limit) throws Exception {
+		List<String> result = new ArrayList<String>();
+		if(jsonArray != null && jsonArray.size() > 0) {
+			int lineCnt = 0;
+			for (JsonElement je : jsonArray) {
+				JsonObject jo = (JsonObject) je;
+				if (jo != null && jo.get(tag) != null) {
+					String word = jo.get(tag).getAsString();
+					word = word.trim();
+					if (lineCnt < limit) {
+						result.add(word);
+					} else {
+						break;
+					}
+				}
+				lineCnt++;
 			}
 		}
 		return result;
