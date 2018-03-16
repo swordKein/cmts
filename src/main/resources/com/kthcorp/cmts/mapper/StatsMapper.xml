@@ -17,8 +17,15 @@
     <select id="top_countEndTagged" resultType="java.lang.Integer" useCache="true">
         /* 태깅 완료 */
         /* top_countEndTagged */
-        /* select count(*) from items where stat = 'S' */
-        select count(*) from items_hist where type = 'meta' and action = 'CONFIRM_META'
+        /* select count(*) from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST' */
+        /* select count(*) from items_hist where type = 'meta' and action = 'CONFIRM_META' */
+
+        select count(*) as cnt from (
+        select count(*), it.idx from items it
+        inner join items_tags_keys itk on itk.idx = it.idx and itk.stat = 'S'
+        group by it.idx
+        ) a ;
     </select>
 
     <select id="top_countCollecting" resultType="java.lang.Integer" useCache="true">
@@ -111,23 +118,29 @@
     <select id="mid_countFailCollect" resultType="java.lang.Integer" useCache="true">
         /* 수집실패 건수 */
         /* mid_countFailCollect */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'C' and st.stat = 'F'
-        ) a
+        ) a */
+        select count(*)
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FC'
     </select>
 
     <select id="mid_countFailAnalyze" resultType="java.lang.Integer" useCache="true">
         /* 추출실패 건수 */
         /* mid_countFailAnalyze */
-        select count(*) from (
+        /* select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type in ('R', 'A') and st.stat = 'F'
-        ) a
+        ) a */
+        select count(*)
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat in ('FR','FA')
     </select>
 
     <select id="mid_countReadyTagging" resultType="java.lang.Integer" useCache="true">
@@ -139,9 +152,12 @@
         inner join items it on it.idx = ism.idx
         where st.type = 'A' and st.stat = 'S'
         ) a*/
-        select count(*)
+        /* select count(*)
         from items_stat
-        where stat = 'RT'
+        where stat = 'RT' */
+        select count(*)
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'RT'
     </select>
 
     <select id="mid_down_stats" resultType="java.lang.Integer" useCache="true">
