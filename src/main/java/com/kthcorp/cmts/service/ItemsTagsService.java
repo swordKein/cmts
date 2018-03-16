@@ -569,7 +569,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonArray resultArr = new JsonArray();
 
         System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);
-        if (type.contains("METAS") || !type.equals("LIST_SEARCHKEYWORD")) {
+        if (type.contains("METAS") || !type.equals("LIST_SEARCHKEYWORDS")) {
             for (JsonElement oje : oldArr) {
                 //System.out.println("#TOLOG:oje:" + oje.toString());
                 try {
