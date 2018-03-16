@@ -7,8 +7,10 @@ cmts:
     collect_fail_limit: 10
     criteria_success_ratio: 0.7
     crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
+    crawl_sns_topwords_utl: http://127.0.0.1:8080/sns/topwords
     #crawl_api_url: http://127.0.0.1:8080/crawl/byprefix
     sns_api_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetKeywordAssociation&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&categorySetName=SM&topN=10&keywordFilterList[]=+(%EC%98%81%ED%99%94)&keyword=#TITLE&categoryList[]=123/0/0
+    sns_stat_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetTopKeywords&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&topN=10&categorySetName=SM&categoryList%5b%5d=7/1/160
     naver_kordic_url: http://krdic.naver.com/search.nhn?query=#KEYWORD&kind=all
     hdfs_url: hdfs://210.122.36.199:8020
     ccube_sftp:
@@ -133,8 +135,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://localhost:3306/cmtsdb?autoReconnect=true&useSSL=false
@@ -165,6 +167,9 @@ schedule :
     -
       cronExpression : 0 */25 * * * ?
       jobType : sftpService
+    -
+      cronExpression : 0 11,15 * * * ?
+      jobType : snsTopWords
 #elasticsearch :
 #  url : http://14.63.170.72:9200/
 #  idx : seunjeon-idx
@@ -213,6 +218,9 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : itemsService
+    -
+      cronExpression : 11,15 * * * * ?
+      jobType : snsTopWords
 ---
 spring:
   profiles: dev_no_sched

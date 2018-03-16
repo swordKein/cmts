@@ -3,8 +3,6 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
-import com.kthcorp.cmts.model.ConfTarget;
-import com.kthcorp.cmts.model.SchedTrigger;
 
 import java.util.List;
 
@@ -55,4 +53,12 @@ public interface ApiServiceImpl {
     int uptSchedTriggerStatByItemIdxAndType(int itemIdx, String type, String stat);
 
     JsonArray getSnsKeywords(String title) throws Exception;
+
+    JsonObject getSnsTopKeywords() throws Exception;
+
+    int processSnsTopKeywordsByDateSched();
+
+    List<String> getResultSnsMapByTag(String target, String date1, String tag);
+
+    JsonObject getSnsTopWordsAndGraph() throws Exception;
 }
