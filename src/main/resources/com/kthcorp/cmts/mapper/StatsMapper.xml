@@ -131,12 +131,15 @@
     <select id="mid_countReadyTagging" resultType="java.lang.Integer" useCache="true">
         /* 승인대기 건수 */
         /* mid_countReadyTagging */
-        select count(*) from (
+        /*select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
         inner join items it on it.idx = ism.idx
         where st.type = 'A' and st.stat = 'S'
-        ) a
+        ) a*/
+        select count(*)
+        from items_stat
+        where stat = 'RT'
     </select>
 
     <select id="mid_down_stats" resultType="java.lang.Integer" useCache="true">
@@ -166,15 +169,24 @@
     /* 일별통계 */
     /* 인입건수 */
         /* down_countsInserted */
-        SELECT DATE(a.regdate) AS date,
-        sum(a.cnt) as cnt
-        FROM (
-        select it.idx, it.regdate, 1 as cnt from items it
-        where DATE(it.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-        AND DATE(it.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
-        group by it.idx
-        ) a
-        GROUP BY date
+        select count(*) as cnt, date from (
+            select a.cid, a.date from (
+                (
+                select cc.content_id as cid, DATE(cc.regdate) as date from ccube_contents cc
+                where
+                DATE(cc.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+                AND DATE(cc.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                )
+                union
+                (
+                select cs.series_id as cid, DATE(cs.regdate) as date from ccube_series cs
+                where
+                DATE(cs.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+                AND DATE(cs.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                )
+            ) a
+        ) b group by b.date
+
     </select>
 
     <select id="down_countsCollected" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">

@@ -230,7 +230,8 @@ public class DicService implements DicServiceImpl {
                     reqhist.setDic_idx(dfw.getIdx());
                     reqhist.setRegid(serverid);
 
-                    int rt = this.insDicNotuseWordsHist(reqhist);
+                    // 데이터가 매우 커서 제외 2018.03.16
+                    //int rt = this.insDicNotuseWordsHist(reqhist);
                     //logger.info("#MLOG req_id:"+req_id+". Do Notuseing by dic_Notuse_words:"+dfw.getWord());
 
                     isNotuse = true;
