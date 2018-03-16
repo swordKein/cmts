@@ -85,7 +85,9 @@
         where st.type = 'A' and st.stat in ('S')
         group by ism.idx
         ) a */
-        select count(*) from items_hist where type = 'analyze' and action = 'END_ANALYZE' and stat = 'S'
+        select count(*) from items_hist
+        where ( type = 'analyze' and action = 'END_ANALYZE' and stat = 'S' )
+        or stat = 'UPT'
     </select>
 
     <select id="top_countTagged" resultType="java.lang.Integer" useCache="true">

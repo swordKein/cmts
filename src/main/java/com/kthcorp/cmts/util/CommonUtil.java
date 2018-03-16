@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class CommonUtil {
 
     /* Paging pagination 정리 */
-    public static Map<String, Object> getPagination(Integer allCnt, Integer pageSize, Integer pageNo) {
+    public static Map<String, Object> getPagination(Integer allCnt, Integer pageSize, Integer pageNo, int maxLimit) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         List<String> listActive = new ArrayList<String>();
         List<Integer> listPage = new ArrayList<Integer>();
@@ -23,7 +23,7 @@ public class CommonUtil {
 
         int currPage = startPage;
 
-        while (limit < 6 && currPage <= maxPage) {
+        while (limit <= maxLimit && currPage <= maxPage) {
             if (currPage == pageNo) {
                 listActive.add("active");
             } else {

@@ -63,7 +63,7 @@ public class AdminController {
 
 		/* pagination */
 		Integer countItems = adminService.countItems(req);
-		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno);
+		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno,5 );
 		List<String> listActive = null;
 		List<Integer> listPage = null;
 		if (listPaging != null) {
@@ -102,7 +102,7 @@ public class AdminController {
 
 		/* pagination */
 		Integer countItems = adminService.countItems(req);
-		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno);
+		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
 		List<String> listActive = null;
 		List<Integer> listPage = null;
 		if (listPaging != null) {
@@ -143,7 +143,7 @@ public class AdminController {
 
 		/* pagination */
 		Integer countItems = adminService.cntMovieCine21(req);
-		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno);
+		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
 		List<String> listActive = null;
 		List<Integer> listPage = null;
 		if (listPaging != null) {

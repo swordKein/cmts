@@ -18,7 +18,7 @@ public class CommonUtilTest {
 
     @Test
     public void test_1() throws Exception {
-        Map<String, Object> resultMap = CommonUtil.getPagination(221, 20, 11);
+        Map<String, Object> resultMap = CommonUtil.getPagination(221, 20, 11, 5);
         List<String> listActive = (List<String>) resultMap.get("listActive");
         List<Integer> listPage = (List<Integer>) resultMap.get("listPage");
         System.out.println("#RESULT:");
