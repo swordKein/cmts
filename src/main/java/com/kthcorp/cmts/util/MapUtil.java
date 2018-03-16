@@ -254,14 +254,40 @@ public class MapUtil {
     public static List<String> getListFromMapByTag(List<Map<String, Object>> reqMapArr, String tag, int limit) {
         List<String> result = new ArrayList();
 
+        int lineCnt = 0;
         for(Map<String, Object> reqMap : reqMapArr) {
             if (reqMap != null && reqMap.get(tag) != null) {
                 String value = reqMap.get(tag).toString();
-                if (!"".equals(value)) {
+                if (!"".equals(value) && lineCnt < limit) {
                     result.add(value);
                 }
 
             }
+            lineCnt++;
+        }
+
+        return result;
+    }
+
+
+    public static List<String> getListFromMapByTag2(List<Map<String, Object>> reqMapArr, List<String> days, int limit) {
+        List<String> result = new ArrayList();
+
+        int lineCnt = 0;
+        for(Map<String, Object> reqMap : reqMapArr) {
+            if (reqMap != null && reqMap.get("rank") != null) {
+                String value = reqMap.get("rank").toString();
+                if (lineCnt < limit ) {
+                    System.out.println("#ELOG.compare value & date1:: rank:"+value+"/date1:"+reqMap.get("date1").toString()+"/before:"+days.get(lineCnt));
+
+                    if (!"".equals(value) && reqMap.get("date1").toString().equals(days.get(lineCnt))) {
+                        result.add(value);
+                    } else {
+                        result.add("0");
+                    }
+                }
+            }
+            lineCnt++;
         }
 
         return result;

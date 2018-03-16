@@ -79,6 +79,7 @@ public class ApiServiceTest {
 	@Test
 	public void test_getSnsTopWordsAndGraph() throws Exception {
 		JsonObject result = apiService.getSnsTopWordsAndGraph();
+		System.out.println("#RES:"+result.toString());
 	}
 
 	@Test

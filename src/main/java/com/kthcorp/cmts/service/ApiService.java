@@ -895,30 +895,83 @@ public class ApiService implements ApiServiceImpl {
         return resultArr;
     }
 
-    private List<String> getRankArrayByTarget(String target) {
-        List<String> result = new ArrayList<>();
+    private List<String> getBeforeDays(String date1, int limit) {
+        List<String> daysArr = new ArrayList();
+        for (int i=0; i<limit; i++) {
+            int bday = - (limit - i) + 1;
+
+            String todate = DateUtils.calculateDate(Calendar.DATE, bday, date1);
+            daysArr.add(todate);
+
+           // System.out.println("#ELOG.add beforeDays:"+todate);
+        }
+        return daysArr;
+    }
+
+    private JsonObject getRankArrayByTarget(String target, List<String> wordsArr1) {
+        //List<String> result = new ArrayList<>();
         String date1 = snsMapper.getMaxDateStr();
 
-        List<String> wordsArr1 = this.getResultSnsMapByTag(target, date1, "word");
+        //List<String> wordsArr1 = this.getResultSnsMapByTag(target, date1, "word");
 
         String edate = date1;
-        String sdate = DateUtils.calculateDate(Calendar.DATE, -7, date1);
+        String sdate = DateUtils.calculateDate(Calendar.DATE, -5, date1);
+
+        List<String> beforeDays = this.getBeforeDays(date1, 5);
 
         Map<String, Object> reqMap = new HashMap();
         reqMap.put("target", target);
         reqMap.put("sdate", sdate);
         reqMap.put("edate", edate);
+
+        JsonObject graphs = new JsonObject();
+
+        int itemCnt = 1;
         for (String word : wordsArr1) {
             if (!"".equals(word)) {
                 reqMap.put("word", word);
                 List<Map<String, Object>> ranksMapArr = snsMapper.getSnsTopWords2RankByWord(reqMap);
-                System.out.println("#ELOG.ranksMappArr:"+ranksMapArr.toString());
-                result = MapUtil.getListFromMapByTag(ranksMapArr, "rank", 10);
-                //System.out.println("#ELOG.result:"+result.toString());
+                //System.out.println("#ELOG.ranksMappArr:"+ranksMapArr.toString());
+                //result = MapUtil.getListFromMapByTag2(ranksMapArr, this.getBeforeDays(date1, 5), 5);
+                JsonArray rankArr = this.getRanksArrFromWordsMap(ranksMapArr, beforeDays);
+                String itemTag = "ITEM" + String.format("%02d",itemCnt);
+                graphs.add(itemTag, rankArr);
+                //System.out.println("#ELOG.rankArr:"+rankArr.toString());
             }
 
+            itemCnt++;
         }
-        return result;
+        return graphs;
+    }
+
+    private JsonArray getRanksArrFromWordsMap(List<Map<String, Object>> ranksMapArr, List<String> beforeDays) {
+        JsonArray graphs = new JsonArray();
+
+        Map<String, Object> nmap = new HashMap();
+        for (Map<String, Object> rm : ranksMapArr) {
+            if (rm != null && rm.get("date1") != null && rm.get("rank") != null) {
+                String date1 = rm.get("date1").toString();
+                String rank = rm.get("rank").toString();
+                nmap.put(date1, rank);
+            }
+        }
+
+        Set entrySet = nmap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        for (String ds : beforeDays) {
+            if(nmap.get(ds) != null) {
+                int rankno = 0;
+                try {
+                    rankno = Integer.parseInt(nmap.get(ds).toString());
+                } catch (Exception e) {}
+                graphs.add(rankno);
+            } else {
+                graphs.add(0);
+            }
+        }
+
+        return graphs;
     }
 
 
@@ -929,42 +982,32 @@ public class ApiService implements ApiServiceImpl {
         String ndate = DateUtils.getLocalDate();
         String date1 = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
 
-        // for Twitter
-        String target = "twitter";
-        List<String> ranksArr = this.getRankArrayByTarget(target);
+        // rank for Twitter
+        String targetTwitter = "twitter";
+        List<String> wordsArrTwitter = this.getResultSnsMapByTag(targetTwitter, date1, "word");
+        JsonObject graph_twitter = this.getRankArrayByTarget(targetTwitter, wordsArrTwitter);
 
-/*
-        JsonObject twitterWordsMap
+        // rank for Instagram
+        String targetInsta = "insta";
+        List<String> wordsArrInsta = this.getResultSnsMapByTag(targetInsta, date1, "word");
+        JsonObject graph_insta = this.getRankArrayByTarget(targetInsta, wordsArrInsta);
 
-        Map<String, Object> resultWordMap = snsMapper.getSnsTopWords2Rank(reqMap);
-        System.out.println("#ELOG.resultWordMap:"+resultWordMap.toString());
-*/
-        JsonArray words_instagram = new JsonArray();
-        words_instagram.add("타투");
-        words_instagram.add("해피버스데이");
-        words_instagram.add("스케치");
+        JsonArray words_instagram = JsonUtil.convertListToJsonArray(wordsArrInsta);
         result.add("WORDS_INSTAGRAM", words_instagram);
 
-        JsonObject graph_instagram = new JsonObject();
         JsonArray captions = new JsonArray();
         captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
-        graph_instagram.add("CAPTIONS", captions);
-        JsonArray item1 = new JsonArray();
-        item1.add(1);  item1.add(2); item1.add(1); item1.add(1); item1.add(1);
-        graph_instagram.add("ITEM01", item1);
-        JsonArray item2 = new JsonArray();
-        item2.add(2);  item2.add(3); item2.add(2); item2.add(2); item2.add(2);
-        graph_instagram.add("ITEM02", item2);
-        JsonArray item3 = new JsonArray();
-        item3.add(3);  item3.add(1); item3.add(3); item3.add(3); item3.add(3);
-        graph_instagram.add("ITEM03", item3);
-        result.add("GRAPH_INSTAGRAM", graph_instagram);
+        graph_insta.add("CAPTIONS", captions);
 
-        JsonArray words_twitter = new JsonArray();
-        words_twitter.add("7호실");
-        words_twitter.add("교환");
-        words_twitter.add("토르");
+        result.add("GRAPH_INSTAGRAM", graph_insta);
+
+
+        JsonArray words_twitter = JsonUtil.convertListToJsonArray(wordsArrTwitter);
         result.add("WORDS_TWITTER", words_twitter);
+
+        graph_twitter.add("CAPTIONS", captions);
+
+        result.add("GRAPH_TWITTER", graph_twitter);
 
         return result;
     }
