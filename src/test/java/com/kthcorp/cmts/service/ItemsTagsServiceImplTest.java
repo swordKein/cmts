@@ -90,6 +90,7 @@ public class ItemsTagsServiceImplTest {
 				//"METASWHEN", "1852","1852","add"));
 				//"METASWHEN", "1852","18세기","mod"));
 				//"METASWHEN", "테스트","테스트","del"));
-				"METASWHEN", "18세기","18세기","del");
+				"METASWHEN", "3","3","del");
+		Thread.sleep(10000);
 	}
 }
