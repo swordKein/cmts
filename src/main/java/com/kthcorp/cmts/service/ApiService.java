@@ -404,7 +404,7 @@ public class ApiService implements ApiServiceImpl {
 
         int maxPage = countItems / pageSize + 1;
 
-        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno);
+        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 20);
         List<String> listActive = null;
         List<Integer> listPage = null;
         if (listPaging != null) {
@@ -551,7 +551,7 @@ public class ApiService implements ApiServiceImpl {
 
         int maxPage = countItems / pageSize + 1;
 
-        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno);
+        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
         List<String> listActive = null;
         List<Integer> listPage = null;
         if (listPaging != null) {
