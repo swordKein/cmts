@@ -1080,39 +1080,32 @@ public class ApiController {
 		result_all.addProperty("RT_CODE", 1);
 		result_all.addProperty("RT_MSG", "SUCCESS");
 
-		JsonObject result = new JsonObject();
+		JsonObject result1 = new JsonObject();
+		int rtcode = -1;
+		String rtmsg = "";
 
-		JsonArray words_instagram = new JsonArray();
-		words_instagram.add("타투");
-		words_instagram.add("해피버스데이");
-		words_instagram.add("스케치");
-		result.add("WORDS_INSTAGRAM", words_instagram);
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				result1 = apiService.getSnsTopWordsAndGraph();
+				if(result1 != null) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "SnsTopWords data is null!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
 
-		JsonObject graph_instagram = new JsonObject();
-		JsonArray captions = new JsonArray();
-		captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
-		graph_instagram.add("CAPTIONS", captions);
-		JsonArray item1 = new JsonArray();
-		item1.add(1);  item1.add(2); item1.add(1); item1.add(1); item1.add(1);
-		graph_instagram.add("ITEM01", item1);
-		JsonArray item2 = new JsonArray();
-		item2.add(2);  item2.add(3); item2.add(2); item2.add(2); item2.add(2);
-		graph_instagram.add("ITEM02", item2);
-		JsonArray item3 = new JsonArray();
-		item3.add(3);  item3.add(1); item3.add(3); item3.add(3); item3.add(3);
-		graph_instagram.add("ITEM03", item3);
-		result.add("GRAPH_INSTAGRAM", graph_instagram);
-
-		JsonArray words_twitter = new JsonArray();
-		words_twitter.add("7호실");
-		words_twitter.add("교환");
-		words_twitter.add("토르");
-		result.add("WORDS_TWITTER", words_twitter);
-
-		result.add("GRAPH_TWITTER", graph_instagram);
-
-
-		result_all.add("RESULT", result);
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
 
 		return result_all.toString();
 	}
