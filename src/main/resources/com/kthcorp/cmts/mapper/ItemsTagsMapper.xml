@@ -112,7 +112,7 @@
           select itm.* from items_tags_metas itm
           where itm.mtype = #{mtype}
             <if test='keyword != null and keyword != ""'>
-                and itm.meta like concat ('%', #{keyword}, '%')
+                and itm.meta like concat ('%"', #{keyword}, '",%')
             </if>
             order by itm.regdate desc, itm.idx desc
           limit ${pageSize} offset ${offsetIdx}
@@ -124,7 +124,7 @@
         select count(*) as cnt from items_tags_metas itm
         where itm.mtype = #{mtype}
             <if test='keyword != null and keyword != ""'>
-                and itm.meta like concat ('%', #{keyword}, '%')
+                and itm.meta like concat ('%"', #{keyword}, '",%')
             </if>
     </select>
 

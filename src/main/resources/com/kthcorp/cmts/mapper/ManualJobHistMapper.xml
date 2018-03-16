@@ -21,7 +21,7 @@
 
     <update id="uptManualJobHist" parameterType="com.kthcorp.cmts.model.ManualChange">
         /* uptManualJobHist */
-        update manual_job_hist set stat = #{stat}
+        update manual_job_hist set stat = #{stat}, cnt = #{cnt}, enddate = now()
         where hidx = #{hidx}
     </update>
 

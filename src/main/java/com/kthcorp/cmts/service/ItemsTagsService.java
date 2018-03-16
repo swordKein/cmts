@@ -1282,6 +1282,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         int rt = 0;
         //target_mtype = apiService.getChangedMtypes(target_mtype);
 
+        System.out.println("#ELOG.start processManualTagsMetasChange :flag:"+jobRuuningStat);
         if (!"".equals(target_mtype) && !"".equals(from_keyword) && !"".equals(to_keyword) && !"".equals(action)) {
             if(jobRuuningStat == false) {
                 jobRuuningStat = true;
@@ -1379,11 +1380,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         int rtd = this.changeDicKeywordsForManual(target_mtype, from_keyword, to_keyword, action);
                     }
 
-                    Thread.sleep(10000);
+                    //Thread.sleep(10000);
 
                     // running job 중복방지를 위해 이력 저장 stat = S
                     ManualChange histOne = this.getManualJobHistLastOne();
                     histOne.setStat("S");
+                    histOne.setCnt(cnt_all);
+
                     rtma = this.uptManualJobHist(histOne);
 
                     jobRuuningStat = false;
@@ -1436,6 +1439,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
     public ManualChange getManualJobHistLastOne() {
         return manualJobHistMapper.getManualJobHistLastOne();
     }
