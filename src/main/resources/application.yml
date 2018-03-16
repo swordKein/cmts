@@ -219,7 +219,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 11,15 * * * * ?
+      cronExpression : * 11,15 * * * ?
       jobType : snsTopWords
 ---
 spring:
