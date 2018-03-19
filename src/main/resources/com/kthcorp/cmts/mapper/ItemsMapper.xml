@@ -440,7 +440,7 @@
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
         </if>
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR')
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
@@ -531,7 +531,7 @@
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
         </if>
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR')
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
@@ -614,7 +614,7 @@
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
         </if>
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RC', 'SR', 'FR')
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR')
         <if test='searchStat != null and searchStat != "ALL"'>
             and iss.stat = #{searchStat}
         </if>
