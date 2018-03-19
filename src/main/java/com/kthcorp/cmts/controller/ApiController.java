@@ -7,6 +7,7 @@ import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsTags;
 import com.kthcorp.cmts.model.ManualChange;
 import com.kthcorp.cmts.service.*;
+import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
 import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
@@ -149,6 +150,10 @@ public class ApiController {
 			, @RequestParam(value = "target_name", required = false, defaultValue = "") String target_name
 	) {
 		logger.info("#CLOG:API/auth/user/add input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name);
+		target_userid = CommonUtil.removeAllSpec2(target_userid);
+		target_grant = CommonUtil.removeAllSpec2(target_grant);
+		target_company = CommonUtil.removeAllSpec2(target_company);
+		target_name = CommonUtil.removeAllSpec2(target_name);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -197,6 +202,7 @@ public class ApiController {
 			, @RequestParam(value = "userid") String userid
 	) {
 		logger.info("#CLOG:API/auth/user/login input userid:" + userid);
+		userid = CommonUtil.removeAllSpec2(userid);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -302,6 +308,7 @@ public class ApiController {
 		+"/type:"+searchType+"/stat:"+searchStat+"/sdate:"+searchSdate+"/edate:"+searchEdate
 		+"/keyword:"+searchKeyword+"/parts:"+searchParts);
 		if("".equals(searchKeyword.trim())) searchParts = "";
+		searchKeyword = CommonUtil.removeAllSpec2(searchKeyword);
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -357,6 +364,7 @@ public class ApiController {
 			, @RequestParam(value = "target_type") String targetType
 	) {
 		logger.info("#CLOG:API/item/upt/one input itemid:" + itemid +" /type:"+targetType);
+		targetType = CommonUtil.removeAllSpec2(targetType);
 
 		int itemIdx = 0;
 		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -414,6 +422,8 @@ public class ApiController {
 			, @RequestParam(value = "target_type") String targetType
 	) {
 		logger.info("#CLOG:API/item/upt/array input items:" + items + "/target_type:" + targetType);
+		items = CommonUtil.removeAllSpec2(items);
+		targetType = CommonUtil.removeAllSpec2(targetType);
 
 		if(!"".equals(items)) {
 			items = items.trim().replace("[","");
@@ -710,6 +720,7 @@ public class ApiController {
 			, @RequestParam(value = "itemid") String itemid
 	) {
 		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration);
+		duration = CommonUtil.removeAllSpec2(duration);
 
 		int itemIdx = 0;
 		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
@@ -1211,6 +1222,8 @@ public class ApiController {
 	) {
 		logger.info("#CLOG:API/manual/batchChange input " +
 				"target_mtype:" + target_mtype+"/from_keyword:"+from_keyword+"/to_keyword:"+to_keyword+"/action:"+action);
+		from_keyword = CommonUtil.removeAllSpec2(from_keyword);
+		to_keyword = CommonUtil.removeAllSpec2(to_keyword);
 
 		//String hashcode = "";
 		int rtcode = -1;

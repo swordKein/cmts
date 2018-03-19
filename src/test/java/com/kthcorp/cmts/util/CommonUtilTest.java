@@ -26,4 +26,12 @@ public class CommonUtilTest {
             System.out.println("## "+i+" 'th data:"+listPage.get(i)+" / "+listActive.get(i));
         }
     }
+
+    @Test
+    public void test_2() throws Exception {
+        String s = "select * from kkk@__.";
+        //s = CommonUtil.removeAllSpec2(s);
+        System.out.println("#RES:"+s);
+        System.out.println("#RES2:"+CommonUtil.removeTag(s));
+    }
 }

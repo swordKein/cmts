@@ -171,7 +171,40 @@ public class CommonUtil {
     }
 
     public static String removeAllSpec(String reqStr) {
-        return reqStr.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", "");
+        String result = reqStr.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", "");
+        result = result.replace("select","");
+        result = result.replace("from","");
+        result = result.replace("insert","");
+        result = result.replace("into","");
+        result = result.replace("update","");
+        result = result.replace("set","");
+        result = result.replace("union","");
+        result = result.replace("join","");
+        result = result.replace("all","");
+        result = result.replace("left","");
+        result = result.replace("right","");
+        return result;
+    }
+
+
+    public static String removeAllSpec2(String reqStr) {
+        String result = reqStr.replaceAll("|", "");
+        result = result.replace("select","");
+        result = result.replace("from","");
+        result = result.replace("insert","");
+        result = result.replace("into","");
+        result = result.replace("update","");
+        result = result.replace("set","");
+        result = result.replace("union","");
+        result = result.replace("join","");
+        result = result.replace("all","");
+        result = result.replace("left","");
+        result = result.replace("right","");
+        result = result.replace("*","");
+        result = result.replace("\\","");
+        result = result.replace("(","");
+        result = result.replace(")","");
+        return result;
     }
 
     public static String filterByWordArray(ArrayList<String> wordsArray, String reqStr) {
