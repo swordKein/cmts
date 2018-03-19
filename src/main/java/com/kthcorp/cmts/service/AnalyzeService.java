@@ -469,6 +469,16 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         return sortedMap;
     }
 
+    /* dicKeywords 사전 Tag 리스트 */
+    private List<String> getDicTypes() {
+        List<String> dicTypes = new ArrayList();
+        dicTypes.add("EMOTION");
+        dicTypes.add("WHAT");
+        dicTypes.add("WHEN");
+        dicTypes.add("WHERE");
+        dicTypes.add("WHO");
+        return dicTypes;
+    }
 
     /* STEP09 분석 sub - sub1 type별 분류 키워드 조회
 
@@ -483,7 +493,8 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         if (resultMap == null) resultMap = new ArrayList<HashMap<String,Object>>();
 
         // 메타태그-키워드 매핑 type 조회
-        List<String> keywordTypes = dicKeywordsMapper.getKeywordTypes();
+        //List<String> keywordTypes = dicKeywordsMapper.getKeywordTypes();
+        List<String> keywordTypes = this.getDicTypes();
         //System.out.println("#STEP09-1-sub:: keywordTypes:"+keywordTypes.toString());
 
         HashMap<String, Object> keywordMappingResult = null;
@@ -548,7 +559,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             //tmpMap.put("notTaggedKeywordList", notTaggedKeywordList);
 
             // [장르] 메타태그 valueMap에서 주어진 개수만큼 KEY만 뽑아서 결과로 사용
-            String keyResult = StringUtil.getKeySringFromMapByCount(keywordValuesMap, 10);
+            String keyResult = StringUtil.getKeySringFromMapByCount(keywordValuesMap, 5);
             tmpMap.put("result", keyResult);
 
             resultMap.add(tmpMap);
@@ -558,6 +569,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         }
 
         // ITEMS_TAGS_META 저장을 위해 TYPE별 키워드 리스트 10개씩 끊어서 point 계산한 jsonArray의 JsonObject를 리턴
+        // 5개로 변경 2018.03.19
         JsonObject keywordPointArraysObj = getKeywordPointArraysObj(keywordValuesMapList, keywordTypes);
         System.out.println("#keywordPointArraysObj:"+keywordPointArraysObj.toString());
 
@@ -586,8 +598,9 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             for (String keywordType : keywordTypes) {
                 if (keywordValuesMapList.get(keywordType) != null) {
                     // Type별 freq 역순 정렬 후 10개만 잘라서 보관
+                    // 5개로 변경 2018.03.19
                     Map<String, Double> keyMap3 = MapUtil.getSortedDescMapForDouble(keywordValuesMapList.get(keywordType));
-                    JsonArray keyMap2 = MapUtil.getCuttedMapPointsFromMapByLimit(keyMap3, 10);
+                    JsonArray keyMap2 = MapUtil.getCuttedMapPointsFromMapByLimit(keyMap3, 5);
 
                     //System.out.println("#keywordPointArrayMap:"+keyMap2.toString());
                     result.add(keywordType, keyMap2);
@@ -697,7 +710,6 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 //System.out.println("#STEP:09:: keywordMapList:"+keywordMapList.toString());
 
                 // 메타태그-키워드 매핑 type별 조회 결과 리턴
-                // #TODO getKeywordsByType
                 Map<String, Object> resultKeywordMap = step09_sub_01_getKeywordsByType(resultMap,  new HashMap<String,Object>()
                                                                                     ,  new HashMap<String,Object>(), keywordMapList);
                 //System.out.println("#STEP:09:: resultKeywordMappingMap:"+resultKeywordMap.toString());
@@ -963,7 +975,8 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             int maxTagidx = itemsTagsService.getCurrTagsIdxForInsert(itemIdx);
 
             // 메타태그-키워드 매핑 type 조회
-            List<String> keywordTypes = dicKeywordsMapper.getKeywordTypes();
+            //List<String> keywordTypes = dicKeywordsMapper.getKeywordTypes();
+            List<String> keywordTypes = this.getDicTypes();
 
             // TYPE별 키워드-포인트-freq Arrays Object를 각각 Array로 구분하여 ITEMS_TAGS_META에 mtype 구분으로 insert
             //System.out.println("#keywordPointArraysObj2:"+keywordPointArraysObj.toString());

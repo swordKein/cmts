@@ -34,7 +34,7 @@ public class AnalyzeServiceTest {
 	@Test
 	public void test_test_ollehTvMetaAnalyzeScheduleCheck() throws Exception{
 		SchedTrigger req1 = new SchedTrigger();
-		req1.setSc_id(29465);
+		req1.setSc_id(3);
 		int result = analyzeService.test_ollehTvMetaAnalyzeScheduleCheck(req1);
 		System.out.println("#Result:"+result);
 	}
