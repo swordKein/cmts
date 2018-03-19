@@ -21,6 +21,25 @@ public class ManualChange extends Paging {
     private Timestamp regdate;
     private String stat;
     private int cnt;
+    private Timestamp enddate;
+
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public Timestamp getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(Timestamp enddate) {
+        this.enddate = enddate;
+    }
 
     public int getCnt() {
         return cnt;

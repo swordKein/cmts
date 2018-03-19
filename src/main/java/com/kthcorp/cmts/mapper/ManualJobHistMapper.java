@@ -21,4 +21,7 @@ public interface ManualJobHistMapper {
 
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     int uptManualJobHist(ManualChange req);
+
+    List<ManualChange> getManualJobHistPaging(ManualChange req);
+    int cntManualJobHist();
 }

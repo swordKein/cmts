@@ -26,6 +26,8 @@ public class AdminService implements AdminServiceImpl {
     private ConfPresetMapper confPresetMapper;
     @Autowired
     private MovieCine21Mapper movieCine21Mapper;
+    @Autowired
+    private ManualJobHistMapper manualJobHistMapper;
 
     @Override
     public List<Items> getItemsList(Items req) {
@@ -148,5 +150,13 @@ public class AdminService implements AdminServiceImpl {
         return movieCine21Mapper.cntMovieCine21(req);
     }
 
+    @Override
+    public List<ManualChange> getManualJobHist(ManualChange req) {
+        return manualJobHistMapper.getManualJobHistPaging(req);
+    }
+    @Override
+    public int cntManualJobHist() {
+        return manualJobHistMapper.cntManualJobHist();
+    }
 
 }
