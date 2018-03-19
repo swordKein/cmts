@@ -591,4 +591,40 @@ public class AdminController {
 
 		return result.toString();
 	}
+
+	@RequestMapping(value="/admin/manual/change", method=RequestMethod.GET)
+	public ModelAndView manual_change(Map<String, Object> model
+			, @RequestParam(value="page", required=false, defaultValue = "1") Integer pageno
+			, @RequestParam(value="keyword", required=false) String keyword
+
+	) {
+
+		logger.debug("#/admin/manual/change get");
+		if(pageno < 1) { pageno = 1; }
+		ManualChange req = new ManualChange();
+		req.setPageNo(pageno);
+		req.setPageSize(pageSize);
+		req.setKeyword(keyword);
+
+		List<ManualChange> itemList = adminService.getManualJobHist(req);
+		int countItems = adminService.cntManualJobHist();
+		Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
+		List<String> listActive = null;
+		List<Integer> listPage = null;
+		if (listPaging != null) {
+			listActive = (List<String>) listPaging.get("listActive");
+			listPage = (List<Integer>) listPaging.get("listPage");
+		}
+		ModelAndView mav = new ModelAndView("admin/manualChange");
+
+		mav.addObject("itemsList", itemList);
+		mav.addObject("pageSize", pageSize);
+		mav.addObject("countItems", countItems);
+		mav.addObject("pageno", pageno);
+
+		mav.addObject("listActive", listActive);
+		mav.addObject("listPage", listPage);
+
+		return mav;
+	}
 }

@@ -30,4 +30,22 @@
         update manual_job_hist set stat = 'S'
         where stat = 'P'
     </update>
+
+    <select id="getManualJobHistPaging" resultType="com.kthcorp.cmts.model.ManualChange"
+            parameterType="com.kthcorp.cmts.model.ManualChange">
+        /* getManualJobHistPaging */
+        select
+        hidx, type as target_mtype, from_keyword, to_keyword, action, regdate, cnt, stat, enddate
+        from manual_job_hist
+        <if test='keyword != null and keyword != ""'>
+            where from_keyword like concat('%', #{keyword}, '%') or to_keyword like concat('%', #{keyword}, '%')
+        </if>
+        order by regdate DESC, hidx DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntManualJobHist" resultType="java.lang.Integer">
+        /* cntManualJobHist */
+        select count(*) from manual_job_hist
+    </select>
 </mapper>

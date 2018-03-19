@@ -35,4 +35,7 @@ public interface AdminServiceImpl {
 
     int cntMovieCine21(MovieCine21 req);
 
+    List<ManualChange> getManualJobHist(ManualChange req);
+
+    int cntManualJobHist();
 }

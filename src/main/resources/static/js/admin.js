@@ -306,6 +306,12 @@
         location.href="/admin/movie_cine21/list?page="+pageno+"&search="+searchTxt;
     }
 
+    function search_manualJob(pageno) {
+        var searchTxt = $("#searchTxt").val();
+        //alert("#search:"+searchTxt);
+        location.href="/admin/manual/change?page="+pageno+"&keyword="+searchTxt;
+    }
+
     function onKeyDown(pageno)
     {
         if(event.keyCode == 13)
@@ -325,5 +331,57 @@
         if(event.keyCode == 13)
         {
             search_items(pageno);
+        }
+    }
+
+    function doManualChange() {
+
+        // Get form
+        var target_mtype = $("#target_mtype").val();
+        console.log('#input target_mtype:' + target_mtype);
+        var from_keyword = $("#from_keyword").val();
+        console.log('#input from_keyword:' + from_keyword);
+        var to_keyword = $("#to_keyword").val();
+        console.log('#input to_keyword:' + to_keyword);
+        var action = $("#action").val();
+        console.log('#input action:' + action);
+
+        var data = new FormData();
+        data.append("target_mtype", target_mtype);
+        data.append("from_keyword", from_keyword);
+        data.append("to_keyword", to_keyword);
+        data.append("action", action);
+
+
+        var valid = true;
+        if (target_mtype == null || target_mtype == '') {            alert("사전 타입을 입력하세요!");        valid=false;      }
+        else if (from_keyword == null || from_keyword == '') {            alert("기존 키워드를 입력하세요!");        valid=false;      }
+        else if (to_keyword == null || to_keyword == '') {            alert("대상 키워드를 입력하세요!");        valid=false;      }
+        else if (action == null || action == '') {            alert("Action을 입력하세요!");        valid=false;      }
+
+        if (valid) {
+
+            $.ajax({
+                type: "POST",
+                url: "/manual/batchChange",
+                data: data,
+                //http://api.jquery.com/jQuery.ajax/
+                //https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                timeout: 6000,
+                success: function (data) {
+                    $("#result").text(data);
+                    console.log("SUCCESS : ", data);
+                    document.location.reload();
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                    alert("ERROR : " + e);
+                    document.location.reload();
+                }
+            });
+
         }
     }
