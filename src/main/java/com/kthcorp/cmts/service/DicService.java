@@ -224,12 +224,13 @@ public class DicService implements DicServiceImpl {
         for(DicNotuseWords dfw : dic) {
             if(dfw.getWord() != null) {
                 if(req.equals(dfw.getWord())) {
+                    /*
                     DicNotuseWordsHist reqhist = new DicNotuseWordsHist();
                     reqhist.setAction_id(req_id);
                     reqhist.setAction("Do Notuseing by dic_Notuse_words:"+dfw.getWord());
                     reqhist.setDic_idx(dfw.getIdx());
                     reqhist.setRegid(serverid);
-
+                    */
                     // 데이터가 매우 커서 제외 2018.03.16
                     //int rt = this.insDicNotuseWordsHist(reqhist);
                     //logger.info("#MLOG req_id:"+req_id+". Do Notuseing by dic_Notuse_words:"+dfw.getWord());
@@ -338,6 +339,7 @@ public class DicService implements DicServiceImpl {
                 if(req.equals(dfw.getWord())) {
                     String wordTo = dfw.getWordto();
                     //System.out.println("#Do changeWords "+dfw.getWord()+" to "+wordTo);
+                    /* 주석처리 2018.03.20
                     DicChangeWordsHist reqhist = new DicChangeWordsHist();
                     reqhist.setAction_id(req_id);
                     reqhist.setAction("Do Changeing by dic_change_words keyword:"+dfw.getWord()+" to "+wordTo);
@@ -345,6 +347,7 @@ public class DicService implements DicServiceImpl {
                     reqhist.setRegid(serverid);
 
                     int rt = this.insDicChangeWordsHist(reqhist);
+                    */
                     //logger.info("#MLOG req_id:"+req_id+". Do Changeing by dic_Change_words:"+dfw.getWord());
 
                     result = dfw.getWordto();
@@ -470,6 +473,7 @@ public class DicService implements DicServiceImpl {
                     System.out.println("#Do Adding by dic_Add_words keyword:"+dfw.getWord()
                             +" added FREQ:"+freq+ " ( "+reqFreq+"=>"+reqFreq*freq+" )");
 
+                    /* 주석처리 2018.03.20
                     DicAddWordsHist reqhist = new DicAddWordsHist();
                     reqhist.setAction_id(req_id);
                     reqhist.setAction("Do Adding by dic_Add_words keyword:"+dfw.getWord()
@@ -478,6 +482,7 @@ public class DicService implements DicServiceImpl {
                     reqhist.setRegid(serverid);
 
                     int rt = this.insDicAddWordsHist(reqhist);
+                    */
                     //logger.info("#MLOG req_id:"+req_id+". Do Adding by dic_Add_words:"+dfw.getWord());
 
                     result = reqFreq * freq;
