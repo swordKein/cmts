@@ -10,7 +10,8 @@
         /* 입수 완료 */
         /* top_countInItems */
         /* select count(*) from items */
-        select count(*) from items_hist where type = 'ccube'
+        /* select count(*) from items_hist where type = 'ccube' */
+        select count(*) from items where stat = 'Y'
     </select>
 
 
@@ -80,6 +81,15 @@
         group by ism.idx
         ) a */
         select count(*) from items_hist where type = 'analyze' and action = 'END_ANALYZE' and stat = 'S'
+
+    </select>
+
+    <select id="top_countAnalyze_fail" resultType="java.lang.Integer" useCache="true">
+        /* top_countAnalyze_fail  */
+        select count(*)
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'A' and sc.stat = 'F';
     </select>
 
     <select id="top_countTagging" resultType="java.lang.Integer" useCache="true">
@@ -124,9 +134,14 @@
         inner join items it on it.idx = ism.idx
         where st.type = 'C' and st.stat = 'F'
         ) a */
-        select count(*)
+        /* select count(*)
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FC'
+        */
+        select count(*)
+        from items it
+        inner join items_sched_mapping ism on ism.idx = it.idx
+        inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'C' and sc.stat = 'F';
     </select>
 
     <select id="mid_countFailAnalyze" resultType="java.lang.Integer" useCache="true">
@@ -138,9 +153,19 @@
         inner join items it on it.idx = ism.idx
         where st.type in ('R', 'A') and st.stat = 'F'
         ) a */
+        /*
         select count(*)
         from items it
-        inner join items_stat iss on iss.idx = it.idx and iss.stat in ('FR','FA')
+        inner join items_stat iss on iss.idx = it.idx and iss.stat in ('FR','FA') */
+
+        select count(*) from (
+            select distinct(it.idx)
+            from items it
+            inner join items_sched_mapping ism on ism.idx = it.idx
+            inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type in ('R','A') and sc.stat = 'F'
+            group by it.idx
+        ) a
+        ;
     </select>
 
     <select id="mid_countReadyTagging" resultType="java.lang.Integer" useCache="true">

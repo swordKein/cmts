@@ -65,10 +65,12 @@ public class StatsService implements StatsServiceImpl {
 
         JsonObject listRatio = new JsonObject();
         double ratio_all_tag = (double) count_tagged / (double) count_inserted * 100.0;
-        double ratio_collect = (double) count_collected / (double) count_inserted * 100.0;
-        double ratio_analyze = (double) count_analyzed / (double) count_inserted * 100.0;
-        double ratio_tag = (double) count_tagged / (double) count_inserted * 100.0;
-        listRatio.addProperty("RATIO_ALL_TAG", Double.toString(ratio_all_tag));
+        double ratio_collect = (double) ( count_inserted - count_fail_collect ) / (double) count_inserted * 100.0;
+        double ratio_analyze = (double) ( count_inserted - count_fail_analyze ) / (double) count_inserted * 100.0;
+        //double ratio_tag = (double) count_tagged / (double) count_inserted * 100.0;
+
+        double ratio_tag = (double) count_endTagged / (double) count_inserted * 100.0;
+        listRatio.addProperty("RATIO_ALL_TAG", Double.toString(ratio_tag));
         //System.out.println("# "+count_tagged +" / "+count_inserted+ " = ratio_tag:"+ratio_tag);
         listRatio.addProperty("RATIO_COLLECT", ratio_collect);
         listRatio.addProperty("RATIO_ANALYZE", ratio_analyze);
