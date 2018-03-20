@@ -600,6 +600,21 @@
     <select id="countItemsPagingByStat" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items"
             useCache="true">
         /* countItemsPagingByStat */
+        select count(*) as cnt, stat
+        from items_stat
+        group by stat
+    </select>
+
+    <select id="countItemsAll" resultType="java.lang.Integer"
+            useCache="true">
+        /* countItemsAll */
+        select count(*) from items where stat = 'Y';
+    </select>
+
+
+    <select id="countItemsPagingByStat_1" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items"
+            useCache="true">
+        /* countItemsPagingByStat */
         select a.stat, count(*) as cnt
         from
         (	select j.* from
