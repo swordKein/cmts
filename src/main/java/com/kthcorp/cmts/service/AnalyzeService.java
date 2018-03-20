@@ -881,7 +881,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             // SNS감성어를 ITEMS_TAGS_METAS에 WORDS_SNS type으로 저장
             //JsonObject resultRefineObj = resultRefine.get("result").getAsJsonObject();
             //if (resultRefineObj != null) {
-
+            /*
             String movietitle = sched.getMovietitle();
             if (!"".equals(movietitle)) {
                 JsonArray wordsSnsArray = wordsSnsArray = apiService.getSnsKeywords(movietitle);
@@ -889,7 +889,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
 
                 int rtws = insItemsTagsMetaFromWordsSns(wordsSnsArray, sc_id);
             }
-
+            */
             //}
 
         } catch (Exception e) {
