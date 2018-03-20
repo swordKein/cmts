@@ -687,7 +687,7 @@ public class ApiService implements ApiServiceImpl {
 
             String target1 = "twitter";
             String edate = DateUtils.getLocalDate();
-            String sdate = DateUtils.calculateDate(Calendar.MONTH, -6, edate);
+            String sdate = DateUtils.calculateDate(Calendar.YEAR, -1, edate);
 
             String sns_api_url_dest1 = sns_api_url.replace("#SDATE", sdate);
             sns_api_url_dest1 = sns_api_url_dest1.replace("#EDATE", edate);
