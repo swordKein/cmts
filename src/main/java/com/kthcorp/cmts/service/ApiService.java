@@ -486,6 +486,8 @@ public class ApiService implements ApiServiceImpl {
             , String searchParts
     ) {
         if(pageSize < 1) pageSize = 50;
+        if ("".equals(searchKeyword.trim())) searchParts = "";
+
         searchParts = getChangedMtypes(searchParts);
 
         JsonObject result = new JsonObject();
@@ -541,6 +543,7 @@ public class ApiService implements ApiServiceImpl {
         //int countItems = itemsMapper.countItems(reqIt);
         //System.out.println("#ELOG.searchItems:: req:"+reqIt.toString());
         int countItems = itemsMapper.countItemsPaging(reqIt);
+        int countAll = itemsMapper.countItemsAll();
 
         System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
 
@@ -569,8 +572,8 @@ public class ApiService implements ApiServiceImpl {
         result.addProperty("SEARCHKEYWORD", searchKeyword);
         result.addProperty("SEARCHPARTS", searchParts);
 
-        JsonObject countsSearch = getCountSearch(countItems, reqIt);
-        countsSearch.addProperty("COUNT_ALL", countItems);
+        JsonObject countsSearch = getCountSearch(countAll, reqIt);
+        countsSearch.addProperty("COUNT_ALL", countAll);
 
 
         result.add("COUNTS_SEARCH", countsSearch);
@@ -615,6 +618,8 @@ public class ApiService implements ApiServiceImpl {
         JsonObject resultObj = new JsonObject();
         resultObj.addProperty("COUNT_ALL", countItems);
         List<Items> listStatCnts = itemsMapper.countItemsPagingByStat(reqIt);
+        int fail_analyze = 0;
+
         if (listStatCnts != null) {
             for(Items lt : listStatCnts) {
                 if(lt.getStat() != null) {
@@ -623,7 +628,10 @@ public class ApiService implements ApiServiceImpl {
                             resultObj.addProperty("COUNT_FAIL_COLLECT", lt.getCnt());
                             break;
                         case "FA":
-                            resultObj.addProperty("COUNT_FAIL_ANALYZE", lt.getCnt());
+                            fail_analyze += lt.getCnt();
+                            break;
+                        case "FR":
+                            fail_analyze += lt.getCnt();
                             break;
                         case "RT":
                             resultObj.addProperty("COUNT_READY_TAG", lt.getCnt());
@@ -638,6 +646,8 @@ public class ApiService implements ApiServiceImpl {
                 }
             }
         }
+
+        resultObj.addProperty("COUNT_FAIL_ANALYZE", fail_analyze);
 
         JsonObject resultObj2 = setEmptyCountInfo(resultObj, origStats);
         return resultObj2;

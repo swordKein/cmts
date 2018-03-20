@@ -52,12 +52,14 @@ public class StatsService implements StatsServiceImpl {
         result.add("LIST_STAT", listStat);
 
         JsonObject listSummary = new JsonObject();
-        int count_ready = statsMapper.mid_countReady();
+        //int count_ready = statsMapper.mid_countReady();
+
         int count_fail_collect = statsMapper.mid_countFailCollect();
         int count_fail_analyze = statsMapper.mid_countFailAnalyze();
         int count_ready_tag = statsMapper.mid_countReadyTagging();
-        //int count_ready_tag = count_inserted- count_endTagged;
-        listSummary.addProperty("COUNT_READY", count_ready + count_ready_tag);
+        int count_ready = count_fail_collect + count_fail_analyze + count_ready_tag;
+                //int count_ready_tag = count_inserted- count_endTagged;
+        listSummary.addProperty("COUNT_READY", count_ready);
         listSummary.addProperty("COUNT_FAIL_COLLECT", count_fail_collect);
         listSummary.addProperty("COUNT_FAIL_ANALYZE", count_fail_analyze);
         listSummary.addProperty("COUNT_READY_TAG", count_ready_tag);

@@ -41,6 +41,7 @@ public interface ItemsMapper {
     List<Items> searchItemsPaging(Items req);
     List<Items> countItemsPagingByStat(Items req);
     int countItemsPaging(Items req);
+    int countItemsAll();
     List<Items> searchTestMetas(Items req);
 
 
