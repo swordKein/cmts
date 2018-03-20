@@ -441,8 +441,11 @@
         </if>
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR')
-        <if test='searchStat != null and searchStat != "ALL"'>
+        <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
             and iss.stat = #{searchStat}
+        </if>
+        <if test='searchStat != null and searchStat == "FA"'>
+            and iss.stat in ('FR', 'FA')
         </if>
         <if test='searchMetasYn != null and searchMetasYn == "Y"'>
             inner join (
@@ -532,8 +535,11 @@
         </if>
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR')
-        <if test='searchStat != null and searchStat != "ALL"'>
+        <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
             and iss.stat = #{searchStat}
+        </if>
+        <if test='searchStat != null and searchStat == "FA"'>
+            and iss.stat in ('FR', 'FA')
         </if>
         <if test='searchMetasYn != null and searchMetasYn == "Y"'>
             inner join (

@@ -486,6 +486,8 @@ public class ApiService implements ApiServiceImpl {
             , String searchParts
     ) {
         if(pageSize < 1) pageSize = 50;
+        if ("".equals(searchKeyword.trim())) searchParts = "";
+
         searchParts = getChangedMtypes(searchParts);
 
         JsonObject result = new JsonObject();
