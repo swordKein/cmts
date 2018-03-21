@@ -989,8 +989,9 @@ public class ApiService implements ApiServiceImpl {
     public JsonObject getSnsTopWordsAndGraph() throws Exception {
         JsonObject result = new JsonObject();
 
-        String ndate = DateUtils.getLocalDate();
-        String date1 = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+        //String ndate = DateUtils.getLocalDate();
+        //String date1 = DateUtils.calculateDate(Calendar.DATE, -1, ndate);
+        String date1 = snsMapper.getMaxDateStr();
 
         // rank for Twitter
         String targetTwitter = "twitter";
