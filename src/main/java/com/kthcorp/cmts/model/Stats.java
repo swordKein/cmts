@@ -16,6 +16,25 @@ public class Stats extends Paging {
     private String date;
     private Integer cnt;
 
+    private String type;
+    private String stat;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
+
     public String getDate() {
         return date;
     }
