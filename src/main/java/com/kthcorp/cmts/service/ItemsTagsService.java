@@ -569,7 +569,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonArray resultArr = new JsonArray();
 
         System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);
-        if (type.contains("METAS") || !type.equals("LIST_SEARCHKEYWORDS")) {
+        if ((type.contains("METAS") || type.contains("LIST")) && !type.equals("LIST_SEARCHKEYWORDS")) {
             for (JsonElement oje : oldArr) {
                 //System.out.println("#TOLOG:oje:" + oje.toString());
                 try {
@@ -652,7 +652,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         resultArr.add(newItem);
                     }
                 } catch (Exception e) {
-                    logger.error("#ERR.getCombinedJsonArray error! newArr(njje):"+njje.toString());
+                    logger.error("#ERR.getCombinedJsonArray error! type:"+type+" / newArr(njje):"+njje.toString());
                     e.printStackTrace();
                 }
             }
@@ -662,6 +662,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             for (JsonElement je : oldArr) {
                 String os = je.getAsString();
                 resultArr.add(os);
+            }
+            for (JsonElement nje : newArr) {
+                //System.out.println("#ELOG type:"+type+" / nje:"+nje);
+                String ns = nje.getAsString();
+                ns = ns.trim();
+                ns = ns.replace("\"","");
+                resultArr.add(ns);
             }
         }
         return resultArr;
