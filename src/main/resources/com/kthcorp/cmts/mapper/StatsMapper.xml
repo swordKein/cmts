@@ -273,16 +273,59 @@
     <select id="down_countsTagged" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
     /* 승인건수 */
         /* down_countsTagged */
+        /*
         SELECT DATE(a.regdate) AS date,
         sum(a.cnt) as cnt
         FROM (
             select ik.idx, ik.regdate, 1 as cnt from items_tags_keys ik
-            where DATE(ik.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-            AND DATE(ik.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+            where DATE(ik.regdate) <![CDATA[ >= ]]> STR_TO_DATE('', '%Y-%m-%d')
+            AND DATE(ik.regdate) <![CDATA[ <= ]]> STR_TO_DATE(''}, '%Y-%m-%d')
             AND ik.stat = 'S'
             group by ik.idx
         ) a
         GROUP BY date
+        */
+        select count(*) as cnt, date1 as date, type, stat from (
+        select count(*), substr(regdate, 1,10) as date1, type, stat, idx from items_hist
+        where type = 'meta' and stat = 'S'
+        and DATE(regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+        and DATE(regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        group by substr(regdate, 1, 10), type, stat, idx
+        ) a group by a.date1, a.type, a.stat;
     </select>
 
+    <select id="getCountInsertedDaily" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountInsertedDaily */
+        select sum(a.cnt) as cnt_all from (
+            (
+            select count(*) as cnt from ccube_contents
+            where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+            ) union (
+            select count(*) as cnt from ccube_series
+            where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+            )
+        ) a
+    </select>
+
+    <select id="getCountItemsHistByType" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountItemsHistByType  */
+        select type, stat, count(*) as cnt
+        from items_hist
+        where type in ( 'collect', 'analyze', 'meta' )
+        and regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        group by type, stat
+
+    </select>
+
+    <select id="getCountsItemsStatByStat" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountsItemsStatByStat  */
+        select count(*) as cnt, stat
+        from items_stat
+        where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        group by stat
+    </select>
 </mapper>

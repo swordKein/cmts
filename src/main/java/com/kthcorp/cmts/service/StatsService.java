@@ -3,9 +3,13 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.SpringBootWebApplication;
+import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.StatsMapper;
+import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.Stats;
+import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
+import com.kthcorp.cmts.util.JsonUtil;
 import com.kthcorp.cmts.util.pool.concurrent.mgr.GenericTaskThreadPoolExecutor;
 import com.kthcorp.cmts.util.pool.concurrent.task.JobTask;
 import com.kthcorp.cmts.util.pool.concurrent.task.arg.GenericTaskArgument;
@@ -26,6 +30,10 @@ public class StatsService implements StatsServiceImpl {
 
     @Autowired
     private StatsMapper statsMapper;
+    @Autowired
+    private ItemsMapper itemsMapper;
+    @Autowired
+    private ApiService apiService;
 
     @Override
     public JsonObject getStatsForDash() {
@@ -204,5 +212,166 @@ public class StatsService implements StatsServiceImpl {
         }
 
         return result;
+    }
+
+    @Override
+    public int getCountInsertedDaily(Stats req) {
+        return statsMapper.getCountInsertedDaily(req);
+    }
+    @Override
+    public List<Stats> getCountItemsHistByType(Stats req) {
+        return statsMapper.getCountItemsHistByType(req);
+    }
+
+    @Override
+    public JsonObject getStatsList(int pageSize, int pageno, String searchSdate, String searchEdate) {
+        JsonObject result = new JsonObject();
+
+        Items reqIt = new Items();
+        reqIt.setPageSize(pageSize);
+        reqIt.setPageNo(pageno);
+
+        String newSdate = "";
+        String nSdate = "";
+        String newEdate = "";
+        String nEdate = "";
+        if ("".equals(searchSdate) || "".equals(searchEdate)) {
+            newSdate = "2018-02-01 00:00:00"; newEdate = "2025-12-31 23:59:59";
+            nSdate = "2018-02-01"; nEdate = "2025-12-31";
+        } else {
+            newSdate = searchSdate + " 00:00:00";
+            newEdate = searchEdate + " 23:59:59";
+            nSdate = searchSdate;
+            nEdate = searchEdate;
+        }
+        reqIt.setSearchSdate(newSdate);
+        reqIt.setSearchEdate(newEdate);
+        reqIt.setStat("ST");
+
+        Stats reqSt = new Stats();
+        reqSt.setSdate(nSdate);
+        reqSt.setEdate(nEdate);
+
+        //int countItems = itemsMapper.countItems(reqIt);
+        //System.out.println("#ELOG.searchItems:: req:"+reqIt.toString());
+        int countItems = itemsMapper.countItemsPaging(reqIt);
+        int countAll = itemsMapper.countItemsAll();
+
+        System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
+
+        List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
+        JsonArray listItems = apiService.getListItemsFromArray(list_items);
+        // #TODO
+        //n1.addProperty("STAT", "RT");
+        //n1.addProperty("CNT_IN", 1);
+        //n1.addProperty("CNT_COL", 1);
+        //n1.addProperty("CNT_ANA", 1);
+        //n1.addProperty("CNT_TAG2", 1);
+
+        System.out.println("#LIST_ITEMS:"+list_items.toString());
+
+        int maxPage = countItems / pageSize + 1;
+
+        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
+        List<String> listActive = null;
+        List<Integer> listPage = null;
+        if (listPaging != null) {
+            listActive = (List<String>) listPaging.get("listActive");
+            listPage = (List<Integer>) listPaging.get("listPage");
+        }
+        JsonArray listPageArr = JsonUtil.convertIntegerListToJsonArray(listPage);
+        JsonArray listActiveArr = JsonUtil.convertListToJsonArray(listActive);
+
+        result.addProperty("MAXPAGE", maxPage);
+        result.addProperty("SEARCHSDATE", searchSdate);
+        result.addProperty("SEARCHEDATE", searchEdate);
+
+        //JsonObject countsSearch = apiService.getCountSearch(countAll, reqIt);
+        //countsSearch.addProperty("COUNT_ALL", countAll);
+        //result.add("COUNTS_SEARCH", countsSearch);
+
+        //result.addProperty("PAGESIZE", pageSize);
+        //result.addProperty("PAGENO", pageno);
+        result.add("LIST_PAGING", listPageArr);
+        result.add("LIST_PAGING_ACTIVE", listActiveArr);
+        result.add("LIST_ITEMS", listItems);
+
+        JsonObject stat_search = this.getCountsForStat(reqSt);
+        result.add("COUNTS_STAT", stat_search);
+
+        result.add("LIST_ITEMS", listItems);
+
+        return result;
+    }
+
+    private JsonObject getCountsForStat(Stats reqSt) {
+        int count_in = statsMapper.getCountInsertedDaily(reqSt);
+        int count_sc = 0;
+        int count_fc = 0;
+        int count_sa = 0;
+        int count_fa = 0;
+        List<Stats> listCounts1 = statsMapper.getCountItemsHistByType(reqSt);
+        if (listCounts1 != null) {
+            for (Stats s1 : listCounts1) {
+                if (s1 != null && s1.getType() != null && s1.getStat() != null) {
+                    String type = s1.getType();
+                    String stat = s1.getStat();
+                    int cnt = s1.getCnt();
+
+                    if ("collect".equals(type)) {
+                        if ("S".equals(stat)) {
+                            count_sc += cnt;
+                        } else if ("F".equals(stat)) {
+                            count_fc += cnt;
+                        }
+                    } else if ("analyze".equals(type)) {
+                        if ("S".equals(stat)) {
+                            count_sa += cnt;
+                        } else if ("F".equals(stat)) {
+                            count_fa += cnt;
+                        }
+                    }
+                }
+            }
+        }
+
+        int count_st = 0;
+        int count_rt = 0;
+        int count_ft = 0;
+        List<Stats> listCounts2 = statsMapper.getCountsItemsStatByStat(reqSt);
+        if (listCounts2 != null) {
+            for (Stats s2 : listCounts2) {
+                if (s2 != null && s2.getStat() != null) {
+                    String stat = s2.getStat();
+                    int cnt = s2.getCnt();
+
+                    if ("ST".equals(stat)) {
+                        count_st += cnt;
+                    } else if ("RT".equals(stat)) {
+                        count_rt += cnt;
+                    } else if ("FT".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FR".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FA".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FC".equals(stat)) {
+                        count_ft += cnt;
+                    }
+                }
+            }
+        }
+
+        JsonObject stat_search = new JsonObject();
+        stat_search.addProperty("COUNT_IN", count_in);
+        stat_search.addProperty("COUNT_SC", count_sc);
+        stat_search.addProperty("COUNT_FC", count_fc);
+        stat_search.addProperty("COUNT_SA", count_sa);
+        stat_search.addProperty("COUNT_FA", count_fa);
+        stat_search.addProperty("COUNT_ST", count_st);
+        stat_search.addProperty("COUNT_RT", count_rt);
+        stat_search.addProperty("COUNT_FT", count_ft);
+
+        return stat_search;
     }
 }

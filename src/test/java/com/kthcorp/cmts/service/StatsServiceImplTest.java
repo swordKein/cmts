@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.JsonObject;
+import com.kthcorp.cmts.model.Stats;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.pool.concurrent.monitor.TaskPoolMonitorThread;
 import com.kthcorp.cmts.util.pool.concurrent.task.JobTask;
@@ -31,5 +32,28 @@ public class StatsServiceImplTest {
 	public void test_getStatsForDash() throws Exception{
 		JsonObject result = statsService.getStatsForDash();
 		System.out.println("#Result:"+result.toString());
+	}
+
+	@Test
+	public void test_getCountInsertedDaily() throws Exception {
+		Stats req = new Stats();
+		req.setSdate("2018-02-26");
+		req.setEdate("2018-02-28");
+
+		System.out.println("#RESULT:"+statsService.getCountInsertedDaily(req));
+	}
+
+	@Test
+	public void test_getCountItemsHistByType() throws Exception {
+		Stats req = new Stats();
+		req.setSdate("2018-02-26");
+		req.setEdate("2018-02-28");
+
+		System.out.println("#RESULT:"+statsService.getCountItemsHistByType(req));
+	}
+
+	@Test
+	public void test_getStatsList() throws Exception {
+		System.out.println("#RESULT:"+statsService.getStatsList(20, 1, "2018-02-26", "2018-03-28"));
 	}
 }

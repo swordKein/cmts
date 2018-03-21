@@ -1130,81 +1130,40 @@ public class ApiController {
 	public String post__stat_list(Map<String, Object> model
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
-			, @RequestParam(value = "pagesize", required = false, defaultValue = "0") String spagesize
+			, @RequestParam(value = "pagesize", required = false, defaultValue = "50") String spagesize
 			, @RequestParam(value = "pageno", required = false, defaultValue = "1") String spageno
 
-			, @RequestParam(value = "searchstat", required = false, defaultValue = "") String searchstat
-			, @RequestParam(value = "searchsdate", required = false, defaultValue = "") String searchsdate
-			, @RequestParam(value = "searchedate", required = false, defaultValue = "") String searchedate
+			//, @RequestParam(value = "searchstat", required = false, defaultValue = "") String searchstat
+			, @RequestParam(value = "searchsdate", required = false, defaultValue = "2018-02-26") String searchsdate
+			, @RequestParam(value = "searchedate", required = false, defaultValue = "2018-02-28") String searchedate
 	) {
 		logger.info("#CLOG:API/stat/list get pageno:"+spageno+"/pagesize:"+spagesize+"/stat:"
-				+searchstat+"/sdate:"+searchsdate+"/edate:"+searchedate);
+				//+searchstat
+				+"/sdate:"+searchsdate+"/edate:"+searchedate);
+		int pageSize = 0;
+		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+		int pageNo = 1;
+		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
 
+		int rt_code = -1;
+		String rtmsg = "";
 		JsonObject result_all = new JsonObject();
 
-		result_all.addProperty("RT_CODE", 1);
-		result_all.addProperty("RT_MSG", "SUCCESS");
-
-		JsonObject result = new JsonObject();
-		result.addProperty("PAGESIZE", 20);
-		result.addProperty("MAXPAGE", 6);
-		result.addProperty("PAGENO", 1);
-
-		JsonArray list_paging = new JsonArray();
-		list_paging.add(1);
-		list_paging.add(2);
-		list_paging.add(3);
-		list_paging.add(4);
-		list_paging.add(5);
-		result.add("LIST_PAGING", list_paging);
-
-		result.addProperty("SEARCHSTAT", "ALL");
-		result.addProperty("SEARCHSDATE", "");
-		result.addProperty("SEARCHEDATE", "");
-
-
-		JsonObject stat_search = new JsonObject();
-		stat_search.addProperty("COUNT_IN", 80);
-		stat_search.addProperty("COUNT_SC", 70);
-		stat_search.addProperty("COUNT_FC", 10);
-		stat_search.addProperty("COUNT_SA", 65);
-		stat_search.addProperty("COUNT_FA", 5);
-		stat_search.addProperty("COUNT_ST", 62);
-		stat_search.addProperty("COUNT_RT", 2);
-		stat_search.addProperty("COUNT_FT", 1);
-		result.add("COUNTS_STAT", stat_search);
-
-		JsonArray list_items = new JsonArray();
-		JsonObject n1 = new JsonObject();
-		n1.addProperty("TITLE", "피나 3D");
-		n1.addProperty("CID", "000001");
-		n1.addProperty("TYPE", "OTH");
-		n1.addProperty("CNT_TAG", 1);
-		n1.addProperty("REGDATE", "2017-12-23");
-		n1.addProperty("PROCDATE", "2017-12-24");
-		n1.addProperty("STAT", "RT");
-		n1.addProperty("CNT_IN", 1);
-		n1.addProperty("CNT_COL", 1);
-		n1.addProperty("CNT_ANA", 1);
-		n1.addProperty("CNT_TAG2", 1);
-		list_items.add(n1);
-		JsonObject n2 = new JsonObject();
-		n2.addProperty("TITLE", "1724 기방난동사건");
-		n2.addProperty("CID", "000036");
-		n2.addProperty("TYPE", "KOR");
-		n2.addProperty("CNT_TAG", 0);
-		n2.addProperty("REGDATE", "2017-12-25");
-		n2.addProperty("PROCDATE", "2017-12-26");
-		n2.addProperty("STAT", "FC");
-		n2.addProperty("CNT_IN", 1);
-		n2.addProperty("CNT_COL", 1);
-		n2.addProperty("CNT_ANA", 0);
-		n2.addProperty("CNT_TAG2", 0);
-		list_items.add(n2);
-		result.add("LIST_ITEMS", list_items);
+		JsonObject result = null;
+		try {
+			result = statsService.getStatsList(pageSize, pageNo, searchsdate, searchedate);
+			rt_code = 1;
+			rtmsg = "SUCCESS";
+		} catch (Exception e) {
+			rt_code = -1;
+			rtmsg = "ERROR";
+			e.printStackTrace();
+		}
 
 		result_all.add("RESULT", result);
 
+		result_all.addProperty("RT_CODE", rt_code);
+		result_all.addProperty("RT_MSG", rtmsg);
 
 		return result_all.toString();
 	}

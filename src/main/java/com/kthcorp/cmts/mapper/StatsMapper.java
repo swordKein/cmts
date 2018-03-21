@@ -30,4 +30,9 @@ public interface StatsMapper {
     List<Stats> down_countsCollected(Stats req);
     List<Stats> down_countsAnalyzed(Stats req);
     List<Stats> down_countsTagged(Stats req);
+
+    //stat page
+    int getCountInsertedDaily(Stats req);
+    List<Stats> getCountItemsHistByType(Stats req);
+    List<Stats> getCountsItemsStatByStat(Stats req);
 }

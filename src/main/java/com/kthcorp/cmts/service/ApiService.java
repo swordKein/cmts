@@ -587,7 +587,8 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
-    private JsonArray getListItemsFromArray(List<Items> itemsList) {
+    @Override
+    public JsonArray getListItemsFromArray(List<Items> itemsList) {
         JsonArray result = new JsonArray();
         if (itemsList != null && itemsList.size() > 0) {
             for (Items tm : itemsList) {

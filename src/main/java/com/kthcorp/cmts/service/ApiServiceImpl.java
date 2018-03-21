@@ -3,6 +3,7 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
+import com.kthcorp.cmts.model.Items;
 
 import java.util.List;
 
@@ -49,6 +50,8 @@ public interface ApiServiceImpl {
             , String searchKeyword
             , String searchParts
     );
+
+    JsonArray getListItemsFromArray(List<Items> itemsList);
 
     int uptSchedTriggerStatByItemIdxAndType(int itemIdx, String type, String stat);
 
