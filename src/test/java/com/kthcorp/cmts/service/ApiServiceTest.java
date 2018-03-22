@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -42,8 +43,9 @@ public class ApiServiceTest {
 		//JsonObject result = apiService.getItemsSearch(50, 1, "", ""
 		//		, "", "", "최근", "title,METASWHEN");
 
-		JsonObject result = apiService.getItemsSearch(10, 1, "ALL", "FA"
-				, "2018-01-01", "2019-03-28", "", "title");
+
+		JsonObject result = apiService.getItemsSearch(20, 1, "ALL", "ALL"
+				, "2018-01-01", "2019-03-28", "여배우", "title");
 
 		System.out.println("#result:"+result.toString());
 	}

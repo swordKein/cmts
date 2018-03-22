@@ -7,6 +7,7 @@ import com.kthcorp.cmts.model.SchedTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -38,10 +39,23 @@ public class SchedTriggerService implements SchedTriggerServiceImpl {
         return rtcode;
     }
 
+    @Autowired
+    private Environment environment;
     @Override
     @PostConstruct
     public int uptStoppedProcessingJobsStat() {
-        return schedTriggerMapper.uptStoppedProcessingJobsStat();
+        int rt = 0;
+
+        String[] prs = this.environment.getActiveProfiles();
+        String activeProfile = "";
+        for(String pr: prs) {
+            System.out.println("#Spring-Boot ACTIVE PROFILE:" + pr.toString());
+            activeProfile = pr;
+        }
+        if("dev".equals(activeProfile)) {
+            rt = schedTriggerMapper.uptStoppedProcessingJobsStat();;
+        }
+        return rt;
     }
 
 }
