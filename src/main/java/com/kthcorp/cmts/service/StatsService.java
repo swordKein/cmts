@@ -304,6 +304,77 @@ public class StatsService implements StatsServiceImpl {
         return result;
     }
 
+    private JsonObject getCountsForStat_old(Stats reqSt) {
+        int count_in = statsMapper.getCountInsertedDaily(reqSt);
+        int count_sc = 0;
+        int count_fc = 0;
+        int count_sa = 0;
+        int count_fa = 0;
+        List<Stats> listCounts1 = statsMapper.getCountItemsHistByType(reqSt);
+        if (listCounts1 != null) {
+            for (Stats s1 : listCounts1) {
+                if (s1 != null && s1.getType() != null && s1.getStat() != null) {
+                    String type = s1.getType();
+                    String stat = s1.getStat();
+                    int cnt = s1.getCnt();
+
+                    if ("collect".equals(type)) {
+                        if ("S".equals(stat)) {
+                            count_sc += cnt;
+                        } else if ("F".equals(stat)) {
+                            count_fc += cnt;
+                        }
+                    } else if ("analyze".equals(type)) {
+                        if ("S".equals(stat)) {
+                            count_sa += cnt;
+                        } else if ("F".equals(stat)) {
+                            count_fa += cnt;
+                        }
+                    }
+                }
+            }
+        }
+
+        int count_st = 0;
+        int count_rt = 0;
+        int count_ft = 0;
+        List<Stats> listCounts2 = statsMapper.getCountsItemsStatByStat(reqSt);
+        if (listCounts2 != null) {
+            for (Stats s2 : listCounts2) {
+                if (s2 != null && s2.getStat() != null) {
+                    String stat = s2.getStat();
+                    int cnt = s2.getCnt();
+
+                    if ("ST".equals(stat)) {
+                        count_st += cnt;
+                    } else if ("RT".equals(stat)) {
+                        count_rt += cnt;
+                    } else if ("FT".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FR".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FA".equals(stat)) {
+                        count_ft += cnt;
+                    } else if ("FC".equals(stat)) {
+                        count_ft += cnt;
+                    }
+                }
+            }
+        }
+
+        JsonObject stat_search = new JsonObject();
+        stat_search.addProperty("COUNT_IN", count_in);
+        stat_search.addProperty("COUNT_SC", count_sc);
+        stat_search.addProperty("COUNT_FC", count_fc);
+        stat_search.addProperty("COUNT_SA", count_sa);
+        stat_search.addProperty("COUNT_FA", count_fa);
+        stat_search.addProperty("COUNT_ST", count_st);
+        stat_search.addProperty("COUNT_RT", count_rt);
+        stat_search.addProperty("COUNT_FT", count_ft);
+
+        return stat_search;
+    }
+
     private JsonObject getCountsForStat(Stats reqSt) {
         int count_in = statsMapper.getCountInsertedDaily(reqSt);
         int count_sc = 0;
@@ -361,6 +432,16 @@ public class StatsService implements StatsServiceImpl {
                 }
             }
         }
+
+        List<Stats> listCountsUniq = statsMapper.getCountsItemsByStatUniq(reqSt);
+        int count_sc_u = 0;
+        int count_fc_u = 0;
+        int count_sa_u = 0;
+        int count_fa_u = 0;
+        int count_st_u = 0;
+        int count_rt_u = 0;
+        int count_ft_u = 0;
+
 
         JsonObject stat_search = new JsonObject();
         stat_search.addProperty("COUNT_IN", count_in);

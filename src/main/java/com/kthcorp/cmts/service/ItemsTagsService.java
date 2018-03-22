@@ -557,6 +557,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             JsonArray typeResultArr = getCombinedJsonArray(type, oldTypesArr, newTypesArr, isColorCode);
             System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr.toString());
 
+            if ("LIST_NOT_MAPPED".equals(type)) {
+                JsonArray sortedJsonArray = JsonUtil.getSortedJsonArray(typeResultArr, "word", "ratio", "type", 100);
+                if (sortedJsonArray != null && sortedJsonArray.size() > 0) typeResultArr = sortedJsonArray;
+            }
             if (resultObj.get(type) != null) resultObj.remove(type);
             resultObj.add(type, typeResultArr);
         }
@@ -566,6 +570,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     private JsonArray getCombinedJsonArray(String type, JsonArray oldArr, JsonArray newArr, boolean isColorCode) {
         //System.out.println("#TLOG:oldArr:"+oldArr.toString());
+        if("LIST_NOT_MAPPED".equals(type)) {
+            isColorCode = false;
+        }
+
         JsonArray resultArr = new JsonArray();
 
         System.out.println("#MLOG.getCombinedJsonArray req.type:"+type);

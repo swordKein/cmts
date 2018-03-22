@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
@@ -427,5 +428,33 @@ public class JsonUtil {
 
 		}
 		return result;
+	}
+
+	public static JsonArray getSortedJsonArray(JsonArray origArr, String key_field, String sort_field, String extra_field1, int limit) {
+		JsonArray resultArr = null;
+		if (origArr != null && origArr.size() > 0) {
+			resultArr = new JsonArray();
+
+			Map<String, Double> keyListMap = new HashMap();
+			Map<String, String> extraListMap1 = new HashMap();
+			for(JsonElement je : origArr) {
+				JsonObject jo = (JsonObject) je;
+				keyListMap.put(jo.get(key_field).getAsString(), jo.get(sort_field).getAsDouble());
+				extraListMap1.put(jo.get(key_field).getAsString(), jo.get(extra_field1).getAsString());
+			}
+			//Map<String, Double> sortedKeyListMap = MapUtil.getSortedDescMapForDouble(keyListMap);
+			List<String> sortedKeyList = MapUtil.getSortedDescStringArrayForDouble(keyListMap, limit);
+			//System.out.println("#MLOG.sortedKeyList for LIST_NOT_MAPPED:"+sortedKeyList);
+			for(String ks : sortedKeyList) {
+				JsonObject newItem = new JsonObject();
+				newItem.addProperty(key_field, ks);
+				newItem.addProperty(sort_field, keyListMap.get(ks).toString());
+				newItem.addProperty(extra_field1, extraListMap1.get(ks).toString());
+				resultArr.add(newItem);
+			}
+			//System.out.println("#MLOG.sortedJsonArray for LIST_NOT_MAPPED:"+resultArr.toString());
+		}
+
+		return resultArr;
 	}
 }
