@@ -6,7 +6,8 @@ cmts:
     running_job_limit: 10
     collect_fail_limit: 10
     criteria_success_ratio: 0.7
-    crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
+    #crawl_api_url: http://14.63.170.72:8080/crawl/byprefix
+    crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
     crawl_sns_topwords_utl: http://127.0.0.1:8080/sns/topwords
     #crawl_api_url: http://127.0.0.1:8080/crawl/byprefix
     sns_api_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetKeywordAssociation&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&categorySetName=SM&topN=10&keywordFilterList[]=+(%EC%98%81%ED%99%94)&keyword=#TITLE&categoryList[]=123/0/0
@@ -19,13 +20,23 @@ cmts:
       user: daisy
       passwd: daisy!
       #workdir: /home/daisy/ccube_work
-      workdir: e:\\ccube_work
+      workdir: d:\\upload
       #downdir: /home/daisy/service/cmts
       downdir: /home/daisy/service/cmts
       downext: yml
       #downext: xml
       end_after_movedir: /home/daisy/service/cmts/done
-      uploaddir: /home/daisy/service/cmts/upload
+      uploaddir: /home/daisy/service/cmts/upload/
+      #uploaddir: /META_EXT
+    prism_sftp:
+      ip: 14.63.170.72
+      port: 22
+      user: daisy
+      passwd: daisy!
+      workdir: d:\\upload
+      downdir: /home/daisy/service/cmts
+      downext: dat
+      uploaddir: /home/daisy/service/cmts/upload/
   admin:
     page_size: 20
   collector:
