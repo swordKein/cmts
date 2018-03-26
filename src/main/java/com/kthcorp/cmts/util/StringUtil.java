@@ -233,6 +233,12 @@ public class StringUtil {
     }
 
     public static List<String> convertStringToListByComma(String req) {
+        req = req.replace("[","");
+        req = req.replace("]", "");
+        req = req.replace("\"","");
+
+        //System.out.println("#reqstr:"+req);
+
         List<String> result = new ArrayList();
         if(!"".equals(req.trim())) {
             if(req.contains(",")) {
@@ -247,6 +253,21 @@ public class StringUtil {
         return result;
     }
 
+    public static String convertArrayStringToStringAddDelimeter(List<String> reqList, String delimeter) {
+        String result = "";
+        if (reqList != null && reqList.size() > 0 && !"".equals(delimeter.trim())) {
+            int cnt = 0;
+            for (String s : reqList) {
+                if (cnt == 0) {
+                    result = s;
+                } else {
+                    result += delimeter + " " + s;
+                }
+                cnt++;
+            }
+        }
+        return result;
+    }
 
     public static List<String> getCombinedWordsArrayFromToWords(List<Map<String, Object>> origArr) {
         List<String> resultArr = new ArrayList();

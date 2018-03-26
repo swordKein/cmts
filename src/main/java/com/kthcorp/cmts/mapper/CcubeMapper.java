@@ -1,13 +1,11 @@
 package com.kthcorp.cmts.mapper;
 
-import com.kthcorp.cmts.model.CcubeContent;
-import com.kthcorp.cmts.model.CcubeKeys;
-import com.kthcorp.cmts.model.CcubeSeries;
-import com.kthcorp.cmts.model.ItemsMetas;
+import com.kthcorp.cmts.model.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -30,4 +28,12 @@ public interface CcubeMapper {
 
     List<CcubeContent> getCcubeContentByYjid();
     List<CcubeContent> getCcubeContentByYjidNot();
+
+    List<Map<String,Object>> getCcubeOutputList50();
+    List<Map<String,Object>> getCcubeOutputListStandby(Items req);
+    int cntCcubeOutputListStandby(Items req);
+
+    int insCcubeOutput(Map<String,Object> req);
+    int uptCcubeOutputStat(Map<String,Object> req);
+    int insCcubeOutputHist(Map<String,Object> req);
 }

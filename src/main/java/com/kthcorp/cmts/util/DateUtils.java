@@ -84,6 +84,22 @@ public class DateUtils {
 
 	/**
 	 * <p>
+	 * 현재 날짜와 시각을 주어진 규격 형태로 변환 후 return.
+	 *
+	 * @return yyyy-MM-dd
+	 * @see Date
+	 * @see Locale <p>
+	 */
+	public static String getLocalDate(String pattern) {
+		Date today = new Date();
+		Locale currentLocale = new Locale("KOREAN", "KOREA");
+		//String pattern = "yyyy-MM-dd";
+		SimpleDateFormat formatter = new SimpleDateFormat(pattern,currentLocale);
+		return formatter.format(today);
+	}
+
+	/**
+	 * <p>
 	 * 현재 날짜와 시각을 yyyy-MM-dd 형태로 변환 후 return.
 	 *
 	 * @return yyyy-MM-dd

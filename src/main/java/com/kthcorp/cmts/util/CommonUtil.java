@@ -47,28 +47,30 @@ public class CommonUtil {
             // script 처리
             Pattern script = Pattern.compile("<(no)?script[^>]*>.*?</(no)?script>",Pattern.DOTALL);
             mat = script.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
             // style 처리
             Pattern style = Pattern.compile("<style[^>]*>.*</style>",Pattern.DOTALL);
             mat = style.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
             // tag 처리
             //Pattern tag = Pattern.compile("<(\"[^\"]*\"|\'[^\']*\'|[^\'\">])*>");
             Pattern tag = Pattern.compile("\\<[^\\>]*\\>");
             mat = tag.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
             // ntag 처리
             Pattern ntag = Pattern.compile("<\\w+\\s+[^<]*\\s*>");
             mat = ntag.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
             // entity ref 처리
             Pattern Eentity = Pattern.compile("&[^;]+;");
             mat = Eentity.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
             // whitespace 처리
             Pattern wspace = Pattern.compile("\\s\\s+");
             mat = wspace.matcher(str);
-            str = mat.replaceAll("");
+            str = mat.replaceAll(" ");
+
+            str = str.trim().replace("  ", " ");
 
         } catch (Exception e)
         {
@@ -172,20 +174,19 @@ public class CommonUtil {
 
     public static String removeAllSpec(String reqStr) {
         String result = reqStr.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", "");
-        result = result.replace("select","");
-        result = result.replace("from","");
-        result = result.replace("insert","");
-        result = result.replace("into","");
-        result = result.replace("update","");
-        result = result.replace("set","");
-        result = result.replace("union","");
-        result = result.replace("join","");
-        result = result.replace("all","");
-        result = result.replace("left","");
-        result = result.replace("right","");
         return result;
     }
 
+    public static String removeAllSpec1(String reqStr) {
+        String result = reqStr.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", " ");
+        return result;
+    }
+
+    public static String removeLineFeed(String reqStr) {
+        reqStr = reqStr.replace("\n","");
+        reqStr = reqStr.replace("\r","");
+        return reqStr;
+    }
 
     public static String removeAllSpec2(String reqStr) {
         String result = reqStr.replaceAll("|", "");

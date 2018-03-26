@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonReader;
 import com.kthcorp.cmts.model.MovieCine21;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -711,5 +712,30 @@ public class FileUtils {
         }
 
         return result;
+    }
+
+    public static int writeYyyymmddFileFromStr(String reqStr, String upload_dir, String fileName, String charset) {
+        int rt = 0;
+
+        BufferedWriter output = null;
+        try {
+
+            File targetFile = new File(upload_dir + fileName);
+            targetFile.createNewFile();
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), charset));
+
+            String lineFeed = System.getProperty("line.separator");
+
+            output.write(reqStr);
+            output.write(lineFeed);
+
+            output.close();
+            rt = 1;
+        } catch (Exception e) {
+            rt = -1;
+            e.printStackTrace();
+        }
+
+        return rt;
     }
 }

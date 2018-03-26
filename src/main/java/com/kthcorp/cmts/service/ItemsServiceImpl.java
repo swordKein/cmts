@@ -58,4 +58,6 @@ public interface ItemsServiceImpl {
     Items getItemsByIdx(Items req);
 
     int uptItemsTagcnt(Items req);
+
+    Items getItemInfoOne(int idx);
 }

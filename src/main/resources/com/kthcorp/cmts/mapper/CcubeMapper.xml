@@ -261,4 +261,54 @@
             where yj.yj_id not in ( select yj_id from yj_items_out )
         ) a
     </select>
+
+    <select id="getCcubeOutputList50" resultType="map">
+        /* getCcubeOutputList50 */
+        select * from ccube_output
+        where stat = 'Y'
+        order by regdate asc, idx asc
+        limit 50
+    </select>
+
+    <select id="getCcubeOutputListStandby" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getCcubeOutputListStandby */
+        select co.*, it.title, it.title2, it.director, it.year, it.cid, it.type from ccube_output co
+        inner join items it on it.idx = co.idx
+        where co.stat = 'Y' and it.type like concat(#{type}, '%')
+        and co.uptcnt <![CDATA[ < ]]> 4
+        order by co.regdate asc, co.idx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntCcubeOutputListStandby" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Items">
+        /* cntCcubeOutputListStandby */
+        select count(*) as cnt from ccube_output co
+        inner join items it on it.idx = co.idx
+        where co.stat = 'Y' and it.type like concat(#{type}, '%')
+        and co.uptcnt <![CDATA[ < ]]> 4
+    </select>
+
+    <insert id="insCcubeOutput" parameterType="map">
+        /* insCcubeOutput */
+        insert into ccube_output (idx, stat, regdate, regid)
+        values (#{idx}, 'Y', now(), #{regid})
+    </insert>
+
+    <update id="uptCcubeOutputStat" parameterType="map">
+        /* uptCcubeOutputStat */
+        update ccube_output set procdate = now()
+          <if test='stat != null and stat != ""'>
+              , stat = #{stat}
+          </if>
+          <if test='uptcnt != null and uptcnt > 0'>
+              , uptcnt = #{uptcnt}
+          </if>
+        where hidx = #{hidx}
+    </update>
+
+    <insert id="insCcubeOutputHist" parameterType="map">
+        /* insCcubeOutputHist */
+        insert into ccube_output_hist (content, procdate, regid)
+        values (#{content}, now(), #{regid})
+    </insert>
 </mapper>

@@ -69,20 +69,20 @@
     <select id="getItemsByIdx" resultMap="Items" parameterType="com.kthcorp.cmts.model.Items">
         /* getItemsByIdx */
         select
-            t.idx, t.cid, t.title, t.title1, t.title2,
+            t.idx, t.type, t.cid, t.title, t.title1, t.title2,
             t.regdate, t.regdate1, t.regdate2, t.regid, t.stat, t.director, t.year,
-            m.idx, m.mtype, m.meta
+            m.mtype, m.meta
         from items t
-        LEFT JOIN items_metas_mapping tm on tm.idx = t.idx
-        LEFT JOIN items_metas m on m.idx = tm.idx
+        /* LEFT JOIN items_metas_mapping tm on tm.idx = t.idx */
+        LEFT JOIN items_metas m on m.idx = t.idx
         where t.idx = #{idx}
-        limit 1
+
     </select>
 
     <select id="getItemsInfoByIdx" resultMap="Items" parameterType="java.lang.Integer">
         /* getItemsInfoByIdx */
         select
-        t.idx, t.cid, t.title, t.title1, t.title2,
+        t.idx, t.type, t.cid, t.title, t.title1, t.title2,
         t.regdate, t.regdate1, t.regdate2, t.regid, t.stat, t.director, t.year,
         t.duration, t.tagcnt
         from items t

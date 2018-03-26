@@ -1,21 +1,22 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.AuthUserMapper;
 import com.kthcorp.cmts.mapper.CcubeMapper;
+import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.ItemsMetasMapper;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.util.AES256Util;
-import com.kthcorp.cmts.util.DateUtils;
+import com.kthcorp.cmts.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CcubeService implements CcubeServiceImpl {
@@ -24,8 +25,17 @@ public class CcubeService implements CcubeServiceImpl {
 
     @Value("${cmts.property.serverid}")
     private String serverid;
+    @Value("${spring.static.resource.location}")
+    private String UPLOAD_DIR;
+    @Value("${spring.static.resource.location}")
+    private String WORK_DIR;
+
     @Autowired
     private CcubeMapper ccubeMapper;
+    @Autowired
+    private ItemsService itemsService;
+    @Autowired
+    private SftpService sftpService;
 
     @Override
     public List<CcubeContent> get50ActiveCcubeContents() {
@@ -153,5 +163,191 @@ public class CcubeService implements CcubeServiceImpl {
         }
 
         return result;
+    }
+
+    private Map<String, Object> getTagsMetasMap(List<ItemsTags> tagsMetasList) {
+        Map<String,Object> resMap = new HashMap();
+        for (ItemsTags it : tagsMetasList) {
+            if (it != null && it.getMtype() != null && it.getMeta() != null) {
+                resMap.put(it.getMtype(), it.getMeta());
+            }
+        }
+        return resMap;
+    }
+
+    private JsonObject getTagsMetasObj(JsonObject origObj, List<ItemsTags> tagsMetasList) throws Exception {
+        if(origObj == null) origObj = new JsonObject();
+
+        List<String> origTypes = new ArrayList();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SEARCHKEYWORDS");
+        origTypes.add("METASCHARACTER");
+        origTypes.add("LIST_RECO_TARGET");
+        origTypes.add("LIST_RECO_SITUATION");
+
+        Map<String, Object> tagsMetasMap = this.getTagsMetasMap(tagsMetasList);
+
+        for(String type : origTypes) {
+            String mtype = type;
+            mtype = mtype.replace("METAS", "META_");
+            mtype = mtype.replace("LIST_", "META_");
+            mtype = mtype.replace("SEARCHKEYWORDS", "SEARCH");
+
+            if (tagsMetasMap != null && tagsMetasMap.get(type) != null) {
+                String metasStr = tagsMetasMap.get(type).toString();
+                //System.out.println("#MLOG.convert.type:"+type+" | metasStr:"+metasStr);
+
+                List<String> tmpList = null;
+                if ((type.contains("METAS") || type.contains("LIST")) && !type.equals("LIST_SEARCHKEYWORDS")) {
+                    JsonArray tmpArr = JsonUtil.getJsonArray(metasStr);
+                    tmpList = JsonUtil.getListFromJsonArrayByTag(tmpArr, "word", 100);
+                } else {
+                    tmpList = StringUtil.convertStringToListByComma(metasStr);
+                    //System.out.println("#MLOG.tmpLIST:"+tmpList.toString());
+                }
+                String meta = StringUtil.convertArrayStringToStringAddDelimeter(tmpList, ",");
+                origObj.addProperty(mtype, meta);
+            }
+        }
+
+        return origObj;
+    }
+
+    private JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
+        if (contentsArr == null) contentsArr = new JsonArray();
+
+        if (reqMap != null) {
+            int itemIdx = 0;
+            if (reqMap.get("idx") != null) {
+                String sIdx = String.valueOf(reqMap.get("idx"));
+                itemIdx = Integer.parseInt(sIdx);
+            }
+            if (itemIdx > 0) {
+                Items itemInfo = itemsService.getItemInfoOne(itemIdx);
+                //System.out.println("#MLOG: getContent::"+itemInfo.toString());
+                if (itemInfo != null) {
+                    JsonObject newItem = new JsonObject();
+                    newItem.addProperty("CONTENT_ID", (itemInfo.getCid() != null ? itemInfo.getCid() : "0"));
+                    newItem.addProperty("META_CONTENT_TITLE", itemInfo.getTitle());
+
+                    // items_tags_metas를 읽어와서 Obj에 매핑
+                    newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
+
+                    // items_metas에서 award를 가져와서 Obj에 매핑
+                    String awardStr = "";
+                    if (itemInfo.getMetaList() != null) {
+                        for (ItemsMetas im : itemInfo.getMetaList()) {
+                            if (im != null && im.getMtype() != null && im.getMeta() != null
+                                    && "award".equals(im.getMtype())) {
+                                awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
+                                awardStr = CommonUtil.removeTag(awardStr);
+                                awardStr = CommonUtil.removeAllSpec1(awardStr);
+                            }
+                        }
+                    }
+                    newItem.addProperty("META_AWARD",awardStr);
+                    contentsArr.add(newItem);
+                    //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
+                }
+
+            }
+        }
+        return contentsArr;
+    }
+
+    @Override
+    public int processCcubeOutputToJson() {
+        int rt = 0;
+        rt = this.processCcubeOutputToJsonByType("CcubeSeries");
+        rt = this.processCcubeOutputToJsonByType("CcubeContent");
+
+        return rt;
+    }
+
+    @Override
+    @Transactional
+    public int processCcubeOutputToJsonByType(String type) {
+        int rt = 0;
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        countAll = ccubeMapper.cntCcubeOutputListStandby(req);
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("TOTAL_COUNT", countAll);
+
+        logger.info("#MLLOG:processCcubeOutput:: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            //System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+            Map<Long, Integer> uptKeyAndTagCntList = new HashMap();
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    reqItems = ccubeMapper.getCcubeOutputListStandby(req);
+                    if (reqItems != null) {
+                        logger.info("#SCHEDULE processCcubeOutputToJson.getCcubeOutputListStandby: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        for (Map<String, Object> ins : reqItems) {
+                            contents = this.getJsonArrayForCcubeOutput(contents, type, ins);
+                            uptKeyAndTagCntList.put((Long) ins.get("hidx"), (Integer) ins.get("uptcnt"));
+                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+                    }
+
+                }
+                resultObj.add("CONTENTS", contents);
+                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "META_SERIES_" : "META_MOVIE_");
+                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+
+                rt = 1;
+            } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+            }
+
+            System.out.println("#UPT stat:: from:" + uptKeyAndTagCntList.toString());
+
+            /* update CCUBE_OUTPUT stat = S , uptcnt++ */
+            Set entrySet = uptKeyAndTagCntList.entrySet();
+            Iterator it = entrySet.iterator();
+
+            while (it.hasNext()) {
+                Map.Entry me = (Map.Entry) it.next();
+                Long hidx = (Long) me.getKey();
+                Integer nextUptCnt = (Integer) me.getValue() + 1;
+
+                Map<String, Object> uptItem = new HashMap();
+                uptItem.put("hidx", hidx);
+                uptItem.put("uptcnt", nextUptCnt);
+                uptItem.put("stat", "S");
+
+                int rtupt = ccubeMapper.uptCcubeOutputStat(uptItem);
+            }
+        }
+        return rt;
     }
 }

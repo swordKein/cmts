@@ -88,4 +88,46 @@ public class SftpService implements SftpServiceImpl {
 
         return rtcode;
     }
+
+    @Override
+    public int uploadToCcube(String work_dir, String fileName) {
+        int rt = 0;
+
+        logger.info("#SftpService:uploadToCcube:: from:"+work_dir+fileName);
+        try {
+            rt = this.uploadSftpToCcubeOutput(ccube_sftp_ip, ccube_sftp_port, ccube_sftp_user, ccube_sftp_passwd
+                    , ccube_sftp_uploaddir, work_dir, fileName);
+        } catch (Exception e) {
+            rt = -2;
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+    @Override
+    public int uploadSftpToCcubeOutput(String ip, int port, String user, String passwd
+            , String upload_dir, String work_dir, String fileName) {
+        int rt = 0;
+
+        SftpClient client = new SftpClient();
+        client.setServer(ip);
+        client.setPort(port);
+        client.setLogin(user);
+        client.setPassword(passwd);
+        client.connect();
+
+        try {
+
+            logger.info("#SftpService:uploadToCcube:: to:"+upload_dir+fileName);
+            client.uploadFile(work_dir+fileName, upload_dir+fileName);
+            rt = 1;
+        } catch (Exception e) {
+            rt = -1;
+            logger.error("", e);
+        } finally {
+            client.disconnect();
+        }
+
+        return rt;
+    }
 }

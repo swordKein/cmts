@@ -164,23 +164,26 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 */25 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : collectService
     -
-      cronExpression : 0 */25 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : refineService
     -
-      cronExpression : 0 */25 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : analyzeService
     -
-      cronExpression : 0 */25 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : itemsService
     -
-      cronExpression : 0 */25 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : sftpService
     -
-      cronExpression : 0 0 * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
+    -
+      cronExpression : 0 * * * * ?
+      jobType : ccubeOutput
 #elasticsearch :
 #  url : http://14.63.170.72:9200/
 #  idx : seunjeon-idx
@@ -232,6 +235,9 @@ schedule :
     -
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
+    -
+      cronExpression : 0 0 * * * ?
+      jobType : ccubeOutput
 ---
 spring:
   profiles: dev_no_sched
