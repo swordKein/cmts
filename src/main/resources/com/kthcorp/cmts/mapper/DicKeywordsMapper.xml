@@ -25,6 +25,17 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
+    <select id="cntDicKeywordsByType" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* cntDicKeywordsByType */
+        select
+        count(*) as cnt
+        from dic_keywords
+        where type = #{type}
+        <if test='keyword != null and keyword != ""'>
+            and keyword like concat('%',#{keyword},'%')
+        </if>
+    </select>
+
     <select id="getDicKeywords" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsList */
         select
@@ -94,6 +105,13 @@
         where type = #{type} and keyword = #{oldword}
     </update>
 
+    <update id="uptDicKeywords2" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* uptDicKeywords2 */
+        update dic_keywords
+        set procdate = now(), freq1 = #{freq1}
+        where idx = #{idx}
+    </update>
+
     <delete id="delDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* delDicKeywords  */
         delete from dic_keywords
@@ -106,5 +124,22 @@
         select idx, genre, word, regdate, regid
         from dic_genre_words
         where genre = #{genre}
+    </select>
+
+    <select id="cntTagsMetasByDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords" resultType="java.lang.Integer">
+        /* cntTagsMetasByDicKeywords */
+        select count(*) as cnt
+        from items_tags_metas itm
+        inner join items_tags_keys itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx and itk.stat = 'S'
+        where itm.mtype = #{type} and itm.meta like concat('%"',#{keyword},'",%');
+    </select>
+
+    <select id="getRankOfDicKeywordsFreq1" parameterType="com.kthcorp.cmts.model.DicKeywords"
+            resultType="com.kthcorp.cmts.model.DicKeywords">
+        /* getRankOfDicKeywordsFreq1 */
+        select * from dic_keywords
+        where type = #{type}
+        order by freq1 desc
+        limit 500
     </select>
 </mapper>
