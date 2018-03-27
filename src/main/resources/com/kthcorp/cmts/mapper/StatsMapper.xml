@@ -328,4 +328,16 @@
             and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
         group by stat
     </select>
+
+    <select id="getCountsItemsByStatUniq" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountsItemsByStatUniq */
+        select type,stat,count(*) as cnt from (
+        select type, stat, idx
+        from items_hist
+        where type in ('collect', 'analyze', 'meta')
+        and regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
+            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        group by type, stat, idx
+        ) a group by a.type, a.stat
+    </select>
 </mapper>

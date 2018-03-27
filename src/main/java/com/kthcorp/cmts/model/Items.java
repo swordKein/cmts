@@ -58,7 +58,15 @@ public class Items extends Paging {
 
     private List<ItemsMetas> metaList;
     private List<SchedTrigger> schedList;
+    private List<ItemsTags> tagsMetasList;
 
+    public List<ItemsTags> getTagsMetasList() {
+        return tagsMetasList;
+    }
+
+    public void setTagsMetasList(List<ItemsTags> tagsMetasList) {
+        this.tagsMetasList = tagsMetasList;
+    }
 
     public Integer getIdx() {
         return idx;

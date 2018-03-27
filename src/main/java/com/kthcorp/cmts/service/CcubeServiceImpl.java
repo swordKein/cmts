@@ -29,4 +29,8 @@ public interface CcubeServiceImpl {
     int insCcubeKeys(CcubeKeys req);
 
     JsonObject getCcubeDatasByItemIdx(int itemIdx);
+
+    int processCcubeOutputToJson();
+
+    int processCcubeOutputToJsonByType(String type);
 }

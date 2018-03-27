@@ -1,9 +1,6 @@
 package com.kthcorp.cmts.mapper;
 
-import com.kthcorp.cmts.model.CcubeContent;
-import com.kthcorp.cmts.model.CcubeKeys;
-import com.kthcorp.cmts.model.CcubeSeries;
-import com.kthcorp.cmts.model.ItemsMetas;
+import com.kthcorp.cmts.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -14,7 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -68,4 +67,22 @@ public class CcubeMapperTest {
         CcubeKeys result = ccubeMapper.getCcubeKeys(10406);
         System.out.println("#result:"+result.toString());
     }
+
+    @Test
+    @Rollback(false)
+    public void test_insertCcubeOutput() throws Exception {
+        Map<String, Object> req = new HashMap();
+        req.put("idx", 9473);
+        req.put("stat", "Y");
+        req.put("regid", "ghkdwo77");
+        int rt = ccubeMapper.insCcubeOutput(req);
+
+        Items reqi = new Items();
+        reqi.setType("CcubeContent");
+        reqi.setPageSize(50);
+        reqi.setPageNo(1);
+
+        System.out.println("#RES:"+ccubeMapper.getCcubeOutputListStandby(reqi));
+    }
+
 }

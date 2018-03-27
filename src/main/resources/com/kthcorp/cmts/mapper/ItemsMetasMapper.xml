@@ -5,7 +5,7 @@
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsMetasMapper">
 
     <select id="getItemsMetas" resultType="com.kthcorp.cmts.model.ItemsMetas">
-        /* getMetas */
+        /* getItemsMetas */
         select
           idx, mtype, meta, regdate, regid
         from items_metas

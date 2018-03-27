@@ -22,6 +22,7 @@ public class JobRunner implements Job {
     @Autowired private ItemsService itemsService;
     @Autowired private SftpService sftpService;
     @Autowired private ApiService apiService;
+    @Autowired private CcubeService ccubeService;
     //@Autowired
     //private MainService mainServiceImpl;
     //@Autowired
@@ -53,6 +54,10 @@ public class JobRunner implements Job {
                 case "snsTopWords":
                     rt = apiService.processSnsTopKeywordsByDateSched();
                     logger.info("#MLOG schedule.snsTopKeywords.start jobType:"+jobType+"/rt:"+rt);
+                    break;
+                case "ccubeOutput":
+                    rt = ccubeService.processCcubeOutputToJson();
+                    logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
                     break;
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");

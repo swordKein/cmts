@@ -564,4 +564,24 @@ public class ItemsService implements ItemsServiceImpl {
     public int uptItemsTagcnt(Items req) {
         return itemsMapper.uptItemsTagcnt(req);
     }
+
+    @Override
+    public Items getItemInfoOne(int idx) {
+        Items item = null;
+        if (idx > 0) {
+            item = itemsMapper.getItemsInfoByIdx(idx);
+            ItemsMetas reqIm = new ItemsMetas();
+            reqIm.setIdx(idx);
+            List<ItemsMetas> metasList = itemsMetasMapper.getItemsMetasByIdx(reqIm);
+            item.setMetaList(metasList);
+
+            ItemsTags reqIt = new ItemsTags();
+            reqIt.setIdx(idx);
+            reqIt.setStat("S");
+            List<ItemsTags> tagsList = itemsTagsService.getItemsTagsMetasByItemIdx(reqIt);
+            item.setTagsMetasList(tagsList);
+        }
+
+        return item;
+    }
 }

@@ -35,4 +35,5 @@ public interface StatsMapper {
     int getCountInsertedDaily(Stats req);
     List<Stats> getCountItemsHistByType(Stats req);
     List<Stats> getCountsItemsStatByStat(Stats req);
+    List<Stats> getCountsItemsByStatUniq(Stats req);
 }

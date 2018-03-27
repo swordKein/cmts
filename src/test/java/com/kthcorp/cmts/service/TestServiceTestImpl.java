@@ -386,4 +386,14 @@ public class TestServiceTestImpl {
 
 	}
 
+	@Test
+	public void test_processCalFreqFromDicKeywords() throws Exception {
+		testService.processCalFreqFromDicKeywords();
+	}
+
+	@Test
+	public void test_writeRankOfDicKeywordByFreq1() throws Exception {
+		testService.writeRankOfDicKeywordByFreq1();
+	}
+
 }

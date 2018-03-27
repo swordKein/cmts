@@ -54,6 +54,34 @@ public class MapUtil {
         return sortedMap;
     }
 
+    public static List<String> getSortedDescStringArrayForDouble(Map<String, Double> reqMap, int limit) {
+        Map<String, Double> metaValueMap = new HashMap<String, Double>();
+        List<String> resultArr = new ArrayList();
+
+        Set entrySet = reqMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            metaValueMap.put(me.getKey().toString(), (Double) me.getValue());
+        }
+
+        ValueComparator vc = new ValueComparator(metaValueMap);
+        Map<String, Double> sortedMap = new TreeMap<String, Double>(vc);
+
+        sortedMap.putAll(metaValueMap);
+
+        Set entrySet2 = sortedMap.entrySet();
+        Iterator it2 = entrySet2.iterator();
+        int lineCnt = 0;
+        while(it2.hasNext() && lineCnt < limit) {
+            Map.Entry me2 = (Map.Entry) it2.next();
+            resultArr.add(me2.getKey().toString());
+            lineCnt++;
+        }
+
+        return resultArr;
+    }
 
     public static Map<String, Object> getSortedascMapForStringKey(Map<String, Object> reqMap) {
         Map<String, Object> metaValueMap = new HashMap<String, Object>();

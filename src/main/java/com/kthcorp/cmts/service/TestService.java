@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,8 @@ public class TestService implements TestServiceImpl {
     private DicService dicService;
     @Autowired
     private CcubeMapper ccubeMapper;
+    @Autowired
+    private DicKeywordsMapper dicKeywordsMapper;
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -3068,4 +3071,74 @@ public class TestService implements TestServiceImpl {
         return result;
     }
 
+    @Override
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
+    public void processCalFreqFromDicKeywords() {
+        List<String> types = dicKeywordsMapper.getKeywordTypes();
+
+        int pageSize = 5000;
+        DicKeywords reqDic = new DicKeywords();
+        reqDic.setPageSize(pageSize);
+
+        for (String type : types) {
+            reqDic.setType(type);
+            int countAll = dicKeywordsMapper.cntDicKeywordsByType(reqDic);
+            System.out.println("#DIC2 type:"+type+" / countAll:"+countAll);
+            if (countAll > 0) {
+                int pageAll = 0;
+                pageAll = countAll / pageSize + 1;
+                System.out.println("#DIC2 type:"+type+" / pageAll:"+pageAll);
+
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    reqDic.setPageNo(pno);
+                    List<DicKeywords> thisArr = dicKeywordsMapper.getDicKeywordsPaging(reqDic);
+                    System.out.println("#DIC3 type:" + type + " / page:" + pno + " / size:" + thisArr.size());
+
+
+                    for(int cn=0; cn < thisArr.size(); cn++) {
+                        DicKeywords kw = thisArr.get(cn);
+
+                            //System.out.println("#DIC4 type:" + type + " / page:" + pno + " / keyword:" + kw.getKeyword());
+                            DicKeywords ndic = new DicKeywords();
+                            ndic.setType("METAS"+type);
+                            ndic.setKeyword(kw.getKeyword());
+                            int cntMetas = dicKeywordsMapper.cntTagsMetasByDicKeywords(ndic);
+                            System.out.println("#DIC4 type:" + type + " / page:" + pno + " / keyword:" + kw.getKeyword()+ " / cntMetas:"+cntMetas);
+
+                            double cntMetas1 = (double) cntMetas;
+                            ndic.setFreq1(cntMetas1);
+                            ndic.setIdx(kw.getIdx());
+                            int rtU = dicKeywordsMapper.uptDicKeywords2(ndic);
+                    }
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void writeRankOfDicKeywordByFreq1() {
+        List<String> types = dicKeywordsMapper.getKeywordTypes();
+
+        for(String type : types) {
+            DicKeywords req = new DicKeywords();
+            req.setType(type);
+            List<DicKeywords> wordsList = dicKeywordsMapper.getRankOfDicKeywordsFreq1(req);
+            System.out.println("# type:"+type+" / wordsList.size:"+wordsList.size());
+
+            String seperator = "\t";
+            String lineFeed = System.getProperty("line.separator");
+            String resultStr = "";
+            resultStr = "키워드" + seperator + "문서수" + lineFeed;
+
+            for (DicKeywords kw : wordsList) {
+                if(!kw.getKeyword().trim().equals(""))
+                resultStr += kw.getKeyword() + seperator + kw.getFreq1() + lineFeed;
+            }
+
+            String fileNameContent = "RANK_180327_"+type+".tsv";
+
+            int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+        }
+    }
 }
