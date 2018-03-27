@@ -23,6 +23,25 @@ public class DicKeywords extends Paging {
     private String oldword;
     private String toword;
 
+    private Double freq1;
+    private Double freq2;
+
+    public Double getFreq1() {
+        return freq1;
+    }
+
+    public void setFreq1(Double freq1) {
+        this.freq1 = freq1;
+    }
+
+    public Double getFreq2() {
+        return freq2;
+    }
+
+    public void setFreq2(Double freq2) {
+        this.freq2 = freq2;
+    }
+
     public String getToword() {
         return toword;
     }

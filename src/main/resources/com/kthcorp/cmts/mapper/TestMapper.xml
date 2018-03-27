@@ -72,4 +72,5 @@
             where length(yc.words) > 2 and yc.titlecnt = 1
         ) c
     </select>
+
 </mapper>
