@@ -573,8 +573,8 @@ public class ApiService implements ApiServiceImpl {
         result.addProperty("SEARCHPARTS", searchParts);
 
         JsonObject countsSearch = getCountSearch(countAll, reqIt);
-        countsSearch.addProperty("COUNT_ALL", countAll);
-
+//        countsSearch.addProperty("COUNT_ALL", countAll);
+        countsSearch.addProperty("COUNT_ALL", countItems);
 
         result.add("COUNTS_SEARCH", countsSearch);
 
