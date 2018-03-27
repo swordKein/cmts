@@ -554,8 +554,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             JsonArray newTypesArr = null;
             if (resultObj != null && resultObj.get(type) != null) newTypesArr = (JsonArray) resultObj.get(type);
 
-            JsonArray typeResultArr = getCombinedJsonArray(type, oldTypesArr, newTypesArr, isColorCode);
-            System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr.toString());
+            JsonArray typeResultArr1 = getCombinedJsonArray(type, oldTypesArr, newTypesArr, isColorCode);
+            System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr1.toString());
+
+            JsonArray typeResultArr = null;
+            if(!"LIST_SEARCHKEYWORDS".equals(type)) {
+                //&& !"LIST_SUBGENRE".equals(atype)) {
+                typeResultArr = this.getRemoveDupTargetMetasArray(typeResultArr1);
+                //System.out.println("#ELOG.destArr(JsonObject): datas::"+destArr2.toString());
+            } else {
+                typeResultArr = this.getRemoveDupTargetMetasArrayOnlyString(typeResultArr1);
+                //System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
+            }
 
             if ("LIST_NOT_MAPPED".equals(type)) {
                 JsonArray sortedJsonArray = JsonUtil.getSortedJsonArray(typeResultArr, "word", "ratio", "type", 100);
