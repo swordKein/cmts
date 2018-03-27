@@ -115,4 +115,8 @@ public interface TestServiceImpl {
     void insCcubeMovies0226(List<CcubeContent> reqList);
 
     void writeDicEmo0227() throws Exception;
+
+    void processCalFreqFromDicKeywords();
+
+    void writeRankOfDicKeywordByFreq1();
 }
