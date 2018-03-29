@@ -6,10 +6,13 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
+import org.apache.avro.generic.GenericData;
+import org.apache.directory.shared.ldap.codec.ResponseCarryingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestComponent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,8 @@ public class TestService implements TestServiceImpl {
     private CcubeMapper ccubeMapper;
     @Autowired
     private DicKeywordsMapper dicKeywordsMapper;
+    @Autowired
+    private ItemsMetasMapper itemsMetasMapper;
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -3140,5 +3145,157 @@ public class TestService implements TestServiceImpl {
 
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
+    }
+
+    public void processRankForDicKeywordsAndGenres_() {
+        //List<String> types = dicKeywordsMapper.getKeywordTypes();
+
+        //for(String type : types) {
+        Set<String> genreArr = new HashSet();
+        ItemsMetas reqIm = new ItemsMetas();
+        reqIm.setMtype("genre");
+        List<ItemsMetas> resIm = itemsMetasMapper.getItemsMetasByMtype(reqIm);
+        for(ItemsMetas im : resIm) {
+            String genreStr = "";
+            if (im != null && im.getMeta() != null) {
+                genreStr = im.getMeta().trim();
+                genreStr = CommonUtil.removeNationStr(genreStr);
+
+                if (!"".equals(genreStr) && !genreStr.contains("분")) {
+                    if (genreStr.contains(" ")) {
+                        String genres[] = genreStr.split(" ");
+                        for (String gn : genres) {
+                            gn = gn.trim();
+                            if (!"".equals(gn)) {
+                                genreArr.add(gn);
+                            }
+                        }
+                    } else {
+                        genreArr.add(genreStr);
+                    }
+                }
+            }
+        }
+        System.out.println("#RES.genreArr:"+genreArr.toString());
+
+    }
+
+    @Override
+    public void processRankForDicKeywordsAndGenres() {
+        String origGenres = "공포, 다큐멘터리, 서사, 뮤지컬, 무협, 미스터리, 액션, 코미디, SF, 에로, 드라마, 컬트, 판타지, 가족, 전쟁, 멜로로맨스, " +
+                "범죄, 모험, 애니메이션, 블랙코미디, 실험, 스릴러, 서스펜스, 느와르, TV영화, 서부, 공연실황";
+        origGenres = origGenres.replace(" ","");
+
+        Map<String, Integer> calMap = new HashMap();
+        String genresp[] = origGenres.split(",");
+        //String genresp2[] = {"드라마", "전쟁"};
+
+        List<String> types = dicKeywordsMapper.getKeywordTypes();
+
+        for(String genre : genresp) {
+            for (String type : types) {
+
+                int pageSize = 2000;
+                DicKeywords reqDic = new DicKeywords();
+                reqDic.setPageSize(pageSize);
+                reqDic.setPageNo(1);
+
+                    reqDic.setType(type);
+                    //int countAll = dicKeywordsMapper.cntDicKeywordsByType(reqDic);
+                    //System.out.println("#DIC2 type:"+type+" / countAll:"+countAll);
+                    //if (countAll > 0) {
+                        //int pageAll = 0;
+                        //pageAll = countAll / pageSize + 1;
+                        //System.out.println("#DIC2 type:"+type+" / pageAll:"+pageAll);
+
+                        //pageAll = 2;
+                        //for (int pno = 1; pno <= pageAll; pno++) {
+                            //reqDic.setPageNo(pno);
+                            List<DicKeywords> thisArr = dicKeywordsMapper.getDicRankKeywordsPaging(reqDic);
+                            System.out.println("#DIC3 type:" + type + " / size:" + thisArr.size());
+
+                            int keywordAllCnt = thisArr.size();
+                            //keywordAllCnt = 5;
+                            for(int cn=0; cn < keywordAllCnt; cn++) {
+
+                                DicKeywords kw = thisArr.get(cn);
+
+                                System.out.println("#DIC4 type:" + type + " / keyword:" + kw.getKeyword());
+                                String keyword = kw.getKeyword();
+                                keyword = keyword.trim();
+
+                                if (!"".equals(keyword) && !"\\".equals(keyword)) {
+                                    DicKeywords ndic = new DicKeywords();
+                                    ndic.setType("METAS" + type);
+                                    ndic.setGenre(genre);
+                                    ndic.setKeyword(keyword);
+
+                                    List<DicKeywords> cntMetasByType = dicKeywordsMapper.cntTagsMetasByDicKeywordsAndGenre(ndic);
+                                    System.out.println("#DIC4 type:" + type + " / keyword:" + keyword
+                                            + " / cntMetasByType:" + cntMetasByType.toString());
+
+                                    for (DicKeywords dkw : cntMetasByType) {
+                                        String mapKey = genre + "_" + dkw.getType() + "_" + keyword;
+
+                                        int sum1 = 0;
+                                        int cntMetas = dkw.getCnt();
+                                        if (calMap.get(mapKey) != null) sum1 = calMap.get(mapKey);
+                                        sum1 += cntMetas;
+
+                                        calMap.put(mapKey, sum1);
+                                    }
+                                }
+                            }
+
+                            System.out.println("#type:"+type+"  #RES.calMap:"+calMap.size());
+
+                            Set entrySet = calMap.entrySet();
+                            Iterator it = entrySet.iterator();
+
+                            while (it.hasNext()) {
+                                Map.Entry me = (Map.Entry) it.next();
+                                String keys = me.getKey().toString();
+                                String keyss[] = keys.split("_");
+                                if (keyss != null && keyss.length == 3) {
+                                    //String genre = keyss[0];
+                                    //String mtype = keyss[1];
+                                    String keyword = keyss[2];
+                                    int cnt = (int) me.getValue();
+                                    DicKeywords reqDk = new DicKeywords();
+                                    reqDk.setGenre(genre);
+                                    reqDk.setType(type);
+                                    reqDk.setKeyword(keyword);
+                                    reqDk.setCnt(cnt);
+                                    int rti = dicKeywordsMapper.insDicRankWords2(reqDk);
+                                }
+
+                            }
+
+                            calMap = null;
+                            calMap = new HashMap();
+                        //}
+                    //}
+
+
+            }
+        }
+    }
+
+    @Override
+    public void writeNoGenreItems() {
+        List<Items> items = testMapper.getNoGenreItems();
+        System.out.println("#RES.size:"+items.size());
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        resultStr = "CONTENT_ID" + seperator + "ITEM_IDX" + seperator + "TITLE" + lineFeed;
+
+        for (Items item : items) {
+                resultStr += item.getCid() + seperator + item.getIdx() + seperator + item.getTitle() + lineFeed;        }
+
+        String fileNameContent = "NO_GENRE_ITEMS_180329.tsv";
+
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
     }
 }

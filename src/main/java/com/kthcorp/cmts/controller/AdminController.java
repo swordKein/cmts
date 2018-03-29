@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ws.rs.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,6 @@ public class AdminController {
 	private DicService dicService;
 	@Autowired
 	private ItemsService itemsService;
-
-
 
 	@RequestMapping(value="/admin", method=RequestMethod.GET)
 	public ModelAndView home(Model model
@@ -624,6 +623,41 @@ public class AdminController {
 
 		mav.addObject("listActive", listActive);
 		mav.addObject("listPage", listPage);
+
+		return mav;
+	}
+
+
+	@RequestMapping(value="/admin/keywordrank/list", method=RequestMethod.GET)
+	public ModelAndView keywordrankList(Map<String, Object> model
+			, @RequestParam(value="genre", required=false, defaultValue = "") String genre
+			, @RequestParam(value="type", required=false, defaultValue = "") String type
+	) {
+
+		logger.debug("#/admin/keywordrank/list get");
+
+		DicKeywords req = new DicKeywords();
+		req.setGenre(genre);
+		req.setType(type);
+		List<DicKeywords> itemsList = dicService.getRankWordsByGenreAndType(req);
+
+		/* pagination */
+		Integer countItems = itemsList.size();
+
+		ModelAndView mav = new ModelAndView("admin/keywordrankList");
+		mav.addObject("itemsList", itemsList);
+		mav.addObject("countItems", countItems);
+		mav.addObject("oldgenre", genre);
+		mav.addObject("oldtype", type);
+
+		String origGenres = "공포, 다큐멘터리, 서사, 뮤지컬, 무협, 미스터리, 액션, 코미디, SF, 에로, 드라마, 컬트, 판타지, 가족, 전쟁, 멜로로맨스, " +
+				"범죄, 모험, 애니메이션, 블랙코미디, 실험, 스릴러, 서스펜스, 느와르, TV영화, 서부, 공연실황";
+		origGenres = origGenres.replace(" ","");
+		String genresp[] = origGenres.split(",");
+		mav.addObject("genres", genresp);
+
+		List<String> types = dicService.getKeywordTypes();
+		mav.addObject("types", types);
 
 		return mav;
 	}

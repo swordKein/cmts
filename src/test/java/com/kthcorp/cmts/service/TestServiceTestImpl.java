@@ -396,4 +396,14 @@ public class TestServiceTestImpl {
 		testService.writeRankOfDicKeywordByFreq1();
 	}
 
+	@Test
+	public void test_processRankForDicKeywordsAndGenres() throws Exception {
+		testService.processRankForDicKeywordsAndGenres();
+	}
+
+	@Test
+	public void test_writeNoGenreItems() throws Exception {
+		testService.writeNoGenreItems();
+	}
+
 }

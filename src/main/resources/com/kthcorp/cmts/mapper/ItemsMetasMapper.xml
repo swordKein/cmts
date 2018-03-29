@@ -21,6 +21,14 @@
         order by mtype asc
     </select>
 
+    <select id="getItemsMetasByMtype" resultType="com.kthcorp.cmts.model.ItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
+        /* getItemsMetasByMtype  */
+        select
+        idx, mtype, meta, regdate, regid
+        from items_metas
+        where mtype = #{mtype}
+    </select>
+
     <insert id="insItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
         /* insItemsMetas */
         insert into items_metas

@@ -219,4 +219,77 @@ public class CommonUtil {
         }
         return reqStr;
     }
+
+    public static String removeNationStr(String req) {
+        req = req.replace("아르메니아", "");
+        req = req.replace("그리스", "");
+        req = req.replace("아일랜드", "");
+        req = req.replace("대만", "");
+        req = req.replace("몽골", "");
+        req = req.replace("말레이지아", "");
+        req = req.replace("멕시코", "");
+        req = req.replace("일본", "");
+        req = req.replace("모로코", "");
+        req = req.replace("노르웨이", "");
+
+        req = req.replace("핀란드", "");
+        req = req.replace("칠레", "");
+        req = req.replace("아르헨티나", "");
+        req = req.replace("뉴질랜드", "");
+        req = req.replace("캐나다", "");
+        req = req.replace("아프가니스탄", "");
+        req = req.replace("스웨덴", "");
+        req = req.replace("타지키스탄", "");
+
+        req = req.replace("한국", "");
+        req = req.replace("기니", "");
+        req = req.replace("카자흐스탄", "");
+        req = req.replace("벨기에", "");
+        req = req.replace("영국", "");
+        req = req.replace("이란", "");
+        req = req.replace("러시아구", "");
+        req = req.replace("덴마크", "");
+        req = req.replace("홍콩", "");
+        req = req.replace("라트비아", "");
+
+        req = req.replace("튀니지", "");
+        req = req.replace("미국", "");
+        req = req.replace("폴란드", "");
+        req = req.replace("중국", "");
+        req = req.replace("터키", "");
+        req = req.replace("필리핀", "");
+        req = req.replace("스페인", "");
+        req = req.replace("헝가리", "");
+        req = req.replace("세네갈", "");
+        req = req.replace("이집트", "");
+        req = req.replace("루마니아", "");
+
+        req = req.replace("스위스", "");
+        req = req.replace("키르기스스탄", "");
+        req = req.replace("체코", "");
+        req = req.replace("이탈리아", "");
+        req = req.replace("독일", "");
+        req = req.replace("포르투갈", "");
+        req = req.replace("페루", "");
+        req = req.replace("독일구", "");
+        req = req.replace("베트남", "");
+        req = req.replace("인도", "");
+
+        req = req.replace("프랑스", "");
+        req = req.replace("오스트리아", "");
+        req = req.replace("소련", "");
+        req = req.replace("태국", "");
+        req = req.replace("오스트레일리아", "");
+        req = req.replace("인도네시아", "");
+        req = req.replace("이스라엘", "");
+        req = req.replace("러시아", "");
+        req = req.replace("연방", "");
+        req = req.replace("네덜란드", "");
+        req = req.replace("쿠바", "");
+        req = req.replace("서독", "");
+        req = req.replace("구", "");
+        req = req.replace("네시아", "");
+
+        return req;
+    }
 }

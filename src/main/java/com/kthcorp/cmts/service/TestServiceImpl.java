@@ -119,4 +119,8 @@ public interface TestServiceImpl {
     void processCalFreqFromDicKeywords();
 
     void writeRankOfDicKeywordByFreq1();
+
+    void processRankForDicKeywordsAndGenres();
+
+    void writeNoGenreItems();
 }

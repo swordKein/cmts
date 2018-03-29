@@ -96,4 +96,8 @@ public interface DicServiceImpl {
     JsonArray getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
 
     int modifyDicsByTypesFromArrayList(String items);
+
+    List<DicKeywords> getRankWordsByGenreAndType(DicKeywords req);
+
+    List<String> getKeywordTypes();
 }

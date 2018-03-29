@@ -31,11 +31,14 @@ public interface DicKeywordsMapper {
 
     List<DicGenreWords> getDicGenreKeywordsByGenre(String genre);
     int cntTagsMetasByDicKeywords(DicKeywords req);
+    List<DicKeywords> cntTagsMetasByDicKeywordsAndGenre(DicKeywords req);
+    int insDicRankWords2(DicKeywords req);
 
 
     @Transactional(propagation= Propagation.REQUIRES_NEW)
     int uptDicKeywords2(DicKeywords req);
 
-
     List<DicKeywords> getRankOfDicKeywordsFreq1(DicKeywords req);
+    List<DicKeywords> getDicRankKeywordsPaging(DicKeywords req);
+    List<DicKeywords> getRankWordsByGenreAndType(DicKeywords req);
 }

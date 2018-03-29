@@ -73,4 +73,13 @@
         ) c
     </select>
 
+    <select id="getNoGenreItems" resultType="com.kthcorp.cmts.model.Items">
+        /* getNoGenreItems */
+        select a.cid,a.idx,a.title,a.genre from (
+        select it.idx, it.title, it.cid
+        , ( select meta from items_metas where idx = it.idx and  mtype = 'genre' ) as genre
+        from items it
+        ) a where a.genre is null
+
+    </select>
 </mapper>

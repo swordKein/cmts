@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.mapper;
 
+import com.kthcorp.cmts.model.Items;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,6 @@ public interface TestMapper {
     int insYcDatas(Map<String, Object> reqMap);
     List<Map<String, Object>> getYcDatas1st();
     List<Map<String, Object>> getYcDatas2st();
+
+    List<Items> getNoGenreItems();
 }
