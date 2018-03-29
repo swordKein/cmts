@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>OllehTV Meta Extended</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script th:src="@{/js/admin.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container1">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">OllehTV Meta</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/admin/items/list">Items</a></li>
+					<li><a href="/admin/movie_cine21/list">Cine21</a></li>
+					<li><a href="/admin/properties/list">Properties</a></li>
+					<li><a href="/admin/dic/filter/list">Dictionary</a></li>
+					<li class="active"><a href="/admin/keywordrank/list">KeywordRank</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container1">
+		<div id="searchArea" align="center" style="display:table;">
+			<p th:each="genre0: ${genres}" style="float:left;min-width: 100px;">
+				<a th:text="${genre0}" th:href="@{'/admin/keywordrank/list?genre='+${genre0}(type=${oldtype})}"
+				   style="font-size:20px;color:blue;font-weight: bold;"></a>&nbsp;&nbsp;
+			</p>
+		</div>
+		<br/>
+		<div id="searchArea2" align="center" style="display:table;">
+			<p th:each="type0: ${types}" style="float:left;min-width: 200px;">
+				<a th:text="${type0}" th:href="@{'/admin/keywordrank/list?genre='+${oldgenre}(type=${type0})}"
+				   style="font-size:16px;color:red;font-weight: bold;"></a>&nbsp;&nbsp;
+			</p>
+		</div>
+		<br/>
+		<div class="starter-template">
+			<h1><span class="label label-default">키워드 랭킹 리스트 : <b th:text="${countItems}"></b></span></h1>
+			<h1><span class="label label-default">장르 : <b th:text="${oldgenre}"></b> / 사전유형 : <b th:text="${oldtype}"></b></span></h1>
+
+		</div>
+
+
+		<div class="table-responsive" style="width:3000px;">
+			<table id="targetListTable" class="table" border="1" style="width:1500px;">
+				<thead>
+				<tr>
+					<th>RANK</th>
+					<th>장르</th>
+					<th>사전유형</th>
+					<th>키워드</th>
+					<th>출현빈도</th>
+					<th>등록일시</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="items,iterStat : ${itemsList}">
+					<td width="100px"><span th:text="${iterStat.count}"></span></td>
+					<td width="100px"><span th:text="${items.genre}"></span></td>
+					<td width="100px"><span th:text="${items.type}"></span></td>
+					<td width="100px"><span th:text="${items.keyword}"></span></td>
+					<td width="100px"><span th:text="${items.freq2}"></span></td>
+					<td width="100px"><span th:text="${items.regdate}"></span></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

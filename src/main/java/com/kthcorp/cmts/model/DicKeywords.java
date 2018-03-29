@@ -25,6 +25,25 @@ public class DicKeywords extends Paging {
 
     private Double freq1;
     private Double freq2;
+    private String genre;
+
+    private Integer cnt;
+
+    public Integer getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(Integer cnt) {
+        this.cnt = cnt;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
     public Double getFreq1() {
         return freq1;

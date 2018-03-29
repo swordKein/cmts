@@ -23,6 +23,7 @@ public class JobRunner implements Job {
     @Autowired private SftpService sftpService;
     @Autowired private ApiService apiService;
     @Autowired private CcubeService ccubeService;
+    @Autowired private TestService testService;
     //@Autowired
     //private MainService mainServiceImpl;
     //@Autowired
@@ -57,6 +58,7 @@ public class JobRunner implements Job {
                     break;
                 case "ccubeOutput":
                     rt = ccubeService.processCcubeOutputToJson();
+                    //testService.processRankForDicKeywordsAndGenres();
                     logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
                     break;
                 case "dummyService":

@@ -25,6 +25,41 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
+    <select id="getDicRankKeywordsPaging" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
+      /* getDicRankKeywordsPaging */
+        select
+        idx, type, keyword, ratio, regdate, regid, freq1
+        from dic_keywords
+        where type = #{type}
+        <if test='keyword != null and keyword != ""'>
+            and keyword like concat('%',#{keyword},'%')
+        </if>
+        order by freq1 DESC, idx DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="getRankWordsByGenreAndType" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* getRankWordsByGenreAndType */
+        select genre, mtype as type, keyword, freq2, regdate
+        from dic_rank_words2
+        where genre = #{genre} and mtype = #{type}
+        order by freq2 desc, idx desc
+
+    </select>
+
+    <select id="getDicRankKeywordsPaging_" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* getDicRankKeywordsPaging_ */
+        select
+        idx, mtype as type, keyword, freq2 as cnt, regdate
+        from dic_rank_words2
+        where mtype = #{type}
+        <if test='keyword != null and keyword != ""'>
+            and keyword like concat('%',#{keyword},'%')
+        </if>
+        order by freq2 DESC, idx DESC
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
     <select id="cntDicKeywordsByType" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* cntDicKeywordsByType */
         select
@@ -133,6 +168,24 @@
         inner join items_tags_keys itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx and itk.stat = 'S'
         where itm.mtype = #{type} and itm.meta like concat('%"',#{keyword},'",%');
     </select>
+
+    <select id="cntTagsMetasByDicKeywordsAndGenre" parameterType="com.kthcorp.cmts.model.DicKeywords"
+            resultType="com.kthcorp.cmts.model.DicKeywords">
+        /* cntTagsMetasByDicKeywordsAndGenre */
+        select count(*) as cnt, itm.mtype as type
+        from items_tags_metas itm
+        inner join items_tags_keys itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx and itk.stat = 'S'
+        inner join items_metas im on im.idx = itm.idx and im.mtype = 'genre' and im.meta like concat('%',#{genre},'%')
+        where itm.mtype like 'METAS%' and itm.meta like concat('%"',#{keyword},'",%')
+        group by itm.mtype;
+    </select>
+
+    <insert id="insDicRankWords2" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* insDicRankWords2  */
+        insert into dic_rank_words2(genre, mtype, keyword, freq2, regdate)
+        values (#{genre}, #{type}, #{keyword}, #{cnt}, now())
+        ON DUPLICATE KEY UPDATE freq2 = #{cnt}, regdate = now()
+    </insert>
 
     <select id="getRankOfDicKeywordsFreq1" parameterType="com.kthcorp.cmts.model.DicKeywords"
             resultType="com.kthcorp.cmts.model.DicKeywords">

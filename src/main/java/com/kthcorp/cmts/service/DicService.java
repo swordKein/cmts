@@ -996,4 +996,13 @@ public class DicService implements DicServiceImpl {
         if(req != null && req.getRegid() == null) req.setRegid(serverid);
         return dicKeywordsMapper.delDicKeywords(req);
     }
+
+    @Override
+    public List<DicKeywords> getRankWordsByGenreAndType(DicKeywords req) {
+        return dicKeywordsMapper.getRankWordsByGenreAndType(req);
+    }
+    @Override
+    public List<String> getKeywordTypes() {
+        return dicKeywordsMapper.getKeywordTypes();
+    }
 }
