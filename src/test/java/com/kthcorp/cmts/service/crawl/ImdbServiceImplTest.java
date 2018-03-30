@@ -35,7 +35,7 @@ public class ImdbServiceImplTest {
 
 		reqInfo.setTg_url("GOOGLE_SEARCH_IMDB");
 		reqInfo.setTg_url_param1("/plotsummary?ref_=tt_stry_pl");
-		reqInfo.setParam1("site:imdb.com/title/ blind in 2011 director shin gyu hyun");
+		reqInfo.setParam1("site:imdb.com/title/ 마더! 2017");
 
 		JsonObject result = imdbService.getMovie(reqInfo);
 		System.out.println("#Result:"+result.toString());

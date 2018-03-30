@@ -78,7 +78,8 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
         JsonArray result = new JsonArray();
 
         String reqUrl = "https://www.google.co.kr/search?q=";
-        String q = "site:imdb.com/title/ " + reqInfo.getParam1().replaceAll("//*","/");
+        //String q = "site:imdb.com/title/ " + reqInfo.getParam1().replaceAll("//*","/");
+        String q = reqInfo.getParam1().replaceAll("//*","/");
 
 
         try {
@@ -90,7 +91,7 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
 
             result = getSearchWebItems(resultStr);
 
-            //if (result != null && result.get(0) != null) System.out.println("#result jArr.get(0):"+result.get(0).toString());
+            if (result != null && result.get(0) != null) System.out.println("#GOOGLE_SEARCH_RESULT for IMDB jArr.get(0):"+result.get(0).toString());
 
         } catch (Exception e) { e.printStackTrace(); }
 
@@ -159,14 +160,21 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
             for (Element elm : summaryElms) {
                 obj = new JsonObject();
                 Elements titles = elm.select(".r");
-                Elements items = elm.select(".kv");
+                Elements links = elm.select(".r a");
+                //Elements items = elm.select(".kv");
 
                 //System.out.println("## array All-ITEM:: "+elm.toString());
-                //System.out.println("## array ITEM:title:: "+titles.text().toString());
+                //System.out.println("## array ITEM:title:: "+titles.toString());
                 //System.out.println("## array ITEM:link:: "+items.select("cite").text().toString());
 
                 obj.addProperty("title", titles.text().toString());
-                obj.addProperty("link", items.select("cite").text().toString());
+                //String link = items.select("cite").text().toString();
+                String link = links.attr("href").toString();
+                link = link.replace("http://","");
+                link = link.replace("https://","");
+
+                System.out.println("# GOOGLE_SEARCH URL for IMDB :: title:"+titles.text()+"/url:"+link);
+                obj.addProperty("link", link);
 
                 result.add(obj);
             }

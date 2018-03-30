@@ -63,7 +63,7 @@ public class CollectServiceTest {
 	@Test
 	public void test_step01_02_03() throws Exception {
 		SchedTrigger req = new SchedTrigger();
-		req.setSc_id(18);
+		req.setSc_id(1);
 		int result = collectService.test_ollehTvMetaCollectScheduleCheck(req);
 		//System.out.println("#Result:"+result);
 	}

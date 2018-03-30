@@ -48,6 +48,15 @@ public class ConfTarget extends Paging {
     private String moviedirector;
     private String movieyear;
 
+    private String ccubetype;
+
+    public String getCcubetype() {
+        return ccubetype;
+    }
+
+    public void setCcubetype(String ccubetype) {
+        this.ccubetype = ccubetype;
+    }
 
     public String getMovieyear() {
         return movieyear;
