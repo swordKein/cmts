@@ -74,6 +74,7 @@ public class CrawlController {
 			param1 = param1.replace("#moviedirector", "");
 			param1 = param1.trim();
 			reqInfo.setParam1(param1);
+			logger.info("#/crawl/byprefix convert search_keyword:"+param1+" for CcubeSeries");
 		}
 
 		reqInfo.setMovietitle(movietitle);
