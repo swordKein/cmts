@@ -108,10 +108,10 @@ public class CollectService implements CollectServiceImpl {
                         // STEP03 진행 전 수집설정 stat = P로 변경
                         // (추가) 진행 회차를 기록한다 tcnt + 1
                         //int rt0 = stepService.uptConfTargetBeforeCollectProcess(target);
-                        System.out.println("#STEP02 process TG:"+target.toString());
+                        //System.out.println("#STEP02 process TG:"+target.toString());
 
                         ConfTarget tg = this.step02(target);
-                        System.out.println("#STEP02 process to TG:"+tg.toString());
+                        //System.out.println("#STEP02 process to TG:"+tg.toString());
 
                         tg.setMovietitle(target.getMovietitle());
                         tg.setMoviedirector((target.getMoviedirector() != null) ? target.getMoviedirector() : "");
@@ -146,10 +146,16 @@ public class CollectService implements CollectServiceImpl {
                                 param1 = param1.replace("#moviedirector", "");
                             }
 
+
+
+
                             if (!"".equals(movietitle)) {
                                 resultCollect = run_step03(tg, sc_id, type, tcnt, sched.getCountry_of_origin());
-                                System.out.println("#run_stap03 resultCollect:" + resultCollect.toString());
+                                logger.info("####CollectService.run_stap03 resultCollect:" + resultCollect.toString());
                             }
+
+
+
 
                             if (resultCollect != null && resultCollect.get("rt_code") != null
                                     && "OK".equals(resultCollect.get("rt_code").getAsString())
@@ -276,10 +282,12 @@ public class CollectService implements CollectServiceImpl {
 
                     //ConfTarget tg = new ConfTarget();
 
-                    System.out.println("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
+                    logger.debug("#STEP:03:: collecting sched history writing! by sc_id:"+reqSth.getSc_id()
+                    +"/type:"+reqSth.getType()+"/stat:"+reqSth.getStat()+"/rt_code:"+reqSth.getStat());
+
                     int rt1 = stepService.uptSchedTriggerProgsAfterCollectTargetOneProcess(sc_id, rt_stat);
 
-                    logger.debug("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
+                    //logger.debug("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
                     // 수집 스케쥴 이력 저장
                     int rtsth = schedTriggerHistMapper.insSchedTriggerHist(reqSth);
 
@@ -303,11 +311,16 @@ public class CollectService implements CollectServiceImpl {
                         int retryRt = 0;
                         // 이미 등록된 분석 스케쥴이 있으면 stat를 Y로 변경하여 재처리
                         if (oldRefineSched != null) {
-                            System.out.println("# getSchedTriggerOne result:"+oldRefineSched.toString());
+                            //System.out.println("# getSchedTriggerOne result:"+oldRefineSched.toString());
+                            logger.info("#CollectService.result for RefineService:: sc_id:"+oldRefineSched.getSc_id()
+                                    +"/type:"+oldRefineSched.getType()
+                                    +"/stat:"+oldRefineSched.getStat()
+                                    +"/parent_sc_id:"+oldRefineSched.getParent_sc_id()
+                            );
 
                             retryRt = schedTriggerMapper.uptOldSchedTriggerRetry(newReq);
                             retryRt++;
-                            System.out.println("# uptSchedTriggerRetry for R result:"+retryRt);
+                            //System.out.println("# uptSchedTriggerRetry for R result:"+retryRt);
                         }
                         // 등록된 분석 스케쥴이 없으면 신규 등록
                         if (retryRt < 2) {
@@ -398,10 +411,10 @@ public class CollectService implements CollectServiceImpl {
                         // STEP03 진행 전 수집설정 stat = P로 변경
                         // (추가) 진행 회차를 기록한다 tcnt + 1
                         //int rt0 = stepService.uptConfTargetBeforeCollectProcess(target);
-                        System.out.println("#STEP02 process TG:"+target.toString());
+                        //System.out.println("#STEP02 process TG:"+target.toString());
 
                         ConfTarget tg = this.step02(target);
-                        System.out.println("#STEP02 process to TG:"+tg.toString());
+                        //System.out.println("#STEP02 process to TG:"+tg.toString());
 
                         tg.setMovietitle(target.getMovietitle());
                         tg.setMoviedirector((target.getMoviedirector() != null) ? target.getMoviedirector() : "");
@@ -561,10 +574,12 @@ public class CollectService implements CollectServiceImpl {
 
                     //ConfTarget tg = new ConfTarget();
 
-                    System.out.println("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
+                    logger.debug("#STEP:03:: collecting sched history writing! by sc_id:"+reqSth.getSc_id()
+                            +"/type:"+reqSth.getType()+"/stat:"+reqSth.getStat()+"/rt_code:"+reqSth.getStat());
+
                     int rt1 = stepService.uptSchedTriggerProgsAfterCollectTargetOneProcess(sc_id, rt_stat);
 
-                    logger.debug("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
+                    //logger.debug("#STEP:03:: collecting sched history writing! by "+reqSth.toString());
                     // 수집 스케쥴 이력 저장
                     int rtsth = schedTriggerHistMapper.insSchedTriggerHist(reqSth);
 
@@ -586,7 +601,10 @@ public class CollectService implements CollectServiceImpl {
                         int retryRt = 0;
                         // 이미 등록된 분석 스케쥴이 있으면 stat를 Y로 변경하여 재처리
                         if (oldRefineSched != null) {
-                            System.out.println("# getSchedTriggerOne result:"+oldRefineSched.toString());
+                            logger.info("#CollectService.result for RefineService:: sc_id:"+oldRefineSched.getSc_id()
+                                            +"/type:"+oldRefineSched.getType()
+                                            +"/stat:"+oldRefineSched.getStat()
+                                            +"/parent_sc_id:"+oldRefineSched.getParent_sc_id());
 
                             retryRt = schedTriggerMapper.uptOldSchedTriggerRetry(newReq);
                             retryRt++;
@@ -731,7 +749,20 @@ public class CollectService implements CollectServiceImpl {
         if (req != null && req.getTg_id() != null) {
 
             result = confTargetMapper.getConfTargetById(req);
-            logger.info("#STEP:02:: target: req.tg_id:"+req.getTg_id().toString()+" :: getConfTargetById:"+result.toString());
+            if (result != null && result.getPresetList() != null) {
+                logger.info("#STEP:02:: target: req.tg_id:" + req.getTg_id().toString()
+                        + "/URL:"+req.getTg_url()
+                        + "/PARAM1:"+req.getTg_url_param1());
+
+                List<ConfPreset> psetList = result.getPresetList();
+                for (ConfPreset ps : psetList) {
+                    logger.info("#STEP:02:: target-preset: req.tg_id:" + req.getTg_id().toString()
+                            +"/req.ps_id:"+ps.getPs_id()
+                            +"/dest_field:"+ps.getDest_field()
+                            +"/ps_tag:"+ps.getPs_tag()
+                            +"/descriptp:"+ps.getDescriptp());
+                }
+            }
         } else {
             if (req!=null) {
                 logger.info("#STEP:02::fail target is empty!");
@@ -920,6 +951,7 @@ public class CollectService implements CollectServiceImpl {
             String movietitle = req.getMovietitle() != null ? req.getMovietitle() : "";
             String moviedirector = req.getMoviedirector() != null ? req.getMoviedirector() : "";
             String movieyear = req.getMovieyear() != null ? req.getMovieyear() : "";
+            String ccubetype = req.getCcubetype() != null ? req.getCcubetype() : "";
 
 
             int collectCnt = 0;
@@ -935,6 +967,7 @@ public class CollectService implements CollectServiceImpl {
                         .data("movietitle", movietitle)
                         .data("movieyear", movieyear)
                         .data("moviedirector", moviedirector)
+                        .data("ccubetype", ccubetype)
                         .execute().body();
 
                 result = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -1005,6 +1038,7 @@ public class CollectService implements CollectServiceImpl {
 
     /* STEP 3 - main
      * tg_url:STEP 3 - 데이터 수집 이후 conf_target_history와 conf_target_content를 저장
+     * conuntry_of_origin :: CcubeContent, CcubeContentK, CcubeSeries, CcubeSeriesK
     */
     public JsonObject run_step03(ConfTarget tg, int sc_id, String type, int tcnt, String country_of_origin) {
         String statTarget = "F";
@@ -1012,6 +1046,9 @@ public class CollectService implements CollectServiceImpl {
 
         JsonObject resultCollect = null;
         try {
+            // CcubeSeries의 경우 검색어에서 영화, 감독명을 빼기 위해 ccubetype에 type을 저장
+            tg.setCcubetype(country_of_origin);
+
             switch (tg.getTg_url()) {
                 case "GOOGLE_SEARCH_IMDB":
                     if (!country_of_origin.endsWith("K")) {

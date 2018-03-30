@@ -56,6 +56,7 @@ public class CrawlController {
 			, @RequestParam(value="movietitle", required=true) String movietitle
 			, @RequestParam(value="movieyear", required=false, defaultValue = "") String movieyear
 			, @RequestParam(value="moviedirector", required=false, defaultValue = "") String moviedirector
+			, @RequestParam(value="ccubetype", required=false, defaultValue = "") String ccubetype
 	) {
 
 		logger.debug("#/crawl/byprefix ::"+prefix+" by movietitle:"+movietitle+"/movieyear:"+movieyear+"/moviedirector:"+moviedirector);
@@ -67,6 +68,13 @@ public class CrawlController {
 		x.setTg_url(prefix);
 		ConfTarget reqInfo = confTargetService.getTargetListByPrefix(x);
 		String param1 = reqInfo.getParam1();
+		//CcubeSeries 의 경우 검색어에서 영화 제거, 감독 제거
+		if(ccubetype.contains("CcubeSeries")) {
+			param1 = param1.replace("영화","");
+			param1 = param1.replace("#moviedirector", "");
+			param1 = param1.trim();
+			reqInfo.setParam1(param1);
+		}
 
 		reqInfo.setMovietitle(movietitle);
 		reqInfo.setMovieyear(movieyear);
