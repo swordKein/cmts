@@ -147,7 +147,7 @@ public class ItemsService implements ItemsServiceImpl {
 
         try {
             String type = "CcubeContent";
-            if ("KOR".equals(req.getCountry_of_origin().trim())) {
+            if (req.getCountry_of_origin() != null && "KOR".equals(req.getCountry_of_origin().trim())) {
                 type = "CcubeContentK";
             }
 
@@ -244,7 +244,7 @@ public class ItemsService implements ItemsServiceImpl {
 
         try {
             String type = "CcubeSeries";
-            if ("KOR".equals(req.getCountry_of_origin().trim())) {
+            if (req.getCountry_of_origin() != null && "KOR".equals(req.getCountry_of_origin().trim())) {
                 type = "CcubeSeriesK";
             }
 
