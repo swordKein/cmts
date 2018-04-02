@@ -38,7 +38,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 @Service
 public class GoogleTransService implements GoogleTransServiceImpl {
-    private static final Logger log = LoggerFactory.getLogger(GoogleTransService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoogleTransService.class);
 
     @Value("${keys.google.key}")
     private String oauth_key;
@@ -69,24 +69,27 @@ public class GoogleTransService implements GoogleTransServiceImpl {
 
         String result = "";
         if(reqTxt.length() > 10) {
-            System.out.println("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 2000ms!");
+            logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 2000ms!");
             Thread.sleep(2000);
             try {
                 String dt = detectLanguage(reqTxt);
                 result = getTransResult(reqTxt, "en", "ko");
+                logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 1st ::"+result);
             } catch (Exception e) {
                 e.printStackTrace();
 
                 try {
-                    System.out.println("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 25000ms!");
-                    Thread.sleep(25000);
+                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 5000ms!");
+                    Thread.sleep(5000);
                     result = getTransResult(reqTxt, "en", "ko");
+                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 2nd ::"+result);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                     try {
-                        System.out.println("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 35000ms!");
-                        Thread.sleep(100000);
+                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 5000ms!");
+                        Thread.sleep(5000);
                         result = getTransResult(reqTxt, "en", "ko");
+                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 3nd ::"+result);
                     } catch (Exception e3) {
                         e3.printStackTrace();
                     }
