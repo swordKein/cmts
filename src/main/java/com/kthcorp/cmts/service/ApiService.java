@@ -548,7 +548,15 @@ public class ApiService implements ApiServiceImpl {
         System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
 
         List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
-        JsonArray listItems = getListItemsFromArray(list_items);
+        List<Items> list_items2 = new ArrayList();
+        for(Items one : list_items) {
+            if (one != null && one.getSeries_id() != null && !"0".equals(one.getSeries_id())) {
+                one.setContent_id(one.getSeries_id());
+                one.setCid(one.getSeries_id());
+            }
+            list_items2.add(one);
+        }
+        JsonArray listItems = getListItemsFromArray(list_items2);
 
         //System.out.println("#LIST_ITEMS:"+list_items.toString());
 
