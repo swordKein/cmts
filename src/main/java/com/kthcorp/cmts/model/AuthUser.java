@@ -21,6 +21,15 @@ public class AuthUser extends Paging {
     private String stat;
     private Timestamp regdate;
     private String regid;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public int getIdx() {
         return idx;

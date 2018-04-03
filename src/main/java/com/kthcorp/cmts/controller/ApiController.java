@@ -148,8 +148,9 @@ public class ApiController {
 			, @RequestParam(value = "target_grant") String target_grant
 			, @RequestParam(value = "target_company", required = false, defaultValue = "") String target_company
 			, @RequestParam(value = "target_name", required = false, defaultValue = "") String target_name
+			, @RequestParam(value = "target_password", required = false, defaultValue = "") String target_password
 	) {
-		logger.info("#CLOG:API/auth/user/add input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name);
+		logger.info("#CLOG:API/auth/user/add input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name+"_"+target_password);
 		target_userid = CommonUtil.removeAllSpec2(target_userid);
 		target_grant = CommonUtil.removeAllSpec2(target_grant);
 		target_company = CommonUtil.removeAllSpec2(target_company);
@@ -168,6 +169,7 @@ public class ApiController {
 				user.setUsername(target_name);
 				user.setUsergrant(target_grant);
 				user.setUsercompany(target_company);
+				user.setPassword(target_password);
 
 				int rtins = apiService.insAuthUser(user);
 				if (rtins == 1) {
@@ -990,8 +992,9 @@ public class ApiController {
 			, @RequestParam(value = "target_grant", required = false) String target_grant
 			, @RequestParam(value = "target_company", required = false) String target_company
 			, @RequestParam(value = "target_name", required = false) String target_name
+			, @RequestParam(value = "target_password", required = false) String target_password
 	) {
-		logger.info("#CLOG:API/auth/user/mod input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name);
+		logger.info("#CLOG:API/auth/user/mod input userid:" + target_userid+"_"+target_grant+"_"+target_company+"_"+target_name+"_"+target_password);
 
 		//String hashcode = "";
 		int rtcode = -1;
@@ -1006,6 +1009,7 @@ public class ApiController {
 				user.setUsername(target_name);
 				user.setUsergrant(target_grant);
 				user.setUsercompany(target_company);
+				user.setPassword(target_password);
 
 				int rtins = apiService.uptAuthUser(user);
 				if (rtins > 0) {

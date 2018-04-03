@@ -8,7 +8,7 @@
     <select id="getAuthUsers" resultType="com.kthcorp.cmts.model.AuthUser">
         /* getAuthUsers */
         select
-          idx, userid, usergrant, username, usercompany, regdate, regid, stat
+          idx, userid, usergrant, username, usercompany, regdate, regid, stat, userpass as password
         from auth_user
         /* where stat != 'Y' */
         order by regdate desc
@@ -17,7 +17,7 @@
     <select id="getAuthUserById" resultType="com.kthcorp.cmts.model.AuthUser">
         /* getAuthUserById */
         select
-        idx, userid, usergrant, username, usercompany, regdate, regid, stat
+        idx, userid, usergrant, username, usercompany, regdate, regid, stat, userpass as password
         from auth_user
         where userid = #{userid}
         order by regdate DESC limit 1
@@ -27,10 +27,10 @@
         /* insAuthUser */
         insert into auth_user
           (userid, usergrant, username, usercompany,
-          regdate, regid, stat)
+          regdate, regid, stat, userpass)
         values
           (#{userid}, #{usergrant}, #{username}, #{usercompany},
-          now(), #{regid}, 'Y' )
+          now(), #{regid}, 'Y' , #{password})
     </insert>
 
     <update id="uptAuthUser" parameterType="com.kthcorp.cmts.model.AuthUser">
@@ -50,6 +50,9 @@
         </if>
         <if test='stat != null and stat != ""'>
             , stat = #{stat}
+        </if>
+        <if test='password != null and password != ""'>
+            , userpass = #{password}
         </if>
         where userid = #{userid}
     </update>
