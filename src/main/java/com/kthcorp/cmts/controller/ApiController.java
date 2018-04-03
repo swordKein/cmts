@@ -112,6 +112,7 @@ public class ApiController {
 						new1.addProperty("NAME", user.getUsername());
 						new1.addProperty("COMPANY", user.getUsercompany());
 						new1.addProperty("REGID", user.getRegid());
+						new1.addProperty("STAT", user.getStat());
 
 						result1.add(new1);
 					}

@@ -20,6 +20,7 @@
         idx, userid, usergrant, username, usercompany, regdate, regid, stat, userpass as password
         from auth_user
         where userid = #{userid}
+        and stat != 'D'
         order by regdate DESC limit 1
     </select>
 
