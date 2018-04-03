@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.TestMapper;
 import com.kthcorp.cmts.model.CcubeContent;
+import com.kthcorp.cmts.model.CcubeSeries;
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsContent;
 import com.kthcorp.cmts.util.FileUtils;
@@ -406,4 +407,43 @@ public class TestServiceTestImpl {
 		testService.writeNoGenreItems();
 	}
 
+	@Test
+	public void test_loadCcubeSeriesAllDatas_0330() throws Exception {
+		List<CcubeSeries> result = testService.loadCcubeSeriesAllDatas_0330();
+		//System.out.println("#RESLT:"+result.toString());
+	}
+
+	@Test
+	public void test_insCcubeSeriesAll_0330_run() throws Exception {
+		testService.insCcubeSeriesAll_0330_run();
+	}
+
+	@Test
+	public void test_loadCcubeSeriesDatas_0330() throws Exception {
+		List<CcubeSeries> result = testService.loadCcubeSeriesDatas_0330();
+		//System.out.println("#RESLT:"+result.toString());
+	}
+	@Test
+	public void test_insCcubeSeries_0330_run() throws Exception {
+		testService.insCcubeSeries_0330_run();
+	}
+
+
+	@Test
+	public void test_insCcubeMoviesDatas_adult_0402_1() throws Exception {
+		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0402_1();
+		for (CcubeContent cc : reqList) {
+			if (cc.getYear().length() > 4) System.out.println("#res:" + cc.toString());
+		}
+		testService.insCcubeMovies0226(reqList);
+	}
+
+	@Test
+	public void test_insCcubeMoviesDatas_adult_0402_2() throws Exception {
+		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0402_2();
+		for (CcubeContent cc : reqList) {
+			if (cc.getYear().length() > 4) System.out.println("#res:" + cc.toString());
+		}
+		testService.insCcubeMovies0226(reqList);
+	}
 }

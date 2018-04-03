@@ -272,7 +272,7 @@ public class StatsService implements StatsServiceImpl {
 
         int maxPage = countItems / pageSize + 1;
 
-        Map<String, Object> listPaging = CommonUtil.getPagination(countItems, pageSize, pageno, 5);
+        Map<String, Object> listPaging = CommonUtil.getPaginationJump(countItems, pageSize, pageno, 10);
         List<String> listActive = null;
         List<Integer> listPage = null;
         if (listPaging != null) {

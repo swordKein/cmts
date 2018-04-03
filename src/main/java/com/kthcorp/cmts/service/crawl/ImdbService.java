@@ -64,7 +64,9 @@ public class ImdbService implements ImdbServiceImpl {
                 if ("trans".equals(ps.getPs_type())) {
                     try {
                         transContentStr = googleTrans.getTransKoreanResult(contentStr);
+                        //transContentStr = googleTrans.getTransResult(contentStr,"en","ko");
                     } catch (Exception e) {
+                        e.printStackTrace();
                         transContentStr = "TRANS_FAIL";
                     } finally {
                         if (transContentStr.length() < 5) { transContentStr = "TRANS_FAIL"; }

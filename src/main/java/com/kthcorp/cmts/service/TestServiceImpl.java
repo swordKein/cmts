@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.kthcorp.cmts.model.CcubeContent;
+import com.kthcorp.cmts.model.CcubeSeries;
 import com.kthcorp.cmts.model.ItemsContent;
 import com.kthcorp.cmts.model.NlpProgs;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,7 +113,21 @@ public interface TestServiceImpl {
 
     List<CcubeContent> loadCcubeMoviesDatas0226_2() throws Exception;
 
+    List<CcubeContent> loadCcubeMoviesDatas0402_1() throws Exception;
+
+    List<CcubeContent> loadCcubeMoviesDatas0402_2() throws Exception;
+
     void insCcubeMovies0226(List<CcubeContent> reqList);
+
+    List<CcubeSeries> loadCcubeSeriesAllDatas_0330() throws Exception;
+
+    List<CcubeSeries> loadCcubeSeriesDatas_0330() throws Exception;
+
+    void insCcubeSeries_0330(List<CcubeSeries> reqList);
+
+    void insCcubeSeriesAll_0330_run() throws Exception;
+
+    void insCcubeSeries_0330_run() throws Exception;
 
     void writeDicEmo0227() throws Exception;
 

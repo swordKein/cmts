@@ -2889,6 +2889,7 @@ public class TestService implements TestServiceImpl {
         result = result.replace("\"_\"", "");
         result = result.replace("\"", "");
         result = result.replace("\'", "");
+        result = result.replace("_","");
         return result;
     }
 
@@ -2901,6 +2902,18 @@ public class TestService implements TestServiceImpl {
     @Override
     public List<CcubeContent> loadCcubeMoviesDatas0226_2() throws Exception {
         String fileName = "E:\\yj2_0226.txt";
+        return loadCcubeMoviesDatas0226_14770_2262(fileName);
+    }
+
+    @Override
+    public List<CcubeContent> loadCcubeMoviesDatas0402_1() throws Exception {
+        String fileName = "E:\\ad_yjo_244.txt";
+        return loadCcubeMoviesDatas0226_14770_2262(fileName);
+    }
+
+    @Override
+    public List<CcubeContent> loadCcubeMoviesDatas0402_2() throws Exception {
+        String fileName = "E:\\ad_yjx_777.txt";
         return loadCcubeMoviesDatas0226_14770_2262(fileName);
     }
 
@@ -2924,12 +2937,12 @@ public class TestService implements TestServiceImpl {
                     if (!"".equals(line.trim())) {
                     String lines[] = line.trim().split(seperator);
 
-/*
+
                     for (String ss : lines) {
                          System.out.print("___" + ss);
                     }
                     System.out.println("");
-                            */
+
 
                     CcubeContent newItem = null;
                         newItem = new CcubeContent();
@@ -2981,9 +2994,10 @@ public class TestService implements TestServiceImpl {
 
         for(CcubeContent cc : reqList) {
             //System.out.println("#req cc:" + cc.toString());
-            if (cc.getKmrb_id().length() < 9) {
+            //if (cc.getKmrb_id().length() < 9) {
+            cc.setStat("K");
                 int rt1 = ccubeMapper.insCcubeContent(cc);
-            }
+            //}
 
 
             //System.out.println("#req cc:" + cc.toString());
@@ -2998,6 +3012,116 @@ public class TestService implements TestServiceImpl {
                 //System.out.println("#error! year size"+cc.getYear().length() + "  /  ctgry_id.size:"+cc.getSad_ctgry_id().length()+" / year:" + cc.getYear());
             //}
         }
+    }
+
+    @Override
+    public List<CcubeSeries> loadCcubeSeriesAllDatas_0330() throws Exception {
+        String fileName = "E:\\cs_all_0330.txt";
+        return loadCcubeSeriesDatas0330(fileName);
+    }
+
+    @Override
+    public List<CcubeSeries> loadCcubeSeriesDatas_0330() throws Exception {
+        String fileName = "E:\\cs_0330.txt";
+        return loadCcubeSeriesDatas0330(fileName);
+    }
+
+    @Override
+    public void insCcubeSeries_0330(List<CcubeSeries> reqList) {
+        int rt = 0;
+
+        for (CcubeSeries cc : reqList) {
+            //System.out.println("#req cc:" + cc.toString());
+            //if (cc.getKmrb_id().length() < 9) {
+            try {
+                int rt1 = ccubeMapper.insCcubeSeries(cc);
+            } catch (Exception e) {
+                System.out.println("#err req:"+cc.toString());
+                e.printStackTrace();
+                try {
+                    throw new Exception("ERR!");
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+            //}
+        }
+    }
+
+    @Override
+    public void insCcubeSeriesAll_0330_run() throws Exception {
+        List<CcubeSeries> allItems = this.loadCcubeSeriesAllDatas_0330();
+        insCcubeSeries_0330(allItems);
+    }
+
+    @Override
+    public void insCcubeSeries_0330_run() throws Exception {
+        List<CcubeSeries> allItems = this.loadCcubeSeriesDatas_0330();
+        insCcubeSeries_0330(allItems);
+    }
+
+    private List<CcubeSeries> loadCcubeSeriesDatas0330(String fileName) throws Exception {
+        //String fileName = "E:\\yj1_0226.txt";
+        //String fileName = "E:\\yj1_0226.csv";
+        String seperator = "\t";
+        List<CcubeSeries> result = new ArrayList();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > 0) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+
+                        for (String ss : lines) {
+                             System.out.print(lines.length+" ___" + removeF(ss));
+                        }
+                        System.out.println("");
+
+
+                        CcubeSeries newItem = new CcubeSeries();
+                        newItem.setSeries_id(this.removeF(lines[0]));
+                        newItem.setSeries_nm(this.removeF(lines[1]));
+                        newItem.setPurity_title(this.removeF(lines[2]));
+                        newItem.setSad_ctgry_nm(this.removeF(lines[3]));
+                        newItem.setActors_display(this.removeF(lines[4]));
+                        if (lines.length > 5 && lines[5] != null) newItem.setDirector(this.removeF(lines[5]));
+                        if (lines.length > 6 && lines[6] != null) newItem.setKt_rating(this.removeF(lines[6]));
+
+                        newItem.setStat("S");
+
+                        //if(newItem.getPoster_url().length() < 3) {
+                        //if(newItem.getYear().length() != 0 && newItem.getYear().length() != 4
+                        //        ) {
+                            //System.out.println("## getYear:"+newItem.getYear() + " // "+ newItem.toString());
+                            //errCnt++;
+                        //}
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
     }
 
     @Override
