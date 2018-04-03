@@ -32,6 +32,15 @@ public class AuthUserMapperTest {
 
     @Test
     @Rollback(false)
+    public void test_getAuthUserById() throws Exception {
+        AuthUser req = new AuthUser();
+        req.setUserid("ghkdwo77");
+        AuthUser result = authUserMapper.getAuthUserById(req);
+        System.out.println("#iresult:" + result.toString());
+    }
+
+    @Test
+    @Rollback(false)
     public void test_insAuthUser() throws Exception {
         AuthUser req = new AuthUser();
         req.setUserid("ghkdwo77");
