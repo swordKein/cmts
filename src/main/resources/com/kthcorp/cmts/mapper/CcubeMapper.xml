@@ -216,7 +216,7 @@
             #{kt_rating}, #{running_time}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, #{kmrb_id}, #{kmrb_title_nm}, #{kmrb_year},
             #{kmrb_domestic_release_date}, #{kmrb_country_of_origin}, #{kmrb_director}, #{kmrb_director_eng}, #{kmrb_actors_display}, #{kmrb_actors_display_eng},
             now(),
-            'Y'
+            #{stat}
             )
             ON DUPLICATE KEY UPDATE
             purity_title=#{purity_title}, content_title=#{content_title}, eng_title=#{eng_title}, director=#{director}, year=#{year},
@@ -226,10 +226,39 @@
             kmrb_id=#{kmrb_id}, kmrb_title_nm=#{kmrb_title_nm}, kmrb_year=#{kmrb_year},
             kmrb_domestic_release_date=#{kmrb_domestic_release_date}, kmrb_country_of_origin=#{kmrb_country_of_origin}, kmrb_director=#{kmrb_director},
             kmrb_director_eng=#{kmrb_director_eng}, kmrb_actors_display=#{kmrb_actors_display}, kmrb_actors_display_eng=#{kmrb_actors_display_eng},
-            regdate=now()
+            regdate=now(),
+            stat=#{stat}
 
     </insert>
 
+    <insert id="insCcubeSeries" parameterType="com.kthcorp.cmts.model.CcubeSeries">
+        /* insCcubeSeries */
+        insert into ccube_series (
+        SERIES_ID, SERIES_NM, PURITY_TITLE , ENG_TITLE, DIRECTOR, YEAR, ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, KT_RATING, DETAIL_GENRE_DISPLAY_CD
+        , DETAIL_GENRE_DISPLAY_NM, regdate, STAT
+        ) values (
+        #{series_id}, #{series_nm}, #{purity_title}, #{eng_title}, #{director}, #{year}, #{actors_display}, #{poster_url}, #{country_of_origin}, #{sad_ctgry_id}, #{sad_ctgry_nm}
+        , #{kt_rating}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, now(), 'S'
+        )
+        ON DUPLICATE KEY UPDATE
+        series_id = #{series_id}
+        , series_nm = #{series_nm}
+        , purity_title = #{purity_title}
+        , eng_title = #{eng_title}
+        , director = #{director}
+        , year = #{year}
+        , actors_display = #{actors_display}
+        , poster_url = #{poster_url}
+        , country_of_origin = #{country_of_origin}
+        , sad_ctgry_id = #{sad_ctgry_id}
+        , sad_ctgry_nm = #{sad_ctgry_nm}
+        , kt_rating = #{kt_rating}
+        , detail_genre_display_cd = #{detail_genre_display_cd}
+        , detail_genre_display_nm = #{detail_genre_display_nm}
+        , stat = #{stat}
+        , regdate = now()
+
+    </insert>
 
     <select id="getCcubeContentByYjid" resultType="com.kthcorp.cmts.model.CcubeContent">
         /* getCcubeContentByYjid */

@@ -22,8 +22,8 @@ public class CommonUtilTest {
         List<String> listActive = (List<String>) resultMap.get("listActive");
         List<Integer> listPage = (List<Integer>) resultMap.get("listPage");
         System.out.println("#RESULT:");
-        for (int i=0; i<listPage.size(); i++) {
-            System.out.println("## "+i+" 'th data:"+listPage.get(i)+" / "+listActive.get(i));
+        for (int i = 0; i < listPage.size(); i++) {
+            System.out.println("## " + i + " 'th data:" + listPage.get(i) + " / " + listActive.get(i));
         }
     }
 
@@ -31,7 +31,13 @@ public class CommonUtilTest {
     public void test_2() throws Exception {
         String s = "select * from kkk@__.";
         //s = CommonUtil.removeAllSpec2(s);
-        System.out.println("#RES:"+s);
-        System.out.println("#RES2:"+CommonUtil.removeTag(s));
+        System.out.println("#RES:" + s);
+        System.out.println("#RES2:" + CommonUtil.removeTag(s));
+    }
+
+    @Test
+    public void test_getPaginationJump() throws Exception {
+        Map<String, Object> resultMap = CommonUtil.getPaginationJump(543, 20, 20, 10);
+        System.out.println("#RES:"+resultMap.toString());
     }
 }

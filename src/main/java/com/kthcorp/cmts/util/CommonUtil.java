@@ -40,6 +40,53 @@ public class CommonUtil {
         return resultMap;
     }
 
+    /* Paging pagination 정리 10page 넥스트 10페이지 */
+    public static Map<String, Object> getPaginationJump(Integer allCnt, Integer pageSize, Integer pageNo, int maxLimit) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        List<String> listActive = new ArrayList<String>();
+        List<Integer> listPage = new ArrayList<Integer>();
+
+        int limit = 1;
+        int maxPage = allCnt / pageSize + 1;
+
+        int maxGroup = maxPage / maxLimit  + 1;
+
+        int groupNo = 1;
+        groupNo = pageNo / maxLimit + 1;
+
+        if(pageNo % maxLimit == 0) groupNo--;
+
+        int startPage = (groupNo - 1) * maxLimit;
+        /*
+        System.out.println("#maxPage:"+maxPage);
+        System.out.println("#maxGroup:"+maxGroup);
+        System.out.println("#pageNo:"+pageNo);
+        System.out.println("#groupNo:"+groupNo);
+        System.out.println("#startPage:"+startPage);
+        */
+        if (startPage < 0) startPage = 0;
+
+        int currPage = startPage;
+
+        while (limit <= ((int) maxLimit + 2) && currPage <= maxPage) {
+            //System.out.println("#COMP:: limit:"+limit+"    maxLimit+2:"+((int) maxLimit+2)+"    currPage:"+currPage+"    maxPage:"+maxPage);
+
+            if (currPage == pageNo) {
+                listActive.add("active");
+            } else {
+                listActive.add("");
+            }
+            listPage.add(currPage);
+
+            currPage++;
+            limit++;
+        }
+
+        resultMap.put("listPage", listPage);
+        resultMap.put("listActive", listActive);
+        return resultMap;
+    }
+
     /* HTML Tag 제거 */
     public static String removeTag(String str){
         Matcher mat;

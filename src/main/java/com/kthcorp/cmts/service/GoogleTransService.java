@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kthcorp.cmts.mapper.GoogleApiHistMapper;
 import com.kthcorp.cmts.model.GoogleApiHist;
+import com.kthcorp.cmts.service.crawl.ImdbService;
 import com.kthcorp.cmts.util.DateUtils;
 import com.kthcorp.cmts.util.HttpClientUtil;
 import com.kthcorp.cmts.util.JsoupUtil;
@@ -72,9 +73,9 @@ public class GoogleTransService implements GoogleTransServiceImpl {
             logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 2000ms!");
             Thread.sleep(2000);
             try {
-                String dt = detectLanguage(reqTxt);
+                //String dt = detectLanguage(reqTxt);
                 result = getTransResult(reqTxt, "en", "ko");
-                logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 1st ::"+result);
+                logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 1st result::"+result);
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -82,14 +83,14 @@ public class GoogleTransService implements GoogleTransServiceImpl {
                     logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 5000ms!");
                     Thread.sleep(5000);
                     result = getTransResult(reqTxt, "en", "ko");
-                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 2nd ::"+result);
+                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 2nd result::"+result);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                     try {
-                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 5000ms!");
-                        Thread.sleep(5000);
+                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 6000ms!");
+                        Thread.sleep(6000);
                         result = getTransResult(reqTxt, "en", "ko");
-                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 3nd ::"+result);
+                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 3nd result::"+result);
                     } catch (Exception e3) {
                         e3.printStackTrace();
                     }
