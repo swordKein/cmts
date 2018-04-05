@@ -113,6 +113,7 @@ public class ApiController {
 						new1.addProperty("COMPANY", user.getUsercompany());
 						new1.addProperty("REGID", user.getRegid());
 						new1.addProperty("STAT", user.getStat());
+						new1.addProperty("PASSWORD", user.getPassword());
 
 						result1.add(new1);
 					}
@@ -224,6 +225,7 @@ public class ApiController {
 					result = new JsonObject();
 					result.addProperty("HASH", hash);
 					result.addProperty("GRANT", user1.getUsergrant());
+					result.addProperty("PASSWORD", user1.getPassword());
 					rtmsg = "SUCCESS";
 
 				} else {
