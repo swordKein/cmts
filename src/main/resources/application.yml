@@ -189,7 +189,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 00 20 * * ?
+      cronExpression : 0 55 08 7 4 ?
       jobType : ccubeOutput
 #elasticsearch :
 #  url : http://14.63.170.72:9200/
