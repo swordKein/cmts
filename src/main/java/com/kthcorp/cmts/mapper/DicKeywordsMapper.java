@@ -2,6 +2,7 @@ package com.kthcorp.cmts.mapper;
 
 import com.kthcorp.cmts.model.DicGenreWords;
 import com.kthcorp.cmts.model.DicKeywords;
+import com.kthcorp.cmts.model.DicSubgenre;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,4 +42,7 @@ public interface DicKeywordsMapper {
     List<DicKeywords> getRankOfDicKeywordsFreq1(DicKeywords req);
     List<DicKeywords> getDicRankKeywordsPaging(DicKeywords req);
     List<DicKeywords> getRankWordsByGenreAndType(DicKeywords req);
+
+    int insDicSubgenreGenres(DicSubgenre req);
+    List<DicSubgenre> getDicSubgenreGenres(String mtype);
 }

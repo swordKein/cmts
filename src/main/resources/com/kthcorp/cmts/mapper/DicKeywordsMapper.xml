@@ -195,4 +195,18 @@
         order by freq1 desc
         limit 500
     </select>
+
+    <insert id="insDicSubgenreGenres" parameterType="com.kthcorp.cmts.model.DicSubgenre">
+        /* insDicSubgenreGenres */
+        insert into dic_subgenre_genres (mtype, genre, meta, regid, regdate)
+        values (#{mtype}, #{genre}, #{meta}, #{regid}, now())
+        ON DUPLICATE KEY UPDATE genre = #{genre}, meta = #{meta}, regid = #{regid}, regdate = now()
+    </insert>
+
+    <select id="getDicSubgenreGenres" resultType="com.kthcorp.cmts.model.DicSubgenre" parameterType="java.lang.String">
+        /* getDicSubgenreGenres */
+        select idx, mtype, genre, meta, regid, regdate
+        from dic_subgenre_genres
+        where mtype = #{mtype} or mtype = 'rating'
+    </select>
 </mapper>

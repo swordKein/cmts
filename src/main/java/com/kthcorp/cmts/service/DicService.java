@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.JsonUtil;
+import com.kthcorp.cmts.util.MapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1004,5 +1005,30 @@ public class DicService implements DicServiceImpl {
     @Override
     public List<String> getKeywordTypes() {
         return dicKeywordsMapper.getKeywordTypes();
+    }
+
+    static List<DicSubgenre> dicSubgenre = null;
+
+    @Override
+    public List<String> getMixedGenreArrayFromGenre(String genre, String mtype) {
+        genre = genre.trim();
+
+        List<String> result = new ArrayList();
+        if(!"".equals(genre) && genre.contains(" ")) {
+            if (dicSubgenre == null) dicSubgenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
+            String[] origGenres = genre.split(" ");
+            Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
+
+            for(DicSubgenre ds : dicSubgenre) {
+                for(String origGenre : noDupMixedGenres) {
+                    String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                    if(ds1.equals(origGenre)) {
+                        result.add(ds.getMeta());
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

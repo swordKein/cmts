@@ -188,7 +188,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return result;
     }
 
-    private JsonObject getItemsMetasByIdx(int itemIdx, List<String> origTypes, String getStat) {
+    @Override
+    public JsonObject getItemsMetasByIdx(int itemIdx, List<String> origTypes, String getStat) {
         JsonObject result = new JsonObject();
 
         ItemsTags itReq = new ItemsTags();

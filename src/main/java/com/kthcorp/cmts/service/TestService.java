@@ -2,12 +2,20 @@ package com.kthcorp.cmts.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
 import org.apache.avro.generic.GenericData;
 import org.apache.directory.shared.ldap.codec.ResponseCarryingException;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.*;
 
 @Service
@@ -41,6 +50,10 @@ public class TestService implements TestServiceImpl {
     private DicKeywordsMapper dicKeywordsMapper;
     @Autowired
     private ItemsMetasMapper itemsMetasMapper;
+    @Autowired
+    private ItemsService itemsService;
+    @Autowired
+    private ItemsTagsService itemsTagsService;
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -2916,6 +2929,44 @@ public class TestService implements TestServiceImpl {
         String fileName = "E:\\ad_yjx_777.txt";
         return loadCcubeMoviesDatas0226_14770_2262(fileName);
     }
+    @Override
+    public Map<String,Object> loadDicSubgenreGenres() throws Exception {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_genres.txt";
+        return loadDicSubgenreGenres(fileName);
+    }
+
+    @Override
+    public Map<String,Object> loadDicSubgenreKeywords() throws Exception {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords.txt";
+        return loadDicSubgenreKeywords(fileName);
+    }
+
+    @Override
+    public void insDicSubgenreKeywords() throws Exception {
+        Map<String,Object> reqMap = loadDicSubgenreKeywords();
+        putBulkDataToEsIndex("idx_subgenre", reqMap);
+    }
+
+    @Override
+    public void insDicSubgenreGenres() throws Exception {
+        Map<String, Object> result = loadDicSubgenreGenres();
+        //System.out.println("#RESULT_MAP::"+result.toString());
+
+        Set entrySet = result.entrySet();
+        Iterator it = entrySet.iterator();
+
+        int lineCnt = 0;
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+            DicSubgenre newSub = new DicSubgenre();
+            newSub.setMtype("mixgenre");
+            newSub.setGenre(me.getKey().toString());
+            newSub.setMeta(me.getValue().toString());
+            newSub.setRegid("ghkdwo77");
+            int rt1 = dicKeywordsMapper.insDicSubgenreGenres(newSub);
+        }
+    }
 
 
     private List<CcubeContent> loadCcubeMoviesDatas0226_14770_2262(String fileName) throws Exception {
@@ -3421,5 +3472,371 @@ public class TestService implements TestServiceImpl {
         String fileNameContent = "NO_GENRE_ITEMS_180329.tsv";
 
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+    }
+
+    private Map<String, Object> loadDicSubgenreGenres(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<String> topGenreArr = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+                        List<String> newSubgenreTitleArr = null;
+
+                        if (cntAll == 0) {
+                            for (String ts : lines) {
+                                topGenreArr.add(ts);
+                            }
+                        }
+                        else {
+
+
+                            for (int no=1; no < lines.length; no++) {
+
+                                newSubgenreTitleArr = new ArrayList();
+                                String topGenre = topGenreArr.get(no);
+                                String leftGenre = lines[0];
+                                newSubgenreTitleArr.add(topGenre);
+                                newSubgenreTitleArr.add(leftGenre);
+
+                                String toGenre = StringUtil.getSortedStringStrsAddSeperator(newSubgenreTitleArr, "___");
+                                System.out.println("# "+no+" 'th topGenre:"+topGenre+"/leftGenre:"+leftGenre
+                                        + "   dest_genre:" + lines[no] + "   toGenre:"+toGenre);
+                                if (!"_".equals(lines[no].trim())) {
+                                    result.put(toGenre, lines[no]);
+                                }
+                            }
+                            System.out.println("");
+
+                        }
+
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    @Override
+    public void putBulkDataToEsIndex(String idxName, Map<String,Object> reqMap) throws Exception {
+        TransportClient client = new PreBuiltTransportClient(Settings.EMPTY)
+                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("14.63.170.72"), 9300));
+
+        IndicesAdminClient indicesAdminClient = client.admin().indices();
+
+        BulkRequestBuilder bulkRequest = client.prepareBulk();
+
+        //String jsonSource = FileUtils.getTestIdxData();
+        /*
+        List<Map<String,Object>> resMap = null;
+        try {
+            resMap = FileUtils.getTestIdxDataMap();
+            //System.out.println("#resultMap:"+resMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+
+        Set entrySet = reqMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        int lineCnt = 1;
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+            JsonObject newObj = new JsonObject();
+            newObj.addProperty("id",lineCnt);
+            newObj.addProperty("topic", me.getKey().toString());
+            newObj.addProperty("keywords", me.getValue().toString());
+            bulkRequest.add(client.prepareIndex(idxName, "item", String.valueOf(lineCnt)).setSource(newObj.toString()));
+            //bulkRequest.source("id", "1", "adresse", "USA");
+        }
+
+        BulkResponse bulkResponse = bulkRequest.get();
+
+        if (bulkResponse.hasFailures()) {
+            System.out.println("#fail:"+bulkResponse.getItems().toString());
+            //process failures by iterating through each bulk response item
+        }
+
+        System.out.println("#bulkResponse:"+bulkResponse.toString());
+
+        client.close();
+
+    }
+
+    private Map<String, Object> loadDicSubgenreKeywords(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<String> topGenreArr = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        for(int j=0; j < lines.length; j++) {
+                            System.out.print("#j:"+j+"::"+lines[j]+" | ");
+                        }
+                        System.out.println(" ");
+
+                        List<String> newSubgenreTitleArr = null;
+
+                        if (cntAll == 0) {
+                        }
+                        else {
+                            List<String> words = new ArrayList();
+                            String subgenre = lines[0];
+
+                            String newKey = "";
+                            for(int j=0; j < lines.length; j++) {
+                                System.out.print("#j:"+j+"::"+lines[j]+" | ");
+
+                                if(j>0) {
+                                    if(!lines[j].equals("_")) {
+                                        if (j % 2 == 1) {
+                                            newKey = lines[j];
+                                        } else {
+                                            newKey = newKey + "___" + lines[j];
+                                            words.add(newKey);
+                                        }
+                                    }
+                                }
+                            }
+                            System.out.println(" ");
+                            System.out.println("#subgenre:"+subgenre+"  | words::"+words.toString());
+                            result.put(subgenre, words);
+                            /*
+                            for (int no=1; no < lines.length; no++) {
+
+                                newSubgenreTitleArr = new ArrayList();
+                                String topGenre = topGenreArr.get(no);
+                                String leftGenre = lines[0];
+                                newSubgenreTitleArr.add(topGenre);
+                                newSubgenreTitleArr.add(leftGenre);
+
+                                String toGenre = StringUtil.getSortedStringStrsAddSeperator(newSubgenreTitleArr, "___");
+                                System.out.println("# "+no+" 'th topGenre:"+topGenre+"/leftGenre:"+leftGenre
+                                        + "   dest_genre:" + lines[no] + "   toGenre:"+toGenre);
+                                if (!"_".equals(lines[no].trim())) {
+                                    result.put(toGenre, lines[no]);
+                                }
+                            }
+                            System.out.println("");
+                            */
+
+                        }
+
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    @Override
+    public void processMixedSubgenre() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        for(Map<String, Object> nmap : itemList) {
+            //for(int i=0; i<10; i++) {
+            //Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            String reqStr = "";
+            if(nmap.get("genre") != null) reqStr = nmap.get("genre").toString();
+            if(nmap.get("kt_rating") != null) reqStr = reqStr + " " + nmap.get("kt_rating").toString();
+
+            List<String> result = dicService.getMixedGenreArrayFromGenre(reqStr, "mixgenre");
+            String toMeta = result.toString();
+            toMeta = CommonUtil.removeNationStr(toMeta);
+
+            if(!"".equals(toMeta)) {
+                ItemsMetas newMeta = new ItemsMetas();
+                long longIdx = (Long) nmap.get("idx");
+                int intIdx = (int) longIdx;
+                newMeta.setIdx(intIdx);
+                newMeta.setMtype("subgenre1");
+                newMeta.setMeta(toMeta);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                int rtItm = itemsService.insItemsMetas(newMeta);
+            }
+        }
+    }
+
+    private String getMetasStringFromJsonObject(JsonObject resultObj, List<String> origTypes) {
+        String result = "";
+
+        List<String> resultArr = new ArrayList();
+
+        if (resultObj != null && origTypes != null) {
+            for(String type : origTypes) {
+                String typeStr = type.replace("METAS","");
+                if (resultObj.get(type) != null) {
+                    JsonArray metaArr = (JsonArray) resultObj.get(type);
+                    //System.out.println("#metaArr:"+metaArr.toString());
+                    if(metaArr != null && metaArr.size() > 0) {
+                        for(JsonElement je : metaArr) {
+                            JsonObject jo = (JsonObject) je;
+                            String keyOne = (jo.get("word") != null) ? jo.get("word").toString() : "";
+                            if((!"".equals(keyOne.trim()))) {
+                                keyOne = keyOne.replace("\"","");
+                                keyOne = keyOne.replace("\'","");
+                                keyOne = typeStr +"___"+ keyOne.trim();
+                                //System.out.println("#word:"+keyOne);
+                                resultArr.add(keyOne);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(resultArr != null && resultArr.size() > 0) {
+            result = resultArr.toString();
+            result = result.replace(",","");
+            result = CommonUtil.removeBrackets(result);
+        }
+        return result;
+    }
+
+    @Override
+    public void processSubgenre2ByKeywords() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        List<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        origTypes.add("METASCHARACTER");
+
+        for(Map<String, Object> nmap : itemList) {
+            //for(int i=0; i<10; i++) {
+            //Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            long itemIdx0 = (long) nmap.get("idx");
+            int itemIdx = (int) itemIdx0;
+            JsonObject resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
+
+            //System.out.println("#resultObj:"+resultObj.toString());
+            //System.out.println("#resultSet:"+getMetasStringFromJsonObject(resultObj, origTypes));
+            String reqStr = getMetasStringFromJsonObject(resultObj, origTypes);
+            System.out.println("#requestEs for reqStr:"+reqStr);
+            JsonObject resultEs = RestUtil.getSearchedEsData("idx_subgenre", "keywords"
+                    , reqStr);
+
+            //System.out.println("#resultEs:"+resultEs.toString());
+            JsonObject hits = RestUtil.getEsTopWords(resultEs);
+            //System.out.println("#resultEs.words top2::"+hits.toString());
+            String subGenreWord1 = "";
+            String subGenreWord2 = "";
+            String subGenreWords = "";
+
+            if (hits != null && hits.get("words") != null) {
+                JsonArray words = hits.get("words").getAsJsonArray();
+                int cnt = 0;
+                for (JsonElement je : words) {
+                    JsonObject jo = (JsonObject) je;
+                    String word = "";
+                    word = (jo.get("word") != null) ? jo.get("word").getAsString() : "";
+                    if (cnt == 0) {
+                        //subGenreWord1 = word;
+                        double score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
+                        if (score > 3.0) subGenreWord1 = word;
+                    } else {
+                        subGenreWord2 = word;
+                    }
+                    cnt++;
+                }
+                subGenreWords = hits.get("words").toString();
+            }
+            System.out.println("#subGenreWord1:"+subGenreWord1+" / subGenreWord2:"+subGenreWord2
+                                +" / subGenreWords:"+subGenreWords);
+                //if(nmap.get("genre") != null) reqStr = nmap.get("genre").toString();
+            //if(nmap.get("kt_rating") != null) reqStr = reqStr + " " + nmap.get("kt_rating").toString();
+
+            /*
+            List<String> result = dicService.getMixedGenreArrayFromGenre(reqStr, "mixgenre");
+            String toMeta = result.toString();
+            toMeta = CommonUtil.removeNationStr(toMeta);
+            */
+            if(!"".equals(subGenreWord1)) {
+                ItemsMetas newMeta = new ItemsMetas();
+                long longIdx = (Long) nmap.get("idx");
+                int intIdx = (int) longIdx;
+                newMeta.setIdx(intIdx);
+                newMeta.setMtype("subgenreword1");
+                newMeta.setMeta(subGenreWord1);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                int rtItm1 = itemsService.insItemsMetas(newMeta);
+
+                newMeta.setMtype("subgenreword2");
+                newMeta.setMeta(subGenreWord2);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                int rtItm2 = itemsService.insItemsMetas(newMeta);
+
+                newMeta.setMtype("subgenrewords");
+                newMeta.setMeta(subGenreWords);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                int rtItm3 = itemsService.insItemsMetas(newMeta);
+
+            }
+
+        }
     }
 }

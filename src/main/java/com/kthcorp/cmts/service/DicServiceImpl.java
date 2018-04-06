@@ -100,4 +100,6 @@ public interface DicServiceImpl {
     List<DicKeywords> getRankWordsByGenreAndType(DicKeywords req);
 
     List<String> getKeywordTypes();
+
+    List<String> getMixedGenreArrayFromGenre(String genre, String mtype);
 }

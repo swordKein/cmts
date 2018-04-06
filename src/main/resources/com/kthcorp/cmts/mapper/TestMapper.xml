@@ -82,4 +82,9 @@
         ) a where a.genre is null
 
     </select>
+
+    <select id="getItemsForSubgenre" resultType="map">
+        /* getItemsForSubgenre */
+        select * from items_for_subgenre;
+    </select>
 </mapper>

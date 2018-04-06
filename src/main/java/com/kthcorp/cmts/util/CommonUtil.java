@@ -267,6 +267,12 @@ public class CommonUtil {
         return reqStr;
     }
 
+    public static String removeBrackets (String req) {
+        req = req.replace("[","");
+        req = req.replace("]", "");
+        return req;
+    }
+
     public static String removeNationStr(String req) {
         req = req.replace("아르메니아", "");
         req = req.replace("그리스", "");
@@ -336,7 +342,12 @@ public class CommonUtil {
         req = req.replace("서독", "");
         req = req.replace("구", "");
         req = req.replace("네시아", "");
+        req = req.replace("[","");
+        req = req.replace("]", "");
 
         return req;
     }
+
+
+
 }
