@@ -117,6 +117,14 @@ public interface TestServiceImpl {
 
     List<CcubeContent> loadCcubeMoviesDatas0402_2() throws Exception;
 
+    Map<String,Object> loadDicSubgenreGenres() throws Exception;
+
+    Map<String,Object> loadDicSubgenreKeywords() throws Exception;
+
+    void insDicSubgenreKeywords() throws Exception;
+
+    void insDicSubgenreGenres() throws Exception;
+
     void insCcubeMovies0226(List<CcubeContent> reqList);
 
     List<CcubeSeries> loadCcubeSeriesAllDatas_0330() throws Exception;
@@ -138,4 +146,10 @@ public interface TestServiceImpl {
     void processRankForDicKeywordsAndGenres();
 
     void writeNoGenreItems();
+
+    void putBulkDataToEsIndex(String idxName, Map<String, Object> reqMap) throws Exception;
+
+    void processMixedSubgenre() throws Exception;
+
+    void processSubgenre2ByKeywords() throws Exception;
 }

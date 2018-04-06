@@ -320,4 +320,36 @@ public class MapUtil {
 
         return result;
     }
+
+    public static Set<String> getSetFromStringArray(String[] reqArr) {
+        Set<String> result = null;
+        if (reqArr != null && reqArr.length > 0) {
+            result = new HashSet();
+            for (String s1 : reqArr) {
+                for (String s2 : reqArr) {
+                    String ds = s1 + "___" + s2;
+                    result.add(ds);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Set<String> getNoDupSetFromStringArray(String[] reqArr) {
+        Set<String> result = null;
+        if (reqArr != null && reqArr.length > 0) {
+            result = new HashSet();
+            for (String s1 : reqArr) {
+                for (String s2 : reqArr) {
+                    List<String> newDsArr = new ArrayList();
+                    newDsArr.add(s1);
+                    newDsArr.add(s2);
+                    String ds = StringUtil.getSortedStringStrsAddSeperator(newDsArr, "___");
+                    result.add(ds);
+                }
+            }
+        }
+        return result;
+    }
+
 }

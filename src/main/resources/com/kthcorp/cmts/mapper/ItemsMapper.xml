@@ -811,7 +811,7 @@
     </update>
 
     <insert id="insItemsStat" parameterType="com.kthcorp.cmts.model.Items">
-        /*  */
+        /* insItemsStat */
         insert into items_stat (idx, stat, regdate)
         values (#{idx}, #{stat}, now())
         ON DUPLICATE KEY UPDATE stat = #{stat}, regdate = now()

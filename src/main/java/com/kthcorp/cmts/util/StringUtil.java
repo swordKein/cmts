@@ -315,4 +315,29 @@ public class StringUtil {
 
         return result;
     }
+
+    public static String[] convertArrayListToStringArray(List<String> origArr) {
+        String[] result = null;
+        if (origArr != null && origArr.size() > 0) {
+            result = new String[origArr.size()];
+            result = origArr.toArray(result);
+        }
+        return result;
+    }
+
+    public static String getSortedStringStrsAddSeperator(List<String> origArr, String seperator) {
+        String result = "";
+        if (origArr != null && origArr.size() > 0) {
+            String[] newArr = convertArrayListToStringArray(origArr);
+            Arrays.sort(newArr);
+            for(int i=0; i<newArr.length; i++) {
+                if (i == 0) {
+                    result = newArr[0];
+                } else {
+                    result += seperator + newArr[i];
+                }
+            }
+        }
+        return result;
+    }
 }

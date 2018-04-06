@@ -5,11 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.TestMapper;
-import com.kthcorp.cmts.model.CcubeContent;
-import com.kthcorp.cmts.model.CcubeSeries;
-import com.kthcorp.cmts.model.Items;
-import com.kthcorp.cmts.model.ItemsContent;
+import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.FileUtils;
+import com.kthcorp.cmts.util.MapUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //@RunWith(SpringRunner.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -445,5 +440,53 @@ public class TestServiceTestImpl {
 			if (cc.getYear().length() > 4) System.out.println("#res:" + cc.toString());
 		}
 		testService.insCcubeMovies0226(reqList);
+	}
+
+	@Test
+	public void test_loadDicSubgenreGenres() throws Exception {
+		Map<String, Object> result = testService.loadDicSubgenreGenres();
+		System.out.println("#RESULT_MAP::"+result.toString());
+
+		Set entrySet = result.entrySet();
+		Iterator it = entrySet.iterator();
+
+		int lineCnt = 0;
+		while(it.hasNext()) {
+			Map.Entry me = (Map.Entry) it.next();
+			System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+		}
+	}
+
+	@Test
+	public void test_insDicSubgenreGenres() throws Exception {
+		testService.insDicSubgenreGenres();
+	}
+
+	@Test
+	public void test_getMixedSet() throws Exception {
+		String[] origArr = {"A", "B", "C"};
+		Set<String> result = MapUtil.getNoDupSetFromStringArray(origArr);
+		System.out.println("#RESULT:"+result.toString());
+	}
+
+	@Test
+	public void test_processMixedSubgenre() throws Exception {
+		testService.processMixedSubgenre();
+	}
+
+	@Test
+	public void test_loadDicSubgenreKeywords() throws Exception {
+		Map<String,Object> result = testService.loadDicSubgenreKeywords();
+		System.out.println("#RESULT:"+result.toString());
+	}
+
+	@Test
+	public void test_insDicSubgenreKeywords() throws Exception {
+		testService.insDicSubgenreKeywords();
+	}
+
+	@Test
+	public void test_processSubgenre2ByKeywords() throws Exception {
+		testService.processSubgenre2ByKeywords();
 	}
 }

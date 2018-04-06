@@ -29,4 +29,6 @@ public interface TestMapper {
     List<Map<String, Object>> getYcDatas2st();
 
     List<Items> getNoGenreItems();
+
+    List<Map<String, Object>> getItemsForSubgenre();
 }

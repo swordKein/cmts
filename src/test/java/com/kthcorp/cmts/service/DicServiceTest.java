@@ -13,10 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //@RunWith(SpringRunner.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -219,5 +216,13 @@ public class DicServiceTest {
 		int rt = dicService.modifyDicsByTypesFromArrayList(items);
 		System.out.println("#result:"+rt);
 
+	}
+
+
+	@Test
+	public void test_getMixedGenreArrayFromGenre() throws Exception {
+		String req = "성인전용 전쟁 드라마 액션 모험 ";
+		List<String> result = dicService.getMixedGenreArrayFromGenre(req, "mixgenre");
+		System.out.println("#RES:"+result.toString());
 	}
 }

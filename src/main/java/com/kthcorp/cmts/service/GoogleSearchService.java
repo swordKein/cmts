@@ -21,10 +21,16 @@ import java.util.Map;
 public class GoogleSearchService implements GoogleSearchServiceImpl {
     private static final Logger log = LoggerFactory.getLogger(GoogleSearchService.class);
 
-    @Value("${keys.google.key}")
-    private String api_key;
+    //@Value("${keys.google.key}")
+    //private String api_key;
     //@Value("${keys.google.cx}")
     //private String api_cx;
+    @Value("${google.api.key}")
+    private String api_key;
+    @Value("${google.api.cx}")
+    private String api_cx;
+    @Value("${google.api.search.url}")
+    private String search_url;
 
     @Override
     public JsonObject getFirstSearchedMovieItem (String title, String producer, String year) {
@@ -49,8 +55,34 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
         return jObj;
     }
 
+    /*
+    미사용
+     */
     @Override
     public String getSearchItems(String title, String producer, String year) {
+        String reqUrl = search_url;
+        String q = title + " in " + year + " directed by " + producer;
+        String result = "";
+        try {
+
+            Map<String, Object> reqParamMap = new HashMap<String, Object>();
+            reqParamMap.put("key", api_key);
+            reqParamMap.put("cx", api_cx);
+
+            q = java.net.URLEncoder.encode(q, "UTF-8");
+            reqParamMap.put("q", q);
+
+            System.out.println("#GoogleSearchService reqUrl:"+reqUrl+"&& params:"+reqParamMap.toString());
+
+            result = HttpClientUtil.reqGet(reqUrl, "", null, reqParamMap, "bypass");
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return result;
+    }
+
+    /*
+    @Override
+    public String getSearchItems_old_use_google_web(String title, String producer, String year) {
         String result = "";
 
         //System.out.println("#KEY:"+api_key+"/CX:"+api_cx);
@@ -72,9 +104,47 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
 
         return result;
     }
+    */
 
     @Override
     public JsonArray getSearchItems3(ConfTarget reqInfo) {
+        JsonArray result = new JsonArray();
+
+        String reqUrl = search_url;
+        //String q = "site:imdb.com/title/ " + reqInfo.getParam1().replaceAll("//*","/");
+        String q = reqInfo.getParam1().replaceAll("//*","/");
+        String resultStr = "";
+
+        try {
+
+            //reqUrl += java.net.URLEncoder.encode(q, "UTF-8");
+
+            Map<String, Object> reqParamMap = new HashMap<String, Object>();
+            reqParamMap.put("key", api_key);
+            reqParamMap.put("cx", api_cx);
+
+            q = java.net.URLEncoder.encode(q, "UTF-8");
+            reqParamMap.put("q", q);
+
+            System.out.println("#GoogleSearchService reqUrl:"+reqUrl+"&& params:"+reqParamMap.toString());
+
+            resultStr = HttpClientUtil.reqGet(reqUrl, "", null, reqParamMap, "bypass");
+
+            //System.out.println("#request URI:"+reqUrl);
+
+            //String resultStr = HttpClientUtil.reqGet(reqUrl, "", null,null, "bypass");
+
+            result = getSearchWebItems(resultStr);
+
+            if (result != null && result.get(0) != null) System.out.println("#GOOGLE_SEARCH_RESULT for IMDB jArr.get(0):"+result.get(0).toString());
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+
+        return result;
+    }
+
+    public JsonArray getSearchItems3_old_use_google_web(ConfTarget reqInfo) {
         JsonArray result = new JsonArray();
 
         String reqUrl = "https://www.google.co.kr/search?q=";

@@ -41,7 +41,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 public class GoogleTransService implements GoogleTransServiceImpl {
     private static final Logger logger = LoggerFactory.getLogger(GoogleTransService.class);
 
-    @Value("${keys.google.key}")
+    @Value("${google.api.key}")
     private String oauth_key;
     @Value("${cmts.property.serverid}")
     private String serverid;

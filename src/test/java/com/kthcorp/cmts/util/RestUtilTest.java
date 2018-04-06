@@ -17,6 +17,11 @@ import java.util.Map;
 @SpringBootTest
 public class RestUtilTest {
 
+    @Test
+    public void test_getSearchedEsData() throws Exception {
+        JsonObject result = RestUtil.getSearchedEsData("idx_subgenre", "keywords", "WHO___사이코패스 WHAT___살인 WHAT___살해");
+        System.out.println("#RES:"+result);
+    }
     /*
     @Test
     public void test_getES() throws Exception {

@@ -36,6 +36,8 @@ public interface ItemsTagsServiceImpl {
 
     //JsonObject getItemsMetasByItemIdx(int itemIdx);
 
+    JsonObject getItemsMetasByIdx(int itemIdx, List<String> origTypes, String getStat);
+
     JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode);
 
     List<String> getGenreWordsListByGenre(String genre);

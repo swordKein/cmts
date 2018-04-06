@@ -386,7 +386,7 @@ public class ApiController {
 					case "C": case "A": case "S":
 						rtcode = apiService.uptSchedTriggerStatByItemIdxAndType(itemIdx, targetType, "Y" );
 						break;
-					case "FT":
+					case "FT": case "RT":
 						Items reqIt = new Items();
 						reqIt.setIdx(itemIdx);
 						reqIt.setStat(targetType);

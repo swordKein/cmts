@@ -59,6 +59,7 @@ public class JobRunner implements Job {
                 case "ccubeOutput":
                     rt = ccubeService.processCcubeOutputToJson();
                     //testService.processRankForDicKeywordsAndGenres();
+                    //testService.processSubgenre2ByKeywords();
                     logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
                     break;
                 case "dummyService":
