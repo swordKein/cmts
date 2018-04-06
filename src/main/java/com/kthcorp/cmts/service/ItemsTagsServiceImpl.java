@@ -75,4 +75,6 @@ public interface ItemsTagsServiceImpl {
     int insManualJobHist(ManualChange req);
 
     int uptManualJobHist(ManualChange req);
+
+    int delItemsMetasAward(int itemIdx);
 }
