@@ -1025,18 +1025,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* action_item이 있는 경우 타입별 meta 수정 */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
-                /* 해당 items_tags_keys 를 승인으로 업데이트 한다 */
-                ItemsTags reqConfirm = new ItemsTags();
-                reqConfirm.setIdx(itemid);
-                reqConfirm.setTagidx(curTagIdx);
-                reqConfirm.setStat("S");
-                int rts = this.uptItemsTagsKeysStat(reqConfirm);
 
-                /* 해당 items_stat 를 승인으로 업데이트 한다 */
-                reqIt = new Items();
-                reqIt.setIdx(itemid);
-                reqIt.setStat("ST");
-                int rti = itemsMapper.insItemsStat(reqIt);
                 rt = 1;
             }
 
