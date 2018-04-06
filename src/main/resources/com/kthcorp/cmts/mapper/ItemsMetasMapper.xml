@@ -38,5 +38,9 @@
         ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
 
+    <delete id="delItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
+        /* delItemsMetas */
+        delete from items_metas where idx = #{idx} and mtype = #{mtype}
+    </delete>
 
 </mapper>

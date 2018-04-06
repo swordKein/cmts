@@ -1176,6 +1176,51 @@ public class ApiController {
 	}
 
 
+	// #23
+	@RequestMapping(value = "/pop/meta/del/award", method = RequestMethod.POST)
+	@ResponseBody
+	public String post__pop_meta_del_award(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "itemid") String itemid
+	) {
+		logger.info("#CLOG:API/pop/meta/del/award input itemid:" + itemid);
+
+		int itemIdx = 0;
+		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
+
+		int rtcode = -1;
+		String rtmsg = "";
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				rtcode = itemsTagsService.delItemsMetasAward(itemIdx);
+
+				if(rtcode > 0) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Item meta award delete fail!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		if(rtcode > 1) rtcode = 1;
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+
+
+		return result_all.toString();
+	}
+
 	// Danger!!! only for admin, 매우조심!!!
 	@RequestMapping(value = "/manual/batchChange", method = RequestMethod.POST)
 	@ResponseBody

@@ -1483,4 +1483,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         return manualJobHistMapper.uptManualJobHist(req);
     }
+
+    @Override
+    public int delItemsMetasAward(int itemIdx) {
+        ItemsMetas req = new ItemsMetas();
+        req.setIdx(itemIdx);
+        req.setMtype("award");
+        int rt = itemsMetasMapper.delItemsMetas(req);
+        return rt;
+    }
 }
