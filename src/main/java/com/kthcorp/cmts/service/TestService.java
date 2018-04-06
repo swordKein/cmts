@@ -3764,39 +3764,55 @@ public class TestService implements TestServiceImpl {
         origTypes.add("METASEMOTION");
         origTypes.add("METASCHARACTER");
 
+        long itemIdx0 = (long) 0;
+        JsonObject hits = null;
+        int itemIdx = 0;
+        JsonObject resultObj = null;
+        JsonObject resultEs = null;
+
+        String subGenreWord1 = "";
+        String subGenreWord2 = "";
+        String subGenreWords = "";
+        JsonArray words = null;
+
         for(Map<String, Object> nmap : itemList) {
             //for(int i=0; i<10; i++) {
             //Map<String, Object>   nmap = itemList.get(i);
             System.out.println("#req::"+nmap.toString());
 
-            long itemIdx0 = (long) nmap.get("idx");
-            int itemIdx = (int) itemIdx0;
-            JsonObject resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
+            itemIdx0 = (long) nmap.get("idx");
+            itemIdx = (int) itemIdx0;
+            resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
 
             //System.out.println("#resultObj:"+resultObj.toString());
             //System.out.println("#resultSet:"+getMetasStringFromJsonObject(resultObj, origTypes));
             String reqStr = getMetasStringFromJsonObject(resultObj, origTypes);
             System.out.println("#requestEs for reqStr:"+reqStr);
-            JsonObject resultEs = RestUtil.getSearchedEsData("idx_subgenre", "keywords"
+            resultEs = RestUtil.getSearchedEsData("idx_subgenre", "keywords"
                     , reqStr);
 
             //System.out.println("#resultEs:"+resultEs.toString());
-            JsonObject hits = RestUtil.getEsTopWords(resultEs);
+            hits = RestUtil.getEsTopWords(resultEs);
             //System.out.println("#resultEs.words top2::"+hits.toString());
-            String subGenreWord1 = "";
-            String subGenreWord2 = "";
-            String subGenreWords = "";
-
+            subGenreWord1 = "";
+            subGenreWord2 = "";
+            subGenreWords = "";
+            words = null;
             if (hits != null && hits.get("words") != null) {
-                JsonArray words = hits.get("words").getAsJsonArray();
+                words = hits.get("words").getAsJsonArray();
                 int cnt = 0;
+                JsonObject jo = null;
+                String word = "";
+                double score = 0.0;
                 for (JsonElement je : words) {
-                    JsonObject jo = (JsonObject) je;
-                    String word = "";
+                    jo = (JsonObject) je;
+                    word = "";
                     word = (jo.get("word") != null) ? jo.get("word").getAsString() : "";
+
                     if (cnt == 0) {
+                        score = 0.0;
                         //subGenreWord1 = word;
-                        double score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
+                        score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
                         if (score > 3.0) subGenreWord1 = word;
                     } else {
                         subGenreWord2 = word;
