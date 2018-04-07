@@ -3975,4 +3975,39 @@ public class TestService implements TestServiceImpl {
 
         return result;
     }
+
+    @Override
+    public void writeItemsAndSubgenre() {
+        List<Map<String, Object>> items = testMapper.getItemsAndSubgenre();
+        System.out.println("#RES.size:" + items.size());
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        resultStr = "아이템ID" + seperator + "CONTENT_ID" + seperator + "TITLE"
+                + seperator + "장르" + seperator + "KT등급"
+                + seperator + "조합장르"
+                + seperator + "서브장르1" + seperator + "서브장르2"
+                + seperator + "서브장르 SCORE"
+                + lineFeed;
+
+        String itemStr = "";
+        for (Map<String, Object> item : items) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("title").toString();
+            itemStr = itemStr + seperator + (item.get("genre") != null ? item.get("genre").toString() : "");
+            itemStr = itemStr + seperator + (item.get("kt_rating") != null ? item.get("kt_rating").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenre1") != null ? item.get("subgenre1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreword1") != null ? item.get("subgenreword1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreword2") != null ? item.get("subgenreword2").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenrewords") != null ? item.get("subgenrewords").toString() : "");
+
+            resultStr += itemStr + lineFeed;
+
+        }
+
+        String fileNameContent = "SUBGENRE_ITEMS_180407.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+    }
 }
