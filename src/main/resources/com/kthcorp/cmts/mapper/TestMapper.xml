@@ -87,4 +87,17 @@
         /* getItemsForSubgenre */
         select * from items_for_subgenre;
     </select>
+
+    <select id="getItemsAndSubgenre" resultType="map">
+        /* getItemsAndSubgenre */
+        select it.idx, it.cid, it.title
+        , (select meta from items_metas where idx = it.idx and mtype = 'genre') as genre
+        , it.kt_rating
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenre1') as subgenre1
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenreword1') as subgenreword1
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenreword2') as subgenreword2
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenrewords') as subgenrewords
+        from items_for_subgenre it
+
+    </select>
 </mapper>

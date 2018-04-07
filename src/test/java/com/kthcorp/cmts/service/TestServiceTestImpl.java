@@ -489,4 +489,9 @@ public class TestServiceTestImpl {
 	public void test_processSubgenre2ByKeywords() throws Exception {
 		testService.processSubgenre2ByKeywords();
 	}
+
+	@Test
+	public void test_writeItemsAndSubgenre() throws Exception {
+		testService.writeItemsAndSubgenre();
+	}
 }
