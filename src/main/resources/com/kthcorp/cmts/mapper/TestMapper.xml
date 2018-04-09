@@ -100,4 +100,12 @@
         from items_for_subgenre it
 
     </select>
+
+    <select id="getItemsStatRt" resultType="map">
+        /* getItemsStatRt */
+        select it.idx, it.cid, it.title
+        , ( select count(*) from items_tags_keys where idx = it.idx and stat = 'S' ) as st_cnt
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'RT'
+    </select>
 </mapper>

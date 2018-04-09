@@ -154,4 +154,8 @@ public interface TestServiceImpl {
     void processSubgenre2ByKeywords() throws Exception;
 
     void writeItemsAndSubgenre();
+
+    void processSubgenrePointCutting() throws Exception;
+
+    void writeItemsStatRt();
 }

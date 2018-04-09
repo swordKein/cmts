@@ -494,4 +494,14 @@ public class TestServiceTestImpl {
 	public void test_writeItemsAndSubgenre() throws Exception {
 		testService.writeItemsAndSubgenre();
 	}
+
+	@Test
+	public void test_processSubgenrePointCutting() throws Exception {
+		testService.processSubgenrePointCutting();
+	}
+
+	@Test
+	public void test_writeItemsStatRt() throws Exception {
+		testService.writeItemsStatRt();
+	}
 }

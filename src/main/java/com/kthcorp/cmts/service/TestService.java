@@ -3835,7 +3835,7 @@ public class TestService implements TestServiceImpl {
                         score = 0.0;
                         //subGenreWord1 = word;
                         score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
-                        if (score > 3.0) subGenreWord1 = word;
+                        if (score > 6.0) subGenreWord1 = word;
                     } else {
                         subGenreWord2 = word;
                     }
@@ -4007,7 +4007,91 @@ public class TestService implements TestServiceImpl {
 
         }
 
-        String fileNameContent = "SUBGENRE_ITEMS_180407.tsv";
+        String fileNameContent = "SUBGENRE_ITEMS_180409.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
     }
+
+
+    @Override
+    public void processSubgenrePointCutting() throws Exception {
+        double pointCut = 6.0;
+        ItemsMetas reqM = new ItemsMetas();
+        reqM.setPageNo(1);
+        reqM.setPageSize(15000);
+        reqM.setMtype("subgenrewords");
+        List<ItemsMetas> itemList = itemsMetasMapper.getItemsMetasByMtypePaging(reqM);
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        String metaStr = "";
+        int itemIdx = 0;
+        JsonArray words = null;
+        String subGenreWord1 = "";
+        ItemsMetas newMeta = null;
+        int rtItm1 = 0;
+
+        for(int i=0; i<itemList.size(); i++) {
+            subGenreWord1 = "";
+            ItemsMetas item = itemList.get(i);
+            itemIdx = item.getIdx();
+            metaStr = item.getMeta();
+
+            System.out.println("#req:: idx:"+itemIdx+"  metaStr:"+metaStr.toString());
+            if(!"".equals(metaStr.trim())) {
+                try {
+                    words = JsonUtil.getJsonArray(metaStr);
+                    if (words != null && words.size() > 0) {
+                        JsonObject jo1 = (JsonObject) words.get(0);
+                        if (jo1 != null) {
+                            if (jo1.get("score") != null && jo1.get("score").getAsDouble() > pointCut) {
+                                subGenreWord1 = jo1.get("word").getAsString();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //if(!"".equals(subGenreWord1)) {
+                newMeta = new ItemsMetas();
+                newMeta.setIdx(itemIdx);
+                newMeta.setMtype("subgenreword1");
+                newMeta.setMeta(subGenreWord1);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                rtItm1 = itemsService.insItemsMetas(newMeta);
+            //}
+
+        }
+    }
+
+
+
+    @Override
+    public void writeItemsStatRt() {
+        List<Map<String, Object>> items = testMapper.getItemsStatRt();
+        System.out.println("#RES.size:" + items.size());
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        resultStr = "아이템ID" + seperator + "CONTENT_ID" + seperator + "TITLE"
+                + seperator + "승인횟수"
+                + lineFeed;
+
+        String itemStr = "";
+        for (Map<String, Object> item : items) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("title").toString();
+            itemStr = itemStr + seperator + (item.get("st_cnt") != null ? item.get("st_cnt").toString() : "");
+
+            resultStr += itemStr + lineFeed;
+
+        }
+
+        String fileNameContent = "ITEMS_STAT_RT_180409.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+    }
+
+
 }
