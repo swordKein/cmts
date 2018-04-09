@@ -1,6 +1,5 @@
 package com.kthcorp.cmts.service;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
