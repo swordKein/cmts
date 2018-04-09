@@ -9,9 +9,16 @@ import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
 import org.apache.avro.generic.GenericData;
 import org.apache.directory.shared.ldap.codec.ResponseCarryingException;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.nio.entity.NStringEntity;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -3719,16 +3726,17 @@ public class TestService implements TestServiceImpl {
         String result = "";
 
         List<String> resultArr = new ArrayList();
-
+        JsonArray metaArr = null;
         if (resultObj != null && origTypes != null) {
             for(String type : origTypes) {
                 String typeStr = type.replace("METAS","");
                 if (resultObj.get(type) != null) {
-                    JsonArray metaArr = (JsonArray) resultObj.get(type);
+                    metaArr = (JsonArray) resultObj.get(type);
                     //System.out.println("#metaArr:"+metaArr.toString());
+                    JsonObject jo = null;
                     if(metaArr != null && metaArr.size() > 0) {
                         for(JsonElement je : metaArr) {
-                            JsonObject jo = (JsonObject) je;
+                            jo = (JsonObject) je;
                             String keyOne = (jo.get("word") != null) ? jo.get("word").toString() : "";
                             if((!"".equals(keyOne.trim()))) {
                                 keyOne = keyOne.replace("\"","");
@@ -3764,39 +3772,69 @@ public class TestService implements TestServiceImpl {
         origTypes.add("METASEMOTION");
         origTypes.add("METASCHARACTER");
 
-        for(Map<String, Object> nmap : itemList) {
+        long itemIdx0 = (long) 0;
+        JsonObject hits = null;
+        int itemIdx = 0;
+        JsonObject resultObj = null;
+        JsonObject resultEs = null;
+
+        String subGenreWord1 = "";
+        String subGenreWord2 = "";
+        String subGenreWords = "";
+        JsonArray words = null;
+        String reqStr = "";
+
+        int cnt = 0;
+        JsonObject jo = null;
+        String word = "";
+        double score = 0.0;
+
+        ItemsMetas newMeta = null;
+        int intIdx = 0;
+        int rtItm1 = -1;
+        long longIdx = 0;
+        Map<String, Object> nmap = null;
+        for(int i=0; i<itemList.size(); i++) {
+            nmap = itemList.get(i);
+        //for(nmap : itemList) {
             //for(int i=0; i<10; i++) {
             //Map<String, Object>   nmap = itemList.get(i);
             System.out.println("#req::"+nmap.toString());
 
-            long itemIdx0 = (long) nmap.get("idx");
-            int itemIdx = (int) itemIdx0;
-            JsonObject resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
+            itemIdx0 = (long) nmap.get("idx");
+            itemIdx = (int) itemIdx0;
+            resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
 
             //System.out.println("#resultObj:"+resultObj.toString());
             //System.out.println("#resultSet:"+getMetasStringFromJsonObject(resultObj, origTypes));
-            String reqStr = getMetasStringFromJsonObject(resultObj, origTypes);
+            reqStr = "";
+            reqStr = getMetasStringFromJsonObject(resultObj, origTypes);
             System.out.println("#requestEs for reqStr:"+reqStr);
-            JsonObject resultEs = RestUtil.getSearchedEsData("idx_subgenre", "keywords"
+            resultEs = getSearchedEsData("idx_subgenre", "keywords"
                     , reqStr);
 
             //System.out.println("#resultEs:"+resultEs.toString());
-            JsonObject hits = RestUtil.getEsTopWords(resultEs);
+            hits = getEsTopWords(resultEs);
             //System.out.println("#resultEs.words top2::"+hits.toString());
-            String subGenreWord1 = "";
-            String subGenreWord2 = "";
-            String subGenreWords = "";
-
+            subGenreWord1 = "";
+            subGenreWord2 = "";
+            subGenreWords = "";
+            words = null;
             if (hits != null && hits.get("words") != null) {
-                JsonArray words = hits.get("words").getAsJsonArray();
-                int cnt = 0;
+                words = hits.get("words").getAsJsonArray();
+                cnt = 0;
+                jo = null;
+                word = "";
+                score = 0.0;
                 for (JsonElement je : words) {
-                    JsonObject jo = (JsonObject) je;
-                    String word = "";
+                    jo = (JsonObject) je;
+                    word = "";
                     word = (jo.get("word") != null) ? jo.get("word").getAsString() : "";
+
                     if (cnt == 0) {
+                        score = 0.0;
                         //subGenreWord1 = word;
-                        double score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
+                        score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
                         if (score > 3.0) subGenreWord1 = word;
                     } else {
                         subGenreWord2 = word;
@@ -3816,27 +3854,160 @@ public class TestService implements TestServiceImpl {
             toMeta = CommonUtil.removeNationStr(toMeta);
             */
             if(!"".equals(subGenreWord1)) {
-                ItemsMetas newMeta = new ItemsMetas();
-                long longIdx = (Long) nmap.get("idx");
-                int intIdx = (int) longIdx;
+                newMeta = new ItemsMetas();
+                longIdx = (Long) nmap.get("idx");
+                intIdx = (int) longIdx;
                 newMeta.setIdx(intIdx);
                 newMeta.setMtype("subgenreword1");
                 newMeta.setMeta(subGenreWord1);
                 System.out.println("#save itemsMetas:" + newMeta.toString());
-                int rtItm1 = itemsService.insItemsMetas(newMeta);
+                rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 newMeta.setMtype("subgenreword2");
                 newMeta.setMeta(subGenreWord2);
                 System.out.println("#save itemsMetas:" + newMeta.toString());
-                int rtItm2 = itemsService.insItemsMetas(newMeta);
+                rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 newMeta.setMtype("subgenrewords");
                 newMeta.setMeta(subGenreWords);
                 System.out.println("#save itemsMetas:" + newMeta.toString());
-                int rtItm3 = itemsService.insItemsMetas(newMeta);
+                rtItm1 = itemsService.insItemsMetas(newMeta);
 
             }
 
         }
+    }
+
+    private static EsConfig esConfig = null;
+    private static RestClient restClient = null;
+
+    private JsonObject getSearchedEsData(String idxName, String fieldName, String reqStr) throws Exception {
+        //String result = "";
+        JsonObject result = new JsonObject();
+
+        try {
+            if (restClient == null) {
+                esConfig = new EsConfig();
+                System.out.println("##REST::ElasticSearch server:" + EsConfig.INSTANCE.getEs_host() + ":" + EsConfig.INSTANCE.getEs_port() + "//:request_param:" + reqStr);
+                restClient = RestClient.builder(
+                        new HttpHost(EsConfig.INSTANCE.getEs_host(), EsConfig.INSTANCE.getEs_port(), "http")).build();
+            }
+            //HttpEntity entity = new NStringEntity(reqStr, ContentType.APPLICATION_JSON);
+
+            /*
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("keywords", reqStr);
+            paramMap.put("pretty", "true");
+            */
+            HttpEntity entity = new NStringEntity(
+                    "{\n" +
+                            "    \"query\" : {\n" +
+                            "    \"match\": { \""+fieldName+"\":\""+reqStr+"\"} \n" +
+                            "} \n"+
+                            "}",
+                    ContentType.APPLICATION_JSON
+            );
+            Response response = restClient.performRequest(
+                    "GET",
+                    "/"+idxName+"/_search",
+                    Collections.singletonMap("pretty", "true"),
+                    entity
+            );
+
+
+            /*
+            Response response = restClient.performRequest(
+                    "GET",
+                    "/"+idxName+"/_search",
+                    paramMap
+            );
+            */
+
+            //System.out.println(EntityUtils.toString(response.getEntity()));
+            //result = response.getEntity().toString();
+            String resultStr = EntityUtils.toString(response.getEntity());
+            result = JsonUtil.getJsonObject(resultStr);
+
+            //System.out.println("#REST::ElasticSearch Result:"+result.toString());
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+
+        return result;
+    }
+
+    private JsonObject getEsTopWords(JsonObject reqObj) {
+        JsonObject result = null;
+        JsonArray words = null;
+        if(reqObj != null) {
+            result = new JsonObject();
+            words = new JsonArray();
+
+            JsonObject hitsObj = null;
+            if(reqObj.get("hits") != null) hitsObj = (JsonObject) reqObj.get("hits");
+            //System.out.println("#hits:"+hitsObj.toString());
+            JsonArray hitsArr = null;
+            if(hitsObj != null && hitsObj.get("hits") !=null) hitsArr = hitsObj.get("hits").getAsJsonArray();
+            //System.out.println("#hitsArr:"+hitsArr.toString());
+            int cnt = 0;
+            for(JsonElement je : hitsArr) {
+                if (cnt < 2) {
+                    JsonObject jo = (JsonObject) je;
+                    JsonObject jobj = null;
+                    String wordOne = "";
+
+                    double score = 0.0;
+                    if (jo != null && jo.get("_score") != null) score = jo.get("_score").getAsDouble();
+                    if (jo != null && jo.get("_source") != null) jobj = jo.get("_source").getAsJsonObject();
+                    if (jobj != null && jobj.get("topic") != null) wordOne = jobj.get("topic").getAsString();
+                    System.out.println("# score:"+score+"  /  word:"+wordOne);
+                    JsonObject word1 = new JsonObject();
+                    word1.addProperty("score", String.valueOf(score));
+                    word1.addProperty("word", wordOne);
+                    words.add(word1);
+                } else {
+                    break;
+                }
+                cnt++;
+            }
+            result.add("words", words);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void writeItemsAndSubgenre() {
+        List<Map<String, Object>> items = testMapper.getItemsAndSubgenre();
+        System.out.println("#RES.size:" + items.size());
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        resultStr = "아이템ID" + seperator + "CONTENT_ID" + seperator + "TITLE"
+                + seperator + "장르" + seperator + "KT등급"
+                + seperator + "조합장르"
+                + seperator + "서브장르1" + seperator + "서브장르2"
+                + seperator + "서브장르 SCORE"
+                + lineFeed;
+
+        String itemStr = "";
+        for (Map<String, Object> item : items) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("title").toString();
+            itemStr = itemStr + seperator + (item.get("genre") != null ? item.get("genre").toString() : "");
+            itemStr = itemStr + seperator + (item.get("kt_rating") != null ? item.get("kt_rating").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenre1") != null ? item.get("subgenre1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreword1") != null ? item.get("subgenreword1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreword2") != null ? item.get("subgenreword2").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenrewords") != null ? item.get("subgenrewords").toString() : "");
+
+            resultStr += itemStr + lineFeed;
+
+        }
+
+        String fileNameContent = "SUBGENRE_ITEMS_180407.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
     }
 }
