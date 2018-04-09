@@ -723,8 +723,9 @@ public class ApiController {
 			, @RequestParam(value = "items", required = false, defaultValue = "") String items
 			, @RequestParam(value = "duration", required = false, defaultValue = "") String duration
 			, @RequestParam(value = "itemid") String itemid
+			, @RequestParam(value = "sendnow", required = false, defaultValue = "") String sendnow
 	) {
-		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration);
+		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
 		duration = CommonUtil.removeAllSpec2(duration);
 
 		int itemIdx = 0;
