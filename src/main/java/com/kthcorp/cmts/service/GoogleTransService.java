@@ -1,12 +1,5 @@
 package com.kthcorp.cmts.service;
 
-import com.google.cloud.translate.Detection;
-import com.google.cloud.translate.Language;
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.Translate.LanguageListOption;
-import com.google.cloud.translate.Translate.TranslateOption;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,6 +9,7 @@ import com.kthcorp.cmts.model.GoogleApiHist;
 import com.kthcorp.cmts.service.crawl.ImdbService;
 import com.kthcorp.cmts.util.DateUtils;
 import com.kthcorp.cmts.util.HttpClientUtil;
+import com.kthcorp.cmts.util.JsonUtil;
 import com.kthcorp.cmts.util.JsoupUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,17 +26,18 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 
 @Service
 public class GoogleTransService implements GoogleTransServiceImpl {
     private static final Logger logger = LoggerFactory.getLogger(GoogleTransService.class);
 
     @Value("${google.api.key}")
-    private String oauth_key;
+    private String api_key;
+    @Value("${google.api.cx}")
+    private String api_cx;
+    @Value("${google.api.translate.url}")
+    private String translate_url;
+
     @Value("${cmts.property.serverid}")
     private String serverid;
     @Value("${google.api.translate.limit_month_count}")
@@ -104,45 +99,54 @@ public class GoogleTransService implements GoogleTransServiceImpl {
         return result;
     }
 
-    private String getTransResultOld(String reqTxt, String to_lang) throws Exception {
+    public String getTransResult(String q, String sourceLang, String targetLang) {
         String result = "";
-/*
-        final TranslateRequestInitializer KEY_INITIALIZER = new TranslateRequestInitializer(oauth_key);
+        String reqUrl = translate_url;
+        try {
+            Map<String, Object> reqParamMap = new HashMap<String, Object>();
+            reqParamMap.put("key", api_key);
+            reqParamMap.put("cx", api_cx);
 
-        // Set up the HTTP transport and JSON factory
-        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            q = java.net.URLEncoder.encode(q, "UTF-8");
+            reqParamMap.put("q", q);
+            reqParamMap.put("source", sourceLang);
+            reqParamMap.put("target", targetLang);
 
-        // set up translate
-        final Translate translate = new Translate.Builder(httpTransport, jsonFactory, null)
-                .setApplicationName("My Project")
-                .setTranslateRequestInitializer(KEY_INITIALIZER)
-                .build();
+            System.out.println("#GoogleSearchService reqUrl:"+reqUrl+"&& params:"+reqParamMap.toString());
 
-        // list languages
-        {
-            //System.out.println(translate.languages().list().execute());
-            // output: {"languages":[{"language":"af"},{"language":"ar"},{"language":"az"},{"language":"be"},{"language":"bg"},{"language":"bn"},{"language":"bs"},{"language":"ca"},{"language":"ceb"},{"language":"cs"},{"language":"cy"},{"language":"da"},{"language":"de"},{"language":"el"},{"language":"en"},{"language":"eo"},{"language":"es"},{"language":"et"},{"language":"eu"},{"language":"fa"},{"language":"fi"},{"language":"fr"},{"language":"ga"},{"language":"gl"},{"language":"gu"},{"language":"ha"},{"language":"hi"},{"language":"hmn"},{"language":"hr"},{"language":"ht"},{"language":"hu"},{"language":"hy"},{"language":"id"},{"language":"ig"},{"language":"is"},{"language":"it"},{"language":"iw"},{"language":"ja"},{"language":"jw"},{"language":"ka"},{"language":"kk"},{"language":"km"},{"language":"kn"},{"language":"ko"},{"language":"la"},{"language":"lo"},{"language":"lt"},{"language":"lv"},{"language":"mg"},{"language":"mi"},{"language":"mk"},{"language":"ml"},{"language":"mn"},{"language":"mr"},{"language":"ms"},{"language":"mt"},{"language":"my"},{"language":"ne"},{"language":"nl"},{"language":"no"},{"language":"ny"},{"language":"pa"},{"language":"pl"},{"language":"pt"},{"language":"ro"},{"language":"ru"},{"language":"si"},{"language":"sk"},{"language":"sl"},{"language":"so"},{"language":"sq"},{"language":"sr"},{"language":"st"},{"language":"su"},{"language":"sv"},{"language":"sw"},{"language":"ta"},{"language":"te"},{"language":"tg"},{"language":"th"},{"language":"tl"},{"language":"tr"},{"language":"uk"},{"language":"ur"},{"language":"uz"},{"language":"vi"},{"language":"yi"},{"language":"yo"},{"language":"zh"},{"language":"zh-TW"},{"language":"zu"}]}
+            String result1 = HttpClientUtil.reqGet(reqUrl, "", null, reqParamMap, "bypass");
+            //System.out.println("#result1:"+result1);
+
+            if (result1 != null) {
+                JsonObject jobj = JsonUtil.getJsonObject(result1);
+                if (jobj != null && jobj.get("data") != null) {
+                    JsonObject data = jobj.get("data").getAsJsonObject();
+                    //System.out.println("#GOOGLE.TRANS :: data txt:" + data.toString());
+
+                    if (data != null && data.get("translations") != null) {
+                        JsonArray translations = data.get("translations").getAsJsonArray();
+                        //System.out.println("#GOOGLE.TRANS :: translations txt:" + translations.toString());
+
+                        if (translations != null && translations.size() > 0) {
+                            JsonObject transTxt = (JsonObject) translations.get(0);
+                            //System.out.println("#GOOGLE.TRANS :: transed txt:" + transTxt);
+
+                            if (transTxt != null && transTxt.get("translatedText") != null) {
+                                result = transTxt.get("translatedText").getAsString();
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("#GOOGLE.TRANS error! ::"+e.toString());
+            e.printStackTrace();
         }
-
-        // translate
-        {
-            final ImmutableList<String> phrasesToTranslate = ImmutableList.<String>builder().add(reqTxt).build();
-            // perform
-            TranslationsListResponse res = translate.translations().list(phrasesToTranslate, to_lang).execute();
-
-            // output: {"translations":[{"detectedSourceLanguage":"en","translatedText":"Bonjour le monde"},{"detectedSourceLanguage":"en","translatedText":"Où puis-je promener mon chien"}]}
-
-
-            System.out.println("#GOOGLE.TRANS: all-result::"+res.toString());
-            System.out.println("#GOOGLE.TRANS: "+reqTxt.length()+" Char's Translated Text:"+res.getTranslations().get(0).getTranslatedText());
-            if (res != null && res.size() > 0) result =  res.getTranslations().get(0).getTranslatedText();
-        }
-
-*/
         return result;
     }
 
+    /*
     public static Translate createTranslateService() {
         return TranslateOptions.newBuilder().build().getService();
     }
@@ -207,4 +211,5 @@ public class GoogleTransService implements GoogleTransServiceImpl {
         }
         return detections.toString();
     }
+    */
 }

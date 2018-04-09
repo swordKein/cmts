@@ -1,6 +1,5 @@
 package com.kthcorp.cmts.service;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;

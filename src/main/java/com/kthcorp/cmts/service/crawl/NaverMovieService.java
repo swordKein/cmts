@@ -205,6 +205,10 @@ public class NaverMovieService implements NaverMovieServiceImpl {
             String movieId = jo.get("movieId").getAsString();
             String link = "movie.daum.net/moviedb/main?movieId=";
             link += movieId;
+
+            String prodYear = jo.get("prodYear").getAsString();
+            System.out.println("#daum_prodYear:"+prodYear);
+
             JsonObject newItem = new JsonObject();
             newItem.addProperty("title", title);
             newItem.addProperty("link", link);
@@ -249,6 +253,8 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                     result = getSearchWebItemsForNaverMovie(resultStr);
                     break;
                 case "DAUM_MOVIE" :
+                    System.out.println("#reqInfo::"+reqInfo.toString());
+                    
                     result = getSearchWebItemsForDaumMovie(reqUrl);
                     break;
             }
@@ -390,7 +396,6 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                     //System.out.println("###sub magazine items array:"+magaArr.toString());
 
                     //다음영화 매거진을 분석대상인 contentsObj에 추가한다.
-                    //#TODO 하드코딩 함
                     //System.out.println("#contents:"+ resultObj.toString());
                     //JsonObject contentObj = (resultObj != null && resultObj.get("contents") != null) ? (JsonObject) resultObj.get("contents") : new JsonObject();
                     JsonArray contentArr = (resultObj != null && resultObj.get("contents") != null) ? (JsonArray) resultObj.get("contents") : new JsonArray();
