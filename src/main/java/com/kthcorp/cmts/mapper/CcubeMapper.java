@@ -37,4 +37,7 @@ public interface CcubeMapper {
     int insCcubeOutput(Map<String,Object> req);
     int uptCcubeOutputStat(Map<String,Object> req);
     int insCcubeOutputHist(Map<String,Object> req);
+
+    List<Map<String,Object>> getCcubeOutputListSeriesAll();
+    int cntCcubeOutputListSeriesAll();
 }
