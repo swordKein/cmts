@@ -7,7 +7,7 @@ import org.apache.ibatis.type.Alias;
 import java.sql.Timestamp;
 
 @Alias("ItemsMetas")
-public class ItemsMetas {
+public class ItemsMetas extends Paging {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

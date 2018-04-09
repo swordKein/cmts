@@ -29,6 +29,15 @@
         where mtype = #{mtype}
     </select>
 
+    <select id="getItemsMetasByMtypePaging" resultType="com.kthcorp.cmts.model.ItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
+        /* getItemsMetasByMtype  */
+        select
+        idx, mtype, meta, regdate, regid
+        from items_metas
+        where mtype = #{mtype}
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
     <insert id="insItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">
         /* insItemsMetas */
         insert into items_metas

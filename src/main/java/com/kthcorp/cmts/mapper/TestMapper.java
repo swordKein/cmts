@@ -33,4 +33,6 @@ public interface TestMapper {
     List<Map<String, Object>> getItemsForSubgenre();
 
     List<Map<String, Object>> getItemsAndSubgenre();
+
+    List<Map<String, Object>> getItemsStatRt();
 }

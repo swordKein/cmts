@@ -16,6 +16,7 @@ public interface ItemsMetasMapper {
     List<ItemsMetas> getItemsMetasByIdx(ItemsMetas req);
 
     List<ItemsMetas> getItemsMetasByMtype(ItemsMetas req);
+    List<ItemsMetas> getItemsMetasByMtypePaging(ItemsMetas req);
 
     int insItemsMetas(ItemsMetas req);
     int delItemsMetas(ItemsMetas req);

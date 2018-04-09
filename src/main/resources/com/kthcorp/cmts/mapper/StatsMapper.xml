@@ -138,10 +138,13 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FC'
         */
+        /*
         select count(*)
         from items it
         inner join items_sched_mapping ism on ism.idx = it.idx
         inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'C' and sc.stat = 'F';
+        */
+        select count(*) from items_stat where stat in ('FC');
     </select>
 
     <select id="mid_countFailAnalyze" resultType="java.lang.Integer" useCache="true">
