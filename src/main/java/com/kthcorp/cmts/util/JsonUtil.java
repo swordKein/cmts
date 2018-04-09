@@ -316,7 +316,19 @@ public class JsonUtil {
 	public static String getStringFromJsonArraysValues2(JsonArray jsonArray) {
 		String result = "";
 		for(JsonElement je : jsonArray) {
-			result = result + " " + je.getAsString().trim();
+			JsonObject jo = null;
+			String jobj_plot = "";
+			try {
+				jo = (JsonObject) je;
+				jobj_plot = (jo != null && jo.get("plot") != null) ? jo.get("plot").getAsString() : "";
+			} catch (Exception e) {}
+
+			if (!"".equals(jobj_plot)) {
+				result = jobj_plot;
+				break;
+			} else {
+				result = result + " " + je.getAsString().trim();
+			}
 		}
 		return result;
 	}
