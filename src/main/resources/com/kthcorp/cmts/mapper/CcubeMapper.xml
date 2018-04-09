@@ -317,6 +317,20 @@
         and co.uptcnt <![CDATA[ < ]]> 4
     </select>
 
+
+    <select id="getCcubeOutputListSeriesAll" resultType="map">
+        /* getCcubeOutputListSeriesAll */
+        select co.*, it.idx, it.title, it.title2, it.director, it.year, it.cid, it.type
+        from ccube_series co
+        inner join items it on it.cid = co.series_id
+        order by co.regdate asc, co.series_id asc
+    </select>
+
+    <select id="cntCcubeOutputListSeriesAll" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Items">
+        /* cntCcubeOutputListStandby */
+        select count(*) as cnt from ccube_series
+    </select>
+
     <insert id="insCcubeOutput" parameterType="map">
         /* insCcubeOutput */
         insert into ccube_output (idx, stat, regdate, regid)

@@ -5,6 +5,7 @@ import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.CcubeContent;
 import com.kthcorp.cmts.model.CcubeKeys;
 import com.kthcorp.cmts.model.CcubeSeries;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,4 +34,7 @@ public interface CcubeServiceImpl {
     int processCcubeOutputToJson();
 
     int processCcubeOutputToJsonByType(String type);
+
+    @Transactional
+    int processCcubeSeriesOutputToJsonTest();
 }

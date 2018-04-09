@@ -66,4 +66,9 @@ public class CcubeServiceTest {
 		int rt = ccubeService.processCcubeOutputToJson();
 	}
 
+	@Test
+	public void test_processCcubeOutputToJsonForSeries() throws Exception {
+		int rt = ccubeService.processCcubeSeriesOutputToJsonTest();
+	}
+
 }
