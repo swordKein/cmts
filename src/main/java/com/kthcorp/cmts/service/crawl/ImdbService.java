@@ -84,7 +84,7 @@ public class ImdbService implements ImdbServiceImpl {
                 }
                 resultArr.add(res1);
             }
-            resultObj.add("contents", resultArr);
+            resultObj.add("contentsObj", resultArr);
             resultObj.add("dest_fields", dest_fields);
         }
         return resultObj;
