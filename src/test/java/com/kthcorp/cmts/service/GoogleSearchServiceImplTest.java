@@ -29,9 +29,11 @@ public class GoogleSearchServiceImplTest {
 		//System.out.println("#Result:"+result);
 	}
 
+
 	@Test
 	public void test_getFirstSearchedItem() throws Exception {
 		JsonObject result = googleSerchService.getFirstSearchedMovieItem("blind", "shin gyun hyun", "2017");
 		System.out.println("#Result:"+result);
 	}
+
 }
