@@ -79,21 +79,24 @@ public class GoogleTransService implements GoogleTransServiceImpl {
                 logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 1st result::"+result);
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.error("#GOOGLE.TRANS error! :: "+e.toString());
 
                 try {
-                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 5000ms!");
-                    Thread.sleep(5000);
+                    logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 2000ms!");
+                    Thread.sleep(2000);
                     result = getTransResult(reqTxt, "en", "ko");
                     logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 2nd result::"+result);
                 } catch (Exception e2) {
                     e2.printStackTrace();
+                    logger.error("#GOOGLE.TRANS error! 2:: "+e2.toString());
                     try {
-                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 6000ms!");
-                        Thread.sleep(6000);
+                        logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 4000ms!");
+                        Thread.sleep(4000);
                         result = getTransResult(reqTxt, "en", "ko");
                         logger.info("#GOOGLE.TRANS "+reqTxt.length()+" to trans 3nd result::"+result);
                     } catch (Exception e3) {
                         e3.printStackTrace();
+                        logger.error("#GOOGLE.TRANS error! 3:: "+e3.toString());
                     }
                 }
             }
