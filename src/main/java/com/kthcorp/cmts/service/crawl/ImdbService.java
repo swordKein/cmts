@@ -102,14 +102,16 @@ public class ImdbService implements ImdbServiceImpl {
             if (jArr != null && jArr.size() > 0) {
                 //System.out.println(">> items::" + jObj.toString());
                 JsonObject obj = (JsonObject) jArr.get(0);
+                System.out.println("#jobj.get(0)::"+obj.toString());
+
                 String titleGoogle = obj.get("title").toString();
                 resultObj.addProperty("title_google", CommonUtil.removeTex(titleGoogle));
 
                 String sUrl = obj.get("link").toString();
                 sUrl = CommonUtil.removeTex(sUrl);
-                sUrl = sUrl.replaceAll("//*", "/");
+                //sUrl = sUrl.replaceAll("//*", "/");
 
-                String reqUrl = "http://" + sUrl;
+                String reqUrl = sUrl;
                 reqInfo.setTg_url(reqUrl);
 
                 /* 설정에 따라 구글 검색결과에서 취득된 url을 검색 후 취득한 후 대상 tag를 수집한다 */

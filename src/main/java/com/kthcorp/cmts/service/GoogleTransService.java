@@ -70,8 +70,9 @@ public class GoogleTransService implements GoogleTransServiceImpl {
 
         String result = "";
         if(reqTxt.length() > 10) {
-            logger.info("#GOOGLE.TRANS "+reqTxt.length()+" chars getTransKoraen wait 2000ms!");
-            Thread.sleep(2000);
+            logger.info("#GOOGLE.TRANS "+reqTxt.length()+" 1st");
+                    //+"chars getTransKoraen wait 2000ms!");
+            //Thread.sleep(2000);
             try {
                 //String dt = detectLanguage(reqTxt);
                 result = getTransResult(reqTxt, "en", "ko");

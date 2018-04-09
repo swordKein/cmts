@@ -5,6 +5,7 @@ import com.kthcorp.cmts.util.HttpClientUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kthcorp.cmts.util.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -220,6 +221,24 @@ public class GoogleSearchService implements GoogleSearchServiceImpl {
 
 
     private JsonArray getSearchWebItems(String reqStr) throws Exception {
+        JsonArray result = null;
+        if (!"".equals(reqStr.trim())) {
+            result = new JsonArray();
+
+            JsonObject reqObj = JsonUtil.getJsonObject(reqStr);
+            //System.out.println("#reqObj:" + reqObj.toString());
+
+            if(reqObj != null && reqObj.get("items") != null) {
+                result = reqObj.get("items").getAsJsonArray();
+                //System.out.println("reqObj.getArray::"+result.toString());
+            }
+        }
+        return result;
+    }
+
+    /* 미사용
+     */
+    private JsonArray getSearchWebItems_old_html_parse(String reqStr) throws Exception {
         JsonArray result = new JsonArray();
 
         Document doc = Jsoup.parse(reqStr,"UTF-8");
