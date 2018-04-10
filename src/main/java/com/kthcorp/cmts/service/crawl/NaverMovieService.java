@@ -187,7 +187,7 @@ public class NaverMovieService implements NaverMovieServiceImpl {
     }
 
     @Override
-    public JsonArray getSearchWebItemsForDaumMovie(String reqUrl) throws Exception {
+    public JsonArray getSearchWebItemsForDaumMovie(String reqUrl, String movieTitle, String movieYear) throws Exception {
         JsonArray result = new JsonArray();
 
         String jsonStr = Jsoup.connect(reqUrl)
@@ -197,24 +197,53 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                 .execute().body();
 
         JsonObject jobj = new Gson().fromJson(jsonStr, JsonObject.class);
+        //System.out.println("#daumMovieSearch result::"+jobj.toString());
+
         JsonArray datas = (JsonArray) jobj.get("data");
-        for (JsonElement je : datas) {
-            JsonObject jo = (JsonObject) je;
-            String title = jo.get("titleKo").getAsString();
-            title = CommonUtil.removeTex(title);
-            String movieId = jo.get("movieId").getAsString();
-            String link = "movie.daum.net/moviedb/main?movieId=";
-            link += movieId;
+        if (datas != null) {
+            if (datas.size() > 1) {
+                for (JsonElement je : datas) {
+                    JsonObject jo = (JsonObject) je;
+                    String title = jo.get("titleKo").getAsString();
+                    title = CommonUtil.removeTex(title);
+                    String movieId = jo.get("movieId").getAsString();
+                    String link = "movie.daum.net/moviedb/main?movieId=";
+                    link += movieId;
 
-            String prodYear = jo.get("prodYear").getAsString();
-            System.out.println("#daum_prodYear:"+prodYear);
+                    String prodYear = jo.get("prodYear").getAsString();
 
-            JsonObject newItem = new JsonObject();
-            newItem.addProperty("title", title);
-            newItem.addProperty("link", link);
-            result.add(newItem);
+                    System.out.println("#get_title:"+movieTitle+"  /  get_prodYear:"+movieYear);
+                    System.out.println("#daum_title:"+title+"  /  daum_prodYear:"+prodYear);
+                    // 다음 검색 결과 중 영화 명과 영화 출시년도가 같을 경우 link 취득  added 2018.04.10
+                    if (movieTitle.equals(title) && movieYear.equals(prodYear)) {
+                        JsonObject newItem = new JsonObject();
+                        newItem.addProperty("title", title);
+                        newItem.addProperty("link", link);
+                        result.add(newItem);
+                        break;
+                    }
+                }
+            }
+            if (datas.size() > 0 && result.size() < 1) {
+                // 다음 검색 결과 중 제목과 출시년도가 같은 건이 없을 경우 첫번째 링크 취득 addedd 2018.04.10
+                // 다음 검색 결과가 1건일 경우 링크 취득 added 2018.04.10
+                JsonObject jo = (JsonObject) datas.get(0);
+                String title = jo.get("titleKo").getAsString();
+                title = CommonUtil.removeTex(title);
+                String movieId = jo.get("movieId").getAsString();
+                String link = "movie.daum.net/moviedb/main?movieId=";
+                link += movieId;
+
+                String prodYear = jo.get("prodYear").getAsString();
+
+                System.out.println("#get_title:"+movieTitle+"  /  get_prodYear:"+movieYear);
+                System.out.println("#daum_title:"+title+"  /  daum_prodYear:"+prodYear);
+                JsonObject newItem = new JsonObject();
+                newItem.addProperty("title", title);
+                newItem.addProperty("link", link);
+                result.add(newItem);
+            }
         }
-            //System.out.println("#jobj::"+jobj.toString());
 
         return result;
     }
@@ -254,12 +283,14 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                     break;
                 case "DAUM_MOVIE" :
                     System.out.println("#reqInfo::"+reqInfo.toString());
-                    
-                    result = getSearchWebItemsForDaumMovie(reqUrl);
+
+                    String movieTitle = (reqInfo != null && reqInfo.getMovietitle() != null) ? reqInfo.getMovietitle() : "";
+                    String movieYear = (reqInfo != null && reqInfo.getMovieyear() != null) ? reqInfo.getMovieyear() : "";
+                    result = getSearchWebItemsForDaumMovie(reqUrl, movieTitle, movieYear);
                     break;
             }
 
-            System.out.println("#result jArr.get(0):"+result.get(0).toString());
+            //System.out.println("#result jArr.get(0):"+result.get(0).toString());
 
         } catch (Exception e) { e.printStackTrace(); }
 

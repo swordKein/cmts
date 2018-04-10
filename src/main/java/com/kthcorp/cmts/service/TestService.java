@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
+import com.kthcorp.cmts.service.crawl.NaverMovieService;
 import com.kthcorp.cmts.util.*;
 import org.apache.avro.generic.GenericData;
 import org.apache.directory.shared.ldap.codec.ResponseCarryingException;
@@ -61,6 +62,8 @@ public class TestService implements TestServiceImpl {
     private ItemsService itemsService;
     @Autowired
     private ItemsTagsService itemsTagsService;
+    @Autowired
+    private NaverMovieService naverMovieService;
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -4093,5 +4096,55 @@ public class TestService implements TestServiceImpl {
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
     }
 
+    @Override
+    public void processRetryDaumAward() throws Exception {
+        List<Map<String,Object>> itemList = testMapper.getItemsForDaumAward();
+        System.out.println("#itemList.size::"+itemList.size());
 
+        ConfTarget reqInfo = null;
+        List<ConfPreset> psList = null;
+        ConfPreset ps1 = null;
+        ItemsMetas newMeta = null;
+        int rtItm1 = 0;
+        String awardStr = "";
+
+        for(Map<String,Object> item : itemList) {
+            reqInfo = new ConfTarget();
+            psList = new ArrayList<ConfPreset>();
+
+            ps1 = new ConfPreset();
+            ps1.setPs_type("meta");
+            ps1.setPs_tag(".main_detail");
+            ps1.setDest_field("award");
+            ps1.setDescriptp("daummovie_award");
+            psList.add(ps1);
+
+            reqInfo.setPresetList(psList);
+            reqInfo.setTg_url("DAUM_MOVIE");
+
+            long longIdx = (item != null && item.get("idx") != null) ? (long) item.get("idx"): 0;
+            int itemIdx = (int) longIdx;
+            String movieTitle = (item != null && item.get("title") != null) ? item.get("title").toString() : "";
+            String movieYear = (item != null && item.get("year") != null) ? item.get("year").toString() : "";
+
+            reqInfo.setParam1(movieTitle);
+            reqInfo.setMovietitle(movieTitle);
+            reqInfo.setMovieyear(movieYear);
+
+            if (itemIdx > 0 && !"".equals(movieTitle)) {
+
+            JsonObject result = naverMovieService.getContents("DAUM_MOVIE", reqInfo);
+            awardStr = (result != null && result.get("metas") != null) ? result.get("metas").getAsJsonObject().get("award").toString() : "";
+            System.out.println("#Result awardStr:"+ awardStr);
+
+            newMeta = new ItemsMetas();
+            newMeta.setIdx(itemIdx);
+            newMeta.setMtype("award");
+            newMeta.setMeta(awardStr);
+            System.out.println("#save itemsMetas:" + newMeta.toString());
+            rtItm1 = itemsService.insItemsMetas(newMeta);
+
+            }
+        }
+    }
 }

@@ -35,7 +35,7 @@ public class DaumMovieServiceImplTest {
 
 		ps1 = new ConfPreset();
 		ps1.setPs_type("meta");
-		ps1.setPs_tag(".list_produce");
+		ps1.setPs_tag(".main_detail");
 		ps1.setDest_field("award");
 		ps1.setDescriptp("daummovie_award");
 		psList.add(ps1);
@@ -52,6 +52,9 @@ public class DaumMovieServiceImplTest {
 
 		reqInfo.setTg_url("DAUM_MOVIE");
 		reqInfo.setParam1("서편제");
+
+		reqInfo.setMovietitle("서편제");
+		reqInfo.setMovieyear("1993");
 
 		JsonObject result = naverMovieService.getContents("DAUM_MOVIE", reqInfo);
 		System.out.println("#Result:"+result.toString());

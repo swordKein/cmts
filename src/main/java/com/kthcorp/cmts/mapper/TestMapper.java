@@ -35,4 +35,6 @@ public interface TestMapper {
     List<Map<String, Object>> getItemsAndSubgenre();
 
     List<Map<String, Object>> getItemsStatRt();
+
+    List<Map<String, Object>> getItemsForDaumAward();
 }
