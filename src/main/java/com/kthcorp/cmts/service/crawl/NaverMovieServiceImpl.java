@@ -8,7 +8,7 @@ public interface NaverMovieServiceImpl {
 
     JsonArray getSearchWebItemsForNaverMovie(String reqStr) throws Exception;
 
-    JsonArray getSearchWebItemsForDaumMovie(String reqStr) throws Exception;
+    JsonArray getSearchWebItemsForDaumMovie(String reqStr, String movieTitle, String movieYear) throws Exception;
 
     JsonObject getContents(String prefix, ConfTarget reqInfo) throws Exception;
 }

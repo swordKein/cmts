@@ -158,4 +158,6 @@ public interface TestServiceImpl {
     void processSubgenrePointCutting() throws Exception;
 
     void writeItemsStatRt();
+
+    void processRetryDaumAward() throws Exception;
 }

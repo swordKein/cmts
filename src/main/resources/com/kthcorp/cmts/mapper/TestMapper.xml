@@ -108,4 +108,11 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'RT'
     </select>
+
+    <select id="getItemsForDaumAward" resultType="map">
+        /* getItemsForDaumAward  */
+        select it.idx, it.title, it.year
+        from items it
+
+    </select>
 </mapper>

@@ -504,4 +504,9 @@ public class TestServiceTestImpl {
 	public void test_writeItemsStatRt() throws Exception {
 		testService.writeItemsStatRt();
 	}
+
+	@Test
+	public void test_processRetryDaumAward() throws Exception {
+		testService.processRetryDaumAward();
+	}
 }
