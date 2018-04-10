@@ -538,7 +538,7 @@ public class ItemsService implements ItemsServiceImpl {
                                 }
                             }
                             break;
-                        case "FT":
+                        case "FT": case "RT":
                             if(!"".equals(idx)) {
                                 Items reqIt = new Items();
                                 reqIt.setIdx(Integer.parseInt(idx));
