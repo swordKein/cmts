@@ -827,6 +827,12 @@
         where idx = #{idx}
     </update>
 
+    <select id="getItemsStatByIdx" parameterType="java.lang.Integer" resultType="java.lang.String">
+        /* getItemsStatByIdx */
+        select stat from items_stat
+        where idx = #{idx}
+    </select>
+
     <update id="uptItemsTagcntMinus" parameterType="com.kthcorp.cmts.model.Items">
         /* uptItemsTagcntMinus */
         update items set tagcnt = tagcnt - 1

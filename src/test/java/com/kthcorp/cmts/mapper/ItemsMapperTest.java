@@ -170,4 +170,9 @@ public class ItemsMapperTest {
         System.out.println("#result:"+result.toString());
         System.out.println("#result.size:"+result.size());
     }
+
+    @Test
+    public void test_getItemsStatByIdx() throws Exception {
+        System.out.println("#RES:"+itemsMapper.getItemsStatByIdx(235));
+    }
 }
