@@ -51,4 +51,5 @@ public interface ItemsMapper {
     int uptItemsTagcnt(Items req);
     int uptItemsTagcntMinus(Items req);
     int uptItemsRegdate(Items req);
+    String getItemsStatByIdx(int idx);
 }
