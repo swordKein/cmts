@@ -352,7 +352,7 @@ spring:
       max-request-size: 10MB
   static:
     resource:
-      location: /home/ktipmedia/upload/
+      location: /home/megatag/upload/
   task:
     fixedDelay: 5000
     name: devTask
