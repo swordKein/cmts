@@ -177,7 +177,7 @@ public class CollectService implements CollectServiceImpl {
                                     for (JsonElement je : metaDestFields) {
                                         String dest = je.getAsString().trim();
                                         String meta = metasObj.get(dest).getAsString();
-                                        meta = CommonUtil.removeTex(meta);
+                                        if (!"award".equals(dest)) meta = CommonUtil.removeTex(meta);
                                         System.out.println("## insert! itemIdx:"+itemIdx+ " metas:"+dest+" data::"+metasObj.get(dest));
 
                                         ItemsMetas newMeta = new ItemsMetas();

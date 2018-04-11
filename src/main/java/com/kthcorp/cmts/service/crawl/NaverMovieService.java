@@ -367,6 +367,7 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                         for (JsonElement je : newMetasDestArr) {
                             String dest = je.getAsString();
                             String destStr = (newAwardItem.get(dest) != null ? newAwardItem.get(dest).getAsString() : "");
+                            //destStr = CommonUtil.removeTex(destStr);
                             metasObj.addProperty(dest, destStr);
                             metasDestArr.add(dest);
                         }
