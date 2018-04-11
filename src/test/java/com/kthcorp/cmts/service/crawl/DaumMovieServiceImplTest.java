@@ -25,13 +25,15 @@ public class DaumMovieServiceImplTest {
 	public void test_getContents() throws Exception {
 		ConfTarget reqInfo = new ConfTarget();
 		List<ConfPreset> psList = new ArrayList<ConfPreset>();
+
 		ConfPreset ps1 = new ConfPreset();
+		/*
 		ps1.setPs_type("content meta");
 		ps1.setPs_tag(".desc_movie");
 		ps1.setDest_field("plot");
 		ps1.setDescriptp("daummovie_plot");
 		psList.add(ps1);
-
+		*/
 
 		ps1 = new ConfPreset();
 		ps1.setPs_type("meta");
@@ -39,14 +41,14 @@ public class DaumMovieServiceImplTest {
 		ps1.setDest_field("award");
 		ps1.setDescriptp("daummovie_award");
 		psList.add(ps1);
-
+		/*
 		ps1 = new ConfPreset();
 		ps1.setPs_type("ready");
 		ps1.setPs_tag(".section_view");
 		ps1.setDest_field("magazine");
 		ps1.setDescriptp("daummovie_magazine");
 		psList.add(ps1);
-
+		*/
 
 		reqInfo.setPresetList(psList);
 

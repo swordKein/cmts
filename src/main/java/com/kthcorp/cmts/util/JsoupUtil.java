@@ -57,6 +57,7 @@ public class JsoupUtil {
         Document doc = Jsoup.parse(reqStr,"UTF-8");
         //Elements summaryElms = doc.select(tag).removeAttr("Table");
         Elements summaryElms = doc.select(tag);
+        summaryElms.select(".paging_popcorn").remove();
         //System.out.println(">> summaryElms0 for tag:"+tag+"  ::" + summaryElms.toString());
         System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.toString());
 

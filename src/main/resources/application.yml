@@ -154,8 +154,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://localhost:3306/cmtsdb?autoReconnect=true&useSSL=false
@@ -190,7 +190,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 59 08 7 4 ?
+      cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
 #elasticsearch :
 #  url : http://14.63.170.72:9200/
@@ -240,12 +240,15 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : itemsService
-    -
-      cronExpression : 0 0 * * * ?
-      jobType : snsTopWords
-    -
-      cronExpression : 0 45 8 7 4 ?
-      jobType : ccubeOutput
+    #-
+    #  cronExpression : 0 * * * * ?
+    #  jobType : sftpService
+    #-
+    #  cronExpression : 0 0 * * * ?
+    #  jobType : snsTopWords
+    #-
+    #  cronExpression : 0 00 22 * * ?
+    #  jobType : ccubeOutput
 ---
 spring:
   profiles: dev_no_sched
@@ -255,7 +258,7 @@ spring:
       max-request-size: 10MB
   static:
     resource:
-      location: /home/daisy/upload/
+      location: /home/megatag/upload/
   task:
     fixedDelay: 5000
     name: devTask
@@ -301,13 +304,13 @@ spring:
       max-request-size: 10MB
   static:
     resource:
-      location: /home/daisy/upload/
+      location: /home/megatag/upload/
   task:
     fixedDelay: 5000
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://211.42.150.162:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://10.42.150.162:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
@@ -391,7 +394,7 @@ spring:
       max-request-size: 10MB
   static:
     resource:
-      location: /home/daisy/upload/
+      location: /home/ktipmedia/upload/
   task:
     fixedDelay: 5000
     name: devTask
@@ -399,7 +402,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://14.63.170.72:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/cmtsdb?autoReconnect=true&useSSL=false
-    username: daisy
+    username: metataguser
     password: daisy!
 schedule :
   jobs :
