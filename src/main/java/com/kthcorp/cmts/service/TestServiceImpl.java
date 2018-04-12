@@ -160,4 +160,6 @@ public interface TestServiceImpl {
     void writeItemsStatRt();
 
     void processRetryDaumAward() throws Exception;
+
+    void processItemsSearchKeywordRetry();
 }

@@ -23,7 +23,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     public static boolean jobRuuningStat = false;
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
     @Value("${cmts.property.naver_kordic_url}")
     private String naver_kordic_url;

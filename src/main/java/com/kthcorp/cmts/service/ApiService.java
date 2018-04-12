@@ -21,13 +21,13 @@ public class ApiService implements ApiServiceImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectService.class);
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
-    @Value("${cmts.property.sns_api_url}")
+    @Value("${property.sns_api_url}")
     private String sns_api_url;
     @Value("${cmts.property.sns_stat_url}")
     private String sns_stat_url;
-    @Value("${cmts.property.crawl_sns_topwords_utl}")
+    @Value("${spring.cmts.crawl_sns_topwords_utl}")
     private String crawl_sns_topwords_utl;
 
     @Autowired

@@ -509,4 +509,9 @@ public class TestServiceTestImpl {
 	public void test_processRetryDaumAward() throws Exception {
 		testService.processRetryDaumAward();
 	}
+
+	@Test
+	public void test_processItemsSearchKeywordRetry() throws Exception {
+		testService.processItemsSearchKeywordRetry();
+	}
 }

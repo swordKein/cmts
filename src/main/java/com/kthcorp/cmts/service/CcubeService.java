@@ -23,7 +23,7 @@ public class CcubeService implements CcubeServiceImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectService.class);
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;

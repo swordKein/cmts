@@ -38,7 +38,7 @@ public class GoogleTransService implements GoogleTransServiceImpl {
     @Value("${google.api.translate.url}")
     private String translate_url;
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
     @Value("${google.api.translate.limit_month_count}")
     private Integer google_trans_limit_month_count;

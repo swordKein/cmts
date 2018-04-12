@@ -40,7 +40,7 @@ public class GoogleApiHistMapperTest {
     }
 
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     @Test

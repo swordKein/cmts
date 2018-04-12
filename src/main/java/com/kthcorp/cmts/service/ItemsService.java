@@ -15,7 +15,7 @@ import java.util.*;
 public class ItemsService implements ItemsServiceImpl {
     static Logger logger = LoggerFactory.getLogger(ItemsService.class);
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     @Autowired
