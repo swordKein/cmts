@@ -15,25 +15,25 @@ public class SftpService implements SftpServiceImpl {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
-    @Value("${cmts.property.ccube_sftp.ip}")
+    @Value("${property.ccube_sftp.ip}")
     private String ccube_sftp_ip;
-    @Value("${cmts.property.ccube_sftp.port}")
+    @Value("${property.ccube_sftp.port}")
     private Integer ccube_sftp_port;
-    @Value("${cmts.property.ccube_sftp.user}")
+    @Value("${property.ccube_sftp.user}")
     private String ccube_sftp_user;
-    @Value("${cmts.property.ccube_sftp.passwd}")
+    @Value("${property.ccube_sftp.passwd}")
     private String ccube_sftp_passwd;
-    @Value("${cmts.property.ccube_sftp.workdir}")
+    @Value("${property.ccube_sftp.workdir}")
     private String ccube_sftp_workdir;
-    @Value("${cmts.property.ccube_sftp.downdir}")
+    @Value("${property.ccube_sftp.downdir}")
     private String ccube_sftp_downdir;
-    @Value("${cmts.property.ccube_sftp.downext}")
+    @Value("${property.ccube_sftp.downext}")
     private String ccube_sftp_downext;
-    @Value("${cmts.property.ccube_sftp.end_after_movedir}")
+    @Value("${property.ccube_sftp.end_after_movedir}")
     private String ccube_sftp_end_after_movedir;
-    @Value("${cmts.property.ccube_sftp.uploaddir}")
+    @Value("${property.ccube_sftp.uploaddir}")
     private String ccube_sftp_uploaddir;
 
     @PostConstruct

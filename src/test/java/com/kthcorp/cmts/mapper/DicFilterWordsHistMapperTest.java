@@ -31,7 +31,7 @@ public class DicFilterWordsHistMapperTest {
         System.out.println("#iresult:" + result.toString());
     }
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     @Test

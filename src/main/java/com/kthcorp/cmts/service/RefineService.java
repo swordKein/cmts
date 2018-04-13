@@ -44,7 +44,7 @@ public class RefineService implements RefineServiceImpl {
     @Autowired
     private ApiService apiService;
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     /* 올레TV 메타 확장 - 정제 수행 STEP04~06

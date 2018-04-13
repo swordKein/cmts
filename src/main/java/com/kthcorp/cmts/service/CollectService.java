@@ -53,9 +53,9 @@ public class CollectService implements CollectServiceImpl {
     @Autowired
     private ItemsService itemsService;
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
-    @Value("${cmts.property.crawl_api_url}")
+    @Value("${property.crawl_api_url}")
     private String crawl_api_url;
     @Value("${cmts.property.collect_fail_limit}")
     private Integer collect_fail_limit;

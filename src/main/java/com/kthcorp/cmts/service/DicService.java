@@ -21,7 +21,7 @@ import java.util.*;
 public class DicService implements DicServiceImpl {
     static Logger logger = LoggerFactory.getLogger(DicService.class);
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     @Autowired

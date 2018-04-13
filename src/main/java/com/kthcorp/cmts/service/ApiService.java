@@ -21,14 +21,14 @@ public class ApiService implements ApiServiceImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectService.class);
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
     @Value("${cmts.property.sns_api_url}")
     private String sns_api_url;
     @Value("${cmts.property.sns_stat_url}")
     private String sns_stat_url;
-    @Value("${cmts.property.crawl_sns_topwords_utl}")
-    private String crawl_sns_topwords_utl;
+    @Value("${property.crawl_sns_topwords_url}")
+    private String crawl_sns_topwords_url;
 
     @Autowired
     private AuthUserMapper authUserMapper;
@@ -825,7 +825,7 @@ public class ApiService implements ApiServiceImpl {
     public int processSnsTopKeywordsByDateSched() {
         int rt = 0;
         try {
-            Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(crawl_sns_topwords_utl, null, null,null, "bypass");
+            Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(crawl_sns_topwords_url, null, null,null, "bypass");
             if (resultMap1 != null && resultMap1.get("resultStr") != null) {
                 //System.out.println("#ELOG.getAPI_result::"+resultMap1.toString());
                 String result1 = resultMap1.get("resultStr").toString();

@@ -4147,4 +4147,151 @@ public class TestService implements TestServiceImpl {
             }
         }
     }
+
+    /* dicKeywords 사전 Tag 리스트 */
+    private List<String> getDicTypes() {
+        List<String> dicTypes = new ArrayList();
+        //dicTypes.add("METASEMOTION");
+        dicTypes.add("METASWHAT");
+        dicTypes.add("METASWHEN");
+        dicTypes.add("METASWHERE");
+        dicTypes.add("METASWHO");
+        return dicTypes;
+    }
+
+    private int saveItemsTagsMetas(String metas, int itemIdx, int tagidx, String mtype) {
+        ItemsTags itm = new ItemsTags();
+        itm.setIdx(itemIdx);
+        itm.setTagidx(tagidx);
+        itm.setMtype(mtype);
+        itm.setMeta(metas);
+        int itm1 = itemsTagsService.insItemsTagsMetas(itm);
+
+        return itm1;
+    }
+
+    @Override
+    public void processItemsSearchKeywordRetry() {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSearchKeywords();
+        System.out.println("#itemList.size::" + itemList.size());
+
+        ConfTarget reqInfo = null;
+        List<ConfPreset> psList = null;
+        ConfPreset ps1 = null;
+        ItemsMetas newMeta = null;
+        int rtItm1 = 0;
+        String awardStr = "";
+        int maxTagidx = 0;
+
+        for (Map<String, Object> item : itemList) {
+            // type 리스트 취득
+            List<String> types = this.getDicTypes();
+
+            // 아이템 ID 발췌
+            long longIdx = (item != null && item.get("idx") != null) ? (long) item.get("idx"): 0;
+            int itemIdx = (int) longIdx;
+            String title = item.get("title").toString();
+
+            System.out.println("### process itemIdx:"+itemIdx+"   /  title:"+title);
+
+            // 아이템 태깅 메타 리스트 타입별 조회
+            ItemsTags reqm = new ItemsTags();
+            reqm.setIdx(itemIdx);
+            reqm.setStat("S");
+
+            List<ItemsTags> itemsMetasAll = itemsTagsService.getItemsTagsMetasByItemIdx(reqm);
+
+            // all_keyword_list 조합
+            //Map<String, Double> allKeywordList = new HashMap();
+            // 각 사전별 top1 키워드와 ratio만 모음
+            Map<String, Double> topWordsForTypesList = new HashMap();
+
+            JsonArray searchKeyword = null;
+            for(ItemsTags im : itemsMetasAll) {
+                maxTagidx = im.getTagidx();
+
+                if (im != null && im.getMtype() != null
+                        && im.getMeta() != null && !"".equals(im.getMeta().trim())) {
+                    // type 별 word_list 조합
+                    Map<String, Double> typesKeywordList = null;
+                    searchKeyword = null;
+
+                    for (String mtype : types) {
+                        typesKeywordList = new HashMap();
+
+                        String metaStr = "";
+                        JsonArray metaWords = null;
+                        if (mtype.equals(im.getMtype())) {
+                            metaStr = im.getMeta();
+
+                            //System.out.println("###mtype:"+mtype+" / origMetaStr:"+metaStr);
+                            try {
+                                metaWords = JsonUtil.getJsonArray(metaStr);
+                                if(metaWords != null && metaWords.size() > 0) {
+                                    JsonObject wordOne = null;
+                                    for (JsonElement je : metaWords) {
+                                        wordOne = null;
+                                        wordOne = (JsonObject) je;
+                                        String word = "";
+                                        Double ratio = 0.0;
+                                        if (wordOne.get("word") != null && wordOne.get("ratio") != null) {
+                                            word = wordOne.get("word").getAsString();
+                                            word = word.trim();
+                                            ratio = wordOne.get("ratio").getAsDouble();
+
+                                            //System.out.println("#putting stand-by word:"+word+" / ratio:"+ratio);
+
+                                            if (!"".equals(word)) {
+                                                //allKeywordList.put(word, ratio);
+                                                //System.out.println("#putting map word:"+word+" / ratio:"+ratio);
+                                                typesKeywordList.put(word, ratio);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            // 각 type 별 최상위 랭킹 키워드만 추출
+
+                            //System.out.println("###mtype:"+mtype+" / typesKeywordList::"+typesKeywordList.toString());
+                            Map<String, Double> typeWords3 = MapUtil.getSortedDescMapForDouble(typesKeywordList);
+                            //System.out.println("###mtype:"+mtype+"/ sorted typeWords3::"+typeWords3.toString());
+                            Map<String, Double> typeWords2 = MapUtil.getCuttedMapFromMapByLimit(typeWords3, 1);
+                            String word1 = "";
+                            Double ratio1 = 0.0;
+                            //System.out.println("#mtype:"+mtype);
+                            if(typeWords2 != null) {
+                                for ( String key : typeWords2.keySet() ) {
+
+                                    word1 = key;
+                                    ratio1 = typeWords2.get(key);
+                                    //System.out.println("#top keyword1 for mtype:"+mtype+"  / word:"+word1 + " / ratio1:"+ratio1);
+                                    break;
+                                }
+                            }
+
+                            if (!"".equals(word1)) {
+                                topWordsForTypesList.put(word1, ratio1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //System.out.println("#topWordsForTypesList::"+topWordsForTypesList.toString());
+            //Map<String, Double> searchKeyword3 = MapUtil.getSortedDescMapForDouble(topWordsForTypesList);
+            //Map<String, Double> searchKeyword2 = MapUtil.getCuttedMapFromMapByLimit(searchKeyword3, 4);
+            Map<String, Double> searchKeyword1 = MapUtil.getSortedDescMapForDouble(topWordsForTypesList);
+            //System.out.println("#searchKeyword1:"+searchKeyword1.toString());
+            searchKeyword = MapUtil.getListNotMapKeywords(searchKeyword1);
+            //System.out.println("#searchKeyword:"+searchKeyword.toString());
+
+            // 검색 키워드 jsonArray mtype:LIST_SEARCHKEYWORDS 저장
+            int resitm2 = saveItemsTagsMetas(searchKeyword.toString(), itemIdx, maxTagidx, "LIST_SEARCHKEYWORDS");
+            System.out.println("### do saveItemsTagsMetas searchKeyword:"+searchKeyword.toString()+"/itemIdx:"+itemIdx
+                    + "/maxTagIdx:"+maxTagidx+"/mtype:LIST_SEARCHKEYWORDS");
+        }
+    }
 }

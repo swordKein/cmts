@@ -43,7 +43,7 @@ public class DicNotuseWordsHistMapperTest {
         System.out.println("# result size:"+ result.size());
     }
 
-    @Value("${cmts.property.serverid}")
+    @Value("${property.serverid}")
     private String serverid;
 
     @Test

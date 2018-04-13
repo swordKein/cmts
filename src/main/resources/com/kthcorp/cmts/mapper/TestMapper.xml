@@ -113,6 +113,14 @@
         /* getItemsForDaumAward  */
         select it.idx, it.title, it.year
         from items it
+        limit 10;
+    </select>
 
+    <select id="getItemsForSearchKeywords" resultType="map">
+        /* getItemsForSearchKeywords  */
+        select it.idx, it.title from items_stat iss
+        inner join items it on it.idx = iss.idx
+        where iss.stat = 'ST' and iss.regdate <![CDATA[ < ]]> '2018-04-11 00:00:00'
+        #limit 10
     </select>
 </mapper>
