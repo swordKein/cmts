@@ -11,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +28,8 @@ import java.util.Map;
 
 @Controller
 //@RequestMapping(value = {"", "/dummy"})
+@Conditional(CheckAdminProfiles.class)
 public class AdminController {
-
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@Value("${cmts.collector.naverblog.search_url}")

@@ -7,7 +7,7 @@ cmts:
     collect_fail_limit: 10
     criteria_success_ratio: 0.7
     ##crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-    ##crawl_sns_topwords_utl: http://127.0.0.1:8080/sns/topwords
+    ##crawl_sns_topwords_url: http://127.0.0.1:8080/sns/topwords
     sns_api_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetKeywordAssociation&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&categorySetName=SM&topN=10&keywordFilterList[]=+(%EC%98%81%ED%99%94)&keyword=#TITLE&categoryList[]=123/0/0
     sns_stat_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetTopKeywords&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&topN=10&categorySetName=SM&categoryList%5b%5d=7/1/160
     naver_kordic_url: http://krdic.naver.com/search.nhn?query=#KEYWORD&kind=all
@@ -122,8 +122,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -161,7 +161,88 @@ schedule :
 property:
   serverid: cmts_local_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-  crawl_sns_topwords_utl: http://127.0.0.1:8080/sns/topwords
+  crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
+  ccube_sftp:
+    ip: 14.63.170.72
+    port: 22
+    user: daisy
+    passwd: daisy!
+    #workdir: /home/daisy/ccube_work
+    workdir: d:\\upload
+    #downdir: /home/daisy/service/cmts
+    downdir: /home/daisy/service/cmts
+    downext: yml
+    #downext: xml
+    end_after_movedir: /home/daisy/service/cmts/done
+    uploaddir: /home/daisy/service/cmts/upload/
+    #uploaddir: /META_EXT
+  prism_sftp:
+    ip: 14.63.170.72
+    port: 22
+    user: daisy
+    passwd: daisy!
+    workdir: d:\\upload
+    downdir: /home/daisy/service/cmts
+    downext: dat
+    uploaddir: /home/daisy/service/cmts/upload/
+  elasticsearch:
+    host: 14.63.170.72
+    port: 9200
+---
+spring:
+  profiles: local1
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  static:
+    resource:
+      location: D:\\UPLOAD\\
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    username: metataguser
+    password: daisy!
+  thymeleaf:
+    cache: false
+    check-template: false
+    check-template-location: false
+    content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    #prefix: /views/
+schedule :
+  jobs :
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : collectService
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : analyzeService
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : itemsService
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : sftpService
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : snsTopWords
+    -
+      cronExpression : 0 00 22 * * ?
+      jobType : ccubeOutput
+property:
+  serverid: cmts_local_cm01
+  crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
+  crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
   ccube_sftp:
     ip: 14.63.170.72
     port: 22
@@ -243,7 +324,7 @@ schedule :
 property:
   serverid: cmts_dev_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-  crawl_sns_topwords_utl: http://14.63.174.158:8080/sns/topwords
+  crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
   ccube_sftp:
     ip: 14.63.170.72
     port: 22
@@ -302,7 +383,7 @@ schedule :
 property:
   serverid: cmts_dev_nosched01
   crawl_api_url:
-  crawl_sns_topwords_utl:
+  crawl_sns_topwords_url:
   ccube_sftp:
     ip:
     port:
@@ -359,7 +440,7 @@ schedule :
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
-  crawl_sns_topwords_utl:
+  crawl_sns_topwords_url:
   ccube_sftp:
     ip:
     port:
@@ -415,7 +496,7 @@ schedule :
 property:
   serverid: cmts_prod_crawl01
   crawl_api_url:
-  crawl_sns_topwords_utl:
+  crawl_sns_topwords_url:
   ccube_sftp:
     ip:
     port:
@@ -453,9 +534,9 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.208.41:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-      username: ktipmedia
-      password: 2!dlqnsrl
+    url: jdbc:mysql://172.16.208.41:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    username: ktipmedia
+    password: 2!dlqnsrl
 schedule :
   jobs :
     -
@@ -482,9 +563,9 @@ schedule :
 property:
   serverid: cmts_prod_coll01
   crawl_api_url: http://10.42.150.161:8080/crawl/byprefix
-  crawl_sns_topwords_utl: http://10.42.150.161:8080/sns/topwords
+  crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
   ccube_sftp:
-    ip: 14.63.170.72
+    ip: 10.220.147.95
     port: 22
     user: daisy
     passwd: daisy!
@@ -530,7 +611,7 @@ schedule :
 property:
   serverid: cmts_prod_api01
   crawl_api_url:
-  crawl_sns_topwords_utl:
+  crawl_sns_topwords_url:
   ccube_sftp:
     ip:
     port:
@@ -599,7 +680,7 @@ schedule :
 property:
   serverid: cmts_staging_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-  crawl_sns_topwords_utl: http://127.0.0.1:8080/sns/topwords
+  crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
   ccube_sftp:
     ip: 14.63.170.72
     port: 22
