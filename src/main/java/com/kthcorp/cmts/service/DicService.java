@@ -1008,14 +1008,16 @@ public class DicService implements DicServiceImpl {
     }
 
     static List<DicSubgenre> dicSubgenre = null;
+    static List<DicSubgenre> dicSubgenreOrig = null;
+    static List<DicSubgenre> dicSubgenreFilter = null;
 
     @Override
     public List<String> getMixedGenreArrayFromGenre(String genre, String mtype) {
         genre = genre.trim();
+        if (dicSubgenre == null) dicSubgenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
         List<String> result = new ArrayList();
-        if(!"".equals(genre) && genre.contains(" ")) {
-            if (dicSubgenre == null) dicSubgenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
+        if(genre.trim().contains(" ")) {
             String[] origGenres = genre.split(" ");
             Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
 
@@ -1025,6 +1027,91 @@ public class DicService implements DicServiceImpl {
 
                     if(ds1.equals(origGenre)) {
                         result.add(ds.getMeta());
+                    }
+                }
+            }
+        } else if (!"".equals(genre.trim())) {
+            String origGenre = genre;
+            for(DicSubgenre ds : dicSubgenre) {
+                String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                if(ds1.equals(origGenre)) {
+                    result.add(ds.getMeta());
+                }
+            }
+        }
+        return result;
+    }
+
+
+
+    @Override
+    public List<String> getMixedGenreArrayFromFilter(String genre, String mtype) {
+        genre = genre.trim();
+        if (dicSubgenreFilter == null) dicSubgenreFilter = dicKeywordsMapper.getDicSubgenreGenres(mtype);
+
+        List<String> result = new ArrayList();
+        if(genre.trim().contains(" ")) {
+            String[] origGenres = genre.split(" ");
+            Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
+
+            for(DicSubgenre ds : dicSubgenreFilter) {
+                for(String origGenre : noDupMixedGenres) {
+                    String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                    if(ds1.equals(origGenre)) {
+                        result.add(ds.getMeta());
+                    }
+                }
+            }
+        } else if (!"".equals(genre.trim())) {
+            String origGenre = genre;
+            for(DicSubgenre ds : dicSubgenreFilter) {
+                String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                if(ds1.equals(origGenre)) {
+                    result.add(ds.getMeta());
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype) {
+        genre = genre.trim();
+        if (dicSubgenreOrig == null) dicSubgenreOrig = dicKeywordsMapper.getDicSubgenreGenres(mtype);
+
+        List<String> result = new ArrayList();
+        List<String> origGenres = new ArrayList();
+
+        if(genre.trim().contains(" ")) {
+            //System.out.println("#dicSubgenreOrig::"+dicSubgenreOrig.toString());
+            String[] origGenres0 = genre.split(" ");
+            if (origGenres0 != null) {
+                for(String og : origGenres0) {
+                    if(!"".equals(og.trim())) {
+                        origGenres.add(og);
+                    }
+                }
+            }
+        } else if (!"".equals(genre.trim())) {
+            origGenres.add(genre.trim());
+        }
+
+        Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArrayAddTag(origGenres, origin);
+        //System.out.println("#noDupMixedGenres::"+noDupMixedGenres.toString());
+
+        if(noDupMixedGenres != null) {
+            for (DicSubgenre ds : dicSubgenreOrig) {
+                for (String origGenre : noDupMixedGenres) {
+                    String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                    //System.out.println("##compare  origGenre:"+origGenre+"   vs  ds1:"+ds1);
+
+                    if (ds1.equals(origGenre)) {
+                        result.add(ds.getMeta());
+                        break;
                     }
                 }
             }

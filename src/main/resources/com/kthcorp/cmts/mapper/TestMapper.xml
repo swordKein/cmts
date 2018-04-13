@@ -85,7 +85,10 @@
 
     <select id="getItemsForSubgenre" resultType="map">
         /* getItemsForSubgenre */
-        select * from items_for_subgenre;
+        select ifs.*
+        , ( select country_of_origin from ccube_contents where content_id = ifs.cid limit 1 ) as origin
+        from items_for_subgenre ifs
+
     </select>
 
     <select id="getItemsAndSubgenre" resultType="map">
