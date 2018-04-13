@@ -352,4 +352,31 @@ public class MapUtil {
         return result;
     }
 
+    public static Set<String> getNoDupSetFromStringArrayOne(String[] reqArr) {
+        Set<String> result = null;
+        if (reqArr != null && reqArr.length > 0) {
+            result = new HashSet();
+            List<String> newDsArr = new ArrayList();
+            newDsArr.add(reqArr[0]);
+            newDsArr.add(reqArr[1]);
+            String ds = StringUtil.getSortedStringStrsAddSeperator(newDsArr, "___");
+            result.add(ds);
+        }
+        return result;
+    }
+
+    public static Set<String> getNoDupSetFromStringArrayAddTag(List<String> reqArr, String origin) {
+        Set<String> result = null;
+        if (reqArr != null && reqArr.size() > 0) {
+            result = new HashSet();
+            for(String gen : reqArr) {
+                List<String> newDsArr = new ArrayList();
+                newDsArr.add(gen);
+                newDsArr.add(origin);
+                String ds = StringUtil.getSortedStringStrsAddSeperator(newDsArr, "___");
+                result.add(ds);
+            }
+        }
+        return result;
+    }
 }

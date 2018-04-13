@@ -207,6 +207,9 @@
         /* getDicSubgenreGenres */
         select idx, mtype, genre, meta, regid, regdate
         from dic_subgenre_genres
-        where mtype = #{mtype} or mtype = 'rating'
+        where mtype = #{value}
+            <if test='value != "origin"'>
+            or mtype = 'rating'
+            </if>
     </select>
 </mapper>

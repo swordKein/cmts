@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -144,7 +144,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 00 22 * * ?
+      cronExpression : 0 10 17 * * ?
       jobType : ccubeOutput
 property:
   serverid: cmts_local_cm01
@@ -238,9 +238,9 @@ schedule :
     #-
     #  cronExpression : 0 0 * * * ?
     #  jobType : snsTopWords
-    #-
-    #  cronExpression : 0 00 22 * * ?
-    #  jobType : ccubeOutput
+    -
+      cronExpression : 0 10 17 * * ?
+      jobType : ccubeOutput
 property:
   serverid: cmts_dev_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
