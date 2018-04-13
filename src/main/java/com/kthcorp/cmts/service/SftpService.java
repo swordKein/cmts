@@ -17,23 +17,23 @@ public class SftpService implements SftpServiceImpl {
 
     @Value("${property.serverid}")
     private String serverid;
-    @Value("${property.ccube_sftp.ip}")
+    @Value("${ccube_sftp.ip}")
     private String ccube_sftp_ip;
-    @Value("${property.ccube_sftp.port}")
+    @Value("${ccube_sftp.port}")
     private Integer ccube_sftp_port;
-    @Value("${property.ccube_sftp.user}")
+    @Value("${ccube_sftp.user}")
     private String ccube_sftp_user;
-    @Value("${property.ccube_sftp.passwd}")
+    @Value("${ccube_sftp.passwd}")
     private String ccube_sftp_passwd;
-    @Value("${property.ccube_sftp.workdir}")
+    @Value("${ccube_sftp.workdir}")
     private String ccube_sftp_workdir;
-    @Value("${property.ccube_sftp.downdir}")
+    @Value("${ccube_sftp.downdir}")
     private String ccube_sftp_downdir;
-    @Value("${property.ccube_sftp.downext}")
+    @Value("${ccube_sftp.downext}")
     private String ccube_sftp_downext;
-    @Value("${property.ccube_sftp.end_after_movedir}")
+    @Value("${ccube_sftp.end_after_movedir}")
     private String ccube_sftp_end_after_movedir;
-    @Value("${property.ccube_sftp.uploaddir}")
+    @Value("${ccube_sftp.uploaddir}")
     private String ccube_sftp_uploaddir;
 
     @PostConstruct

@@ -10,9 +10,9 @@ import javax.annotation.PostConstruct;
 public class EsConfig {
     public static EsConfig INSTANCE;
 
-    @Value("${property.elasticsearch.host}")
+    @Value("${elasticsearch.host}")
     private String es_host;
-    @Value("${property.elasticsearch.port}")
+    @Value("${elasticsearch.port}")
     private Integer es_port;
     //@Value("${elasticsearch.idx}")
     //private String idx;
