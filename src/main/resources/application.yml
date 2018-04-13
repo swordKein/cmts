@@ -144,7 +144,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 10 17 * * ?
+      cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
 property:
   serverid: cmts_local_cm01
@@ -233,7 +233,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 10 17 * * ?
+      cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
     #-
     #  cronExpression : 0 * * * * ?
