@@ -95,18 +95,6 @@ org.quartz.scheduler.instanceId: AUTO
 org.quartz.threadPool.threadCount: 400
 org.quartz.jobStore.class: org.quartz.simpl.RAMJobStore
 
-logging:
-  level:
-    ROOT: INFO
-    org.springframework: INFO
-    com.kthcorp: DEBUG
-  pattern:
-    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/daisy/ometa/debug.log
-  #file: e:/home/debug.log
-
 ---
 spring:
   profiles: local
@@ -188,87 +176,19 @@ property:
   elasticsearch:
     host: 14.63.170.72
     port: 9200
----
-spring:
-  profiles: local1
-  http:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
-  static:
-    resource:
-      location: D:\\UPLOAD\\
-  task:
-    fixedDelay: 5000
-    name: devTask
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    username: metataguser
-    password: daisy!
-  thymeleaf:
-    cache: false
-    check-template: false
-    check-template-location: false
-    content-type: text/html
-    enabled: true
-    encoding: UTF-8
-    #prefix: /views/
-schedule :
-  jobs :
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : collectService
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : refineService
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : analyzeService
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : itemsService
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : sftpService
-    -
-      cronExpression : 0 0 3 * * ?
-      jobType : snsTopWords
-    -
-      cronExpression : 0 00 22 * * ?
-      jobType : ccubeOutput
-property:
-  serverid: cmts_local_cm01
-  crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-  crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
-  ccube_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    #workdir: /home/daisy/ccube_work
-    workdir: d:\\upload
-    #downdir: /home/daisy/service/cmts
-    downdir: /home/daisy/service/cmts
-    downext: yml
-    #downext: xml
-    end_after_movedir: /home/daisy/service/cmts/done
-    uploaddir: /home/daisy/service/cmts/upload/
-    #uploaddir: /META_EXT
-  prism_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: d:\\upload
-    downdir: /home/daisy/service/cmts
-    downext: dat
-    uploaddir: /home/daisy/service/cmts/upload/
-  elasticsearch:
-    host: 14.63.170.72
-    port: 9200
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/daisy/ometa/debug.log
+  #file: e:/home/debug.log
+
 ---
 spring:
   profiles: dev
@@ -347,6 +267,19 @@ property:
   elasticsearch:
     host: 14.63.170.72
     port: 9200
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/daisy/ometa/debug.log
+  #file: e:/home/debug.log
+
 ---
 spring:
   profiles: dev_no_sched
@@ -407,6 +340,19 @@ property:
   elasticsearch:
     host:
     port:
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/daisy/ometa/debug.log
+  #file: e:/home/debug.log
+
 ---
 spring:
   profiles: dev_crawl
@@ -465,6 +411,19 @@ property:
   elasticsearch:
     host:
     port:
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: DEBUG
+  pattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/daisy/ometa/debug.log
+  #file: e:/home/debug.log
+
 ---
 spring:
   profiles: prod_crawl
@@ -522,6 +481,17 @@ property:
   elasticsearch:
     host:
     port:
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: INFO
+  pattern:
+    #console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/megatag/cmts/service.log
+
 ---
 spring:
   profiles: prod_collector
@@ -589,6 +559,17 @@ property:
   elasticsearch:
     host: 172.16.208.52
     port: 9200
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: INFO
+  pattern:
+    #console: "PROD::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/ktipmedia/logs/service.log
+
 ---
 spring:
   profiles: prod_api
@@ -638,6 +619,16 @@ property:
   elasticsearch:
     host:
     port:
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.kthcorp: INFO
+  pattern:
+    #console: "PROD::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /home/ktipmedia/logs/service.log
 
 
 
