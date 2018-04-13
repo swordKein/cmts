@@ -378,8 +378,9 @@ spring:
       #prefix: /resources
 schedule :
   jobs :
-    cronExpression : 0 0 1 * * ?
-    jobType : dummyService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
 property:
   serverid: cmts_dev_nosched01
   crawl_api_url:
@@ -435,8 +436,9 @@ spring:
       #prefix: /resources
 schedule :
   jobs :
-    cronExpression : 0 0 1 * * ?
-    jobType : dummyService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
@@ -491,8 +493,9 @@ spring:
       #prefix: /resources
 schedule :
   jobs :
-    cronExpression : 0 0 1 * * ?
-    jobType : dummyService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
 property:
   serverid: cmts_prod_crawl01
   crawl_api_url:
@@ -606,8 +609,9 @@ spring:
     password: 2!dlqnsrl
 schedule :
   jobs :
-    cronExpression : 0 0 1 * * ?
-    jobType : dummyService
+    -
+      cronExpression : 0 0 1 * * ?
+      jobType : dummyService
 property:
   serverid: cmts_prod_api01
   crawl_api_url:
