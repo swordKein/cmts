@@ -150,32 +150,32 @@ property:
   serverid: cmts_local_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
   crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
-  ccube_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    #workdir: /home/daisy/ccube_work
-    workdir: d:\\upload
-    #downdir: /home/daisy/service/cmts
-    downdir: /home/daisy/service/cmts
-    downext: yml
-    #downext: xml
-    end_after_movedir: /home/daisy/service/cmts/done
-    uploaddir: /home/daisy/service/cmts/upload/
-    #uploaddir: /META_EXT
-  prism_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: d:\\upload
-    downdir: /home/daisy/service/cmts
-    downext: dat
-    uploaddir: /home/daisy/service/cmts/upload/
-  elasticsearch:
-    host: 14.63.170.72
-    port: 9200
+ccube_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  #workdir: /home/daisy/ccube_work
+  workdir: d:\\upload
+  #downdir: /home/daisy/service/cmts
+  downdir: /home/daisy/service/cmts
+  downext: yml
+  #downext: xml
+  end_after_movedir: /home/daisy/service/cmts/done
+  uploaddir: /home/daisy/service/cmts/upload/
+  #uploaddir: /META_EXT
+prism_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: d:\\upload
+  downdir: /home/daisy/service/cmts
+  downext: dat
+  uploaddir: /home/daisy/service/cmts/upload/
+elasticsearch:
+  host: 14.63.170.72
+  port: 9200
 
 logging:
   level:
@@ -245,28 +245,28 @@ property:
   serverid: cmts_dev_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
   crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
-  ccube_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: /home/daisy/cmts/work
-    downdir: /home/daisy/cmts/down
-    downext: xml
-    end_after_movedir: /home/daisy/service/cmts/done
-    uploaddir: /META_EXT
-  prism_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: d:\\upload
-    downdir: /home/daisy/service/cmts
-    downext: dat
-    uploaddir: /home/daisy/service/cmts/upload/
-  elasticsearch:
-    host: 14.63.170.72
-    port: 9200
+ccube_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: /home/daisy/cmts/work
+  downdir: /home/daisy/cmts/down
+  downext: xml
+  end_after_movedir: /home/daisy/service/cmts/done
+  uploaddir: /META_EXT
+prism_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: /home/daisy/service/cmts
+  downdir: /home/daisy/service/cmts
+  downext: dat
+  uploaddir: /home/daisy/service/cmts/upload/
+elasticsearch:
+  host: 14.63.170.72
+  port: 9200
 
 logging:
   level:
@@ -318,28 +318,28 @@ property:
   serverid: cmts_dev_nosched01
   crawl_api_url:
   crawl_sns_topwords_url:
-  ccube_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    end_after_movedir:
-    uploaddir:
-  prism_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    uploaddir:
-  elasticsearch:
-    host:
-    port:
+ccube_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  end_after_movedir:
+  uploaddir:
+prism_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  uploaddir:
+elasticsearch:
+  host:
+  port:
 
 logging:
   level:
@@ -389,28 +389,28 @@ property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
   crawl_sns_topwords_url:
-  ccube_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    end_after_movedir:
-    uploaddir:
-  prism_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    uploaddir:
-  elasticsearch:
-    host:
-    port:
+ccube_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  end_after_movedir:
+  uploaddir:
+prism_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  uploaddir:
+elasticsearch:
+  host:
+  port:
 
 logging:
   level:
@@ -459,28 +459,28 @@ property:
   serverid: cmts_prod_crawl01
   crawl_api_url:
   crawl_sns_topwords_url:
-  ccube_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    end_after_movedir:
-    uploaddir:
-  prism_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    uploaddir:
-  elasticsearch:
-    host:
-    port:
+ccube_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  end_after_movedir:
+  uploaddir:
+prism_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  uploaddir:
+elasticsearch:
+  host:
+  port:
 
 logging:
   level:
@@ -537,28 +537,28 @@ property:
   serverid: cmts_prod_coll01
   crawl_api_url: http://10.42.150.161:8080/crawl/byprefix
   crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
-  ccube_sftp:
-    ip: 10.220.147.95
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: /home/ktipmedia/ccube/work
-    downdir: /home/ktipmedia/ccube/down
-    downext: xml
-    end_after_movedir: /home/ktipmedia/ccube/done
-    uploaddir: /META_EXT
-  prism_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: /home/ktipmedia/prism/work
-    downdir: /home/ktipmedia/prism/down
-    downext: dat
-    uploaddir: /home/ktipmedia/prism/upload
-  elasticsearch:
-    host: 172.16.208.52
-    port: 9200
+ccube_sftp:
+  ip: 10.220.147.95
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: /home/ktipmedia/ccube/work
+  downdir: /home/ktipmedia/ccube/down
+  downext: xml
+  end_after_movedir: /home/ktipmedia/ccube/done
+  uploaddir: /META_EXT
+prism_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: /home/ktipmedia/prism/work
+  downdir: /home/ktipmedia/prism/down
+  downext: dat
+  uploaddir: /home/ktipmedia/prism/upload
+elasticsearch:
+  host: 172.16.208.52
+  port: 9200
 
 logging:
   level:
@@ -597,28 +597,28 @@ property:
   serverid: cmts_prod_api01
   crawl_api_url:
   crawl_sns_topwords_url:
-  ccube_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    end_after_movedir:
-    uploaddir:
-  prism_sftp:
-    ip:
-    port:
-    user:
-    passwd:
-    workdir:
-    downdir:
-    downext:
-    uploaddir:
-  elasticsearch:
-    host:
-    port:
+ccube_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  end_after_movedir:
+  uploaddir:
+prism_sftp:
+  ip:
+  port:
+  user:
+  passwd:
+  workdir:
+  downdir:
+  downext:
+  uploaddir:
+elasticsearch:
+  host:
+  port:
 
 logging:
   level:
@@ -676,29 +676,29 @@ property:
   serverid: cmts_staging_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
   crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
-  ccube_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    #workdir: /home/daisy/ccube_work
-    workdir: d:\\upload
-    #downdir: /home/daisy/service/cmts
-    downdir: /home/daisy/service/cmts
-    downext: yml
-    #downext: xml
-    end_after_movedir: /home/daisy/service/cmts/done
-    uploaddir: /home/daisy/service/cmts/upload/
-    #uploaddir: /META_EXT
-  prism_sftp:
-    ip: 14.63.170.72
-    port: 22
-    user: daisy
-    passwd: daisy!
-    workdir: d:\\upload
-    downdir: /home/daisy/service/cmts
-    downext: dat
-    uploaddir: /home/daisy/service/cmts/upload/
-  elasticsearch:
-    host: 14.63.170.72
-    port: 9200
+ccube_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  #workdir: /home/daisy/ccube_work
+  workdir: d:\\upload
+  #downdir: /home/daisy/service/cmts
+  downdir: /home/daisy/service/cmts
+  downext: yml
+  #downext: xml
+  end_after_movedir: /home/daisy/service/cmts/done
+  uploaddir: /home/daisy/service/cmts/upload/
+  #uploaddir: /META_EXT
+prism_sftp:
+  ip: 14.63.170.72
+  port: 22
+  user: daisy
+  passwd: daisy!
+  workdir: d:\\upload
+  downdir: /home/daisy/service/cmts
+  downext: dat
+  uploaddir: /home/daisy/service/cmts/upload/
+elasticsearch:
+  host: 14.63.170.72
+  port: 9200
