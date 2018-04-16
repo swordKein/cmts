@@ -221,7 +221,7 @@ public class CollectService implements CollectServiceImpl {
                                 reqStmh.setRt_code(resultCollect.get("rt_code").getAsString());
                             if (resultCollect != null && resultCollect.get("rt_msg") != null)
                                 reqStmh.setRt_msg(resultCollect.get("rt_msg").getAsString());
-                            // #TODO 용량문제로 일시 제외
+                            // 용량문제로 제외
                             //reqStmh.setSummary(resultCollect.toString());
 
                             int rt_tmp = schedTargetMappingHistMapper.insSchedTargetMappingHist(reqStmh);
@@ -509,7 +509,7 @@ public class CollectService implements CollectServiceImpl {
                                 reqStmh.setRt_code(resultCollect.get("rt_code").getAsString());
                             if (resultCollect != null && resultCollect.get("rt_msg") != null)
                                 reqStmh.setRt_msg(resultCollect.get("rt_msg").getAsString());
-                            // #TODO 용량문제로 일시 제회
+                            // 용량문제로 일시 제외
                             //reqStmh.setSummary(resultCollect.toString());
 
                             int rt_tmp = schedTargetMappingHistMapper.insSchedTargetMappingHist(reqStmh);

@@ -40,7 +40,7 @@ public class ConfTargetContentMapperTest {
         req.setTg_id(1);
         req.setContent("테스트 컨텐츠");
 
-        int rt = confTargetContentMapper.insConfTargetContent(req);
+        //int rt = confTargetContentMapper.insConfTargetContent(req);
 
         SchedTrigger reqs = new SchedTrigger();
         reqs.setType("C");

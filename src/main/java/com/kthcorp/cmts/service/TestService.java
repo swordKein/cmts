@@ -4033,27 +4033,32 @@ public class TestService implements TestServiceImpl {
         resultStr = "아이템ID" + seperator + "CONTENT_ID" + seperator + "TITLE"
                 + seperator + "장르" + seperator + "KT등급"
                 + seperator + "조합장르"
+                + seperator + "국가조합장르"
                 + seperator + "서브장르1" + seperator + "서브장르2"
-                + seperator + "서브장르 SCORE"
+                + seperator + "서브장르-매핑장르1" + seperator + "서브장르-매핑장르2"
                 + lineFeed;
 
         String itemStr = "";
+        int cnt = 1;
         for (Map<String, Object> item : items) {
             itemStr = item.get("idx").toString();
             itemStr = itemStr + seperator + item.get("cid").toString();
             itemStr = itemStr + seperator + item.get("title").toString();
             itemStr = itemStr + seperator + (item.get("genre") != null ? item.get("genre").toString() : "");
             itemStr = itemStr + seperator + (item.get("kt_rating") != null ? item.get("kt_rating").toString() : "");
-            itemStr = itemStr + seperator + (item.get("subgenre1") != null ? item.get("subgenre1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreMix") != null ? item.get("subgenreMix").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenreOrgin") != null ? item.get("subgenreOrgin").toString() : "");
             itemStr = itemStr + seperator + (item.get("subgenreword1") != null ? item.get("subgenreword1").toString() : "");
             itemStr = itemStr + seperator + (item.get("subgenreword2") != null ? item.get("subgenreword2").toString() : "");
-            itemStr = itemStr + seperator + (item.get("subgenrewords") != null ? item.get("subgenrewords").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenretopic1") != null ? item.get("subgenretopic1").toString() : "");
+            itemStr = itemStr + seperator + (item.get("subgenretopic2") != null ? item.get("subgenretopic2").toString() : "");
 
             resultStr += itemStr + lineFeed;
-
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
         }
 
-        String fileNameContent = "SUBGENRE_ITEMS_180409.tsv";
+        String fileNameContent = "SUBGENRE_ITEMS_180413.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
     }
 
@@ -4336,5 +4341,63 @@ public class TestService implements TestServiceImpl {
             System.out.println("### do saveItemsTagsMetas searchKeyword:"+searchKeyword.toString()+"/itemIdx:"+itemIdx
                     + "/maxTagIdx:"+maxTagidx+"/mtype:LIST_SEARCHKEYWORDS");
         }
+    }
+
+    @Override
+    public void getCntForSubgenre() throws Exception {
+        /*
+        String mtype = "subgenreMix";
+
+        List<Map<String, Object>> origCntMap = testMapper.cntItemsMetasForSubgenre(mtype);
+
+        System.out.println("## orig.size:"+origCntMap.size());
+
+        for(Map<String, Object> nmap : origCntMap) {
+            int cnt = (int) nmap.get("cnt");
+
+        }
+        */
+    }
+
+    @Override
+    public void getCntForSubgenre(String mtype) throws Exception {
+        //String mtype = "subgenreMix";
+        List<Map<String, Object>> origCntMap = testMapper.cntItemsMetasForSubgenre(mtype);
+
+        System.out.println("## orig.size:"+origCntMap.size());
+        Map<String, Long> resultMap = new HashMap();
+
+        for(Map<String, Object> nmap : origCntMap) {
+            long longCnt = (long) nmap.get("cnt");
+            //int cnt = (int) longCnt;
+            String metaStr = (String) nmap.get("meta");
+            Set<String> metas = new HashSet();
+            if (metaStr.trim().contains(", ")) {
+                String[] metasArr = metaStr.split(", ");
+                if (metasArr != null && metasArr.length > 0) {
+                    for (String ma : metasArr) {
+                        metas.add(ma);
+                    }
+                }
+            } else {
+                metas.add(metaStr);
+            }
+
+            if(metas.size() > 0) {
+                for(String mt : metas) {
+                    long oldCnt = 0;
+                    if (resultMap.get(mt) != null) {
+                        oldCnt = (long) resultMap.get(mt);
+                        resultMap.remove(mt);
+                    }
+                    long newCnt = oldCnt + longCnt;
+                    resultMap.put(mt, newCnt);
+                }
+            }
+        }
+
+        //System.out.println("#RES::"+resultMap.toString());
+        MapUtil.printMapAll(resultMap);
+        System.out.println("#RES.size::"+resultMap.size());
     }
 }

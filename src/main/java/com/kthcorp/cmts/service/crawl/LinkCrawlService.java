@@ -195,7 +195,7 @@ public class LinkCrawlService implements LinkCrawlServiceImpl {
             subLinkUrl = subUrlArray.get(idx);
             System.out.println("#SubPageList url:#" + subLinkUrl);
 
-            // #TODO ancmtsjs 사용하는 웹페이지는 일단 제외 ( 한국일보 )
+            // ancmtsjs 사용하는 웹페이지는 일단 제외 ( 한국일보 )
             // if (!subLinkUrl.contains("star.hankooki")) {
                 try {
 
@@ -640,7 +640,7 @@ public class LinkCrawlService implements LinkCrawlServiceImpl {
         JsonObject resultObj = null;
         JsonArray resultArr2 = new JsonArray();
 
-        //#TODO tg_url 세팅 필요
+        // tg_url 세팅 필요
         //if(!reqInfo.getTg_url().equals("DAUM_NEWS")) throw new Exception("Conf_Preset tg_url is not NAVER BLOG!");
 
         int limitCnt = 0;

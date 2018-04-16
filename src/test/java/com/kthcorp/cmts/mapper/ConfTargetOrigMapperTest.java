@@ -113,8 +113,8 @@ public class ConfTargetOrigMapperTest {
         req.setFail_count1(10);
         req.setFail_count2(20);
 
-        int rt = confTargetOrigMapper.insConfTargetOrig(req);
-        System.out.println("#result code:"+rt);
+        //int rt = confTargetOrigMapper.insConfTargetOrig(req);
+        //System.out.println("#result code:"+rt);
         System.out.println("#result tg_id:"+req.getTg_id());
     }
 
@@ -140,8 +140,8 @@ public class ConfTargetOrigMapperTest {
         req.setFail_count1(10);
         req.setFail_count2(20);
 
-        int rt = confTargetOrigMapper.insConfTargetOrig(req);
-        System.out.println("#result code:"+rt);
+        //int rt = confTargetOrigMapper.insConfTargetOrig(req);
+        //System.out.println("#result code:"+rt);
         System.out.println("#result tg_id:"+req.getTg_id());
     }
 
@@ -168,13 +168,11 @@ public class ConfTargetOrigMapperTest {
         req.setFail_count1(10);
         req.setFail_count2(20);
 
-        int rt = confTargetOrigMapper.insConfTargetOrig(req);
-        System.out.println("#result code:"+rt);
+        //int rt = confTargetOrigMapper.insConfTargetOrig(req);
+        //System.out.println("#result code:"+rt);
         System.out.println("#result tg_id:"+req.getTg_id());
     }
 
-
-    //#TODO
     @Test
     public void test_insConf_preset() throws Exception {
 

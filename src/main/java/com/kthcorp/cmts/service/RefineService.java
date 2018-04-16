@@ -443,7 +443,7 @@ public class RefineService implements RefineServiceImpl {
                 if (resultRefine != null && resultRefine.get("rt_msg") != null)
                     reqHist.setRt_msg(resultRefine.get("rt_msg").getAsString());
                 reqHist.setStat(statTarget);
-                // #TODO 용량문제로 일시 제회
+                // 용량문제로 제외
                 //reqHist.setSummary(resultRefine.toString());
             }
             System.out.println("#STEP06 sc_id:"+sc_id+" insSchedTargetMappingHist from data:"+reqHist.toString());

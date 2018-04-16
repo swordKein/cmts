@@ -90,8 +90,8 @@ public class TestMapperTest {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("voc_id",1);
         req.put("words","test");
-        int result = testMapper.uptVocListById(req);
-        System.out.println("#result:"+result);
+        //int result = testMapper.uptVocListById(req);
+        //System.out.println("#result:"+result);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class TestMapperTest {
         req.put("filecnt", "01");
         req.put("title", "test");
         req.put("words", "[]");
-        int rt = testMapper.insYcDatas(req);
+        //int rt = testMapper.insYcDatas(req);
     }
 
     @Test

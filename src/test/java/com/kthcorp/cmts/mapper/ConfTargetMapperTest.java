@@ -110,9 +110,9 @@ public class ConfTargetMapperTest {
 		ConfTarget req = new ConfTarget();
 		req.setTg_id(19);
 		req.setStat("P");
-		int rs = confTargetMapper.uptTargetStat(req);
+		//int rs = confTargetMapper.uptTargetStat(req);
 
-		System.out.println("#RS:"+rs);
+		//System.out.println("#RS:"+rs);
 
 		List<ConfTarget> result = confTargetMapper.getTargetListActiveFirst10();
 		System.out.println("#Result:"+result);
@@ -141,8 +141,8 @@ public class ConfTargetMapperTest {
 		req.setFail_count1(10);
 		req.setFail_count2(20);
 
-		int rt = confTargetMapper.insConfTarget(req);
-		System.out.println("#result code:"+rt);
+		//int rt = confTargetMapper.insConfTarget(req);
+		//System.out.println("#result code:"+rt);
 		System.out.println("#result tg_id:"+req.getTg_id());
 	}
 
@@ -168,8 +168,8 @@ public class ConfTargetMapperTest {
 		req.setFail_count1(10);
 		req.setFail_count2(20);
 
-		int rt = confTargetMapper.insConfTarget(req);
-		System.out.println("#result code:"+rt);
+		//int rt = confTargetMapper.insConfTarget(req);
+		//System.out.println("#result code:"+rt);
 		System.out.println("#result tg_id:"+req.getTg_id());
 	}
 
@@ -195,8 +195,8 @@ public class ConfTargetMapperTest {
 		req.setFail_count1(10);
 		req.setFail_count2(20);
 
-		int rt = confTargetMapper.insConfTarget(req);
-		System.out.println("#result code:"+rt);
+		//int rt = confTargetMapper.insConfTarget(req);
+		//System.out.println("#result code:"+rt);
 		System.out.println("#result tg_id:"+req.getTg_id());
 	}
 
@@ -223,8 +223,8 @@ public class ConfTargetMapperTest {
 		req.setFail_count1(10);
 		req.setFail_count2(20);
 
-		int rt = confTargetMapper.insConfTarget(req);
-		System.out.println("#result code:"+rt);
+		//int rt = confTargetMapper.insConfTarget(req);
+		//System.out.println("#result code:"+rt);
 		System.out.println("#result tg_id:"+req.getTg_id());
 	}
 

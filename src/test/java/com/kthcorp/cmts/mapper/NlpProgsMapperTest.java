@@ -51,8 +51,8 @@ public class NlpProgsMapperTest {
         req.setOutfilename("filename_out_2017.txt");
         req.setStat("Y");
 
-        int result = nlpProgsMapper.insNlpProgs(req);
-        System.out.println("#iresult:" + result);
+        //int result = nlpProgsMapper.insNlpProgs(req);
+        //System.out.println("#iresult:" + result);
         System.out.println("#inserted idx:" + req.getIdx());
     }
 
@@ -62,8 +62,8 @@ public class NlpProgsMapperTest {
         NlpProgs req = new NlpProgs();
         req.setIdx(1);
         req.setLinecnt((long) 2);
-        int result = nlpProgsMapper.uptNlpProgs(req);
-        System.out.println("#result:"+result);
+        //int result = nlpProgsMapper.uptNlpProgs(req);
+        //System.out.println("#result:"+result);
 
 
         List<NlpProgs> result2 = nlpProgsMapper.getNlpProgs();

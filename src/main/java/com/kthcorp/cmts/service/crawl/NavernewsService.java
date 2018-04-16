@@ -93,7 +93,7 @@ public class NavernewsService implements NavernewsServiceImpl {
         String subLinkUrl = "";
         for (int idx=0; idx<blogIdList.size(); idx++) {
             //subLinkUrl = naverblog_post_url + blogIdList.get(idx) + "&logNo=" + blogLognoList.get(idx);
-            //#TODO subLink 추출 필요
+            // subLink 추출 필요
             subLinkUrl = "";
             System.out.println("#SubPageList url>"+subLinkUrl);
 
@@ -156,7 +156,7 @@ public class NavernewsService implements NavernewsServiceImpl {
                         }
                     }
                     //subUrl = naverblog_post_url + blogId + "&logNo="+logNo;
-                    //#TODO subUrl 발췌 필요
+                    //subUrl 발췌 필요
                     subUrl = "";
                 } else if(s.contains("blog.me")) {
                     String[] s2 = s.split("/");
@@ -170,7 +170,7 @@ public class NavernewsService implements NavernewsServiceImpl {
                         }
                     }
                     //subUrl = naverblog_post_url + blogId + "&logNo="+logNo;
-                    //#TODO subUrl 발췌 필요
+                    //subUrl 발췌 필요
                     subUrl = "";
                 } else if (s.contains("tistory.com")) {
                     subUrl = s;
@@ -223,7 +223,7 @@ public class NavernewsService implements NavernewsServiceImpl {
             subLinkUrl = subUrlArray.get(idx);
             System.out.println("#SubPageList url:#" + subLinkUrl);
 
-            // #TODO ancmtsjs 사용하는 웹페이지는 일단 제외 ( 한국일보 )
+            // ancmtsjs 사용하는 웹페이지는 일단 제외 ( 한국일보 )
             // if (!subLinkUrl.contains("star.hankooki")) {
                 try {
 
@@ -523,7 +523,7 @@ public class NavernewsService implements NavernewsServiceImpl {
             //}
 
             try {
-                //#TODO 네이버 뉴스 서브 URL 발췌 필요
+                //네이버 뉴스 서브 URL 발췌 필요
                // String navernews_url = "";
 
                 String pageContent = HttpClientUtil.reqGet(navernews_url, "", null,reqparams, "");
@@ -547,7 +547,7 @@ public class NavernewsService implements NavernewsServiceImpl {
         JsonObject resultObj = null;
         JsonArray resultArr2 = new JsonArray();
 
-        //#TODO NAVER_NEWS tg_url 세팅 필요
+        //NAVER_NEWS tg_url 세팅 필요
         //if(!reqInfo.getTg_url().equals("NAVER_NEWS")) throw new Exception("Conf_Preset tg_url is not NAVER BLOG!");
 
         int limitCnt = 0;

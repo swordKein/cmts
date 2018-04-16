@@ -29,8 +29,8 @@ public class ItemsSchedMappingMapperTest {
         ItemsSchedMapping req = new ItemsSchedMapping();
         req.setIdx(15);
         req.setSc_id(1);
-        int result = itemsSchedMappingMapper.insItemsSchedMapping(req);
-        System.out.println("#iresult:" + result);
+        //int result = itemsSchedMappingMapper.insItemsSchedMapping(req);
+        //System.out.println("#iresult:" + result);
     }
 
     @Test

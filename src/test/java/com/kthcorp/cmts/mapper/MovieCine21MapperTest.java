@@ -41,8 +41,8 @@ public class MovieCine21MapperTest {
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("list", movieList);
 
-        int result = movieCine21Mapper.insMovieCine21List(reqMap);
-        System.out.println("#iresult:" + result);
+        //int result = movieCine21Mapper.insMovieCine21List(reqMap);
+        //System.out.println("#iresult:" + result);
     }
 
     @Test
@@ -71,8 +71,8 @@ public class MovieCine21MapperTest {
         MovieCine21 req = new MovieCine21();
         req.setMovieId(1);
 
-        int result = movieCine21Mapper.insMovieCine21(req);
-        System.out.println("#iresult:" + result);
+        //int result = movieCine21Mapper.insMovieCine21(req);
+        //System.out.println("#iresult:" + result);
     }
 
 }

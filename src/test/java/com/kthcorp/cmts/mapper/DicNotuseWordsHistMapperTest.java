@@ -56,7 +56,7 @@ public class DicNotuseWordsHistMapperTest {
         req.setAction("do block keyword by notuse word");
         req.setAction_id(11);
 
-        int result = dicNotuseWordsHistMapper.insDicNotuseWordsHist(req);
-        System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
+        //int result = dicNotuseWordsHistMapper.insDicNotuseWordsHist(req);
+        //System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
     }
 }

@@ -29,7 +29,7 @@ public class DicNotuseWordsMapperTest {
         req.setWord("외도");
         req.setRegid("ghkdwo77");
 
-        int rt = dicNotuseWordsMapper.insDicNotuseWords(req);
+        //int rt = dicNotuseWordsMapper.insDicNotuseWords(req);
 
         List<DicNotuseWords> result = dicNotuseWordsMapper.getDicNotuseWords();
         System.out.println("#iresult:" + result.toString());

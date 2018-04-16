@@ -801,7 +801,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
 
         try {
             System.out.println("#STEP:09: analyze start for sc_id:"+sc_id);
-            // #TODO ste09sub
+            // ste09sub
             resultAnalyze = this.step09sub(sched);
 
             //결과 코드를 만든다.
@@ -845,7 +845,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 if (resultAnalyze != null && resultAnalyze.get("rt_msg") != null)
                     reqHist.setRt_msg(resultAnalyze.get("rt_msg").getAsString());
                 reqHist.setStat(statTarget);
-                //#TODO 용량 문제로 일시 제외
+                //용량 문제로 일시 제외
                 //reqHist.setSummary(resultAnalyze.toString());
             }
             System.out.println("#STEP09 sc_id:"+sc_id+" insSchedTargetMappingHist from data:"+reqHist.toString());

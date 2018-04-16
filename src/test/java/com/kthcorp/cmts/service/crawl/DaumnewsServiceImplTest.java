@@ -1623,10 +1623,7 @@ public class DaumnewsServiceImplTest {
 		ps.setDest_field("articleBody");
 		ps.setPs_tag("#ND_Warp #articleBody");
 		pslist.add(ps);
-
-
-
-		//#TODO
+		
 		reqInfo.setPresetList(pslist);
 
 		JsonObject result = daumnewsService.getSearchNews(reqInfo);

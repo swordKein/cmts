@@ -22,7 +22,6 @@ public class ConfPsMappingOrigMapperTest {
     @Autowired
     private ConfPsMappingOrigMapper confPsMappingOrigMapper;
 
-    //#TODO
     @Test
     @Rollback(false)
     public void test_insConfPsMappingOrig() throws Exception {
@@ -33,8 +32,8 @@ public class ConfPsMappingOrigMapperTest {
             psm = new ConfPsMappingOrig();
             psm.setTg_id(6);
             psm.setPs_id(i);
-            int rt = confPsMappingOrigMapper.insConfPsMappingOrig(psm);
-            System.out.println("#result:"+rt);
+            //int rt = confPsMappingOrigMapper.insConfPsMappingOrig(psm);
+            //System.out.println("#result:"+rt);
         }
 
     }

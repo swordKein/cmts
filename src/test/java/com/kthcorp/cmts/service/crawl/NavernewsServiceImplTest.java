@@ -1624,9 +1624,6 @@ public class NavernewsServiceImplTest {
 		pslist.add(ps);
 
 
-
-
-		//#TODO
 		reqInfo.setPresetList(pslist);
 
 		JsonObject result = navernewsService.getSearchNews(reqInfo);

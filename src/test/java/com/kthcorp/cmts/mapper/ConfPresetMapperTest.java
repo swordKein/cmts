@@ -59,7 +59,7 @@ public class ConfPresetMapperTest {
             cp.setPriority(20);
             cp.setRegid("ghkdwo77");
 
-            int rt = confPresetMapper.insertConfPreset(cp);
+            //int rt = confPresetMapper.insertConfPreset(cp);
             System.out.println("#return ps_id:"+cp.getPs_id());
         }
     }
@@ -117,7 +117,7 @@ public class ConfPresetMapperTest {
             cp.setPriority(20);
             cp.setRegid("ghkdwo77");
 
-            int rt = confPresetMapper.insertConfPreset(cp);
+            //int rt = confPresetMapper.insertConfPreset(cp);
             System.out.println("#return ps_id:"+cp.getPs_id());
         }
     }
@@ -153,13 +153,11 @@ public class ConfPresetMapperTest {
             cp.setPriority(20);
             cp.setRegid("ghkdwo77");
 
-            int rt = confPresetMapper.insertConfPreset(cp);
+            //int rt = confPresetMapper.insertConfPreset(cp);
             System.out.println("#return ps_id:"+cp.getPs_id());
         }
     }
 
-
-    //#TODO
     @Test
     @Rollback(false)
     public void test_insConf_preset() throws Exception {
@@ -1741,7 +1739,7 @@ public class ConfPresetMapperTest {
             cp.setPriority(20);
             cp.setRegid("ghkdwo77");
             
-            int rt = confPresetMapper.insertConfPreset(cp);
+            //int rt = confPresetMapper.insertConfPreset(cp);
             System.out.println("#return ps_id:"+cp.getPs_id());
         }
     }

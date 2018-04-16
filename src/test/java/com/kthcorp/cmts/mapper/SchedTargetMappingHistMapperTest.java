@@ -31,9 +31,9 @@ public class SchedTargetMappingHistMapperTest {
     req.setRt_msg("SUCCESS");
     req.setSummary("summary is ok");
 
-    int rs = schedTargetMappingHistMapper.insSchedTargetMappingHist(req);
+    //int rs = schedTargetMappingHistMapper.insSchedTargetMappingHist(req);
 
-    System.out.println("#RS:"+rs);
+    //System.out.println("#RS:"+rs);
 
     SchedTargetMappingHist reqH = new SchedTargetMappingHist();
     reqH.setPageNo(1);

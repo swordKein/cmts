@@ -40,8 +40,8 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insMovieCine21List() throws Exception {
-		int rt = testService.insMovieCine21List();
-		System.out.println("#result:"+rt);
+		//int rt = testService.insMovieCine21List();
+		//System.out.println("#result:"+rt);
 	}
 
 	@Test
@@ -96,12 +96,12 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test__insert_from_loadDataCine21Words() throws Exception {
-		testService.insert_from_loadDataCine21Words();
+		//testService.insert_from_loadDataCine21Words();
 	}
 
 	@Test
 	public void test__insert_from_loadDataCine21_metas() throws Exception {
-		testService.insert_from_loadDataCine21_metas();
+		//testService.insert_from_loadDataCine21_metas();
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insYjItems() throws Exception {
-		int rt = testService.insYjItems();
+		//int rt = testService.insYjItems();
 	}
 
 	@Test
@@ -178,7 +178,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insDicNotUseWords_phase1() throws Exception {
-		testService.insDicNotUseWords_phase1();
+		//testService.insDicNotUseWords_phase1();
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class TestServiceTestImpl {
 	@Test
 	public void test_insCcubeMoviesDatas() throws Exception {
 		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas();
-		testService.insCcubeMovies(reqList);
+		//testService.insCcubeMovies(reqList);
 	}
 
 	@Test
@@ -346,81 +346,81 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insDicKeywords__FromYcDatas1st1() throws Exception {
-		testService.insDicKeywords__FromYcDatas1st1();
+		//testService.insDicKeywords__FromYcDatas1st1();
 		//System.out.println("#RESULT.size:"+result.size());
 	}
 	@Test
 	public void test_insDicKeywords__FromYcDatas1st2() throws Exception {
-		testService.insDicKeywords__FromYcDatas1st2();
+		//testService.insDicKeywords__FromYcDatas1st2();
 		//System.out.println("#RESULT.size:"+result.size());
 	}
 
 	@Test
 	public void test_loadCcubeMoviesDatas_0226() throws Exception {
-		testService.loadCcubeMoviesDatas0226();
+		//testService.loadCcubeMoviesDatas0226();
 	}
 
 	@Test
 	public void test_insCcubeMoviesDatas_0226() throws Exception {
 		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0226();
-		testService.insCcubeMovies0226(reqList);
+		//testService.insCcubeMovies0226(reqList);
 	}
 
 	@Test
 	public void test_loadCcubeMoviesDatas_0226_2() throws Exception {
-		testService.loadCcubeMoviesDatas0226_2();
+		//testService.loadCcubeMoviesDatas0226_2();
 	}
 	@Test
 	public void test_insCcubeMoviesDatas_0226_2() throws Exception {
 		List<CcubeContent> reqList = testService.loadCcubeMoviesDatas0226_2();
-		testService.insCcubeMovies0226(reqList);
+		//testService.insCcubeMovies0226(reqList);
 	}
 
 	@Test
 	public void test_writeDicEmo0227() throws Exception {
-		testService.writeDicEmo0227();
+		//testService.writeDicEmo0227();
 
 	}
 
 	@Test
 	public void test_processCalFreqFromDicKeywords() throws Exception {
-		testService.processCalFreqFromDicKeywords();
+		///testService.processCalFreqFromDicKeywords();
 	}
 
 	@Test
 	public void test_writeRankOfDicKeywordByFreq1() throws Exception {
-		testService.writeRankOfDicKeywordByFreq1();
+		//testService.writeRankOfDicKeywordByFreq1();
 	}
 
 	@Test
 	public void test_processRankForDicKeywordsAndGenres() throws Exception {
-		testService.processRankForDicKeywordsAndGenres();
+		//testService.processRankForDicKeywordsAndGenres();
 	}
 
 	@Test
 	public void test_writeNoGenreItems() throws Exception {
-		testService.writeNoGenreItems();
+		//testService.writeNoGenreItems();
 	}
 
 	@Test
 	public void test_loadCcubeSeriesAllDatas_0330() throws Exception {
-		List<CcubeSeries> result = testService.loadCcubeSeriesAllDatas_0330();
+		//List<CcubeSeries> result = testService.loadCcubeSeriesAllDatas_0330();
 		//System.out.println("#RESLT:"+result.toString());
 	}
 
 	@Test
 	public void test_insCcubeSeriesAll_0330_run() throws Exception {
-		testService.insCcubeSeriesAll_0330_run();
+		///testService.insCcubeSeriesAll_0330_run();
 	}
 
 	@Test
 	public void test_loadCcubeSeriesDatas_0330() throws Exception {
-		List<CcubeSeries> result = testService.loadCcubeSeriesDatas_0330();
-		//System.out.println("#RESLT:"+result.toString());
+		//List<CcubeSeries> result = testService.loadCcubeSeriesDatas_0330();
+		//S/ystem.out.println("#RESLT:"+result.toString());
 	}
 	@Test
 	public void test_insCcubeSeries_0330_run() throws Exception {
-		testService.insCcubeSeries_0330_run();
+		//testService.insCcubeSeries_0330_run();
 	}
 
 
@@ -430,7 +430,7 @@ public class TestServiceTestImpl {
 		for (CcubeContent cc : reqList) {
 			if (cc.getYear().length() > 4) System.out.println("#res:" + cc.toString());
 		}
-		testService.insCcubeMovies0226(reqList);
+		//testService.insCcubeMovies0226(reqList);
 	}
 
 	@Test
@@ -439,7 +439,7 @@ public class TestServiceTestImpl {
 		for (CcubeContent cc : reqList) {
 			if (cc.getYear().length() > 4) System.out.println("#res:" + cc.toString());
 		}
-		testService.insCcubeMovies0226(reqList);
+		//testService.insCcubeMovies0226(reqList);
 	}
 
 	@Test
@@ -459,7 +459,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insDicSubgenreGenres() throws Exception {
-		testService.insDicSubgenreGenres();
+		//testService.insDicSubgenreGenres();
 	}
 
 	@Test
@@ -471,7 +471,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_processMixedSubgenre() throws Exception {
-		testService.processMixedSubgenre();
+		//testService.processMixedSubgenre();
 	}
 
 	@Test
@@ -482,36 +482,41 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insDicSubgenreKeywords() throws Exception {
-		testService.insDicSubgenreKeywords();
+		//testService.insDicSubgenreKeywords();
 	}
 
 	@Test
 	public void test_processSubgenre2ByKeywords() throws Exception {
-		testService.processSubgenre2ByKeywords();
+		//testService.processSubgenre2ByKeywords();
 	}
 
 	@Test
 	public void test_writeItemsAndSubgenre() throws Exception {
-		testService.writeItemsAndSubgenre();
+		//testService.writeItemsAndSubgenre();
 	}
 
 	@Test
 	public void test_processSubgenrePointCutting() throws Exception {
-		testService.processSubgenrePointCutting();
+		//testService.processSubgenrePointCutting();
 	}
 
 	@Test
 	public void test_writeItemsStatRt() throws Exception {
-		testService.writeItemsStatRt();
+		//testService.writeItemsStatRt();
 	}
 
 	@Test
 	public void test_processRetryDaumAward() throws Exception {
-		testService.processRetryDaumAward();
+		//testService.processRetryDaumAward();
 	}
 
 	@Test
 	public void test_processItemsSearchKeywordRetry() throws Exception {
-		testService.processItemsSearchKeywordRetry();
+		//testService.processItemsSearchKeywordRetry();
+	}
+
+	@Test
+	public void test_getCntForSubgenre() throws Exception {
+		//testService.getCntForSubgenre("subgenretopic2");
 	}
 }

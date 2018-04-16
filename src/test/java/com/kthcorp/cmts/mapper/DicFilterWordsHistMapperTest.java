@@ -44,7 +44,7 @@ public class DicFilterWordsHistMapperTest {
         req.setAction("do filtering content by word");
         req.setAction_id(11);
 
-        int result = dicFilterWordsHistMapper.insDicFilterWordsHist(req);
-        System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
+        //int result = dicFilterWordsHistMapper.insDicFilterWordsHist(req);
+        //System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
     }
 }
