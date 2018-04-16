@@ -331,7 +331,7 @@ public class NaverMovieService implements NaverMovieServiceImpl {
                 reqInfo.setParam1(tmpIds[1]);
 
                 /* 설정에 따라 구글 검색결과에서 취득된 url을 검색 후 취득한 후 대상 tag를 수집한다 */
-                //#TODO
+                //
                 resultObj = getSubItems(reqInfo, resultObj);
 
                 /* reply 배열 수집 */

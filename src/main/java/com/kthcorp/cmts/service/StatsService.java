@@ -261,7 +261,6 @@ public class StatsService implements StatsServiceImpl {
 
         List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
         JsonArray listItems = apiService.getListItemsFromArray(list_items);
-        // #TODO
         //n1.addProperty("STAT", "RT");
         //n1.addProperty("CNT_IN", 1);
         //n1.addProperty("CNT_COL", 1);

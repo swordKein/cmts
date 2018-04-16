@@ -162,4 +162,8 @@ public interface TestServiceImpl {
     void processRetryDaumAward() throws Exception;
 
     void processItemsSearchKeywordRetry();
+
+    void getCntForSubgenre() throws Exception;
+
+    void getCntForSubgenre(String mtype) throws Exception;
 }

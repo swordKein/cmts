@@ -1385,7 +1385,6 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             //System.out.println("#ELOG.searchedItemsTags by mtype:"+target_mtype+"/pageno:"+pageno+"/datas::"+resCur.toString());
                             for (ItemsTags itag : resCur) {
                                 // 저장 대상 생성
-                                // #TODO
                                 String origMeta = itag.getMeta();
                                 if (origMeta != null && !"".equals(origMeta) && !"[]".equals(origMeta)) {
                                     JsonParser jsonParser = new JsonParser();
