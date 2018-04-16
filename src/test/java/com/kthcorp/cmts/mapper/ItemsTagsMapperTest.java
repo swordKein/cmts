@@ -52,8 +52,8 @@ public class ItemsTagsMapperTest {
         req.setIdx(1);
         req.setTagidx(1);
 
-        int result = itemsTagsMapper.insItemsTagsKeys(req);
-        System.out.println("#result:" + result);
+        //int result = itemsTagsMapper.insItemsTagsKeys(req);
+        //System.out.println("#result:" + result);
     }
 
     @Test
@@ -64,8 +64,8 @@ public class ItemsTagsMapperTest {
         req.setTagidx(1);
         req.setStat("S");
 
-        int result = itemsTagsMapper.uptItemsTagsKeysStat(req);
-        System.out.println("#result:" + result);
+        //int result = itemsTagsMapper.uptItemsTagsKeysStat(req);
+        //System.out.println("#result:" + result);
     }
 
     @Test
@@ -78,8 +78,8 @@ public class ItemsTagsMapperTest {
         req.setMeta("test meta");
         req.setRegid("sched");
 
-        int result = itemsTagsMapper.insItemsTagsMetas(req);
-        System.out.println("#result:" + result);
+        //int result = itemsTagsMapper.insItemsTagsMetas(req);
+        //System.out.println("#result:" + result);
     }
 
     @Test

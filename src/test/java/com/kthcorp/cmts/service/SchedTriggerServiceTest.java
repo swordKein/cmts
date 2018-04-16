@@ -26,8 +26,8 @@ public class SchedTriggerServiceTest {
 		SchedTrigger req = new SchedTrigger();
 		req.setSc_id(1);
 		req.setStat("Y");
-		int result = schedTriggerService.uptSchedTriggerComplete(req);
-		System.out.println("#Result:"+result);
+		//int result = schedTriggerService.uptSchedTriggerComplete(req);
+		//System.out.println("#Result:"+result);
 
 
 		List<SchedTrigger> result1 = schedTriggerMapper.getSchedTriggerListById(1);
@@ -41,8 +41,8 @@ public class SchedTriggerServiceTest {
 		req.setSc_id(1);
 		req.setStat("Y");
 		//req.setProgs(0);
-		int result = schedTriggerService.uptSchedTriggerOnlyStat(req);
-		System.out.println("#Result:"+result);
+		//int result = schedTriggerService.uptSchedTriggerOnlyStat(req);
+		//System.out.println("#Result:"+result);
 
 
 		List<SchedTrigger> result1 = schedTriggerMapper.getSchedTriggerListById(1);

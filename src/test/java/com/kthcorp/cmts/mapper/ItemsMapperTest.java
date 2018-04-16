@@ -77,8 +77,8 @@ public class ItemsMapperTest {
         req.setRegid("ghkdwo77");
         req.setStat("Y");
         req.setType("movie");
-        int result = itemsMapper.insItems(req);
-        System.out.println("#iresult:" + result);
+        //int result = itemsMapper.insItems(req);
+        //System.out.println("#iresult:" + result);
     }
 
     @Test

@@ -53,8 +53,8 @@ public class ItemsMetasMapperTest {
         req.setMtype("plot");
         req.setMeta("줄거리1");
         req.setRegid("ghkdwo77");
-        int result = itemsMetasMapper.insItemsMetas(req);
-        System.out.println("#iresult:" + result);
+        //int result = itemsMetasMapper.insItemsMetas(req);
+        //System.out.println("#iresult:" + result);
     }
 
 }

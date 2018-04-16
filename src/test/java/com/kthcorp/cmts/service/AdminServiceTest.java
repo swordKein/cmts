@@ -27,8 +27,8 @@ public class AdminServiceTest {
 		ConfTarget req = new ConfTarget();
 		req.setTg_id(14);
 		req.setTitle("test444");
-		int result = adminService.uptConfTarget(req);
-		System.out.println("#Result:"+result);
+		//int result = adminService.uptConfTarget(req);
+		//System.out.println("#Result:"+result);
 	}
 
 }

@@ -34,7 +34,7 @@ public class SchedTargetContentMapperTest {
         req.setStmh_id(2);
         req.setContent("테스트 컨텐츠");
 
-        int rt = schedTargetContentMapper.insSchedTargetContent(req);
+        //int rt = schedTargetContentMapper.insSchedTargetContent(req);
 
         SchedTargetContent reqss = new SchedTargetContent();
         reqss.setStc_id(1);

@@ -46,8 +46,8 @@ public class DicKeywordsMapperTest {
     public void test_insDicNotMapKeywrods() throws Exception {
         DicKeywords req = new DicKeywords();
         req.setKeyword("대통령");
-        int cnt = dicKeywordsMapper.insDicNotMapKeywords(req);
-        System.out.println("#cnt:"+cnt);
+        //int cnt = dicKeywordsMapper.insDicNotMapKeywords(req);
+        //System.out.println("#cnt:"+cnt);
     }
 
     @Test

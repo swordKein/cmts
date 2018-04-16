@@ -49,8 +49,8 @@ public class AuthUserMapperTest {
         req.setUsercompany("KTH");
         req.setRegid("ghkdwo77");
 
-        int result = authUserMapper.insAuthUser(req);
-        System.out.println("#result:"+result);
+        //int result = authUserMapper.insAuthUser(req);
+        //System.out.println("#result:"+result);
     }
 
     @Test
@@ -63,8 +63,8 @@ public class AuthUserMapperTest {
         req.setUsercompany("KTH");
         req.setRegid("ghkdwo77");
 
-        int result = authUserMapper.uptAuthUser(req);
-        System.out.println("#result:"+result);
+        //int result = authUserMapper.uptAuthUser(req);
+        //System.out.println("#result:"+result);
     }
 
 
@@ -78,7 +78,7 @@ public class AuthUserMapperTest {
         req.setUsercompany("KTH");
         req.setRegid("ghkdwo77");
 
-        int result = authUserMapper.delAuthUser(req);
-        System.out.println("#result:"+result);
+        //int result = authUserMapper.delAuthUser(req);
+        //System.out.println("#result:"+result);
     }
 }

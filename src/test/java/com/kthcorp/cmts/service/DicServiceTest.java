@@ -47,8 +47,8 @@ public class DicServiceTest {
 		req.setWord("외모리뷰");
 		req.setRegid("wodus77");
 
-		int result = dicService.insDicFilterWords(req);
-		System.out.println("#insert RESULT:"+result);
+		//int result = dicService.insDicFilterWords(req);
+		//System.out.println("#insert RESULT:"+result);
 
 		List<DicFilterWords> result2 = dicService.getDicFilterWords();
 		System.out.println("#RESLT:"+result2.toString());
@@ -113,8 +113,8 @@ public class DicServiceTest {
 		req.setWordto("외모비교");
 		req.setRegid("wodus77");
 
-		int result = dicService.insDicChangeWords(req);
-		System.out.println("#insert RESULT:"+result);
+		//int result = dicService.insDicChangeWords(req);
+		//System.out.println("#insert RESULT:"+result);
 
 		List<DicChangeWords> result2 = dicService.getDicChangeWords();
 		System.out.println("#RESLT:"+result2.toString());
@@ -154,8 +154,8 @@ public class DicServiceTest {
 		req.setFreq(2.0);
 		req.setRegid("ghkdwo77");
 
-		int result = dicService.insDicAddWords(req);
-		System.out.println("#insert RESULT:"+result);
+		//int result = dicService.insDicAddWords(req);
+		//System.out.println("#insert RESULT:"+result);
 
 		List<DicAddWords> result2 = dicService.getDicAddWords();
 		System.out.println("#RESLT:"+result2.toString());
@@ -185,8 +185,8 @@ public class DicServiceTest {
 		req.setToword("외모리뷰");
 		req.setRegid("ghkdwo777");
 
-		int result = dicService.insDicKeywords(req);
-		System.out.println("#insert RESULT:"+result);
+		//int result = dicService.insDicKeywords(req);
+		//System.out.println("#insert RESULT:"+result);
 
 		List<DicKeywords> result2 = dicService.getDicKeywords(req);
 		System.out.println("#RESLT:"+result2.toString());

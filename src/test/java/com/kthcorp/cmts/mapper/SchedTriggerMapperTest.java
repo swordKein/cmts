@@ -79,8 +79,8 @@ public class SchedTriggerMapperTest {
         req.setSc_id(1);
         //req.setStat("S");
         req.setProgs(1);
-        int result = schedTriggerMapper.uptSchedTriggerProgs(req);
-        System.out.println("#Result:"+result);
+        //int result = schedTriggerMapper.uptSchedTriggerProgs(req);
+        //System.out.println("#Result:"+result);
 
         SchedTrigger result1 = schedTriggerMapper.getSchedTriggerById(1);
         int targetList_length = result1.getTargetList().size();
@@ -98,8 +98,8 @@ public class SchedTriggerMapperTest {
             req.setSc_id(1);
             req.setStat("S");
             req.setProgs(1);
-            int result2 = schedTriggerMapper.uptSchedTriggerProgs(req);
-            System.out.println("#Result upt:"+result2+" <<<<  by req:"+req.toString());
+            //int result2 = schedTriggerMapper.uptSchedTriggerProgs(req);
+            //System.out.println("#Result upt:"+result2+" <<<<  by req:"+req.toString());
         }
         System.out.println("#Result:"+result1);
     }
@@ -117,8 +117,8 @@ public class SchedTriggerMapperTest {
         newReq.setRegid("ghkdwo77");
 
         // 먼저 sched_trigger에 등록
-        int rt = schedTriggerMapper.insSchedTriggerForStart(newReq);
-        System.out.println("# insert sc_id:"+newReq.getSc_id()+ "   result:"+rt);
+        //int rt = schedTriggerMapper.insSchedTriggerForStart(newReq);
+        //System.out.println("# insert sc_id:"+newReq.getSc_id()+ "   result:"+rt);
 
         // sched_trigger에 등록한 sc_id 와 stat = 'P'인 conf_target 리스트를 조합하여 sched_target_mapping 등록
 
@@ -133,8 +133,8 @@ public class SchedTriggerMapperTest {
             SchedTargetMapping reqM = new SchedTargetMapping();
             reqM.setSc_id(newReq.getSc_id());
             reqM.setTg_id(ct.getTg_id());
-            int rtM = schedTriggerMapper.insSchedTargetMapping(reqM);
-            System.out.println("# insert targetMapping sc_id:"+newReq.getSc_id()+ "   result:"+rtM);
+            //int rtM = schedTriggerMapper.insSchedTargetMapping(reqM);
+            //System.out.println("# insert targetMapping sc_id:"+newReq.getSc_id()+ "   result:"+rtM);
         }
 
         SchedTrigger result1 = schedTriggerMapper.getSchedTriggerById(newReq.getSc_id());
@@ -151,8 +151,8 @@ public class SchedTriggerMapperTest {
         newReq.setRegid("ghkdwo77");
 
         // 먼저 sched_trigger에 등록
-        int rt = schedTriggerMapper.insSchedTriggerForStart(newReq);
-        System.out.println("# insert sc_id:" + newReq.getSc_id() + "   result:" + rt);
+        //int rt = schedTriggerMapper.insSchedTriggerForStart(newReq);
+        //System.out.println("# insert sc_id:" + newReq.getSc_id() + "   result:" + rt);
 
         // sched_trigger에 등록한 sc_id 와 stat = 'P'인 conf_target 리스트를 조합하여 sched_target_mapping 등록
 
@@ -167,8 +167,8 @@ public class SchedTriggerMapperTest {
             SchedTargetMapping reqM = new SchedTargetMapping();
             reqM.setSc_id(newReq.getSc_id());
             reqM.setTg_id(ct.getTg_id());
-            int rtM = schedTriggerMapper.insSchedTargetMapping(reqM);
-            System.out.println("# insert targetMapping sc_id:" + newReq.getSc_id() + "   result:" + rtM);
+            //int rtM = schedTriggerMapper.insSchedTargetMapping(reqM);
+            //System.out.println("# insert targetMapping sc_id:" + newReq.getSc_id() + "   result:" + rtM);
         }
 
         SchedTrigger result1 = schedTriggerMapper.getSchedTriggerById(newReq.getSc_id());

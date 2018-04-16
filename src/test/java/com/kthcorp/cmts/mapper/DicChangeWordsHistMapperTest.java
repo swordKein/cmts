@@ -43,7 +43,7 @@ public class DicChangeWordsHistMapperTest {
         req.setAction("do changing keyword by word");
         req.setAction_id(11);
 
-        int result = dicChangeWordsHistMapper.insDicChangeWordsHist(req);
-        System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
+        //int result = dicChangeWordsHistMapper.insDicChangeWordsHist(req);
+        //System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
     }
 }

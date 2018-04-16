@@ -43,7 +43,7 @@ public class DicAddWordsHistMapperTest {
         req.setAction("do adding keyword by word");
         req.setAction_id(11);
 
-        int result = dicAddWordsHistMapper.insDicAddWordsHist(req);
-        System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
+        //int result = dicAddWordsHistMapper.insDicAddWordsHist(req);
+        //System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
     }
 }

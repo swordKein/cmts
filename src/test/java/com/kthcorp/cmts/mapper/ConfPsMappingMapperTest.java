@@ -18,7 +18,6 @@ public class ConfPsMappingMapperTest {
     @Autowired
     private ConfPsMappingMapper confPsMappingMapper;
 
-    //#TODO
     @Test
     @Rollback(false)
     public void test_insConfPsMapping() throws Exception {
@@ -29,8 +28,8 @@ public class ConfPsMappingMapperTest {
             psm = new ConfPsMapping();
             psm.setTg_id(6);
             psm.setPs_id(i);
-            int rt = confPsMappingMapper.insConfPsMapping(psm);
-            System.out.println("#result:"+rt);
+            //int rt = confPsMappingMapper.insConfPsMapping(psm);
+            //System.out.println("#result:"+rt);
         }
 
     }

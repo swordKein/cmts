@@ -32,9 +32,9 @@ public class SchedTriggerHistMapperTest {
     req.setRt_msg("SUCCESS");
     req.setSummary("summary is ok");
 
-    int rs = schedTriggerHistMapper.insSchedTriggerHist(req);
+    //int rs = schedTriggerHistMapper.insSchedTriggerHist(req);
 
-    System.out.println("#RS:"+rs);
+    //System.out.println("#RS:"+rs);
 
     SchedTriggerHist reqH = new SchedTriggerHist();
     reqH.setPageNo(1);

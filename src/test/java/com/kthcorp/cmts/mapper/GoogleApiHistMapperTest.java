@@ -58,7 +58,7 @@ public class GoogleApiHistMapperTest {
         req.setAction("google_translate");
         req.setAction_id(11);
 
-        int result = googleApiHistMapper.insGoogleApiHist(req);
-        System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
+        //int result = googleApiHistMapper.insGoogleApiHist(req);
+        //System.out.println("#iresult:" + result + "/result.hidx:"+req.getHidx());
     }
 }

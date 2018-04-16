@@ -75,7 +75,7 @@ public class CcubeMapperTest {
         req.put("idx", 9473);
         req.put("stat", "Y");
         req.put("regid", "ghkdwo77");
-        int rt = ccubeMapper.insCcubeOutput(req);
+        //int rt = ccubeMapper.insCcubeOutput(req);
 
         Items reqi = new Items();
         reqi.setType("CcubeContent");
