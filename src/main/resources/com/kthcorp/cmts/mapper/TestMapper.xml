@@ -88,7 +88,6 @@
         select ifs.*
         , ( select country_of_origin from ccube_contents where content_id = ifs.cid limit 1 ) as origin
         from items_for_subgenre ifs
-
     </select>
 
     <select id="getItemsAndSubgenre" resultType="map">
@@ -96,10 +95,12 @@
         select it.idx, it.cid, it.title
         , (select meta from items_metas where idx = it.idx and mtype = 'genre') as genre
         , it.kt_rating
-        , (select meta from items_metas where idx = it.idx and mtype = 'subgenre1') as subgenre1
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenreMix') as subgenreMix
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenreOrgin') as subgenreOrgin
         , (select meta from items_metas where idx = it.idx and mtype = 'subgenreword1') as subgenreword1
         , (select meta from items_metas where idx = it.idx and mtype = 'subgenreword2') as subgenreword2
-        , (select meta from items_metas where idx = it.idx and mtype = 'subgenrewords') as subgenrewords
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenretopic1') as subgenretopic1
+        , (select meta from items_metas where idx = it.idx and mtype = 'subgenretopic2') as subgenretopic2
         from items_for_subgenre it
 
     </select>
@@ -125,5 +126,15 @@
         inner join items it on it.idx = iss.idx
         where iss.stat = 'ST' and iss.regdate <![CDATA[ < ]]> '2018-04-11 00:00:00'
         #limit 10
+    </select>
+
+
+    <select id="cntItemsMetasForSubgenre" resultType="map" parameterType="java.lang.String">
+        /* cntItemsMetasForSubgenre */
+        select count(*) as cnt, mtype, meta from items_metas where mtype like concat ('subgenre','%')
+        <if test='value != null and value != ""'>
+            and mtype = #{value}
+        </if>
+        group by mtype, meta
     </select>
 </mapper>

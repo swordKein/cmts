@@ -20,6 +20,17 @@ public class MapUtil {
         }
     }
 
+    public static void printMapAll(Map<String, Long> reqMap) {
+        int lineCnt = 0;
+        Set entrySet = reqMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            System.out.println((me.getKey()+","+me.getValue()));
+        }
+    }
+
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
         Collections.sort( list, new Comparator<Map.Entry<K, V>>() {
