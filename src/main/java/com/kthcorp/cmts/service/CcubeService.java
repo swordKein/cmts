@@ -69,7 +69,18 @@ public class CcubeService implements CcubeServiceImpl {
 
     @Override
     public int getCcubeItemIdx(CcubeKeys req) {
-        return ccubeMapper.getCcubeItemIdx(req);
+        int itemIdx = 0;
+        itemIdx = ccubeMapper.getCcubeItemIdx(req);
+        // CID로 itemIdx 조회 후 타이틀/출시년도/감독 으로 재조회 (OR, AND 복합조건) 추가 2018.04.16
+        if (itemIdx == 0) {
+            if (req.getPurity_title() != null && !"".equals(req.getPurity_title())
+                    && req.getYear() != null && !"".equals(req.getYear())
+                    && req.getDirector() != null && !"".equals(req.getDirector())
+            ) {
+                itemIdx = ccubeMapper.getCcubeItemIdx2(req);
+            }
+        }
+        return itemIdx;
     }
 
     @Override
@@ -428,6 +439,27 @@ public class CcubeService implements CcubeServiceImpl {
             }
             */
         }
+        return rt;
+    }
+
+    @Override
+    public int insCcubeContent(CcubeContent req) {
+        int rt = 0;
+        rt = ccubeMapper.insCcubeContentOrig(req);
+
+        // CID 중복 제거 컨텐츠 등록
+        rt = ccubeMapper.insCcubeContent(req);
+
+        return rt;
+    }
+    @Override
+    public int insCcubeSeries(CcubeSeries req) {
+        int rt = 0;
+        rt = ccubeMapper.insCcubeSeriesOrig(req);
+
+        // SID 중복제거 시리즈 등록
+        rt = ccubeMapper.insCcubeSeries(req);
+
         return rt;
     }
 }

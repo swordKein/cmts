@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -155,21 +155,20 @@ ccube_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  #workdir: /home/daisy/ccube_work
-  workdir: d:\\upload
+  #workdir: /home/daisy/ccube_work/
+  workdir: d:\\upload\\
   #downdir: /home/daisy/service/cmts
-  downdir: /home/daisy/service/cmts
-  downext: yml
-  #downext: xml
-  end_after_movedir: /home/daisy/service/cmts/done
-  uploaddir: /home/daisy/service/cmts/upload/
+  downdir: /home/daisy/download
+  downext: xml
+  end_after_movedir: /home/daisy/download/DELETE
+  uploaddir: /home/daisy/download/META_EXT
   #uploaddir: /META_EXT
 prism_sftp:
   ip: 14.63.170.72
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: d:\\upload
+  workdir: d:\\upload\\
   downdir: /home/daisy/service/cmts
   downext: dat
   uploaddir: /home/daisy/service/cmts/upload/
@@ -251,17 +250,17 @@ ccube_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: /home/daisy/cmts/work
-  downdir: /home/daisy/cmts/down
+  workdir: /home/daisy/cmts/work/
+  downdir: /home/daisy/download
   downext: xml
-  end_after_movedir: /home/daisy/service/cmts/done
+  end_after_movedir: /home/daisy/download/DELETE
   uploaddir: /META_EXT
 prism_sftp:
   ip: 14.63.170.72
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: /home/daisy/service/cmts
+  workdir: /home/daisy/service/cmts/
   downdir: /home/daisy/service/cmts
   downext: dat
   uploaddir: /home/daisy/service/cmts/upload/
@@ -543,7 +542,7 @@ ccube_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: /home/ktipmedia/ccube/work
+  workdir: /home/ktipmedia/ccube/work/
   downdir: /home/ktipmedia/ccube/down
   downext: xml
   end_after_movedir: /home/ktipmedia/ccube/done
@@ -553,7 +552,7 @@ prism_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: /home/ktipmedia/prism/work
+  workdir: /home/ktipmedia/prism/work/
   downdir: /home/ktipmedia/prism/down
   downext: dat
   uploaddir: /home/ktipmedia/prism/upload
@@ -682,10 +681,9 @@ ccube_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  #workdir: /home/daisy/ccube_work
-  workdir: d:\\upload
+  workdir: /home/megatag/ccube/work/
   #downdir: /home/daisy/service/cmts
-  downdir: /home/daisy/service/cmts
+  downdir: /home/daisy/ccube/down
   downext: yml
   #downext: xml
   end_after_movedir: /home/daisy/service/cmts/done
@@ -696,7 +694,7 @@ prism_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: d:\\upload
+  workdir: d:\\upload\\
   downdir: /home/daisy/service/cmts
   downext: dat
   uploaddir: /home/daisy/service/cmts/upload/

@@ -20,6 +20,24 @@ public class CcubeKeys extends Paging {
     private String series_id;
     private String kmrb_id;
     private String purity_title;
+    private String director;
+    private String year;
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public Integer getCidx() {
         return cidx;

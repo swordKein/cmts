@@ -37,4 +37,8 @@ public interface CcubeServiceImpl {
 
     @Transactional
     int processCcubeSeriesOutputToJsonTest();
+
+    int insCcubeContent(CcubeContent req);
+
+    int insCcubeSeries(CcubeSeries req);
 }
