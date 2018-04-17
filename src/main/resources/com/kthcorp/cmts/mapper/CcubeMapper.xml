@@ -164,6 +164,31 @@
         limit 1
     </select>
 
+    <select id="getCcubeItemIdx2" parameterType="com.kthcorp.cmts.model.CcubeKeys" resultType="java.lang.Integer">
+        /* getCcubeItemIdx2  */
+        select a.itemidx from
+        (
+        (
+        select ck.itemidx from ccube_keys ck
+        inner join items it on it.idx = ck.itemidx
+        where
+        <if test='purity_title != null and purity_title != ""'>
+            ck.PURITY_TITLE = #{purity_title}
+        </if>
+        <if test='year != null and year != ""'>
+            and ck.YEAR = #{year}
+        </if>
+        <if test='director != null and director != ""'>
+            and ck.DIRECTOR = #{director}
+        </if>
+        order by ck.regdate ASC limit 1
+        )
+        union
+        ( select 0 as itemidx )
+        ) a
+        limit 1
+    </select>
+
     <select id="getCcubeKeysIdx" parameterType="com.kthcorp.cmts.model.CcubeKeys" resultType="java.lang.Integer">
         /* getCcubeKeysIdx  */
         select CIDX from ccube_keys
@@ -187,8 +212,8 @@
 
     <insert id="insCcubeKeys" parameterType="com.kthcorp.cmts.model.CcubeKeys" useGeneratedKeys="true" keyProperty="cidx">
         /* insCcubeKey */
-        insert into ccube_keys (master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx,regdate)
-        values (#{master_content_id}, #{content_id}, #{series_id}, #{purity_title}, #{kmrb_id}, #{itemidx}, now());
+        insert into ccube_keys (master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx, director, year, regdate)
+        values (#{master_content_id}, #{content_id}, #{series_id}, #{purity_title}, #{kmrb_id}, #{itemidx}, #{director}, #{year}, now());
 
     </insert>
 
@@ -238,7 +263,7 @@
         , DETAIL_GENRE_DISPLAY_NM, regdate, STAT
         ) values (
         #{series_id}, #{series_nm}, #{purity_title}, #{eng_title}, #{director}, #{year}, #{actors_display}, #{poster_url}, #{country_of_origin}, #{sad_ctgry_id}, #{sad_ctgry_nm}
-        , #{kt_rating}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, now(), 'S'
+        , #{kt_rating}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, now(), #{stat}
         )
         ON DUPLICATE KEY UPDATE
         series_id = #{series_id}
@@ -353,5 +378,41 @@
         /* insCcubeOutputHist */
         insert into ccube_output_hist (content, procdate, regid)
         values (#{content}, now(), #{regid})
+    </insert>
+
+
+    <insert id="insCcubeContentOrig" parameterType="com.kthcorp.cmts.model.CcubeContent">
+        /* insCcubeContentOrig */
+        insert into ccube_contents_orig (
+            MASTER_CONTENT_ID, CONTENT_ID, PURITY_TITLE, CONTENT_TITLE, ENG_TITLE, DIRECTOR, YEAR,
+            ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, TITLE_BRIEF, DOMESTIC_RELEASE_DATE,
+            KT_RATING, RUNNING_TIME, DETAIL_GENRE_DISPLAY_CD, DETAIL_GENRE_DISPLAY_NM, KMRB_ID, KMRB_TITLE_NM, KMRB_YEAR,
+            KMRB_DOMESTIC_RELEASE_DATE, KMRB_COUNTRY_OF_ORIGIN, KMRB_DIRECTOR, KMRB_DIRECTOR_ENG, KMRB_ACTORS_DISPLAY, KMRB_ACTORS_DISPLAY_ENG,
+            REGDATE,
+            STAT
+            ) values (
+            #{master_content_id}, #{content_id}, #{purity_title}, #{content_title}, #{eng_title}, #{director}, #{year},
+            #{actors_display}, #{poster_url}, #{country_of_origin}, #{sad_ctgry_id}, #{sad_ctgry_nm}, #{title_brief}, #{domestic_release_date},
+            #{kt_rating}, #{running_time}, #{detail_genre_display_cd}, #{detail_genre_display_nm}, #{kmrb_id}, #{kmrb_title_nm}, #{kmrb_year},
+            #{kmrb_domestic_release_date}, #{kmrb_country_of_origin}, #{kmrb_director}, #{kmrb_director_eng}, #{kmrb_actors_display}, #{kmrb_actors_display_eng},
+            now(),
+            #{stat}
+            )
+
+    </insert>
+
+    <insert id="insCcubeSeriesOrig" parameterType="com.kthcorp.cmts.model.CcubeSeries">
+        /* insCcubeSeriesOrig */
+        insert into ccube_series_orig (
+        SERIES_ID, SERIES_NM, PURITY_TITLE , ENG_TITLE, DIRECTOR, YEAR, ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, KT_RATING, DETAIL_GENRE_DISPLAY_CD
+        , DETAIL_GENRE_DISPLAY_NM,
+        regdate,
+        STAT
+        ) values (
+        #{series_id}, #{series_nm}, #{purity_title}, #{eng_title}, #{director}, #{year}, #{actors_display}, #{poster_url}, #{country_of_origin}, #{sad_ctgry_id}, #{sad_ctgry_nm}
+        , #{kt_rating}, #{detail_genre_display_cd}, #{detail_genre_display_nm},
+        now(),
+        #{stat}
+        )
     </insert>
 </mapper>

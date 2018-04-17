@@ -19,6 +19,8 @@ public interface CcubeMapper {
     CcubeSeries getCcubeSeriesById(CcubeSeries req);
 
     int getCcubeItemIdx(CcubeKeys req);
+    int getCcubeItemIdx2(CcubeKeys req);
+
     int getCcubeKeysIdx(CcubeKeys req);
     int insCcubeKeys(CcubeKeys req);
 
@@ -26,6 +28,9 @@ public interface CcubeMapper {
 
     int insCcubeContent(CcubeContent req);
     int insCcubeSeries(CcubeSeries req);
+
+    int insCcubeContentOrig(CcubeContent req);
+    int insCcubeSeriesOrig(CcubeSeries req);
 
     List<CcubeContent> getCcubeContentByYjid();
     List<CcubeContent> getCcubeContentByYjidNot();

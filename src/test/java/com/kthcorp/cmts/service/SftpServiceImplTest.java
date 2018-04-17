@@ -29,4 +29,26 @@ public class SftpServiceImplTest {
 	public void testPollingCcubeSftp() throws Exception{
 		sftpService.pollingCcubeSftp();
 	}
+
+	@Test
+	public void test_processDownloadMultipleXmlFileToDB() throws Exception {
+		String fileName = "D:\\upload\\Content_2017120100.xml";
+		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
+
+
+		String fileName2 = "D:\\upload\\Content_2018010100.xml";
+		int rt2 = sftpService.processDownloadMultipleXmlFileToDB(fileName2);
+
+	}
+
+	@Test
+	public void test_processDownloadMultipleXmlFileToDB2() throws Exception {
+		String fileName = "D:\\upload\\Series_2017120100.xml";
+		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
+
+
+		String fileName2 = "D:\\upload\\Series_2018010100.xml";
+		int rt2 = sftpService.processDownloadMultipleXmlFileToDB(fileName2);
+
+	}
 }

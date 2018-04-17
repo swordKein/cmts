@@ -75,42 +75,49 @@ public class ItemsService implements ItemsServiceImpl {
 
     @Override
     public int processCcubeContents() {
-        List<CcubeContent> reqCcubeContents = ccubeService.get50ActiveCcubeContents();
-        logger.info("#SCHEDULE checkInItems.get50ActiveCcubeContents: req-size:"+reqCcubeContents.size());
         int rt = 0;
 
-        for (CcubeContent ccont : reqCcubeContents) {
-            //logger.info("#SCHEDULE checkInItems:req datas:"+ccont.toString());
-            rt = this.copyCcubeContentToItems(ccont);
-            logger.info("#SCHEDULE checkInItems:Copy Ccube_Contents to Items Result:"+rt);
+        for(int i=0; i<20; i++) {
+            List<CcubeContent> reqCcubeContents = ccubeService.get50ActiveCcubeContents();
+            logger.info("#SCHEDULE checkInItems.get50ActiveCcubeContents: req-size:" + reqCcubeContents.size());
 
-            int rtupt = 0;
-            if (rt > 0) {
-                ccont.setStat("S");
-            } else {
-                ccont.setStat("F");
+            for (CcubeContent ccont : reqCcubeContents) {
+                //logger.info("#SCHEDULE checkInItems:req datas:"+ccont.toString());
+                rt = this.copyCcubeContentToItems(ccont);
+                logger.info("#SCHEDULE checkInItems:Copy Ccube_Contents to Items Result:" + rt);
+
+                int rtupt = 0;
+                if (rt > 0) {
+                    ccont.setStat("S");
+                } else {
+                    ccont.setStat("F");
+                }
+                rtupt = ccubeService.uptCcubeContentStat(ccont);
             }
-            rtupt = ccubeService.uptCcubeContentStat(ccont);
         }
         return rt;
     }
 
     @Override
     public int processCcubeSeries() {
-        List<CcubeSeries> reqCcubeSeries = ccubeService.get50ActiveCcubeSeries();
-        logger.info("#SCHEDULE checkInItems.get50ActiveCcubeSeries: req-size:"+reqCcubeSeries.size());
         int rt = 0;
-        for (CcubeSeries cser : reqCcubeSeries) {
-            rt = this.copyCcubeSeriesToItems(cser);
-            logger.info("#SCHEDULE checkInItems:Copy Ccube_Series to Items Result:"+rt);
 
-            int rtupt = 0;
-            if (rt > 0) {
-                cser.setStat("S");
-            } else {
-                cser.setStat("F");
+        for(int i=0; i<20; i++) {
+            List<CcubeSeries> reqCcubeSeries = ccubeService.get50ActiveCcubeSeries();
+            logger.info("#SCHEDULE checkInItems.get50ActiveCcubeSeries: req-size:" + reqCcubeSeries.size());
+
+            for (CcubeSeries cser : reqCcubeSeries) {
+                rt = this.copyCcubeSeriesToItems(cser);
+                logger.info("#SCHEDULE checkInItems:Copy Ccube_Series to Items Result:" + rt);
+
+                int rtupt = 0;
+                if (rt > 0) {
+                    cser.setStat("S");
+                } else {
+                    cser.setStat("F");
+                }
+                rtupt = ccubeService.uptCcubeSeriesStat(cser);
             }
-            rtupt = ccubeService.uptCcubeSeriesStat(cser);
         }
         return rt;
     }
@@ -151,12 +158,20 @@ public class ItemsService implements ItemsServiceImpl {
                 type = "CcubeContentK";
             }
 
-            // 중복방지로직, cid 순으로 대조
+            // 중복방지로직, cid , title, director, year 순으로 대조
             CcubeKeys reqCk = new CcubeKeys();
             //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
             if (req.getContent_id() != null) reqCk.setContent_id(req.getContent_id().trim());
+            String title = (req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title();
+            reqCk.setPurity_title(title);
+            reqCk.setYear(req.getYear());
+            reqCk.setDirector(req.getDirector());
+
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
-            if (oldItemIdx > 0) itemIdx = oldItemIdx;
+            if (oldItemIdx > 0) {
+                itemIdx = oldItemIdx;
+                System.out.println("### item Exists:: itemIdx:"+itemIdx+"  by  cid:"+reqCk.getContent_id()+"/title:"+reqCk.getPurity_title()+"/year:"+reqCk.getYear()+"/director:"+reqCk.getDirector());
+            }
             int rtkey = 0;
 
             if (oldItemIdx < 1) {
@@ -165,7 +180,7 @@ public class ItemsService implements ItemsServiceImpl {
                 item.setCid((req.getContent_id() != null) ? req.getContent_id() : "0");
                 item.setDirector((req.getDirector() != null) ? req.getDirector() : "");
                 item.setYear((req.getYear() != null) ? req.getYear() : "");
-                item.setTitle(req.getPurity_title());
+                item.setTitle((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
                 item.setTitle1(req.getContent_title());
                 item.setTitle2(req.getEng_title());
                 item.setStat("Y");
@@ -179,7 +194,10 @@ public class ItemsService implements ItemsServiceImpl {
                     reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
                     reqKey.setSeries_id("0");
                     reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
-                    reqKey.setPurity_title(req.getPurity_title());
+                    reqKey.setPurity_title((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
+                    reqKey.setYear(req.getYear());
+                    reqKey.setDirector(req.getDirector());
+
                     reqKey.setItemidx(rtitem);
                     rtkey = ccubeService.insCcubeKeys(reqKey);
                 }
@@ -248,10 +266,14 @@ public class ItemsService implements ItemsServiceImpl {
                 type = "CcubeSeriesK";
             }
 
-            // 중복방지로직, 기존 title, cid 순으로 대조
+            // 중복방지로직, 기존 series_id,  추가 타이틀,연도,감독 순으로 대조
             CcubeKeys reqCk = new CcubeKeys();
             //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
-            if (req.getSeries_id() != null) reqCk.setContent_id(req.getSeries_id().trim());
+            if (req.getSeries_id() != null) reqCk.setSeries_id(req.getSeries_id().trim());
+            if (req.getSeries_nm() != null) reqCk.setPurity_title(req.getSeries_nm().trim());
+            reqCk.setYear(req.getYear());
+            reqCk.setDirector(req.getDirector());
+
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
             if (oldItemIdx > 0) itemIdx = oldItemIdx;
             int rtkey = 0;
@@ -290,46 +312,6 @@ public class ItemsService implements ItemsServiceImpl {
             e.printStackTrace();
         }
         return itemIdx;
-    }
-
-    //@Override
-    //@/Transactional
-    private int copyCcubeSeriesToItems_(CcubeSeries req) {
-        int rtitem = 0;
-
-        try {
-            String type = "CcubeSeries";
-            if ("KOR".equals(req.getCountry_of_origin().trim())) {
-                type = "CcubeSeriesK";
-            }
-            Items item = new Items();
-            item.setType(type);
-            item.setCid((req.getSeries_id() != null) ? req.getSeries_id() : "0");
-            item.setDirector((req.getDirector() != null) ? req.getDirector() : "");
-            item.setYear((req.getYear() != null) ? req.getYear() : "");
-            item.setTitle(req.getPurity_title());
-            item.setTitle1(req.getSeries_nm());
-            item.setTitle2(req.getEng_title());
-            item.setStat("Y");
-            item.setRegid("sched");
-
-            rtitem =  this.insItems(item);
-
-            if (rtitem > 0) {
-                CcubeKeys reqKey = new CcubeKeys();
-                reqKey.setContent_id("0");
-                reqKey.setMaster_content_id("0");
-                reqKey.setSeries_id(req.getSeries_id());
-                reqKey.setKmrb_id("0");
-                reqKey.setPurity_title(req.getPurity_title());
-                reqKey.setItemidx(rtitem);
-                int rtkey = ccubeService.insCcubeKeys(reqKey);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rtitem;
     }
 
     @Override

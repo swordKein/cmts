@@ -34,14 +34,18 @@ public class ItemsServiceTest {
 
 	@Test
 	public void test_processCcubeContents() throws Exception {
-		int rt = itemsService.processCcubeContents();
-		System.out.println("#result:"+rt);
+		//for(int i=0; i<200; i++) {
+			int rt = itemsService.processCcubeContents();
+			System.out.println("#result:" + rt);
+		//}
 	}
 
 	@Test
 	public void test_processCcubeSeries() throws Exception {
-		int rt = itemsService.processCcubeSeries();
-		System.out.println("#result:"+rt);
+		//for(int i=0; i<200; i++) {
+			int rt = itemsService.processCcubeSeries();
+			System.out.println("#result:" + rt);
+		//}
 	}
 
 }
