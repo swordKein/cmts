@@ -8,8 +8,6 @@ import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.service.crawl.NaverMovieService;
 import com.kthcorp.cmts.util.*;
-import org.apache.avro.generic.GenericData;
-import org.apache.directory.shared.ldap.codec.ResponseCarryingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
@@ -28,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.TestComponent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +61,8 @@ public class TestService implements TestServiceImpl {
     private ItemsTagsService itemsTagsService;
     @Autowired
     private NaverMovieService naverMovieService;
+    @Autowired
+    private CcubeService ccubeService;
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -4399,5 +4398,421 @@ public class TestService implements TestServiceImpl {
         //System.out.println("#RES::"+resultMap.toString());
         MapUtil.printMapAll(resultMap);
         System.out.println("#RES.size::"+resultMap.size());
+    }
+
+    @Override
+    public List<Map<String, Object>> getRtItems0417() throws Exception {
+        return testMapper.getRtItems0417();
+    }
+
+    @Override
+    public void writeItemsRt0417() {
+        List<Map<String, Object>> items = testMapper.getRtItems0417();
+        System.out.println("#RES.size:" + items.size());
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        resultStr = "아이템ID" + seperator + "TYPE" + seperator + "CONTENT_ID" + seperator + "TITLE" + seperator + "REGDATE"
+                + seperator + "cnt_cid" + seperator + "cnt_sid"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : items) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("type").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("title").toString();
+            itemStr = itemStr + seperator + item.get("regdate").toString();
+            itemStr = itemStr + seperator + item.get("cntcid").toString();
+            itemStr = itemStr + seperator + item.get("cntsid").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "RT_ITEMS_180417.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+    }
+
+    @Override
+    public void insCcubeContentsAssetListUniq() throws Exception {
+        int rt = 0;
+        List<Map<String,Object>> assetList = testMapper.getContentsAssetList();
+        System.out.println("#assetList.size:"+assetList.size());
+        Map<String, Object> item = null;
+
+        List<Map<String,Object>> insertList = new ArrayList();
+
+        for(int i=0; i<assetList.size(); i++) {
+            //for(int i=0; i<50; i++) {
+            item = assetList.get(i);
+            String asset = item.get("asset_id").toString();
+            System.out.println("#asset_id:"+asset);
+            if (asset.contains(",")) {
+                String assetArr[] = asset.trim().split(",");
+                Map<String, Object> newItem = null;
+                for (String ass : assetArr) {
+                    newItem = new HashMap();
+                    newItem.put("cid", item.get("cid").toString());
+                    newItem.put("asset_id", ass);
+                    System.out.println("#insert new item:"+newItem.toString());
+
+                    insertList.add(newItem);
+                }
+            } else {
+                System.out.println("#insert item:"+item.toString());
+                insertList.add(item);
+
+                if (insertList.size() > 500) {
+                    rt = testMapper.insContentsAsset(insertList);
+                    insertList = null;
+                    insertList = new ArrayList();
+                }
+            }
+            System.out.println("#assetList.i:"+i);
+        }
+        System.out.println("#assetList.size:"+assetList.size());
+        rt = testMapper.insContentsAsset(insertList);
+    }
+
+
+
+    @Override
+    public void insCcubeSeriesAssetListUniq() throws Exception {
+        int rt = 0;
+        List<Map<String,Object>> assetList = testMapper.getSeriesAssetList();
+        System.out.println("#assetList.size:"+assetList.size());
+        Map<String, Object> item = null;
+
+        List<Map<String,Object>> insertList = new ArrayList();
+
+        for(int i=0; i<assetList.size(); i++) {
+            //for(int i=0; i<50; i++) {
+            item = assetList.get(i);
+            String asset = item.get("asset_id").toString();
+            System.out.println("#asset_id:"+asset);
+            if (asset.contains(",")) {
+                String assetArr[] = asset.trim().split(",");
+                Map<String, Object> newItem = null;
+                for (String ass : assetArr) {
+                    newItem = new HashMap();
+                    newItem.put("sid", item.get("sid").toString());
+                    newItem.put("asset_id", ass);
+                    System.out.println("#insert new item:"+newItem.toString());
+
+                    insertList.add(newItem);
+                }
+            } else {
+                System.out.println("#insert item:"+item.toString());
+                insertList.add(item);
+
+                if (insertList.size() > 500) {
+                    rt = testMapper.insSeriesAsset(insertList);
+                    insertList = null;
+                    insertList = new ArrayList();
+                }
+            }
+            System.out.println("#assetList.i:"+i);
+        }
+        System.out.println("#assetList.size:"+assetList.size());
+        rt = testMapper.insSeriesAsset(insertList);
+    }
+
+    @Override
+    public void writeCcubeContentsOutputCSV() throws Exception {
+        List<Map<String, Object>> itemList  = testMapper.getCcubeContentsAll();
+        List<Map<String, Object>> resultList = new ArrayList();
+
+        JsonArray contents = null;
+        for (Map<String, Object> item : itemList) {
+            long longIdx = (long) item.get("idx");
+            int idx = (int) longIdx;
+            String type = (String) item.get("type");
+            String cid = (String) item.get("cid");
+            String mcid = (String) item.get("mcid");
+            String content_title = (String) item.get("content_title");
+            String eng_title = (String) item.get("eng_title");
+            String director = (String) item.get("director");
+            String year = (String) item.get("year");
+            String asset_id = (String) item.get("asset_id");
+
+
+            String meta_when = "";
+            String meta_where = "";
+            String meta_what = "";
+            String meta_who = "";
+            String meta_emotion = "";
+            String meta_subgenre = "";
+            String meta_search = "";
+            String meta_charactor = "";
+            String meta_reco_target = "";
+            String meta_reco_situation = "";
+            String meta_award = "";
+
+            System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
+
+            contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
+            if (contents != null && contents.size() > 0) {
+                JsonObject jo = (JsonObject) contents.get(0);
+                if (jo != null) {
+                    meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
+                    item.put("meta_when", meta_when);
+                    meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
+                    item.put("meta_where", meta_where);
+                    meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
+                    item.put("meta_what", meta_what);
+                    meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
+                    item.put("meta_who", meta_who);
+                    meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
+                    item.put("meta_emotion", meta_emotion);
+                    meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
+                    item.put("meta_subgenre", meta_subgenre);
+                    meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
+                    item.put("meta_search", meta_search);
+                    meta_charactor = (jo.get("META_CHARACTER") != null ? jo.get("META_CHARACTER").getAsString() : "");
+                    item.put("meta_charactor", meta_charactor);
+                    meta_reco_target = (jo.get("META_RECO_TARGET") != null ? jo.get("META_RECO_TARGET").getAsString() : "");
+                    item.put("meta_reco_target", meta_reco_target);
+                    meta_reco_situation = (jo.get("META_RECO_SITUATION") != null ? jo.get("META_RECO_SITUATION").getAsString() : "");
+                    item.put("meta_reco_situation", meta_reco_situation);
+                    meta_award = (jo.get("META_AWARD") != null ? jo.get("META_AWARD").getAsString() : "");
+                    meta_award = meta_award.replace("현재페이지   1", "").trim(); item.put("meta_award", meta_award);
+                    System.out.println("#meta_when:"+meta_when + " / meta_where:"+meta_where + " / meta_award:"+meta_award);
+                    resultList.add(item);
+                }
+            }
+
+
+        }
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        String resultStr = "";
+        resultStr = "content_id" + seperator + "master_content_id" + seperator + "content_title" + seperator + "eng_title"
+                + seperator + "director"
+                + seperator + "year"
+                + seperator + "asset_id"
+                + seperator + "meta_when"
+                + seperator + "meta_where"
+                + seperator + "meta_what"
+                + seperator + "meta_who"
+                + seperator + "meta_emotion"
+                + seperator + "meta_subgenre"
+                + seperator + "meta_search"
+                + seperator + "meta_charactor"
+                + seperator + "meta_reco_target"
+                + seperator + "meta_reco_situation"
+                + seperator + "meta_award"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : resultList) {
+            //itemStr = item.get("idx").toString();
+            itemStr = item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("mcid").toString();
+            itemStr = itemStr + seperator + item.get("content_title").toString();
+            itemStr = itemStr + seperator + item.get("eng_title").toString();
+            itemStr = itemStr + seperator + item.get("director").toString();
+            itemStr = itemStr + seperator + item.get("year").toString();
+            itemStr = itemStr + seperator + item.get("asset_id").toString();
+
+            itemStr = itemStr + seperator + item.get("meta_when").toString();
+            itemStr = itemStr + seperator + item.get("meta_where").toString();
+            itemStr = itemStr + seperator + item.get("meta_what").toString();
+            itemStr = itemStr + seperator + item.get("meta_who").toString();
+            itemStr = itemStr + seperator + item.get("meta_emotion").toString();
+            itemStr = itemStr + seperator + item.get("meta_subgenre").toString();
+            itemStr = itemStr + seperator + item.get("meta_search").toString();
+            itemStr = itemStr + seperator + item.get("meta_charactor").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_target").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_situation").toString();
+            itemStr = itemStr + seperator + item.get("meta_award").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "METAS_BY_CONTENTS_AND_ASSET_180417.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+    }
+
+    @Override
+    public void writeCcubeSeriesOutputCSV() throws Exception {
+        List<Map<String, Object>> itemList  = testMapper.getCcubeSeriesAll();
+        List<Map<String, Object>> resultList = new ArrayList();
+
+        JsonArray Series = null;
+        for (Map<String, Object> item : itemList) {
+            long longIdx = (long) item.get("idx");
+            int idx = (int) longIdx;
+            String type = (String) item.get("type");
+            String cid = (String) item.get("cid");
+            String content_title = (String) item.get("content_title");
+            String asset_id = (String) item.get("asset_id");
+
+
+            String meta_when = "";
+            String meta_where = "";
+            String meta_what = "";
+            String meta_who = "";
+            String meta_emotion = "";
+            String meta_subgenre = "";
+            String meta_search = "";
+            String meta_charactor = "";
+            String meta_reco_target = "";
+            String meta_reco_situation = "";
+            String meta_award = "";
+
+            System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
+
+            Series = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
+            if (Series != null && Series.size() > 0) {
+                JsonObject jo = (JsonObject) Series.get(0);
+                if (jo != null) {
+                    meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
+                    item.put("meta_when", meta_when);
+                    meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
+                    item.put("meta_where", meta_where);
+                    meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
+                    item.put("meta_what", meta_what);
+                    meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
+                    item.put("meta_who", meta_who);
+                    meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
+                    item.put("meta_emotion", meta_emotion);
+                    meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
+                    item.put("meta_subgenre", meta_subgenre);
+                    meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
+                    item.put("meta_search", meta_search);
+                    meta_charactor = (jo.get("META_CHARACTER") != null ? jo.get("META_CHARACTER").getAsString() : "");
+                    item.put("meta_charactor", meta_charactor);
+                    meta_reco_target = (jo.get("META_RECO_TARGET") != null ? jo.get("META_RECO_TARGET").getAsString() : "");
+                    item.put("meta_reco_target", meta_reco_target);
+                    meta_reco_situation = (jo.get("META_RECO_SITUATION") != null ? jo.get("META_RECO_SITUATION").getAsString() : "");
+                    item.put("meta_reco_situation", meta_reco_situation);
+                    meta_award = (jo.get("META_AWARD") != null ? jo.get("META_AWARD").getAsString() : "");
+                    meta_award = meta_award.replace("현재페이지   1", "").trim(); item.put("meta_award", meta_award);
+                    System.out.println("#meta_when:"+meta_when + " / meta_where:"+meta_where + " / meta_award:"+meta_award);
+                    resultList.add(item);
+                }
+            }
+
+
+        }
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        String resultStr = "";
+        resultStr = "series_id" + seperator + "series_nm"
+                + seperator + "otv_series_id"
+                + seperator + "meta_when"
+                + seperator + "meta_where"
+                + seperator + "meta_what"
+                + seperator + "meta_who"
+                + seperator + "meta_emotion"
+                + seperator + "meta_subgenre"
+                + seperator + "meta_search"
+                + seperator + "meta_charactor"
+                + seperator + "meta_reco_target"
+                + seperator + "meta_reco_situation"
+                + seperator + "meta_award"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : resultList) {
+            //itemStr = item.get("idx").toString();
+            itemStr = item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("content_title").toString();
+            itemStr = itemStr + seperator + item.get("asset_id").toString();
+
+            itemStr = itemStr + seperator + item.get("meta_when").toString();
+            itemStr = itemStr + seperator + item.get("meta_where").toString();
+            itemStr = itemStr + seperator + item.get("meta_what").toString();
+            itemStr = itemStr + seperator + item.get("meta_who").toString();
+            itemStr = itemStr + seperator + item.get("meta_emotion").toString();
+            itemStr = itemStr + seperator + item.get("meta_subgenre").toString();
+            itemStr = itemStr + seperator + item.get("meta_search").toString();
+            itemStr = itemStr + seperator + item.get("meta_charactor").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_target").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_situation").toString();
+            itemStr = itemStr + seperator + item.get("meta_award").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "METAS_BY_SERIES_AND_ASSET_180417.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+    }
+
+
+    @Override
+    public void writeCcubeContentsOutputFT() throws Exception {
+        List<Map<String, Object>> itemList  = testMapper.getCcubeContentsFT();
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        String resultStr = "";
+        resultStr = "idx"  + seperator + "type" + seperator + "content_id"+ seperator + "master_content_id" + seperator + "content_title"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : itemList) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("type").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("mcid").toString();
+            itemStr = itemStr + seperator + item.get("content_title").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "FAIL_TAGGING_CONTENTS_180418.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+    }
+
+
+    @Override
+    public void writeCcubeSeriesOutputFT() throws Exception {
+        List<Map<String, Object>> itemList  = testMapper.getCcubeSeriesFT();
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        String resultStr = "";
+        resultStr = "idx"  + seperator + "type" + seperator + "series_id"+ seperator + "series_nm"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : itemList) {
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("type").toString();
+            itemStr = itemStr + seperator + item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("content_title").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "FAIL_TAGGING_SERIES_180418.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
     }
 }

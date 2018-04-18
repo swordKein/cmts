@@ -1,9 +1,6 @@
 package com.kthcorp.cmts.service;
 
-import com.kthcorp.cmts.model.CcubeContent;
-import com.kthcorp.cmts.model.CcubeSeries;
-import com.kthcorp.cmts.model.ItemsContent;
-import com.kthcorp.cmts.model.NlpProgs;
+import com.kthcorp.cmts.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -166,4 +163,20 @@ public interface TestServiceImpl {
     void getCntForSubgenre() throws Exception;
 
     void getCntForSubgenre(String mtype) throws Exception;
+
+    List<Map<String, Object>> getRtItems0417() throws Exception;
+
+    void writeItemsRt0417();
+
+    void insCcubeContentsAssetListUniq() throws Exception;
+
+    void insCcubeSeriesAssetListUniq() throws Exception;
+
+    void writeCcubeContentsOutputCSV() throws Exception;
+
+    void writeCcubeSeriesOutputCSV() throws Exception;
+
+    void writeCcubeContentsOutputFT() throws Exception;
+
+    void writeCcubeSeriesOutputFT() throws Exception;
 }

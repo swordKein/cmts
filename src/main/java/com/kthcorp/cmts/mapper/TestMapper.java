@@ -41,4 +41,18 @@ public interface TestMapper {
     List<Map<String, Object>> getItemsForSearchKeywords();
 
     List<Map<String, Object>> cntItemsMetasForSubgenre(String mtype);
+
+    List<Map<String, Object>> getRtItems0417();
+
+    List<Map<String, Object>> getContentsAssetList();
+    List<Map<String, Object>> getSeriesAssetList();
+
+    int insContentsAsset(List<Map<String, Object>> req);
+    int insSeriesAsset(List<Map<String, Object>> req);
+
+    List<Map<String, Object>> getCcubeContentsAll();
+    List<Map<String, Object>> getCcubeSeriesAll();
+
+    List<Map<String, Object>> getCcubeContentsFT();
+    List<Map<String, Object>> getCcubeSeriesFT();
 }
