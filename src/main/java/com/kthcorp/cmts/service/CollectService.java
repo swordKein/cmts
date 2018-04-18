@@ -446,10 +446,16 @@ public class CollectService implements CollectServiceImpl {
                                 param1 = param1.replace("#moviedirector", moviedirector);
                             }
 
+
+
+
                             if (target.getMovietitle() != null && !"".equals(target.getMovietitle().trim())) {
                                 resultCollect = run_step03(tg, sc_id, type, tcnt, sched.getCountry_of_origin());
                                 System.out.println("#run_stap03 resultCollect:" + resultCollect.toString());
                             }
+
+
+
 
                             if (resultCollect != null && resultCollect.get("rt_code") != null
                                     && "OK".equals(resultCollect.get("rt_code").getAsString())
@@ -971,6 +977,8 @@ public class CollectService implements CollectServiceImpl {
 
                 result = new Gson().fromJson(jsonStr, JsonObject.class);
 
+                System.out.println("##### crawl/prefix result::print::"+result.toString());
+
                 String rt_code = "F";
                 String rt_msg = "FAIL";
                 if (result != null
@@ -1011,6 +1019,14 @@ public class CollectService implements CollectServiceImpl {
                             }
                         }
                     } catch (Exception e) { }
+                } else if (result != null && result.get("contentsObj") != null) {
+                    JsonArray contentsObjArr = result.get("contentsObj").getAsJsonArray();
+                    if (contentsObjArr.size() > 0) {
+                        rt_code = "OK";
+                        rt_msg = "SUCCESS";
+                    }
+
+                    result.add("contents", contentsObjArr);
                 }
                 result.addProperty("rt_code",rt_code);
                 result.addProperty("rt_msg",rt_msg);
@@ -1085,7 +1101,8 @@ public class CollectService implements CollectServiceImpl {
             JsonArray resultArr = null;
             String contentAll = "";
             SchedTargetMappingHist reqHist = null;
-            //System.out.println("#resultCollect result:::" + resultCollect.toString());
+            System.out.println("##### resultCollect result:::" + resultCollect.toString());
+
 
             if (resultCollect != null && (resultCollect.get("result") != null
                     || resultCollect.get("contents") != null)) {

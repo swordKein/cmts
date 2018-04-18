@@ -229,7 +229,8 @@ public class CcubeService implements CcubeServiceImpl {
         return origObj;
     }
 
-    private JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
+    @Override
+    public JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
         if (contentsArr == null) contentsArr = new JsonArray();
 
         if (reqMap != null) {
@@ -367,6 +368,70 @@ public class CcubeService implements CcubeServiceImpl {
         return rt;
     }
 
+    @Override
+    @Transactional
+    public List<Map<String, Object>> processCcubeOutputToMapListByType(String type) {
+        int rt = 0;
+        List<Map<String, Object>> result = null;
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        countAll = ccubeMapper.cntCcubeOutputListStandby(req);
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("TOTAL_COUNT", countAll);
+
+        logger.info("#MLLOG:processCcubeOutput:: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            //System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+            Map<Long, Integer> uptKeyAndTagCntList = new HashMap();
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    reqItems = ccubeMapper.getCcubeOutputListStandby(req);
+                    if (reqItems != null) {
+                        logger.info("#SCHEDULE processCcubeOutputToJson.getCcubeOutputListStandby: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        for (Map<String, Object> ins : reqItems) {
+                            contents = this.getJsonArrayForCcubeOutput(contents, type, ins);
+                            uptKeyAndTagCntList.put((Long) ins.get("hidx"), (Integer) ins.get("uptcnt"));
+                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+                    }
+
+                }
+                resultObj.add("CONTENTS", contents);
+                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "META_SERIES_" : "META_MOVIE_");
+                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+
+                rt = 1;
+            } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+            }
+
+        }
+        return result;
+    }
 
     @Override
     @Transactional
