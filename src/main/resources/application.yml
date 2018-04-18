@@ -535,8 +535,8 @@ schedule :
       jobType : ccubeOutput
 property:
   serverid: cmts_prod_coll01
-  crawl_api_url: http://10.42.150.161:8080/crawl/byprefix
-  crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
+  crawl_api_url: http://211.42.150.161:8080/crawl/byprefix
+  crawl_sns_topwords_url: http://211.42.150.161:8080/sns/topwords
 ccube_sftp:
   ip: 10.220.147.95
   port: 22

@@ -137,4 +137,106 @@
         </if>
         group by mtype, meta
     </select>
+
+    <select id="getRtItems0417" resultType="map">
+        /* getRtItems0417 */
+        select it.idx, it.type, it.cid, it.title, it.regdate
+        , (select count(*) from ccube_contents_orig where content_id = it.cid ) as cntcid
+        , (select count(*) from ccube_series_orig where series_id = it.cid ) as cntsid
+         from items it
+        inner join items_stat iss on it.idx = iss.idx and iss.stat = 'RT'
+        where it.tagcnt = 0
+    </select>
+
+    <select id="getContentsAssetList" resultType="map">
+        /* getContentsAssetList */
+        select cid, asset_id
+        from ccube_contents_asset
+    </select>
+
+    <insert id="insContentsAsset" parameterType="map">
+        /* insContentsAsset */
+        insert into ccube_contents_asset_uniq (cid, asset_id)
+        values
+        <foreach collection="list" item="item" separator=" , ">
+            (#{item.cid}, #{item.asset_id})
+        </foreach>
+    </insert>
+
+    <select id="getSeriesAssetList" resultType="map">
+        /* getSeriesAssetList */
+        select sid, asset_id
+        from ccube_series_asset
+    </select>
+
+    <insert id="insSeriesAsset" parameterType="map">
+        /* insSeriesAsset */
+        insert into ccube_series_asset_uniq (sid, asset_id)
+        values
+        <foreach collection="list" item="item" separator=" , ">
+            (#{item.sid}, #{item.asset_id})
+        </foreach>
+    </insert>
+
+    <select id="getCcubeContentsAll" resultType="map">
+        /* getCcubeContentsAll */
+        select
+        it.idx
+        , it.type
+        , it.cid
+        , cc.MASTER_CONTENT_ID mcid
+        , cc.content_title
+        , cc.eng_title
+        , cc.director
+        , cc.year
+        , csu.asset_id
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        inner join ccube_contents cc on cc.content_id = it.cid
+        inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
+
+    </select>
+
+    <select id="getCcubeSeriesAll" resultType="map">
+        /* getCcubeSeriesAll */
+        select
+        it.idx
+        , it.type
+        , it.cid
+        , cc.series_nm as content_title
+        , csu.asset_id
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        inner join ccube_series cc on cc.series_id = it.cid
+        inner join ccube_series_asset_uniq csu on csu.sid = it.cid
+
+    </select>
+
+
+    <select id="getCcubeContentsFT" resultType="map">
+        /* getCcubeContentsFT */
+        select
+        it.idx
+        , it.type
+        , it.cid
+        , cc.MASTER_CONTENT_ID mcid
+        , cc.content_title
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FT'
+        inner join ccube_contents cc on cc.content_id = it.cid
+
+    </select>
+
+    <select id="getCcubeSeriesFT" resultType="map">
+        /* getCcubeSeriesFT */
+        select
+        it.idx
+        , it.type
+        , it.cid
+        , cc.series_nm as content_title
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FT'
+        inner join ccube_series cc on cc.series_id = it.cid
+
+    </select>
 </mapper>

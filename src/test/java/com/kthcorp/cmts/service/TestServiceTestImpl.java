@@ -519,4 +519,41 @@ public class TestServiceTestImpl {
 	public void test_getCntForSubgenre() throws Exception {
 		//testService.getCntForSubgenre("subgenretopic2");
 	}
+
+	@Test
+	public void test_getRtItems0417() throws Exception {
+		//System.out.println("#RES:"+testService.getRtItems0417());
+		testService.writeItemsRt0417();
+	}
+
+	@Test
+	public void test_insCcubeContentsAssetListUniq() throws Exception {
+		testService.insCcubeContentsAssetListUniq();
+	}
+
+	@Test
+	public void test_insCcubeSeriesAssetListUniq() throws Exception {
+		testService.insCcubeSeriesAssetListUniq();
+	}
+
+	@Test
+	public void test_writeCcubeContentsOutputCSV() throws Exception {
+		testService.writeCcubeContentsOutputCSV();
+	}
+
+	@Test
+	public void test_writeCcubeSeriesOutputCSV() throws Exception {
+		testService.writeCcubeSeriesOutputCSV();
+	}
+
+	@Test
+	public void test_writeCcubeContentsOutputFT() throws Exception {
+		testService.writeCcubeContentsOutputFT();
+	}
+
+	@Test
+	public void test_writeCcubeSeriesOutputFT() throws Exception {
+		testService.writeCcubeSeriesOutputFT();
+	}
+
 }

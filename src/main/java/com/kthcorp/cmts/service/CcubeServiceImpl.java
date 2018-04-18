@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.CcubeContent;
@@ -8,6 +9,7 @@ import com.kthcorp.cmts.model.CcubeSeries;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CcubeServiceImpl {
 
@@ -31,9 +33,14 @@ public interface CcubeServiceImpl {
 
     JsonObject getCcubeDatasByItemIdx(int itemIdx);
 
+    JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception;
+
     int processCcubeOutputToJson();
 
     int processCcubeOutputToJsonByType(String type);
+
+    @Transactional
+    List<Map<String, Object>> processCcubeOutputToMapListByType(String type);
 
     @Transactional
     int processCcubeSeriesOutputToJsonTest();
