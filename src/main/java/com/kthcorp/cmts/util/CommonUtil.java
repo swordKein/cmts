@@ -226,6 +226,7 @@ public class CommonUtil {
 
     public static String removeAllSpec1(String reqStr) {
         String result = reqStr.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", " ");
+        result = result.replace("  ", " ");
         return result;
     }
 

@@ -126,13 +126,13 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 0 3 * * ?
+      cronExpression : 0 * * * * ?
       jobType : collectService
     -
-      cronExpression : 0 0 3 * * ?
+      cronExpression : 0 * * * * ?
       jobType : refineService
     -
-      cronExpression : 0 0 3 * * ?
+      cronExpression : 0 * * * * ?
       jobType : analyzeService
     -
       cronExpression : 0 0 3 * * ?
