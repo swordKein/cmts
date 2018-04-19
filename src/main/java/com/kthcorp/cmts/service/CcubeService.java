@@ -221,7 +221,17 @@ public class CcubeService implements CcubeServiceImpl {
                     tmpList = StringUtil.convertStringToListByComma(metasStr);
                     //System.out.println("#MLOG.tmpLIST:"+tmpList.toString());
                 }
+                // 문자열 List에서 각 메타 중 콤마를 제거
+                tmpList = StringUtil.removeCharacterFromList(tmpList, ",");
+
+                // List를 구분자로 구분하여 String으로 치환, 현재 delimeter는 comma
                 String meta = StringUtil.convertArrayStringToStringAddDelimeter(tmpList, ",");
+
+                // 각 meta의 최대 size는 연동규격에 맞추어 700byte에서 cut
+                int limitSize = 699;
+                if (meta.length() < 699) limitSize = meta.length();
+                meta = meta.substring(0,limitSize);
+
                 origObj.addProperty(mtype, meta);
             }
         }
@@ -241,7 +251,7 @@ public class CcubeService implements CcubeServiceImpl {
             }
             if (itemIdx > 0) {
                 Items itemInfo = itemsService.getItemInfoOne(itemIdx);
-                System.out.println("#MLOG: getContent::"+itemInfo.toString());
+                //System.out.println("#MLOG: getContent::"+itemInfo.toString());
                 if (itemInfo != null) {
                     JsonObject newItem = new JsonObject();
                     if(type.contains("CcubeContent")) {
@@ -269,7 +279,7 @@ public class CcubeService implements CcubeServiceImpl {
                     }
                     newItem.addProperty("META_AWARD",awardStr);
                     contentsArr.add(newItem);
-                    System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
+                    //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
                 }
 
             }

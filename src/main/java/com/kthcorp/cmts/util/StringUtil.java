@@ -253,6 +253,19 @@ public class StringUtil {
         return result;
     }
 
+    public static List<String> removeCharacterFromList(List<String> reqArr, String character) {
+        List<String> resultArr = null;
+        if (reqArr != null && reqArr.size() > 0) {
+            resultArr = new ArrayList();
+
+            for (String s : reqArr) {
+                s = s.replace(character, "");
+                resultArr.add(s);
+            }
+        }
+        return resultArr;
+    }
+
     public static String convertArrayStringToStringAddDelimeter(List<String> reqList, String delimeter) {
         String result = "";
         if (reqList != null && reqList.size() > 0 && !"".equals(delimeter.trim())) {

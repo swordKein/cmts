@@ -451,6 +451,9 @@ public class ItemsService implements ItemsServiceImpl {
                     //items_hist에 등록 for 통계
                     Items itemInfo = this.getItemsByIdx(req);
                     String movietitle = "";
+                    System.out.println("#RERTY action ITEMS_HIST by idx:"+req.getIdx()+" /type:"+req.getType()
+                            +" /histType:"+histType+" /histAction:"+histAction);
+
                     movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
                     int rthist = this.insItemsHist(req.getIdx(), histType, "UPT", movietitle, histAction, sc_id);
 
