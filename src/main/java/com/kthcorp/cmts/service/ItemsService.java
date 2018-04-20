@@ -187,21 +187,26 @@ public class ItemsService implements ItemsServiceImpl {
                 item.setRegid("sched");
 
                 rtitem = this.insItems(item);
-                if (rtitem > 0) {
-                    itemIdx = rtitem;
-                    CcubeKeys reqKey = new CcubeKeys();
-                    reqKey.setContent_id(req.getContent_id());
-                    reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
-                    reqKey.setSeries_id("0");
-                    reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
-                    reqKey.setPurity_title((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
-                    reqKey.setYear(req.getYear());
-                    reqKey.setDirector(req.getDirector());
-
-                    reqKey.setItemidx(rtitem);
-                    rtkey = ccubeService.insCcubeKeys(reqKey);
-                }
             }
+
+            if (rtitem > 0) {
+                itemIdx = rtitem;
+            }
+            // 2018.04.20
+            // 기존 itemIdx가 있을 경우 ccube_keys에 키 등록
+            // 신규 itemIdx로 등록된 경우에도 ccube_keys에 키 등록
+            CcubeKeys reqKey = new CcubeKeys();
+            reqKey.setContent_id(req.getContent_id());
+            reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
+            reqKey.setSeries_id("0");
+            reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
+            reqKey.setPurity_title((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
+            reqKey.setYear(req.getYear());
+            reqKey.setDirector(req.getDirector());
+
+            reqKey.setItemidx(itemIdx);
+            rtkey = ccubeService.insCcubeKeys(reqKey);
+
 
             if (itemIdx > 0) {
                 /* insert items_tags_keys by yj_items_out2 */
