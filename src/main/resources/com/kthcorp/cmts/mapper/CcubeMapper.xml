@@ -352,7 +352,7 @@
     </select>
 
     <select id="cntCcubeOutputListSeriesAll" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Items">
-        /* cntCcubeOutputListStandby */
+        /* cntCcubeOutputListSeriesAll */
         select count(*) as cnt from ccube_series
     </select>
 

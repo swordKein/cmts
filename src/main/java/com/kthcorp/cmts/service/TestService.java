@@ -4815,4 +4815,250 @@ public class TestService implements TestServiceImpl {
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
 
     }
+
+    @Override
+    public void processRemoveAwardByYear() throws Exception {
+        List<Map<String,Object>> itemList = testMapper.getItemsAndAwardAll();
+        if (itemList != null && itemList.size() > 0) {
+            Map<String,Object> item = null;
+
+            int willRemoveSize = 0;
+            for(int i = 0 ; i<itemList.size() ; i++) {
+                item = itemList.get(i);
+
+                String syear = "";
+                int year = 0;
+                String metaStr = "";
+                long longIdx = 0;
+                int idx = 0;
+                if(item != null) {
+                    if (item.get("year") != null) syear = item.get("year").toString();
+                    if (item.get("award") != null) metaStr = item.get("award").toString();
+                    longIdx = (long) item.get("idx");
+                    idx = (int) longIdx;
+
+                    if (!"".equals(syear)) {
+                        try { year = Integer.parseInt(syear); } catch (Exception e) {}
+                        if (year > 0 && !"".equals(metaStr)) {
+
+                            boolean isYearContainsYn = false;
+                            if (metaStr.contains(String.valueOf(year))
+                                    || metaStr.contains(String.valueOf(year + 1))
+                                    || metaStr.contains(String.valueOf(year + 2))) {
+                                isYearContainsYn = true;
+                            }
+                            //System.out.println("## process year compare!  year:"+syear+"  /  metaStr:"+metaStr);
+
+                            ItemsMetas reqIm = null;
+                            if (!isYearContainsYn) {
+                                //System.out.println("#remove award!");
+                                willRemoveSize++;
+                                reqIm = new ItemsMetas();
+                                reqIm.setIdx(idx);
+                                reqIm.setMtype("award");
+                                reqIm.setMeta("");
+                                reqIm.setRegid("ghkdwo77");
+                                int rtim = itemsService.insItemsMetas(reqIm);
+
+                                System.out.println("## remove year compare!  year:"+syear+"  /  metaStr:"+metaStr);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println("## AllCnt:"+itemList.size() + "   / willRemoveSize:"+willRemoveSize);
+        }
+    }
+
+    @Override
+    public void writeItemsAndAwardCSV() throws Exception {
+        List<Map<String, Object>> itemList  = testMapper.getItemsAndAwardAll2();
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+        String resultStr = "";
+        int cnt = 1;
+
+        resultStr = "idx"
+                + seperator + "type"
+                + seperator + "cid/sid"
+                + seperator + "title"
+                + seperator + "award"
+                + lineFeed;
+
+        for (Map<String, Object> item : itemList) {
+            System.out.println("#RES:: idx:"+item.get("idx").toString()+"/ title:"+item.get("title"));
+
+            String itemStr = "";
+            itemStr = item.get("idx").toString();
+            itemStr = itemStr + seperator + item.get("type");
+            itemStr = itemStr + seperator + item.get("cid");
+            itemStr = itemStr + seperator + item.get("title");
+            itemStr = itemStr + seperator + StringUtil.removeAllTags2(item.get("award").toString());
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "ITEMS_AND_AWARD_180419_2.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+    }
+
+
+    @Override
+    public void writeDicKeywordsByTypes() throws Exception {
+        List<String> types = new ArrayList();
+        types.add("CHARACTER");
+        types.add("EMOTION");
+        types.add("WHAT");
+        types.add("WHEN");
+        types.add("WHERE");
+        types.add("WHO");
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        for(String type : types) {
+            List<Map<String, Object>> itemList = testMapper.getDicKeywordsByType0(type);
+
+            String resultStr = "";
+            int cnt = 1;
+
+            resultStr = "keyword"
+                    + lineFeed;
+
+            for (Map<String, Object> item : itemList) {
+                //System.out.println("#RES:: idx:" + item.get("idx").toString() + "/ title:" + item.get("title"));
+
+                String itemStr = "";
+                String tag = item.get("keyword").toString();
+                tag = tag.replace(",","");
+
+                if(!"".equals(tag.trim()) && !",".equals(tag) && !".".equals(tag.trim()) && !"'".equals(tag.trim()) && !"\"".equals(tag.trim())
+                        ) {
+                    itemStr = tag;
+                    resultStr += itemStr + lineFeed;
+                    System.out.println("#write " + cnt + "'s item::" + itemStr);
+                    cnt++;
+                }
+            }
+
+            String fileNameContent = "DIC_TYPE_"+type+"_180419.tsv";
+            int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+        }
+    }
+
+    @Override
+    public int writeCcubeOutputToJsonByType(String type) {
+        int rt = 0;
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        if ("CcubeSeries".equals(type)) {
+            countAll = testMapper.cntSeriesOrigItemsAll();
+        } else {
+            countAll = testMapper.cntContentsOrigItemsAll();
+        }
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("TOTAL_COUNT", countAll);
+
+        logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+            Map<Long, Integer> uptKeyAndTagCntList = new HashMap();
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    if ("CcubeSeries".equals(type)) {
+                        reqItems = testMapper.getSeriesOrigItemsAll(req);
+                    } else {
+                        reqItems = testMapper.getContentsOrigItemsAll(req);
+                    }
+
+                    if (reqItems != null) {
+                        logger.info("#writeCcubeOutputToJson.getCcubeOutputListStandby: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        int oldItemIdx = 0;
+                        int cnt = 0;
+                        for (Map<String, Object> ins : reqItems) {
+
+                            // 중복방지로직, cid , title, director, year 순으로 대조
+                            if ("CcubeContent".equals(type)) {
+                                CcubeKeys reqCk = new CcubeKeys();
+                                reqCk.setContent_id(ins.get("content_id").toString());
+                                String title = ins.get("content_title").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
+
+                                oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+                            }
+
+                            if (oldItemIdx > 0) {
+                                ins.put("idx", oldItemIdx);
+                                contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
+                                cnt++;
+                            }
+                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+                    }
+
+                }
+                resultObj.add("CONTENTS", contents);
+                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "META_SERIES_" : "META_MOVIE_");
+                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                //int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+
+                rt = 1;
+            } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+            }
+
+            System.out.println("#UPT stat:: from:" + uptKeyAndTagCntList.toString());
+
+            /* update CCUBE_OUTPUT stat = S , uptcnt++ */
+            Set entrySet = uptKeyAndTagCntList.entrySet();
+            Iterator it = entrySet.iterator();
+
+            while (it.hasNext()) {
+                Map.Entry me = (Map.Entry) it.next();
+                Long hidx = (Long) me.getKey();
+                Integer nextUptCnt = (Integer) me.getValue() + 1;
+
+                Map<String, Object> uptItem = new HashMap();
+                uptItem.put("hidx", hidx);
+                uptItem.put("uptcnt", nextUptCnt);
+                uptItem.put("stat", "S");
+
+                int rtupt = ccubeMapper.uptCcubeOutputStat(uptItem);
+            }
+        }
+        return rt;
+    }
+
 }

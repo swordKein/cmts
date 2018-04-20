@@ -85,6 +85,16 @@ public class StringUtil {
         return req.replaceAll("\\<[^>]*>","");
     }
 
+    public static String removeAllTags2(String req) {
+        String res = req.replaceAll("\\<[^>]*>","");
+        res = res.replace("\n", "");
+        res = res.replace("\\n", "");
+        res = res.replace("\r", "");
+        res = res.replace("\\r", "");
+        res = res.replace("  "," ");
+        return res;
+    }
+
     /*
     public static List<HashMap<String, Double>> getMapArrayFromStringSeperatedComma2(String content) {
         List<HashMap<String, Double>> result = new ArrayList<HashMap<String, Double>>();

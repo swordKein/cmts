@@ -512,7 +512,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_processItemsSearchKeywordRetry() throws Exception {
-		//testService.processItemsSearchKeywordRetry();
+		testService.processItemsSearchKeywordRetry();
 	}
 
 	@Test
@@ -556,4 +556,18 @@ public class TestServiceTestImpl {
 		testService.writeCcubeSeriesOutputFT();
 	}
 
+	@Test
+    public void test_processRemoveAwardByYear() throws Exception {
+	    testService.processRemoveAwardByYear();
+    }
+
+    @Test
+    public void test_writeItemsAndAwardCSV() throws Exception {
+	    testService.writeItemsAndAwardCSV();
+    }
+
+    @Test
+    public void test_writeDicKeywordsByTypes() throws Exception {
+	    testService.writeDicKeywordsByTypes();
+    }
 }

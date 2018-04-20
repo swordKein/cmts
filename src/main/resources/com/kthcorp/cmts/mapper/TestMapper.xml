@@ -124,7 +124,7 @@
         /* getItemsForSearchKeywords  */
         select it.idx, it.title from items_stat iss
         inner join items it on it.idx = iss.idx
-        where iss.stat = 'ST' and iss.regdate <![CDATA[ < ]]> '2018-04-11 00:00:00'
+        where iss.stat = 'ST' and iss.regdate <![CDATA[ > ]]> '2018-04-11 00:00:00'
         #limit 10
     </select>
 
@@ -238,5 +238,109 @@
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FT'
         inner join ccube_series cc on cc.series_id = it.cid
 
+    </select>
+
+    <select id="getItemsAndAwardAll" resultType="map">
+        /* getItemsAndAwardAll */
+        select
+        it.idx
+        , it.title
+        , cc.year
+        , itm.meta as award
+        from items it
+        inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'award' and length(itm.meta) > 4
+        inner join ccube_contents cc on cc.content_id = it.cid and cc.year is not null and length(cc.year) > 1
+		where it.type like concat('CcubeContent','%')
+    </select>
+
+    <select id="getItemsAndAwardAll2" resultType="map">
+        /* getItemsAndAwardAll2 */
+        select it.idx, it.type, it.cid, it.title, im.meta as award
+        from items it
+        inner join items_metas im on im.idx = it.idx and im.mtype = 'award' and length(im.meta) > 4
+
+    </select>
+
+    <select id="getDicKeywordsByType0" resultType="map" parameterType="java.lang.String">
+        /* getDicKeywordsByType0 */
+        select * from dic_keywords
+        where type = #{value}
+    </select>
+
+    <select id="getItemsTagsMetasByType0" resultType="map" parameterType="java.lang.String">
+        /* getDicKeywordsByType0 */
+        select * from items_tags_metas
+        where mtype = #{value}
+    </select>
+
+    <select id="getContentsOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getContentsOrigItemsAll */
+        select a.content_id, a.content_title, a.asset_id, a.year, a.director
+        from (
+        select
+        co.content_id
+        , co.content_title
+        , ca.asset_id
+        , co.year
+        , co.director
+        , co.regdate
+        from ccube_contents_orig co
+        left outer join ccube_contents_asset_uniq ca on ca.cid = co.content_id
+        ) a
+        order by a.regdate asc, a.content_id asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntContentsOrigItemsAll" resultType="java.lang.Integer">
+        /* cntContentsOrigItemsAll */
+          select count(*) as cnt from (
+            select a.content_id, a.content_title, a.asset_id, a.year, a.director
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , ca.asset_id
+            , co.year
+            , co.director
+            from ccube_contents_orig co
+            left outer join ccube_contents_asset_uniq ca on ca.cid = co.content_id
+            ) a
+          ) b
+    </select>
+
+
+    <select id="getSeriesOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getContentsOrigItemsAll */
+        select a.content_id, a.content_title, a.asset_id, a.year, a.director
+        from (
+        select
+        co.series_id as content_id
+        , co.series_nm as content_title
+        , ca.asset_id
+        , co.year
+        , co.director
+        , co.regdate
+        from ccube_series_orig co
+        left outer join ccube_series_asset_uniq ca on ca.sid = co.series_id
+        ) a
+        order by a.regdate asc, a.content_id asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntSeriesOrigItemsAll" resultType="java.lang.Integer">
+        /* cntSeriesOrigItemsAll */
+          select count(*) as cnt from (
+            select a.content_id, a.content_title, a.asset_id, a.year, a.director
+            from (
+            select
+            co.series_id as content_id
+            , co.series_nm as content_title
+            , ca.asset_id
+            , co.year
+            , co.director
+            from ccube_series_orig co
+            left outer join ccube_series_asset_uniq ca on ca.sid = co.series_id
+            ) a
+          ) b
     </select>
 </mapper>
