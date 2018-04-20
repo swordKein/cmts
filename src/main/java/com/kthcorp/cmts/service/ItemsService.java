@@ -187,21 +187,26 @@ public class ItemsService implements ItemsServiceImpl {
                 item.setRegid("sched");
 
                 rtitem = this.insItems(item);
-                if (rtitem > 0) {
-                    itemIdx = rtitem;
-                    CcubeKeys reqKey = new CcubeKeys();
-                    reqKey.setContent_id(req.getContent_id());
-                    reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
-                    reqKey.setSeries_id("0");
-                    reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
-                    reqKey.setPurity_title((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
-                    reqKey.setYear(req.getYear());
-                    reqKey.setDirector(req.getDirector());
-
-                    reqKey.setItemidx(rtitem);
-                    rtkey = ccubeService.insCcubeKeys(reqKey);
-                }
             }
+
+            if (rtitem > 0) {
+                itemIdx = rtitem;
+            }
+            // 2018.04.20
+            // 기존 itemIdx가 있을 경우 ccube_keys에 키 등록
+            // 신규 itemIdx로 등록된 경우에도 ccube_keys에 키 등록
+            CcubeKeys reqKey = new CcubeKeys();
+            reqKey.setContent_id(req.getContent_id());
+            reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
+            reqKey.setSeries_id("0");
+            reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
+            reqKey.setPurity_title((req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title());
+            reqKey.setYear(req.getYear());
+            reqKey.setDirector(req.getDirector());
+
+            reqKey.setItemidx(itemIdx);
+            rtkey = ccubeService.insCcubeKeys(reqKey);
+
 
             if (itemIdx > 0) {
                 /* insert items_tags_keys by yj_items_out2 */
@@ -495,7 +500,7 @@ public class ItemsService implements ItemsServiceImpl {
         int rt = 0;
         if (req != null && req.getItemsIdxs() != null && !"".equals(req.getItemsIdxs())) {
             try {
-                String toStat = req.getStat();
+                String toStat = req.getType();
                 String itemsIdxs[] = req.getItemsIdxs().trim().split(",");
                 for (String idx : itemsIdxs) {
                     req.setIdx(Integer.parseInt(idx));
@@ -507,7 +512,7 @@ public class ItemsService implements ItemsServiceImpl {
                                 req.setSc_id(sc_id);
                                 String toStat1 = toStat;
                                 if(!"A".equals(toStat)) toStat1 = "R";
-                                req.setStat(toStat1);
+                                req.setStat("Y");
                                 rt = itemsMapper.uptSchedTriggerStatByScid(req);
 
                                 if (rt > 0) {

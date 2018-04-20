@@ -44,7 +44,7 @@
           (idx, mtype, meta, regdate, regid)
         values
           (#{idx}, #{mtype}, #{meta}, now(), #{regid})
-        ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
+        ON DUPLICATE KEY UPDATE meta_old = meta, meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
 
     <delete id="delItemsMetas" parameterType="com.kthcorp.cmts.model.ItemsMetas">

@@ -179,4 +179,12 @@ public interface TestServiceImpl {
     void writeCcubeContentsOutputFT() throws Exception;
 
     void writeCcubeSeriesOutputFT() throws Exception;
+
+    void processRemoveAwardByYear() throws Exception;
+
+    void writeItemsAndAwardCSV() throws Exception;
+
+    void writeDicKeywordsByTypes() throws Exception;
+
+    int writeCcubeOutputToJsonByType(String type);
 }

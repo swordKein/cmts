@@ -55,4 +55,16 @@ public interface TestMapper {
 
     List<Map<String, Object>> getCcubeContentsFT();
     List<Map<String, Object>> getCcubeSeriesFT();
+
+    List<Map<String, Object>> getItemsAndAwardAll();
+    List<Map<String, Object>> getItemsAndAwardAll2();
+
+    List<Map<String, Object>> getDicKeywordsByType0(String type);
+    List<Map<String, Object>> getItemsTagsMetasByType0(String type);
+
+    List<Map<String, Object>> getContentsOrigItemsAll(Items req);
+    Integer cntContentsOrigItemsAll();
+
+    List<Map<String, Object>> getSeriesOrigItemsAll(Items req);
+    Integer cntSeriesOrigItemsAll();
 }
