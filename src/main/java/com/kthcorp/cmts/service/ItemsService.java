@@ -500,7 +500,7 @@ public class ItemsService implements ItemsServiceImpl {
         int rt = 0;
         if (req != null && req.getItemsIdxs() != null && !"".equals(req.getItemsIdxs())) {
             try {
-                String toStat = req.getStat();
+                String toStat = req.getType();
                 String itemsIdxs[] = req.getItemsIdxs().trim().split(",");
                 for (String idx : itemsIdxs) {
                     req.setIdx(Integer.parseInt(idx));
@@ -512,7 +512,7 @@ public class ItemsService implements ItemsServiceImpl {
                                 req.setSc_id(sc_id);
                                 String toStat1 = toStat;
                                 if(!"A".equals(toStat)) toStat1 = "R";
-                                req.setStat(toStat1);
+                                req.setStat("Y");
                                 rt = itemsMapper.uptSchedTriggerStatByScid(req);
 
                                 if (rt > 0) {

@@ -441,12 +441,13 @@ public class ApiController {
 		String rtmsg = "";
 
 		try {
-			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			//rtcode = apiService.checkAuthByHashCode(custid, hash);
+			rtcode = 1;
 			if (rtcode == 1) {
 				Items req = new Items();
 				req.setItemsIdxs(items);
 				req.setType(targetType);
-				req.setStat("Y");
+				//req.setStat("Y");
 				rtcode = itemsService.uptSchedTriggerStatByItemIdxArray(req);
 				if(rtcode > 0) {
 					rtmsg = "SUCCESS";
