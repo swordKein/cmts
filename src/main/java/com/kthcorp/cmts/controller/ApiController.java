@@ -9,6 +9,7 @@ import com.kthcorp.cmts.model.ManualChange;
 import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
+import com.kthcorp.cmts.util.HttpClientUtil;
 import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1306,5 +1308,23 @@ public class ApiController {
 		result_all.add("RESULT", result1);
 
 		return result_all.toString();
+	}
+
+	@RequestMapping(value="/naver/kordic", method=RequestMethod.GET)
+	@ResponseBody
+	public String crawl_naverkordic_api(Model model
+			, @RequestParam(value="query", required=true) String query
+	) {
+		logger.debug("#/naver/kordic :: by query:" + query);
+		String result = null;
+		try {
+			result = apiService.getNaverKordicResult(query);
+		} catch (Exception e) {
+
+			logger.error("/naver/kordic ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.*;
 
 @Service
@@ -29,6 +30,8 @@ public class ApiService implements ApiServiceImpl {
     private String sns_stat_url;
     @Value("${property.crawl_sns_topwords_url}")
     private String crawl_sns_topwords_url;
+    @Value("${cmts.property.naver_kordic_url}")
+    private String naver_kordic_url;
 
     @Autowired
     private AuthUserMapper authUserMapper;
@@ -1030,6 +1033,27 @@ public class ApiService implements ApiServiceImpl {
 
         result.add("GRAPH_TWITTER", graph_twitter);
 
+        return result;
+    }
+
+    @Override
+    public String getNaverKordicResult(String keyword) throws Exception {
+        String result = "";
+
+        try {
+            String reqUrl = naver_kordic_url;
+            reqUrl = reqUrl.replace("#KEYWORD", keyword);
+
+            Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null
+                    , Charset.forName("utf-8"),null, "bypass");
+
+            if (resultMap2 != null && resultMap2.get("resultStr") != null) {
+                result = resultMap2.get("resultStr").toString();
+            }
+        } catch (Exception e) {
+            logger.error("/naver/kordic ERROR:"+e.toString());
+            e.printStackTrace();
+        }
         return result;
     }
 }

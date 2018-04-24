@@ -64,4 +64,6 @@ public interface ApiServiceImpl {
     List<String> getResultSnsMapByTag(String target, String date1, String tag);
 
     JsonObject getSnsTopWordsAndGraph() throws Exception;
+
+    String getNaverKordicResult(String keyword) throws Exception;
 }

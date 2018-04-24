@@ -570,4 +570,9 @@ public class TestServiceTestImpl {
     public void test_writeDicKeywordsByTypes() throws Exception {
 	    testService.writeDicKeywordsByTypes();
     }
+
+    @Test
+    public void test_writeCcubeOutputToJsonByType() throws Exception {
+	    testService.writeCcubeOutputToJsonByType("CcubeContent");
+    }
 }

@@ -8,6 +8,7 @@ import com.kthcorp.cmts.service.crawl.ImdbService;
 import com.kthcorp.cmts.service.crawl.NaverMovieService;
 import com.kthcorp.cmts.service.crawl.NaverblogService;
 import com.kthcorp.cmts.util.CommonUtil;
+import com.kthcorp.cmts.util.HttpClientUtil;
 import groovy.transform.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -231,5 +233,4 @@ public class CrawlController {
 
 		return result.toString();
 	}
-
 }
