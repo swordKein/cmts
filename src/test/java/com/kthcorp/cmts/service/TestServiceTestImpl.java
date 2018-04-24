@@ -575,4 +575,9 @@ public class TestServiceTestImpl {
     public void test_writeCcubeOutputToJsonByType() throws Exception {
 	    testService.writeCcubeOutputToJsonByType("CcubeContent");
     }
+
+	@Test
+	public void test_writeCcubeOutputToJsonByType2() throws Exception {
+		testService.writeCcubeOutputToJsonByType("CcubeSeries");
+	}
 }

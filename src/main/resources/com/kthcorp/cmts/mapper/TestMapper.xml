@@ -313,12 +313,12 @@
 
 
     <select id="getSeriesOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
-        /* getContentsOrigItemsAll */
-        select a.content_id, a.content_title, a.asset_id, a.year, a.director
+        /* getSeriesOrigItemsAll */
+        select a.series_id, a.series_nm, a.asset_id, a.year, a.director
         from (
         select
-        co.series_id as content_id
-        , co.series_nm as content_title
+        co.series_id
+        , co.series_nm
         , ca.asset_id
         , co.year
         , co.director
@@ -326,18 +326,18 @@
         from ccube_series_orig co
         left outer join ccube_series_asset_uniq ca on ca.sid = co.series_id
         ) a
-        order by a.regdate asc, a.content_id asc
+        order by a.regdate asc, a.series_id asc
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
     <select id="cntSeriesOrigItemsAll" resultType="java.lang.Integer">
         /* cntSeriesOrigItemsAll */
           select count(*) as cnt from (
-            select a.content_id, a.content_title, a.asset_id, a.year, a.director
+            select a.series_id, a.series_nm, a.asset_id, a.year, a.director
             from (
             select
-            co.series_id as content_id
-            , co.series_nm as content_title
+            co.series_id
+            , co.series_nm
             , ca.asset_id
             , co.year
             , co.director
