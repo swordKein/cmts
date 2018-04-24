@@ -77,7 +77,7 @@ public class ItemsService implements ItemsServiceImpl {
     public int processCcubeContents() {
         int rt = 0;
 
-        for(int i=0; i<20; i++) {
+        //for(int i=0; i<20; i++) {
             List<CcubeContent> reqCcubeContents = ccubeService.get50ActiveCcubeContents();
             logger.info("#SCHEDULE checkInItems.get50ActiveCcubeContents: req-size:" + reqCcubeContents.size());
 
@@ -94,7 +94,7 @@ public class ItemsService implements ItemsServiceImpl {
                 }
                 rtupt = ccubeService.uptCcubeContentStat(ccont);
             }
-        }
+        //}
         return rt;
     }
 
@@ -102,7 +102,7 @@ public class ItemsService implements ItemsServiceImpl {
     public int processCcubeSeries() {
         int rt = 0;
 
-        for(int i=0; i<20; i++) {
+        //for(int i=0; i<20; i++) {
             List<CcubeSeries> reqCcubeSeries = ccubeService.get50ActiveCcubeSeries();
             logger.info("#SCHEDULE checkInItems.get50ActiveCcubeSeries: req-size:" + reqCcubeSeries.size());
 
@@ -118,7 +118,7 @@ public class ItemsService implements ItemsServiceImpl {
                 }
                 rtupt = ccubeService.uptCcubeSeriesStat(cser);
             }
-        }
+        //}
         return rt;
     }
 
