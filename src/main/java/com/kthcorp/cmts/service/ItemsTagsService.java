@@ -25,8 +25,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Value("${property.serverid}")
     private String serverid;
-    @Value("${cmts.property.naver_kordic_url}")
-    private String naver_kordic_url;
+    @Value("${property.crawl_naver_kordic_url}")
+    private String crawl_naver_kordic_url;
 
     @Autowired
     private ItemsTagsMapper itemsTagsMapper;
@@ -452,7 +452,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Override
     public List<String> getNaverKindWords(String keyword, List<String> origArr) throws Exception {
-        String reqUrl = naver_kordic_url;
+        String reqUrl = crawl_naver_kordic_url;
         reqUrl = reqUrl.replace("#KEYWORD", keyword);
 
         Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null

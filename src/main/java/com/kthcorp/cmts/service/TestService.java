@@ -4970,6 +4970,8 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
+countAll = 100;
+
         JsonObject resultObj = new JsonObject();
         resultObj.addProperty("TOTAL_COUNT", countAll);
 
@@ -4984,11 +4986,11 @@ public class TestService implements TestServiceImpl {
             System.out.println("#pageAll:" + pageAll);
 
             JsonArray contents = null;
-            Map<Long, Integer> uptKeyAndTagCntList = new HashMap();
 
             try {
                 for (int pno = 1; pno <= pageAll; pno++) {
                     req.setPageNo(pno);
+                    req.setPageSize(pageSize);
                     if ("CcubeSeries".equals(type)) {
                         reqItems = testMapper.getSeriesOrigItemsAll(req);
                     } else {
@@ -4996,24 +4998,40 @@ public class TestService implements TestServiceImpl {
                     }
 
                     if (reqItems != null) {
-                        logger.info("#writeCcubeOutputToJson.getCcubeOutputListStandby: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        logger.info("#writeCcubeOutputToJson.getAll: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
                         int oldItemIdx = 0;
                         int cnt = 0;
                         for (Map<String, Object> ins : reqItems) {
 
+                            CcubeKeys reqCk = null;
                             // 중복방지로직, cid , title, director, year 순으로 대조
                             if ("CcubeContent".equals(type)) {
-                                CcubeKeys reqCk = new CcubeKeys();
+                                reqCk = new CcubeKeys();
                                 reqCk.setContent_id(ins.get("content_id").toString());
+                                reqCk.setMaster_content_id(ins.get("master_content_id").toString());
                                 String title = ins.get("content_title").toString();
                                 reqCk.setPurity_title(title);
                                 reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
                                 reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
-
-                                oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+                                reqCk.setKmrb_id(ins.get("kmrb_id") != null ? ins.get("kmrb_id").toString() : "");
+                            } else if ("CcubeSeries".equals(type)) {
+                                reqCk = new CcubeKeys();
+                                reqCk.setSeries_id(ins.get("series_id").toString());
+                                String title = ins.get("series_nm").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
                             }
 
+                            oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+
                             if (oldItemIdx > 0) {
+                                // 중복방지 로직에 걸려서 ccube_keys에 등재되지 않은 content_id, series_id 재처리용
+                                int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
+                                if (currItemIdx == 0) {
+                                    reqCk.setItemidx(oldItemIdx);
+                                    int rti = ccubeMapper.insCcubeKeys(reqCk);
+                                }
                                 ins.put("idx", oldItemIdx);
                                 contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
                                 cnt++;
@@ -5037,25 +5055,7 @@ public class TestService implements TestServiceImpl {
             } catch (Exception e) {
                 rt = -3;
                 logger.error("#ERROR:" + e);
-            }
-
-            System.out.println("#UPT stat:: from:" + uptKeyAndTagCntList.toString());
-
-            /* update CCUBE_OUTPUT stat = S , uptcnt++ */
-            Set entrySet = uptKeyAndTagCntList.entrySet();
-            Iterator it = entrySet.iterator();
-
-            while (it.hasNext()) {
-                Map.Entry me = (Map.Entry) it.next();
-                Long hidx = (Long) me.getKey();
-                Integer nextUptCnt = (Integer) me.getValue() + 1;
-
-                Map<String, Object> uptItem = new HashMap();
-                uptItem.put("hidx", hidx);
-                uptItem.put("uptcnt", nextUptCnt);
-                uptItem.put("stat", "S");
-
-                int rtupt = ccubeMapper.uptCcubeOutputStat(uptItem);
+                e.printStackTrace();
             }
         }
         return rt;

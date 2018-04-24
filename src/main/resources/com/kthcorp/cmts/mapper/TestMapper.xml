@@ -275,7 +275,7 @@
 
     <select id="getContentsOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getContentsOrigItemsAll */
-        select a.content_id, a.content_title, a.asset_id, a.year, a.director
+        select a.content_id, a.content_title, a.asset_id, a.year, a.director, a.kmrb_id, a.master_content_id
         from (
         select
         co.content_id
@@ -284,6 +284,8 @@
         , co.year
         , co.director
         , co.regdate
+        , co.kmrb_id
+        , co.master_content_id
         from ccube_contents_orig co
         left outer join ccube_contents_asset_uniq ca on ca.cid = co.content_id
         ) a
@@ -294,7 +296,7 @@
     <select id="cntContentsOrigItemsAll" resultType="java.lang.Integer">
         /* cntContentsOrigItemsAll */
           select count(*) as cnt from (
-            select a.content_id, a.content_title, a.asset_id, a.year, a.director
+            select a.content_id, a.content_title, a.asset_id, a.year, a.director, a.kmrb_id
             from (
             select
             co.content_id
@@ -302,6 +304,7 @@
             , ca.asset_id
             , co.year
             , co.director
+            , co.kmrb_id
             from ccube_contents_orig co
             left outer join ccube_contents_asset_uniq ca on ca.cid = co.content_id
             ) a
