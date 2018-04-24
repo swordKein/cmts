@@ -931,6 +931,19 @@ public class ApiService implements ApiServiceImpl {
         return daysArr;
     }
 
+    private List<String> getBeforeDaysWithDash(String date1, int limit) {
+        List<String> daysArr = new ArrayList();
+        for (int i=0; i<limit; i++) {
+            int bday = - (limit - i) + 1;
+
+            String todate = DateUtils.calculateDateWithDash(Calendar.DATE, bday, date1);
+            daysArr.add(todate);
+
+            // System.out.println("#ELOG.add beforeDays:"+todate);
+        }
+        return daysArr;
+    }
+
     private JsonObject getRankArrayByTarget(String target, List<String> wordsArr1) {
         //List<String> result = new ArrayList<>();
         String date1 = snsMapper.getMaxDateStr();
@@ -941,6 +954,7 @@ public class ApiService implements ApiServiceImpl {
         String sdate = DateUtils.calculateDate(Calendar.DATE, -5, date1);
 
         List<String> beforeDays = this.getBeforeDays(date1, 5);
+        List<String> beforeDaysWithDash = this.getBeforeDaysWithDash(date1, 5);
 
         Map<String, Object> reqMap = new HashMap();
         reqMap.put("target", target);
@@ -948,6 +962,9 @@ public class ApiService implements ApiServiceImpl {
         reqMap.put("edate", edate);
 
         JsonObject graphs = new JsonObject();
+        // caption 에 날짜 표기를 위해 Object에 날짜 array 추가  added 18.04.24
+        JsonArray daysArr = JsonUtil.convertListToJsonArray(beforeDaysWithDash);
+        graphs.add("days", daysArr);
 
         int itemCnt = 1;
         for (String word : wordsArr1) {
@@ -1015,12 +1032,23 @@ public class ApiService implements ApiServiceImpl {
         String targetInsta = "insta";
         List<String> wordsArrInsta = this.getResultSnsMapByTag(targetInsta, date1, "word");
         JsonObject graph_insta = this.getRankArrayByTarget(targetInsta, wordsArrInsta);
+        System.out.println("#graph_insta:"+graph_insta.toString());
 
         JsonArray words_instagram = JsonUtil.convertListToJsonArray(wordsArrInsta);
         result.add("WORDS_INSTAGRAM", words_instagram);
 
-        JsonArray captions = new JsonArray();
-        captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
+        //JsonArray captions = new JsonArray();
+        //captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
+        JsonArray captions = null;
+        if (graph_insta != null && graph_insta.get("days") != null) {
+            captions = graph_insta.get("days").getAsJsonArray();
+        } else if (graph_twitter != null && graph_twitter.get("days") != null) {
+            captions = graph_twitter.get("days").getAsJsonArray();
+        } else {
+            captions = new JsonArray();
+            captions.add("D-5"); captions.add("D-4"); captions.add("D-3"); captions.add("D-2"); captions.add("D-1");
+        }
+
         graph_insta.add("CAPTIONS", captions);
 
         result.add("GRAPH_INSTAGRAM", graph_insta);
