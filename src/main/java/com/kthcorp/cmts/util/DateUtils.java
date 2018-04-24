@@ -259,6 +259,22 @@ public class DateUtils {
 
 	}
 
+	public static String calculateDateWithDash(int field, int amount, String yyyymmdd) {
+
+		GregorianCalendar calDate = getGregorianCalendar(yyyymmdd);
+
+		if (field == Calendar.YEAR) {
+			calDate.add(GregorianCalendar.YEAR, amount);
+		} else if (field == Calendar.MONTH) {
+			calDate.add(GregorianCalendar.MONTH, amount);
+		} else {
+			calDate.add(GregorianCalendar.DATE, amount);
+		}
+
+		return getDateFormat(calDate, "yyyy-MM-dd");
+
+	}
+
 	/**
 	 * <p>
 	 * 지정된 플래그에 따라 연도 , 월 , 일자를 연산한다.
