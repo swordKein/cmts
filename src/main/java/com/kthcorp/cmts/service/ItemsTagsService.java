@@ -14,6 +14,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -386,19 +387,24 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         String subGenreMix = this.getMovieSubGenreData(itemIdx);
         System.out.println("#ELOG.subGenreMix:"+subGenreMix);
         if (!"".equals(subGenreMix)) {
-            List<String> listSubGenres = new ArrayList();
+           JsonArray listSubGenres = new JsonArray();
             String[] arrSubGenres = subGenreMix.split(",");
             for (String as : arrSubGenres) {
+
                 String as2 = as.trim();
-                listSubGenres.add(as2);
+
+                JsonObject newItem = new JsonObject();
+                newItem.addProperty("type","");
+                newItem.addProperty("ratio","0.0");
+                newItem.addProperty("word", as2);
+                listSubGenres.add(newItem);
             }
 
-            JsonArray newListSubGenres = JsonUtil.convertListToJsonArray(listSubGenres);
-            System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/LIST_SUBGENRE:"+newListSubGenres.toString());
+            System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/LIST_SUBGENRE:"+listSubGenres.toString());
             if (resultObj2.get("LIST_SUBGENRE") != null) {
                 resultObj2.remove("LIST_SUBGENRE");
             }
-            resultObj2.add("LIST_SUBGENRE", newListSubGenres);
+            resultObj2.add("LIST_SUBGENRE", listSubGenres);
 
         }
         return resultObj2;
@@ -501,7 +507,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     public List<String> getNaverKindWords(String keyword, List<String> origArr) throws Exception {
         String reqUrl = crawl_naver_kordic_url;
-        reqUrl = reqUrl.replace("#KEYWORD", keyword);
+        reqUrl = reqUrl.replace("#KEYWORD", URLEncoder.encode(keyword, "utf-8"));
 
         Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null
                 , Charset.forName("utf-8"),null, "bypass");
