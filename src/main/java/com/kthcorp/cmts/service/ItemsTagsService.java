@@ -615,7 +615,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr1.toString());
 
             JsonArray typeResultArr = null;
-            if(!"LIST_SEARCHKEYWORDS".equals(type)) {
+            if(!"LIST_SEARCHKEYWORDS".equals(type) && !"WORDS_SNS".equals(type)) {
                 //&& !"LIST_SUBGENRE".equals(atype)) {
                 typeResultArr = this.getRemoveDupTargetMetasArray(typeResultArr1);
                 //System.out.println("#ELOG.destArr(JsonObject): datas::"+destArr2.toString());
