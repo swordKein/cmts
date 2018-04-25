@@ -223,7 +223,7 @@ public class DicServiceTest {
 	public void test_getMixedGenreArrayFromGenre() throws Exception {
 		String req = "19세이상 애니메이션 전쟁 드라마 액션 모험 ";
 		//req = "전쟁";
-		List<String> result = dicService.getMixedGenreArrayFromGenre(req, "mixgenre");
+		Set result = dicService.getMixedGenreArrayFromGenre(req, "mixgenre");
 		System.out.println("#RES:"+result.toString());
 	}
 
@@ -231,7 +231,7 @@ public class DicServiceTest {
 	public void test_getMixedNationGenreArrayFromGenre() throws Exception {
 		String origgenre = "애니메이션 판타지 드라마";
 		String origin = "JPN";
-		List<String> result = dicService.getMixedNationGenreArrayFromGenre(origgenre, origin, "origin");
+		Set result = dicService.getMixedNationGenreArrayFromGenre(origgenre, origin, "origin");
 		System.out.println("#RES:"+result.toString());
 	}
 }

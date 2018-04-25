@@ -148,6 +148,8 @@ public interface TestServiceImpl {
 
     void processMixedSubgenre() throws Exception;
 
+    void processMixedSubgenre2() throws Exception;
+
     void processSubgenre2ByKeywords() throws Exception;
 
     void writeItemsAndSubgenre();

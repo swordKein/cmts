@@ -37,6 +37,8 @@ public class TestServiceTestImpl {
 	private ItemsMapper itemsMapper;
 	@Autowired
 	private TestMapper testMapper;
+	@Autowired
+	private DicService dicService;
 
 	@Test
 	public void test_insMovieCine21List() throws Exception {
@@ -459,7 +461,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_insDicSubgenreGenres() throws Exception {
-		//testService.insDicSubgenreGenres();
+		testService.insDicSubgenreGenres();
 	}
 
 	@Test
@@ -470,8 +472,20 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
+	public void test_getMixedNationGenreArrayFromGenre() throws Exception {
+		String reqStr0 = "코미디 로맨스";
+		Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, "KOR", "origin");
+		System.out.println("#RES:"+resultNation.toString());
+	}
+
+	@Test
 	public void test_processMixedSubgenre() throws Exception {
-		//testService.processMixedSubgenre();
+		testService.processMixedSubgenre();
+	}
+
+	@Test
+	public void test_processMixedSubgenre2() throws Exception {
+		testService.processMixedSubgenre2();
 	}
 
 	@Test
