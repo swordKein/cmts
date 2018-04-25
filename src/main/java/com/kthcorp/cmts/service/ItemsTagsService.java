@@ -392,12 +392,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             for (String as : arrSubGenres) {
 
                 String as2 = as.trim();
+                as2 = StringUtil.filterGenres(as2);
 
-                JsonObject newItem = new JsonObject();
-                newItem.addProperty("type","");
-                newItem.addProperty("ratio","0.0");
-                newItem.addProperty("word", as2);
-                listSubGenres.add(newItem);
+                if(!"".equals(as2)) {
+                    JsonObject newItem = new JsonObject();
+                    newItem.addProperty("type", "");
+                    newItem.addProperty("ratio", "0.0");
+                    newItem.addProperty("word", as2);
+                    listSubGenres.add(newItem);
+                }
             }
 
             System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/LIST_SUBGENRE:"+listSubGenres.toString());
