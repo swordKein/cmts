@@ -1070,7 +1070,7 @@ public class ApiService implements ApiServiceImpl {
 
         try {
             String reqUrl = naver_kordic_url;
-            reqUrl = reqUrl.replace("#KEYWORD", keyword);
+            reqUrl = reqUrl.replace("#KEYWORD", URLEncoder.encode(keyword,"utf-8"));
 
             Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null
                     , Charset.forName("utf-8"),null, "bypass");
