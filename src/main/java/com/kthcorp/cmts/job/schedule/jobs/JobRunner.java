@@ -57,11 +57,11 @@ public class JobRunner implements Job {
                     logger.info("#MLOG schedule.snsTopKeywords.start jobType:"+jobType+"/rt:"+rt);
                     break;
                 case "ccubeOutput":
-                    //rt = ccubeService.processCcubeOutputToJson();
+                    rt = ccubeService.processCcubeOutputToJson();
                     //testService.processRankForDicKeywordsAndGenres();
                     //testService.processSubgenre2ByKeywords();
-                    testService.processMixedSubgenre();
-                    testService.processMixedSubgenre2();
+                    //testService.processMixedSubgenre();
+                    //testService.processMixedSubgenre2();
                     logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
                     break;
                 case "dummyService":

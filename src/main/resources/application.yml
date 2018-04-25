@@ -233,7 +233,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 00 17 * * ?
+      cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
     #-
     #  cronExpression : 0 * * * * ?
