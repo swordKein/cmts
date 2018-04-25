@@ -363,4 +363,71 @@ public class StringUtil {
         }
         return result;
     }
+
+    public static String filterGenres(String req) {
+        req = req.trim();
+
+        Set<String> filterSet = new HashSet();
+        filterSet.add("액션 영화");
+        filterSet.add("SF 영화");
+        filterSet.add("판타지 영화");
+        filterSet.add("휴먼/가족 영화");
+        filterSet.add("드라마 영화");
+        filterSet.add("로맨스 영화");
+        filterSet.add("코미디 영화");
+        filterSet.add("공포/스릴러 영화");
+        filterSet.add("무협 영화");
+        filterSet.add("범죄/추리 영화");
+        filterSet.add("사극 영화");
+        filterSet.add("역사 영화");
+        filterSet.add("모험 영화");
+        filterSet.add("다큐 영화");
+        filterSet.add("학원/순정 영화");
+        filterSet.add("유아/어린이 영화");
+        filterSet.add("전쟁 영화");
+        filterSet.add("메디컬 영화");
+        filterSet.add("교육 영화");
+        filterSet.add("교양 영화");
+        filterSet.add("스포츠 영화");
+        filterSet.add("미스터리 영화");
+        filterSet.add("뮤지컬 영화");
+        filterSet.add("서부 영화");
+        filterSet.add("성인 영화");
+        filterSet.add("단편 영화");
+
+        filterSet.add("액션 시리즈");
+        filterSet.add("SF 시리즈");
+        filterSet.add("판타지 시리즈");
+        filterSet.add("휴먼/가족 시리즈");
+        filterSet.add("드라마 시리즈");
+        filterSet.add("로맨스 시리즈");
+        filterSet.add("코미디 시리즈");
+        filterSet.add("공포/스릴러 시리즈");
+        filterSet.add("무협 시리즈");
+        filterSet.add("범죄/추리 시리즈");
+        filterSet.add("사극 시리즈");
+        filterSet.add("역사 시리즈");
+        filterSet.add("모험 시리즈");
+        filterSet.add("다큐 시리즈");
+        filterSet.add("학원/순정 시리즈");
+        filterSet.add("유아/어린이 시리즈");
+        filterSet.add("전쟁 시리즈");
+        filterSet.add("메디컬 시리즈");
+        filterSet.add("교육 시리즈");
+        filterSet.add("교양 시리즈");
+        filterSet.add("스포츠 시리즈");
+        filterSet.add("미스터리 시리즈");
+        filterSet.add("뮤지컬 시리즈");
+        filterSet.add("서부 시리즈");
+        filterSet.add("성인 시리즈");
+        filterSet.add("단편 시리즈");
+
+        for(String fs : filterSet) {
+            String fs2 = ", " + fs;
+            req = req.replace(fs2, "");
+            req = req.replace(fs, "");
+        }
+
+        return req;
+    }
 }

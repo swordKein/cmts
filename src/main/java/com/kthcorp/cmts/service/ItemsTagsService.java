@@ -302,6 +302,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         /* WORDS_SNS */
         // resultObj2 = getWordsSns(itemIdx, resultObj2);
 
+        /* LIST_SUBGENRE */
+        resultObj2 = getSubgenres(itemIdx, resultObj2);
+
         return resultObj2;
     }
 
@@ -379,6 +382,29 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return resultObj2;
     }
 
+    private JsonObject getSubgenres(int itemIdx, JsonObject resultObj2) {
+        String subGenreMix = this.getMovieSubGenreData(itemIdx);
+        System.out.println("#ELOG.subGenreMix:"+subGenreMix);
+        if (!"".equals(subGenreMix)) {
+            List<String> listSubGenres = new ArrayList();
+            String[] arrSubGenres = subGenreMix.split(",");
+            for (String as : arrSubGenres) {
+                String as2 = as.trim();
+                listSubGenres.add(as2);
+            }
+
+            JsonArray newListSubGenres = JsonUtil.convertListToJsonArray(listSubGenres);
+            System.out.println("#ELOG.getItemMetaByIdx:"+itemIdx+"/LIST_SUBGENRE:"+newListSubGenres.toString());
+            if (resultObj2.get("LIST_SUBGENRE") != null) {
+                resultObj2.remove("LIST_SUBGENRE");
+            }
+            resultObj2.add("LIST_SUBGENRE", newListSubGenres);
+
+        }
+        return resultObj2;
+    }
+
+
     private String getMovieGenreFromCcubeContents(int itemIdx) {
         ItemsMetas req = new ItemsMetas();
         req.setIdx(itemIdx);
@@ -393,6 +419,28 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
         }
         return movieGenre;
+    }
+
+    private String getMovieSubGenreData(int itemIdx) {
+        ItemsMetas req = new ItemsMetas();
+        req.setIdx(itemIdx);
+        List<ItemsMetas> resultMovieMeta = itemsMetasMapper.getItemsMetasByIdx(req);
+        String result = "";
+        if (resultMovieMeta != null) {
+            for (ItemsMetas mm : resultMovieMeta) {
+                //System.out.println("#TMP::mm:"+mm.toString());
+                if (mm != null && mm.getMtype() != null && "subgenreMix2".equals(mm.getMtype()) && mm.getMeta() != null) {
+                    result = mm.getMeta();
+                }
+                if (mm != null && mm.getMtype() != null && "subgenreOrgin2".equals(mm.getMtype()) && mm.getMeta() != null) {
+                    if (!"".equals(result)) {
+                        result = result + ", ";
+                    }
+                    result += mm.getMeta();
+                }
+            }
+        }
+        return result;
     }
 
     private List<DicGenreWords> getDicGenreKeywordsOneGenre(String genre, List<DicGenreWords> origArr) {

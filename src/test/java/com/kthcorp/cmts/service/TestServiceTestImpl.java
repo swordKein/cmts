@@ -8,6 +8,7 @@ import com.kthcorp.cmts.mapper.TestMapper;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.MapUtil;
+import com.kthcorp.cmts.util.StringUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -593,5 +594,11 @@ public class TestServiceTestImpl {
 	@Test
 	public void test_writeCcubeOutputToJsonByType2() throws Exception {
 		testService.writeCcubeOutputToJsonByType("CcubeSeries");
+	}
+
+	@Test
+	public void test1() throws Exception {
+		String req = "드라마, 액션 영화";
+		System.out.println("#RES:"+ StringUtil.filterGenres(req));
 	}
 }
