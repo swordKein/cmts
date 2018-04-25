@@ -955,7 +955,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     /* get meta data for saving */
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
-                    if(!"LIST_SEARCHKEYWORDS".equals(atype)) {
+                    if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype)) {
                             //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
                         destArr2 = this.getRemoveDupTargetMetasArray(destArr);
