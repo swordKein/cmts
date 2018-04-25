@@ -31,6 +31,7 @@ public interface TestMapper {
     List<Items> getNoGenreItems();
 
     List<Map<String, Object>> getItemsForSubgenre();
+    List<Map<String, Object>> getItemsForSubgenre2();
 
     List<Map<String, Object>> getItemsAndSubgenre();
 

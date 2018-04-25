@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //@Service
 public interface DicServiceImpl {
@@ -101,9 +102,9 @@ public interface DicServiceImpl {
 
     List<String> getKeywordTypes();
 
-    List<String> getMixedGenreArrayFromGenre(String genre, String mtype);
+    Set getMixedGenreArrayFromGenre(String genre, String mtype);
 
     List<String> getMixedGenreArrayFromFilter(String genre, String mtype);
 
-    List<String> getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype);
+    Set getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype);
 }

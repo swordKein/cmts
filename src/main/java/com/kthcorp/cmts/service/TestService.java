@@ -2941,6 +2941,7 @@ public class TestService implements TestServiceImpl {
     @Override
     public Map<String,Object> loadDicSubgenreGenres() throws Exception {
         String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_genres4.txt";
+        fileName = "E:\\0425_dic_subgenre_genres.txt";
         return loadDicSubgenreGenres(fileName);
     }
 
@@ -3708,8 +3709,9 @@ public class TestService implements TestServiceImpl {
             String reqStr = "";
             if(nmap.get("genre") != null) reqStr0 = nmap.get("genre").toString();
             if(nmap.get("kt_rating") != null) reqStr = reqStr0 + " " + nmap.get("kt_rating").toString();
+            System.out.println("#req str: genre/kt_rating::"+reqStr);
 
-            List<String> result = dicService.getMixedGenreArrayFromGenre(reqStr, "mixgenre");
+            Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
             String toMeta = result.toString();
             toMeta = CommonUtil.removeNationStr(toMeta);
 
@@ -3717,7 +3719,7 @@ public class TestService implements TestServiceImpl {
             if(nmap.get("origin") != null) origin = nmap.get("origin").toString();
 
             System.out.println("###REQ_STR2::origin:"+origin);
-            List<String> resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
+            Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
             System.out.println("#RESULT_NATION:"+resultNation.toString());
             String toMetaOrigin = resultNation.toString();
             toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
@@ -3727,7 +3729,7 @@ public class TestService implements TestServiceImpl {
                 long longIdx = (Long) nmap.get("idx");
                 int intIdx = (int) longIdx;
                 newMeta.setIdx(intIdx);
-                newMeta.setMtype("subgenreMix");
+                newMeta.setMtype("subgenreMix2");
                 newMeta.setMeta(toMeta);
                 System.out.println("#save itemsMetas:" + newMeta.toString());
                 int rtItm = itemsService.insItemsMetas(newMeta);
@@ -3738,12 +3740,71 @@ public class TestService implements TestServiceImpl {
                 long longIdx = (Long) nmap.get("idx");
                 int intIdx = (int) longIdx;
                 newMeta.setIdx(intIdx);
-                newMeta.setMtype("subgenreOrgin");
+                newMeta.setMtype("subgenreOrgin2");
                 newMeta.setMeta(toMetaOrigin);
                 System.out.println("#save itemsMetas2:" + newMeta.toString());
                 int rtItm = itemsService.insItemsMetas(newMeta);
             }
         }
+
+        System.out.println("#itemsList.size:"+itemList.size());
+    }
+
+    @Override
+    public void processMixedSubgenre2() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre2();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        for(Map<String, Object> nmap : itemList) {
+            //for(int i=0; i<10; i++) {
+            //Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            String reqStr0 = "";
+            String reqStr = "";
+            if(nmap.get("genre") != null) reqStr0 = nmap.get("genre").toString();
+            if(nmap.get("kt_rating") != null) reqStr = reqStr0 + " " + nmap.get("kt_rating").toString();
+            System.out.println("#req str: genre/kt_rating::"+reqStr);
+
+            Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
+            String toMeta = result.toString();
+            toMeta = CommonUtil.removeNationStr(toMeta);
+            toMeta = toMeta.replace("영화", "시리즈");
+
+            String origin = "";
+            if(nmap.get("origin") != null) origin = nmap.get("origin").toString();
+
+            System.out.println("###REQ_STR2::origin:"+origin);
+            Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
+            System.out.println("#RESULT_NATION:"+resultNation.toString());
+            String toMetaOrigin = resultNation.toString();
+            toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
+            toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+
+            if(!"".equals(toMeta)) {
+                ItemsMetas newMeta = new ItemsMetas();
+                long longIdx = (Long) nmap.get("idx");
+                int intIdx = (int) longIdx;
+                newMeta.setIdx(intIdx);
+                newMeta.setMtype("subgenreMix2");
+                newMeta.setMeta(toMeta);
+                System.out.println("#save itemsMetas:" + newMeta.toString());
+                int rtItm = itemsService.insItemsMetas(newMeta);
+            }
+
+            if(!"".equals(toMetaOrigin)) {
+                ItemsMetas newMeta = new ItemsMetas();
+                long longIdx = (Long) nmap.get("idx");
+                int intIdx = (int) longIdx;
+                newMeta.setIdx(intIdx);
+                newMeta.setMtype("subgenreOrgin2");
+                newMeta.setMeta(toMetaOrigin);
+                System.out.println("#save itemsMetas2:" + newMeta.toString());
+                int rtItm = itemsService.insItemsMetas(newMeta);
+            }
+        }
+
+        System.out.println("#itemsList.size:"+itemList.size());
     }
 
     private String getMetasStringFromJsonObject(JsonObject resultObj, List<String> origTypes) {

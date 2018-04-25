@@ -83,11 +83,37 @@
 
     </select>
 
+    <select id="getItemsForSubgenre_" resultType="map">
+    /* getItemsForSubgenre */
+
+    select ifs.*
+    , ( select country_of_origin from ccube_contents where content_id = ifs.cid limit 1 ) as origin
+    from items_for_subgenre ifs
+
+    </select>
+
     <select id="getItemsForSubgenre" resultType="map">
         /* getItemsForSubgenre */
-        select ifs.*
-        , ( select country_of_origin from ccube_contents where content_id = ifs.cid limit 1 ) as origin
-        from items_for_subgenre ifs
+        select it.*
+        , ( select country_of_origin from ccube_contents where content_id = it.cid limit 1 ) as origin
+        , ( select kt_rating from ccube_contents where content_id = it.cid limit 1 ) as kt_rating
+        , itm.meta as genre
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'genre'
+        where it.type like concat ('CcubeContent', '%')
+    </select>
+
+    <select id="getItemsForSubgenre2" resultType="map">
+        /* getItemsForSubgenre2 */
+        select it.*
+        , ( select country_of_origin from ccube_series where series_id = it.cid limit 1 ) as origin
+        , ( select kt_rating from ccube_series where series_id = it.cid limit 1 ) as kt_rating
+        , itm.meta as genre
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'genre'
+        where it.type like concat ('CcubeSeries', '%')
     </select>
 
     <select id="getItemsAndSubgenre" resultType="map">

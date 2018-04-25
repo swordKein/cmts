@@ -1012,11 +1012,11 @@ public class DicService implements DicServiceImpl {
     static List<DicSubgenre> dicSubgenreFilter = null;
 
     @Override
-    public List<String> getMixedGenreArrayFromGenre(String genre, String mtype) {
+    public Set getMixedGenreArrayFromGenre(String genre, String mtype) {
         genre = genre.trim();
         if (dicSubgenre == null) dicSubgenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
-        List<String> result = new ArrayList();
+        Set result = new HashSet();
         if(genre.trim().contains(" ")) {
             String[] origGenres = genre.split(" ");
             Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
@@ -1078,11 +1078,11 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public List<String> getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype) {
+    public Set getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype) {
         genre = genre.trim();
         if (dicSubgenreOrig == null) dicSubgenreOrig = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
-        List<String> result = new ArrayList();
+        Set result = new HashSet();
         List<String> origGenres = new ArrayList();
 
         if(genre.trim().contains(" ")) {
