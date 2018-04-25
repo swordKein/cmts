@@ -469,4 +469,20 @@ public class JsonUtil {
 
 		return resultArr;
 	}
+
+	public static JsonObject setEmptyMetas(JsonObject reqObj, List<String> origTypes) {
+		// 빠진 type은 공백이라도 채워준다
+		if(reqObj != null) {
+			for(String type : origTypes) {
+				if(reqObj.get(type) == null) {
+					reqObj.addProperty(type, "");
+					//System.out.println("#reqObj add new JsonArray:"+type);
+				} else {
+					//System.out.println("#reqObj:"+reqObj.get(type).toString());
+				}
+			}
+		}
+
+		return reqObj;
+	}
 }

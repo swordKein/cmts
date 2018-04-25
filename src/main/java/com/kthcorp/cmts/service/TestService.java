@@ -4970,7 +4970,7 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
-countAll = 100;
+//countAll = 100;
 
         JsonObject resultObj = new JsonObject();
         resultObj.addProperty("TOTAL_COUNT", countAll);
@@ -4991,6 +4991,8 @@ countAll = 100;
                 for (int pno = 1; pno <= pageAll; pno++) {
                     req.setPageNo(pno);
                     req.setPageSize(pageSize);
+
+                    reqItems = null;
                     if ("CcubeSeries".equals(type)) {
                         reqItems = testMapper.getSeriesOrigItemsAll(req);
                     } else {
@@ -5030,6 +5032,13 @@ countAll = 100;
                                 int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
                                 if (currItemIdx == 0) {
                                     reqCk.setItemidx(oldItemIdx);
+
+                                    if("CcubeSeries".equals(type)) {
+                                        reqCk.setMaster_content_id("0");
+                                        reqCk.setContent_id("0");
+                                    } else {
+                                        reqCk.setSeries_id("0");
+                                    }
                                     int rti = ccubeMapper.insCcubeKeys(reqCk);
                                 }
                                 ins.put("idx", oldItemIdx);
@@ -5041,6 +5050,7 @@ countAll = 100;
                     }
 
                 }
+
                 resultObj.add("CONTENTS", contents);
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 

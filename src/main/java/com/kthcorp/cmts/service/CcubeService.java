@@ -278,6 +278,16 @@ public class CcubeService implements CcubeServiceImpl {
                         }
                     }
                     newItem.addProperty("META_AWARD",awardStr);
+
+                    // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
+                    List<String> origTypes = null;
+                    if(type.contains("CcubeContent")) {
+                        origTypes = this.getContentOutputMetaTypes();
+                    } else if(type.contains("CcubeSeries")) {
+                        origTypes = this.getSeriesOutputMetaTypes();
+                    }
+                    newItem = JsonUtil.setEmptyMetas(newItem, origTypes);
+
                     contentsArr.add(newItem);
                     //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
                 }
@@ -285,6 +295,45 @@ public class CcubeService implements CcubeServiceImpl {
             }
         }
         return contentsArr;
+    }
+
+
+    private List<String> getContentOutputMetaTypes() {
+        List<String> origTypes = new ArrayList();
+        origTypes.add("CONTENT_ID");
+        origTypes.add("META_CONTENT_TITLE");
+        origTypes.add("META_WHEN");
+        origTypes.add("META_WHERE");
+        origTypes.add("META_WHAT");
+        origTypes.add("META_WHO");
+        origTypes.add("META_EMOTION");
+        origTypes.add("META_SUBGENRE");
+        origTypes.add("META_SEARCH");
+        origTypes.add("META_CHARACTER");
+        origTypes.add("META_RECO_TARGET");
+        origTypes.add("META_RECO_SITUATION");
+        origTypes.add("META_AWARD");
+
+        return origTypes;
+    }
+
+    private List<String> getSeriesOutputMetaTypes() {
+        List<String> origTypes = new ArrayList();
+        origTypes.add("SERIES_ID");
+        origTypes.add("META_SERIES_TITLE");
+        origTypes.add("META_WHEN");
+        origTypes.add("META_WHERE");
+        origTypes.add("META_WHAT");
+        origTypes.add("META_WHO");
+        origTypes.add("META_EMOTION");
+        origTypes.add("META_SUBGENRE");
+        origTypes.add("META_SEARCH");
+        origTypes.add("META_CHARACTER");
+        origTypes.add("META_RECO_TARGET");
+        origTypes.add("META_RECO_SITUATION");
+        origTypes.add("META_AWARD");
+
+        return origTypes;
     }
 
     @Override
