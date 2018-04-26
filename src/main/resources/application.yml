@@ -236,7 +236,7 @@ schedule :
       cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
     -
-      cronExpression : 0 30 12 * * ?
+      cronExpression : 0 40 12 * * ?
       jobType : ccubeOutputAll
     #-
     #  cronExpression : 0 * * * * ?
