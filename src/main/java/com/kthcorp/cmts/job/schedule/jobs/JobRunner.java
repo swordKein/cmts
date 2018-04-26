@@ -64,6 +64,11 @@ public class JobRunner implements Job {
                     //testService.processMixedSubgenre2();
                     logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
                     break;
+                case "ccubeOutputAll":
+                    testService.writeCcubeOutputToJsonByType("CcubeContent");
+                    testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                    logger.info("#MLOG schedule.ccubeOutputAll.start jobType:"+jobType);
+                    break;
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");
                     break;
