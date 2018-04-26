@@ -146,6 +146,9 @@ schedule :
     -
       cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
+    -
+      cronExpression : 0 20 11 * * ?
+      jobType : ccubeOutputAll
 property:
   serverid: cmts_local_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
