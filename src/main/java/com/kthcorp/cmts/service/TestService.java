@@ -5031,7 +5031,7 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
-//countAll = 100;
+countAll = 40;
 
         JsonObject resultObj = new JsonObject();
         resultObj.addProperty("TOTAL_COUNT", countAll);
@@ -5066,8 +5066,10 @@ public class TestService implements TestServiceImpl {
                         int cnt = 0;
                         for (Map<String, Object> ins : reqItems) {
 
+                            /*
                             CcubeKeys reqCk = null;
                             // 중복방지로직, cid , title, director, year 순으로 대조
+
                             if ("CcubeContent".equals(type)) {
                                 reqCk = new CcubeKeys();
                                 reqCk.setContent_id(ins.get("content_id").toString());
@@ -5087,9 +5089,13 @@ public class TestService implements TestServiceImpl {
                             }
 
                             oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+                            */
+                            long longidx = (long) ins.get("itemidx");
+                            oldItemIdx = (int) longidx;
 
                             if (oldItemIdx > 0) {
                                 // 중복방지 로직에 걸려서 ccube_keys에 등재되지 않은 content_id, series_id 재처리용
+                                /*
                                 int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
                                 if (currItemIdx == 0) {
                                     reqCk.setItemidx(oldItemIdx);
@@ -5102,6 +5108,7 @@ public class TestService implements TestServiceImpl {
                                     }
                                     int rti = ccubeMapper.insCcubeKeys(reqCk);
                                 }
+                                */
                                 ins.put("idx", oldItemIdx);
                                 contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
                                 cnt++;

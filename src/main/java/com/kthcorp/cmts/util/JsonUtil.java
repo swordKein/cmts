@@ -485,4 +485,26 @@ public class JsonUtil {
 
 		return reqObj;
 	}
+
+	public static JsonObject setEmptyMetasAndReplaceComma(JsonObject reqObj, List<String> origTypes) {
+		// 빠진 type은 공백이라도 채워준다
+		if(reqObj != null) {
+			for(String type : origTypes) {
+				if(reqObj.get(type) == null) {
+					reqObj.addProperty(type, "");
+					//System.out.println("#reqObj add new JsonArray:"+type);
+				} else {
+					String orig = reqObj.get(type).getAsString();
+					orig = StringUtil.removeAllTags(orig);
+					orig = orig.replace(", ","|");
+					orig = orig.replace(",","|");
+					reqObj.remove(type);
+					reqObj.addProperty(type, orig);
+					//System.out.println("#reqObj:"+reqObj.get(type).toString());
+				}
+			}
+		}
+
+		return reqObj;
+	}
 }

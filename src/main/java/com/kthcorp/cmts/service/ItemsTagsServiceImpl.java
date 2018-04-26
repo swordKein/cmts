@@ -40,6 +40,14 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode);
 
+    JsonObject getWordsAssoc(int itemIdx, JsonObject resultObj2);
+
+    JsonObject getWordsGenre(int itemIdx, JsonObject resultObj2);
+
+    JsonObject getSubgenres(int itemIdx, JsonObject resultObj2);
+
+    JsonObject getSubgenresString(int itemIdx, JsonObject resultObj2);
+
     List<String> getGenreWordsListByGenre(String genre);
 
     List<String> getNaverKindWordsByList(List<String> keywordList, int limit) throws Exception;

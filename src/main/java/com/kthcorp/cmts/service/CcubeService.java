@@ -35,6 +35,8 @@ public class CcubeService implements CcubeServiceImpl {
     @Autowired
     private ItemsService itemsService;
     @Autowired
+    private ItemsTagsService itemsTagsService;
+    @Autowired
     private SftpService sftpService;
 
     @Override
@@ -279,6 +281,9 @@ public class CcubeService implements CcubeServiceImpl {
                     }
                     newItem.addProperty("META_AWARD",awardStr);
 
+                    /* LIST_SUBGENRE */
+                    newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
+
                     // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
                     List<String> origTypes = null;
                     if(type.contains("CcubeContent")) {
@@ -286,7 +291,7 @@ public class CcubeService implements CcubeServiceImpl {
                     } else if(type.contains("CcubeSeries")) {
                         origTypes = this.getSeriesOutputMetaTypes();
                     }
-                    newItem = JsonUtil.setEmptyMetas(newItem, origTypes);
+                    newItem = JsonUtil.setEmptyMetasAndReplaceComma(newItem, origTypes);
 
                     contentsArr.add(newItem);
                     //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
