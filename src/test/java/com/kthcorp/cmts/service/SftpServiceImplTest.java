@@ -51,4 +51,18 @@ public class SftpServiceImplTest {
 		int rt2 = sftpService.processDownloadMultipleXmlFileToDB(fileName2);
 
 	}
+
+	@Test
+	public void test_processDownloadMultipleXmlFileToDB_0426() throws Exception {
+		String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\CCUBE_입수_데이터\\CCUBE_DOWN_0426\\Content_2016051423.xml";
+		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
+
+	}
+
+	@Test
+	public void test_processDownloadMultipleXmlFileToDB2_0426() throws Exception {
+		String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\CCUBE_입수_데이터\\CCUBE_DOWN_0426\\Series_2016053100.xml";
+		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
+
+	}
 }
