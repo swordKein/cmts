@@ -6,10 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.service.crawl.DaumblogService;
-import com.kthcorp.cmts.service.crawl.ImdbService;
-import com.kthcorp.cmts.service.crawl.NaverMovieService;
-import com.kthcorp.cmts.service.crawl.NaverblogService;
+import com.kthcorp.cmts.service.crawl.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.JsonUtil;
 import org.jsoup.Jsoup;
@@ -35,11 +32,17 @@ public class CollectService implements CollectServiceImpl {
     @Autowired
     private SchedTargetMappingHistMapper schedTargetMappingHistMapper;
     @Autowired
+    private SchedTargetMappingOrigMapper schedTargetMappingOrigMapper;
+    @Autowired
     private ImdbService imdbService;
     @Autowired
     private NaverblogService naverBlogService;
     @Autowired
+    private NavernewsService navernewsService;
+    @Autowired
     private DaumblogService daumBlogService;
+    @Autowired
+    private DaumnewsService daumNewsService;
     @Autowired
     private NaverMovieService naverMovieService;
     @Autowired
@@ -194,9 +197,38 @@ public class CollectService implements CollectServiceImpl {
 
                             System.out.println("#MLOG.collect:sc_id:"+sc_id+"/collectFailCheck::collectedCount:"+collectedCount);
 
+                            int progs = (sched.getProgs() != null ? sched.getProgs() : 0);
+
                             if (collectedCount < collect_fail_limit) {
-                                rtcode = -1;
-                                rt_stat = "F";
+                                if (progs < 1) {
+                                    //기본 수집 스케쥴이 실패할 경우 rank=2의 스케쥴을 추가하여 sched_target_mapping에 등록한다.
+                                    SchedTargetMappingOrig getOrig = new SchedTargetMappingOrig();
+                                    getOrig.setType("C");
+                                    getOrig.setRank(2);
+                                    List<SchedTargetMappingOrig> origSchedList = schedTargetMappingOrigMapper.getSchedTargetMappingOrigList(getOrig);
+                                    if (origSchedList != null) {
+                                        int rtStm = 0;
+                                        for (SchedTargetMappingOrig stmo : origSchedList) {
+                                            SchedTargetMapping newStm = new SchedTargetMapping();
+                                            newStm.setSc_id(sc_id);
+                                            newStm.setTg_id(stmo.getTg_id());
+                                            try {
+                                                rtStm = schedTriggerMapper.insSchedTargetMapping(newStm);
+                                            } catch (Exception e) {}
+                                        }
+                                    }
+
+                                    // 재처리를 위해 상태코드 변경
+                                    sched.setProgs(1);
+                                    sched.setStat("Y");
+                                    int rtu = schedTriggerMapper.uptSchedTriggerProgs(sched);
+
+                                    rtcode = -2;
+                                    rt_stat = "R";
+                                } else {
+                                    rtcode = -1;
+                                    rt_stat = "F";
+                                }
                             } else {
                                 rtcode = 1;
                                 rt_stat = "S";
@@ -1093,6 +1125,16 @@ public class CollectService implements CollectServiceImpl {
                 case "DAUM_MOVIE":
                     logger.info("#STEP:03:daum_movie:: collecting start DAUM_MOVIE: by sc_id:" + sc_id);
                     resultCollect = this.step03_ByHtml(tg);
+
+                    break;
+                case "NAVER_NEWS":
+                    logger.info("#STEP:03:daum_movie:: collecting start NAVER_NEWS: by sc_id:" + sc_id);
+                    resultCollect = navernewsService.getSearchNews(tg);
+
+                    break;
+                case "DAUM_NEWS":
+                    logger.info("#STEP:03:daum_movie:: collecting start DAUM_NEWS: by sc_id:" + sc_id);
+                    resultCollect = daumNewsService.getSearchNews(tg);
 
                     break;
             }

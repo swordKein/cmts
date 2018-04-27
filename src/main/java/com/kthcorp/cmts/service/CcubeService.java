@@ -231,7 +231,8 @@ public class CcubeService implements CcubeServiceImpl {
 
                 // 각 meta의 최대 size는 연동규격에 맞추어 700byte에서 cut
                 int limitSize = 699;
-                if (meta.length() < 699) limitSize = meta.length();
+
+                if (meta.length() < limitSize) limitSize = meta.length();
                 meta = meta.substring(0,limitSize);
 
                 origObj.addProperty(mtype, meta);
@@ -256,12 +257,22 @@ public class CcubeService implements CcubeServiceImpl {
                 //System.out.println("#MLOG: getContent::"+itemInfo.toString());
                 if (itemInfo != null) {
                     JsonObject newItem = new JsonObject();
+                    int limitSize = 199;
                     if(type.contains("CcubeContent")) {
                         newItem.addProperty("CONTENT_ID", (itemInfo.getCid() != null ? itemInfo.getCid() : "0"));
-                        newItem.addProperty("META_CONTENT_TITLE", itemInfo.getTitle());
+                        String title = itemInfo.getTitle();
+
+                        if (title.length() < limitSize) limitSize = title.length();
+                        title = title.substring(0,limitSize);
+
+                        newItem.addProperty("META_CONTENT_TITLE", title);
                     } else if(type.contains("CcubeSeries")) {
                         newItem.addProperty("SERIES_ID", (itemInfo.getCid() != null ? itemInfo.getCid() : "0"));
-                        newItem.addProperty("META_SERIES_TITLE", itemInfo.getTitle());
+                        String title = itemInfo.getTitle();
+                        if (title.length() < limitSize) limitSize = title.length();
+                        title = title.substring(0,limitSize);
+
+                        newItem.addProperty("META_SERIES_TITLE", title);
                     }
 
                     // items_tags_metas를 읽어와서 Obj에 매핑
@@ -279,6 +290,10 @@ public class CcubeService implements CcubeServiceImpl {
                             }
                         }
                     }
+                    limitSize = 3999;
+                    //limitSize = 699;
+                    if (awardStr.length() < limitSize) limitSize = awardStr.length();
+                    awardStr = awardStr.substring(0,limitSize);
                     newItem.addProperty("META_AWARD",awardStr);
 
                     /* LIST_SUBGENRE */
