@@ -5122,7 +5122,7 @@ public class TestService implements TestServiceImpl {
                 resultObj.add("CONTENTS", contents);
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 
-                String fileNameContent = (type.startsWith("CcubeSeries") ? "META_SERIES_" : "META_MOVIE_");
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
                 fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
 
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
