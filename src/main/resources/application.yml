@@ -245,9 +245,9 @@ schedule :
     #-
     #  cronExpression : 0 * * * * ?
     #  jobType : sftpService
-    #-
-    #  cronExpression : 0 0 * * * ?
-    #  jobType : snsTopWords
+    -
+      cronExpression : 0 0 * * * ?
+      jobType : snsTopWords
 
 property:
   serverid: cmts_dev_cm01
