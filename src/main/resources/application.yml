@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -126,7 +126,7 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 * 3 * * ?
+      cronExpression : 0 * * * * ?
       jobType : collectService
     -
       cronExpression : 0 * 3 * * ?
@@ -149,6 +149,9 @@ schedule :
     -
       cronExpression : 0 20 11 * * ?
       jobType : ccubeOutputAll
+    -
+      cronExpression : 0 * * * * ?
+      jobType : processCollectHearbit
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -545,6 +548,9 @@ schedule :
     -
       cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
+    -
+      cronExpression : 0 * * * * ?
+      jobType : processCollectHearbit
 property:
   serverid: cmts_prod_coll01
   crawl_api_url: http://10.42.150.161:8080/crawl/byprefix

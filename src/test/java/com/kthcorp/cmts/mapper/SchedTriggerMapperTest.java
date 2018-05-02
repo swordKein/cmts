@@ -13,7 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -188,5 +190,15 @@ public class SchedTriggerMapperTest {
         int sc_id = 1901;
         List<SchedTargetMapping> targetList = schedTriggerMapper.getParentSchedTargetMapping(sc_id);
         System.out.println("#Result:"+targetList.toString());
+    }
+
+    @Test
+    @Rollback(false)
+    public void test_insCollectorActive() {
+        Map<String, Object> reqMap = new HashMap();
+        reqMap.put("stype","collector");
+        reqMap.put("serverid", "test01");
+        int rt = schedTriggerMapper.insCollectorActive(reqMap);
+        System.out.println("#RES:"+schedTriggerMapper.getCollectorActive());
     }
 }

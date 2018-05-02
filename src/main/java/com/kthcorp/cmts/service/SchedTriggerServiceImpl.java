@@ -11,4 +11,8 @@ public interface SchedTriggerServiceImpl {
     public int uptSchedTriggerOnlyStat(SchedTrigger req);
 
     int uptStoppedProcessingJobsStat();
+
+    int processCollectHearbit() throws Exception;
+
+    boolean checkActiveServerByServerid() throws Exception;
 }

@@ -5,6 +5,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by Ice on 11/4/2016.
@@ -15,6 +16,8 @@ public class JobRunner implements Job {
     static final Logger logger = LoggerFactory.getLogger(JobRunner.class);
 
     private String jobType;
+    @Value("${property.serverid}")
+    private String serverid;
 
     @Autowired private CollectService collectService;
     @Autowired private RefineService refineService;
@@ -24,6 +27,7 @@ public class JobRunner implements Job {
     @Autowired private ApiService apiService;
     @Autowired private CcubeService ccubeService;
     @Autowired private TestService testService;
+    @Autowired private SchedTriggerService schedTriggerService;
     //@Autowired
     //private MainService mainServiceImpl;
     //@Autowired
@@ -37,44 +41,80 @@ public class JobRunner implements Job {
         try {
             switch (jobType) {
                 case "collectService":
-                    rt = collectService.ollehTvMetaCollectScheduleCheck();
-                    logger.info("#MLOG schedule.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = collectService.ollehTvMetaCollectScheduleCheck();
+                        logger.info("#MLOG schedule.start jobType:" + jobType + "/rt:" + rt);
+                    } else {
+                        logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "refineService":
-                    rt = refineService.ollehTvMetaRefineScheduleCheck();
-                    logger.info("#MLOG schedule.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = refineService.ollehTvMetaRefineScheduleCheck();
+                        logger.info("#MLOG schedule.start jobType:" + jobType + "/rt:" + rt);
+                    } else {
+                        logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "analyzeService":
-                    rt = analyzeService.ollehTvMetaAnalyzeScheduleCheck();
-                    logger.info("#MLOG schedule.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = analyzeService.ollehTvMetaAnalyzeScheduleCheck();
+                        logger.info("#MLOG schedule.start jobType:" + jobType + "/rt:" + rt);
+                    } else {
+                        logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "itemsService":
-                    rt = itemsService.checkInItems();
-                    logger.info("#MLOG schedule.checkInItems.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = itemsService.checkInItems();
+                        logger.info("#MLOG schedule.checkInItems.start jobType:"+jobType+"/rt:"+rt);
+                    } else {
+                        logger.info("#MLOG schedule.checkInItems not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "snsTopWords":
-                    rt = apiService.processSnsTopKeywordsByDateSched();
-                    logger.info("#MLOG schedule.snsTopKeywords.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = apiService.processSnsTopKeywordsByDateSched();
+                        logger.info("#MLOG schedule.snsTopKeywords.start jobType:" + jobType + "/rt:" + rt);
+                    } else {
+                        logger.info("#MLOG schedule.snsTopKeywords not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "ccubeOutput":
-                    rt = ccubeService.processCcubeOutputToJson();
-                    //testService.processRankForDicKeywordsAndGenres();
-                    //testService.processSubgenre2ByKeywords();
-                    //testService.processMixedSubgenre();
-                    //testService.processMixedSubgenre2();
-                    logger.info("#MLOG schedule.ccubeOutput.start jobType:"+jobType+"/rt:"+rt);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = ccubeService.processCcubeOutputToJson();
+                        //testService.processRankForDicKeywordsAndGenres();
+                        //testService.processSubgenre2ByKeywords();
+                        //testService.processMixedSubgenre();
+                        //testService.processMixedSubgenre2();
+                        logger.info("#MLOG schedule.ccubeOutput.start jobType:" + jobType + "/rt:" + rt);
+                    } else {
+                        logger.info("#MLOG schedule.ccubeOutput not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "ccubeOutputAll":
-                    testService.writeCcubeOutputToJsonByType("CcubeContent");
-                    testService.writeCcubeOutputToJsonByType("CcubeSeries");
-                    logger.info("#MLOG schedule.ccubeOutputAll.start jobType:"+jobType);
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        testService.writeCcubeOutputToJsonByType("CcubeContent");
+                        testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                        logger.info("#MLOG schedule.ccubeOutputAll.start jobType:" + jobType);
+                    } else {
+                        logger.info("#MLOG schedule.ccubeOutputAll not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
                     break;
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");
                     break;
                 case "sftpService":
-                    rt = sftpService.pollingCcubeSftp();
-                    logger.info("#MLOG schedule.check sftpService");
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = sftpService.pollingCcubeSftp();
+                        logger.info("#MLOG schedule.sftpService start jobType:" + jobType);
+                    } else {
+                        logger.info("#MLOG schedule.sftpService not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
+                    break;
+                case "processCollectHearbit":
+                    rt = schedTriggerService.processCollectHearbit();
+                    logger.info("#MLOG schedule.check processCollectHearbit");
                     break;
             }
         } catch (Exception e) {
