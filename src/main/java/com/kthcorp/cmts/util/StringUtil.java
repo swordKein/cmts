@@ -430,4 +430,24 @@ public class StringUtil {
 
         return req;
     }
+
+    public static List<String> removeDupListString(List<String> reqList) {
+        List<String> result = null;
+
+        if (reqList != null && reqList.size() > 0) {
+            result = new ArrayList();
+
+            Set<String> tmpSet = new HashSet();
+
+            for (String s : reqList) {
+                tmpSet.add(s);
+            }
+
+            for (String ss : tmpSet) {
+                result.add(ss);
+            }
+
+        }
+        return result;
+    }
 }

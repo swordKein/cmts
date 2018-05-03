@@ -604,6 +604,20 @@ public class TestServiceTestImpl {
 		testService.writeCcubeOutputToJsonByType("CcubeSeries");
 	}
 
+
+
+	@Test
+	public void test_writeCcubeOutputToJsonByTypeWithResultTag() throws Exception {
+		testService.writeCcubeOutputToJsonByTypeWithResultTag("CcubeContent");
+	}
+
+	@Test
+	public void test_writeCcubeOutputToJsonByType2WithResultTag() throws Exception {
+		testService.writeCcubeOutputToJsonByTypeWithResultTag("CcubeSeries");
+	}
+
+
+
 	@Test
 	public void test1() throws Exception {
 		String req = "드라마, 액션 영화";

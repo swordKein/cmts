@@ -1118,4 +1118,31 @@ public class DicService implements DicServiceImpl {
         }
         return result;
     }
+
+    @Override
+    public List<String> getStringArrayFromWordWithResultTag(String word, String mtype) {
+        List<String> result = null;
+
+        if (!"".equals(word) && !"".equals(mtype)) {
+            result = new ArrayList();
+            result.add(word);
+
+            Map<String,Object> reqMap = new HashMap();
+            reqMap.put("word", word);
+            reqMap.put("mtype", mtype);
+
+            Map<String,Object> wordResultTags = dicKeywordsMapper.getResultTags(reqMap);
+            if (wordResultTags != null) {
+                if (wordResultTags.get("wordto") != null) {
+                    result.remove(0);
+                    result.add((String) wordResultTags.get("wordto"));
+                }
+                if (wordResultTags.get("wordadd") != null) {
+                    result.add((String) wordResultTags.get("wordadd"));
+                }
+            }
+        }
+
+        return result;
+    }
 }

@@ -212,4 +212,12 @@
             or mtype = 'rating'
             </if>
     </select>
+
+    <select id="getResultTags" parameterType="map" resultType="map">
+        /* getResultTags */
+        select * from dic_result_tag_keywords
+        where mtype = #{mtype} and word = #{word}
+        order by regdate desc
+        limit 1
+    </select>
 </mapper>
