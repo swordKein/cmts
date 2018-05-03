@@ -26,4 +26,9 @@ public interface ItemsTagsMapper {
     int cntSearchTagsMetasByMtypeAndKeyword(ItemsTags req);
     List<ItemsTags> getSearchTagsMetasByMtypeAndKeywordPaging(ItemsTags req);
     int uptItemsTagsByManual(ItemsTags req);
+
+    List<ItemsTags> getItemsTagsMetasByManual(ItemsTags req);
+
+
+    int insItemsTagsMetas_0503(ItemsTags req);
 }

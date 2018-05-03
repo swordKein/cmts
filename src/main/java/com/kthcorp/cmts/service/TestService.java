@@ -56,6 +56,8 @@ public class TestService implements TestServiceImpl {
     @Autowired
     private ItemsMetasMapper itemsMetasMapper;
     @Autowired
+    private ItemsTagsMapper itemsTagsMapper;
+    @Autowired
     private ItemsService itemsService;
     @Autowired
     private ItemsTagsService itemsTagsService;
@@ -2952,6 +2954,19 @@ public class TestService implements TestServiceImpl {
     }
 
     @Override
+    public Map<String,Object> loadDicSearchTxtFromFile() throws Exception {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\98.산출물\\0.작업중\\asset_full.txt";
+        fileName = "E:\\0425_dic_subgenre_genres.txt";
+        return this.loadDicSubgenreKeywords();
+    }
+
+    @Override
+    public Map<String,Object> loadDicResultTagKeywords() throws Exception {
+        String fileName = "E:\\0502_메타_대체_추가어_사전.txt";
+        return loadDicResultTagKeywords(fileName);
+    }
+
+    @Override
     public void insDicSubgenreKeywords() throws Exception {
         Map<String,Object> reqMap = loadDicSubgenreKeywords();
         putBulkDataToEsIndex("idx_subgenre", reqMap);
@@ -2979,6 +2994,27 @@ public class TestService implements TestServiceImpl {
         }
     }
 
+    @Override
+    public void insDicResultTagKeywords() throws Exception {
+        Map<String, Object> result = loadDicSubgenreGenres();
+        //System.out.println("#RESULT_MAP::"+result.toString());
+
+        Set entrySet = result.entrySet();
+        Iterator it = entrySet.iterator();
+
+        int lineCnt = 0;
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+            DicSubgenre newSub = new DicSubgenre();
+            //newSub.setMtype("mixgenre");
+            newSub.setMtype("subgenre_filter");
+            newSub.setGenre(me.getKey().toString());
+            newSub.setMeta(me.getValue().toString());
+            newSub.setRegid("ghkdwo77");
+            int rt1 = dicKeywordsMapper.insDicSubgenreGenres(newSub);
+        }
+    }
 
     private List<CcubeContent> loadCcubeMoviesDatas0226_14770_2262(String fileName) throws Exception {
         //String fileName = "E:\\yj1_0226.txt";
@@ -3555,6 +3591,220 @@ public class TestService implements TestServiceImpl {
 
 
     @Override
+    public List<Map<String, Object>> loadDicSearchTxt(String fileName) throws Exception {
+        String seperator = "\\|";
+        Map<String, Object> result = new HashMap();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<Map<String,Object>> listMap = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 100
+                    ){
+                if (cntAll > 0) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        Map<String,Object> newItem = null;
+
+                        //System.out.println("# listMap: size:"+listMap.size()+" / newItem::"+newItem.toString());
+                        System.out.println("# line::"+line);
+                        System.out.println("# lines.length:"+lines.length);
+
+                        if (lines != null && lines.length > 3) {
+                            newItem = new HashMap();
+                            if (lines[0] != null) newItem.put("asset_id", lines[0]);
+                            if (lines.length > 1 && lines[1] != null) newItem.put("title", lines[1]);
+                            if (lines.length > 3 && lines[3] != null) {
+                                newItem.put("searchtxt", lines[3]);
+
+                                listMap.add(newItem);
+                            }
+
+                        }
+                        System.out.println("");
+
+                        }
+
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return listMap;
+    }
+
+    private JsonArray getCombinedSearchKeywords(String origTxt, String appendTxt) throws Exception {
+        JsonArray res = null;
+        if (!"".equals(origTxt.trim()) && !"".equals(appendTxt.trim())) {
+            res = JsonUtil.getJsonArray(origTxt);
+            if (res == null) res = new JsonArray();
+
+            appendTxt = appendTxt.replace(", ", ",");
+            String[] appList = appendTxt.split(",");
+            if (appList != null && appList.length > 0) {
+                for (String app : appList) {
+                    res.add(app);
+                }
+            }
+
+        }
+        return res;
+    }
+
+    @Override
+    public void processSearchTxtManualAppendFile() throws Exception {
+        String fileName = "/home/daisy/upload/asset_full.txt";
+        List<Map<String, Object>> result = this.loadDicSearchTxt(fileName);
+        System.out.println("#RESULT_MAP::" + result.toString());
+        System.out.println("#RESULT_MAP.size::" + result.size());
+
+        this.processSearchTxtManualAppend(result);
+    }
+
+    @Override
+    public void processSearchTxtManualAppend(List<Map<String,Object>> reqMapList) {
+
+        Map<String, Object> resultMap = new HashMap();
+
+        if (reqMapList != null && reqMapList.size() > 0) {
+
+            for (Map<String, Object> nmap : reqMapList) {
+                if (nmap != null && nmap.get("asset_id") != null && nmap.get("searchtxt") != null) {
+                    String asset_id = (String) nmap.get("asset_id");
+                    if (asset_id.length() > 17) {
+                        asset_id = asset_id.substring(0, 18);
+                    }
+
+                    List<Map<String,Object>> idxBySeries = testMapper.getItemIdxBySeriesAssetId(asset_id);
+
+                    if (idxBySeries != null && idxBySeries.size() > 0) {
+                        for (Map<String,Object> idxmap : idxBySeries) {
+                            long longidx = (long) idxmap.get("idx");
+                            int idx = (int) longidx;
+                            ItemsTags reqit = new ItemsTags();
+                            reqit.setIdx(idx);
+                            //reqit.setTagidx((Integer) idxmap.get("tagidx"));
+                            reqit.setMtype("LIST_SEARCHKEYWORDS");
+
+                            List<ItemsTags> listTags = itemsTagsMapper.getItemsTagsMetasByManual(reqit);
+                            for (ItemsTags it: listTags) {
+                                System.out.println("# tags_ser::" + it.toString());
+
+                                String origTxt = (it.getMeta() != null ? it.getMeta() : "");
+                                String appendTxt = (String) nmap.get("searchtxt");
+
+                                JsonArray newSearchWordsArray = null;
+                                if (!"".equals(origTxt.trim()) && !"".equals(appendTxt.trim())) {
+                                    try {
+                                        newSearchWordsArray = this.getCombinedSearchKeywords(origTxt, appendTxt);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                if(newSearchWordsArray != null) {
+                                    it.setMeta(newSearchWordsArray.toString());
+
+                                    String key = it.getIdx() + "_" + it.getTagidx();
+                                    resultMap.put(key, it);
+                                    System.out.println("#UPT METAS::"+it.toString());
+
+                                    //int rtu = itemsTagsMapper.uptItemsTagsByManual(it);
+                                    //System.out.println("#UPT METAS::"+it.toString() + "  rt:"+rtu);
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        List<Map<String, Object>> idxByContents = testMapper.getItemIdxByContentsAssetId(asset_id);
+
+                        if (idxByContents != null && idxByContents.size() > 0) {
+                            for (Map<String, Object> idxmap : idxByContents) {
+                                long longidx = (long) idxmap.get("idx");
+                                int idx = (int) longidx;
+                                ItemsTags reqit = new ItemsTags();
+                                reqit.setIdx(idx);
+                                //reqit.setTagidx((Integer) idxmap.get("tagidx"));
+                                reqit.setMtype("LIST_SEARCHKEYWORDS");
+
+                                List<ItemsTags> listTags = itemsTagsMapper.getItemsTagsMetasByManual(reqit);
+                                for (ItemsTags it : listTags) {
+                                    System.out.println("# tags_con::" + it.toString());
+
+                                    String origTxt = (it.getMeta() != null ? it.getMeta() : "");
+                                    String appendTxt = (String) nmap.get("searchtxt");
+
+                                    JsonArray newSearchWordsArray = null;
+                                    if (!"".equals(origTxt.trim()) && !"".equals(appendTxt.trim())) {
+
+                                        System.out.println("#append SEARCH_KEYWORDS::"+appendTxt);
+
+                                        try {
+                                            newSearchWordsArray = this.getCombinedSearchKeywords(origTxt, appendTxt);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    if(newSearchWordsArray != null) {
+
+                                        System.out.println("#newSearchWordsArray METAS::"+newSearchWordsArray.toString());
+                                        it.setMeta(newSearchWordsArray.toString());
+
+                                        String key = it.getIdx() + "_" + it.getTagidx();
+                                        resultMap.put(key, it);
+                                        System.out.println("#UPT METAS::"+it.toString());
+
+                                        //int rtu = itemsTagsMapper.uptItemsTagsByManual(it);
+                                        //System.out.println("#UPT METAS::"+it.toString() + "  rt:"+rtu);
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        //System.out.println("#RESULT_MAP:"+resultMap.toString());
+
+        Set entrySet = resultMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            //System.out.println((me.getKey()+","+me.getValue()));
+            ItemsTags reqit = (ItemsTags) me.getValue();
+            int rti = itemsTagsMapper.insItemsTagsMetas_0503(reqit);
+        }
+
+        System.out.println("#RESULT_MAP.size():"+resultMap.size());
+    }
+
+    @Override
     public void putBulkDataToEsIndex(String idxName, Map<String,Object> reqMap) throws Exception {
         TransportClient client = new PreBuiltTransportClient(Settings.EMPTY)
                 .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("14.63.170.72"), 9300));
@@ -3671,6 +3921,88 @@ public class TestService implements TestServiceImpl {
                             System.out.println("");
                             */
 
+                        }
+
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private Map<String, Object> loadDicResultTagKeywords(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<String> topGenreArr = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 100
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+
+                        String lines[] = line.trim().split(seperator);
+
+                        for(int j=0; j < lines.length; j++) {
+                            System.out.print("#j:"+j+"::"+lines[j]+" | ");
+                        }
+                        System.out.println(" ");
+
+
+                        if (cntAll == 0) {
+                        }
+                        else {
+                            if (lines != null && lines.length > 3) {
+                                Map<String, Object> newItem = new HashMap();
+
+                                String mtype = lines[0];
+                                mtype = mtype.trim();
+                                String word = lines[1];
+                                word = word.trim();
+                                String wordto = (lines.length > 2 && lines[2] != null ? lines[2] : "");
+                                wordto = wordto.trim();
+                                String wordadd = (lines.length > 3 && lines [3] != null ? lines[3] : "");
+                                wordadd = wordadd.trim();
+
+                                if (!"".equals(word)) {
+                                    if (!"".equals(wordto) || !"".equals(wordadd)) {
+                                        String newKey = mtype+"_"+word;
+                                        //System.out.println(" ");
+
+                                        newItem.put("mtype",mtype);
+                                        newItem.put("word",word);
+                                        newItem.put("wordto",wordto);
+                                        newItem.put("wordadd",wordadd);
+
+                                        System.out.println("#newKey:"+newKey+"  | result_tag_item::"+newItem.toString());
+
+                                        int rti = testMapper.insDicResultTagKeywords(newItem);
+
+                                        result.put(newKey, newItem);
+                                    }
+                                }
+                            }
                         }
 
                         //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
@@ -5122,7 +5454,7 @@ public class TestService implements TestServiceImpl {
                 resultObj.add("CONTENTS", contents);
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 
-                String fileNameContent = (type.startsWith("CcubeSeries") ? "META_SERIES_" : "META_MOVIE_");
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
                 fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
 
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");

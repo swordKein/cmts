@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -52,4 +53,8 @@ public interface SchedTriggerMapper {
     List<ConfTarget> getConfTargetListByScid(SchedTrigger req);
 
     int uptStoppedProcessingJobsStat();
+
+    Map<String,Object> getCollectorActive();
+    int insCollectorActive(Map<String, Object> req);
+    int uptCollectorActive(Map<String, Object> req);
 }

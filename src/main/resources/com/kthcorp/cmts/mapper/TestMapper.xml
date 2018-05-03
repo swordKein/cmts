@@ -189,6 +189,20 @@
         </foreach>
     </insert>
 
+    <select id="getItemIdxByContentsAssetId" resultType="map">
+        /* getItemIdxByContentsAssetId */
+        select it.idx
+        from items it
+        inner join ccube_contents_asset_uniq cca on cca.cid = it.cid and cca.asset_id = #{asset_id}
+    </select>
+
+    <select id="getItemIdxBySeriesAssetId" resultType="map">
+        /* getItemIdxBySeriesAssetId */
+        select it.idx
+        from items it
+        inner join ccube_series_asset_uniq cca on cca.sid = it.cid and cca.asset_id = #{asset_id}
+    </select>
+
     <select id="getSeriesAssetList" resultType="map">
         /* getSeriesAssetList */
         select sid, asset_id
@@ -299,7 +313,7 @@
         where mtype = #{value}
     </select>
 
-    <select id="getContentsOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+    <select id="getContentsOrigItemsAll__" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getContentsOrigItemsAll */
         select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
             from (
@@ -320,7 +334,7 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
-    <select id="cntContentsOrigItemsAll" resultType="java.lang.Integer">
+    <select id="cntContentsOrigItemsAll__" resultType="java.lang.Integer">
         /* cntContentsOrigItemsAll */
           select count(*) as cnt from (
             select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
@@ -343,7 +357,7 @@
     </select>
 
 
-    <select id="getSeriesOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+    <select id="getSeriesOrigItemsAll__" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getSeriesOrigItemsAll */
         select a.itemidx, a.series_id, a.series_nm, a.year, a.director
             from (
@@ -354,6 +368,91 @@
             , co.director
             , it.idx as itemidx
             from ccube_series_0426 co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+        order by a.itemidx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntSeriesOrigItemsAll__" resultType="java.lang.Integer">
+        /* cntSeriesOrigItemsAll */
+          select count(*) as cnt from (
+            select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series_0426 co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+          ) b
+
+    </select>
+
+
+
+    <select id="getContentsOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getContentsOrigItemsAll */
+        select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            from ccube_contents_0430 co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+        order by a.itemidx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntContentsOrigItemsAll" resultType="java.lang.Integer">
+        /* cntContentsOrigItemsAll */
+          select count(*) as cnt from (
+            select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            from ccube_contents_0430 co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+          ) b
+
+    </select>
+
+
+    <select id="getSeriesOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getSeriesOrigItemsAll */
+        select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series_0430 co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -373,7 +472,7 @@
             , co.year
             , co.director
             , it.idx as itemidx
-            from ccube_series_0426 co
+            from ccube_series_0430 co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -381,4 +480,10 @@
           ) b
 
     </select>
+
+    <insert id="insDicResultTagKeywords" parameterType="map">
+        /* insDicResultTagKeywords */
+        insert into dic_result_tag_keywords (mtype, word, wordto, wordadd, regdate, regid)
+        values (#{mtype}, #{word}, #{wordto}, #{wordadd}, now(), 'ghkdwo77')
+    </insert>
 </mapper>

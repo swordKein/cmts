@@ -369,4 +369,23 @@
         and stat = 'P'
     </update>
 
+    <select id="getCollectorActive" resultType="map">
+        /* getCollectorActive */
+        select * from server_active
+        where stype = 'collector'
+        and regdate <![CDATA[ > ]]> DATE_SUB(now(), INTERVAL 5 MINUTE)
+    </select>
+
+    <insert id="insCollectorActive" parameterType="map">
+        /* insCollectorActive */
+        insert into server_active (stype, serverid, startdate, regdate)
+        values (#{stype}, #{serverid}, now(), now())
+        ON DUPLICATE KEY UPDATE serverid = #{serverid}, regdate = now()
+    </insert>
+
+    <update id="uptCollectorActive" parameterType="map">
+        /* uptCollectorActive  */
+        update server_active set regdate = now()
+        where stype = #{stype} and serverid = #{serverid}
+    </update>
 </mapper>

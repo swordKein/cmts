@@ -149,6 +149,9 @@ schedule :
     -
       cronExpression : 0 20 11 * * ?
       jobType : ccubeOutputAll
+    -
+      cronExpression : 0 * * * * ?
+      jobType : processCollectHearbit
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -245,9 +248,12 @@ schedule :
     #-
     #  cronExpression : 0 * * * * ?
     #  jobType : sftpService
-    #-
-    #  cronExpression : 0 0 * * * ?
-    #  jobType : snsTopWords
+    -
+      cronExpression : 0 0 * * * ?
+      jobType : snsTopWords
+    -
+      cronExpression : 0 40 13 * * ?
+      jobType : dummyService
 
 property:
   serverid: cmts_dev_cm01
@@ -545,6 +551,9 @@ schedule :
     -
       cronExpression : 0 00 22 * * ?
       jobType : ccubeOutput
+    -
+      cronExpression : 0 * * * * ?
+      jobType : processCollectHearbit
 property:
   serverid: cmts_prod_coll01
   crawl_api_url: http://10.42.150.161:8080/crawl/byprefix

@@ -68,4 +68,9 @@ public interface TestMapper {
 
     List<Map<String, Object>> getSeriesOrigItemsAll(Items req);
     Integer cntSeriesOrigItemsAll();
+
+    List<Map<String, Object>> getItemIdxByContentsAssetId(String asset);
+    List<Map<String, Object>> getItemIdxBySeriesAssetId(String asset);
+
+    int insDicResultTagKeywords(Map<String,Object> req);
 }
