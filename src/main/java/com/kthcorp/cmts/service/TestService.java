@@ -4937,6 +4937,7 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public void writeCcubeContentsOutputCSV() throws Exception {
+        //List<Map<String, Object>> itemList  = testMapper.getCcubeContentsAll();
         List<Map<String, Object>> itemList  = testMapper.getCcubeContentsAll();
         List<Map<String, Object>> resultList = new ArrayList();
 
@@ -5622,7 +5623,7 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
-countAll = 4107;
+//countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
         resultObj.addProperty("TOTAL_COUNT", countAll);
