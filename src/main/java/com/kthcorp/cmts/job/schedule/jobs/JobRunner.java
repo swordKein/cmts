@@ -103,7 +103,8 @@ public class JobRunner implements Job {
                     break;
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");
-                    testService.processSearchTxtManualAppendFile();
+                    //testService.processSearchTxtManualAppendFile();
+                    testService.processItemsTagsMetasByResultTag();
                     break;
                 case "sftpService":
                     if(schedTriggerService.checkActiveServerByServerid()) {
