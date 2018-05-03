@@ -202,5 +202,5 @@ public interface TestServiceImpl {
 
     int writeCcubeOutputToJsonByType(String type);
 
-    int writeCcubeOutputToJsonByTypeWithResultTag(String type);
+    void processItemsTagsMetasByResultTag() throws Exception;
 }

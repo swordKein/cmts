@@ -234,4 +234,13 @@ public class DicServiceTest {
 		Set result = dicService.getMixedNationGenreArrayFromGenre(origgenre, origin, "origin");
 		System.out.println("#RES:"+result.toString());
 	}
+
+	@Test
+	public void test_getResultTagsList() throws Exception {
+		Map<String, Object> resMap = dicService.getResultTagsList();
+		System.out.println("#RES:"+resMap.toString());
+		System.out.println("#RES.size:"+resMap.size());
+
+		System.out.println("#RES get One :"+resMap.get("WHO_10대 미혼모").toString());
+	}
 }

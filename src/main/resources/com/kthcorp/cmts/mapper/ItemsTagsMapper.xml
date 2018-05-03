@@ -102,7 +102,7 @@
         (idx, tagidx, mtype, meta, regdate, regid, meta_orig)
         values
         (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid}, #{meta_orig})
-        ON DUPLICATE KEY UPDATE meta = #{meta}, meta = #{meta_orig}, regid = #{regid}, regdate = now()
+        ON DUPLICATE KEY UPDATE meta = #{meta}, meta_orig = #{meta_orig}, regid = #{regid}, regdate = now()
     </insert>
 
     <select id="getYjTagsMetasByItemidx" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
@@ -147,5 +147,12 @@
         /* getItemsTagsMetasByManual  */
         select * from items_tags_metas
         where idx = #{idx} and mtype = #{mtype}
+    </select>
+
+    <select id="getItemsTagsMetasByMtype" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
+        /* getItemsTagsMetasByMtype  */
+        select * from items_tags_metas
+        where mtype = #{mtype}
+        and length(meta) > 2
     </select>
 </mapper>
