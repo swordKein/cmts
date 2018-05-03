@@ -107,7 +107,7 @@ public class JobRunner implements Job {
                     //testService.processItemsTagsMetasByResultTag();
                     //testService.writeCcubeContentsOutputCSV();
                     //testService.writeCcubeOutputToJsonByType("CcubeContent");
-                    testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                    //testService.writeCcubeOutputToJsonByType("CcubeSeries");
                     break;
                 case "sftpService":
                     if(schedTriggerService.checkActiveServerByServerid()) {
