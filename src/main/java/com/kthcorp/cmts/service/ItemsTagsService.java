@@ -437,6 +437,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
                 if (subgenreArr != null) {
                     subgenreStr = subgenreArr.toString();
+                    subgenreStr = StringUtil.removeBracket(subgenreStr);
                 }
                 resultObj2.addProperty("META_SUBGENRE", subgenreStr);
             }

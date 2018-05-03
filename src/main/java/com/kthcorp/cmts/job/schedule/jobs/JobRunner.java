@@ -104,7 +104,9 @@ public class JobRunner implements Job {
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");
                     //testService.processSearchTxtManualAppendFile();
-                    testService.processItemsTagsMetasByResultTag();
+                    //testService.processItemsTagsMetasByResultTag();
+                    testService.writeCcubeContentsOutputCSV();
+                    testService.writeCcubeOutputToJsonByType("CcubeContent");
                     break;
                 case "sftpService":
                     if(schedTriggerService.checkActiveServerByServerid()) {

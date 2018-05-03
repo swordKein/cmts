@@ -242,6 +242,13 @@ public class StringUtil {
         return count;
     }
 
+    public static String removeBracket(String req) {
+        req = req.trim();
+        req = req.replace("[","");
+        req = req.replace("]","");
+        return req;
+    }
+
     public static List<String> convertStringToListByComma(String req) {
         req = req.replace("[","");
         req = req.replace("]", "");
