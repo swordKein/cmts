@@ -5574,7 +5574,7 @@ public class TestService implements TestServiceImpl {
                             it.setMeta_orig(meta);
                             it.setMeta(newMeta);
 
-                            //int rti = itemsTagsMapper.insItemsTagsMetas_0503(it);
+                            int rti = itemsTagsMapper.insItemsTagsMetas_0503(it);
                         }
                     }
 
