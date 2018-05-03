@@ -3724,6 +3724,7 @@ public class TestService implements TestServiceImpl {
                                 System.out.println("# tags_ser::" + it.toString());
 
                                 String origTxt = (it.getMeta() != null ? it.getMeta() : "");
+                                it.setMeta_orig(origTxt);
                                 String appendTxt = (String) nmap.get("searchtxt");
 
                                 JsonArray newSearchWordsArray = null;
@@ -3766,6 +3767,7 @@ public class TestService implements TestServiceImpl {
                                     System.out.println("# tags_con::" + it.toString());
 
                                     String origTxt = (it.getMeta() != null ? it.getMeta() : "");
+                                    it.setMeta_orig(origTxt);
                                     String appendTxt = (String) nmap.get("searchtxt");
 
                                     JsonArray newSearchWordsArray = null;
