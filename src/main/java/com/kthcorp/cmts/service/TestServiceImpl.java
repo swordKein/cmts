@@ -118,7 +118,13 @@ public interface TestServiceImpl {
 
     Map<String,Object> loadDicSubgenreKeywords() throws Exception;
 
+    Map<String,Object> loadDicSearchTxtFromFile() throws Exception;
+
+    Map<String,Object> loadDicResultTagKeywords() throws Exception;
+
     void insDicSubgenreKeywords() throws Exception;
+
+    void insDicResultTagKeywords() throws Exception;
 
     void insDicSubgenreGenres() throws Exception;
 
@@ -143,6 +149,12 @@ public interface TestServiceImpl {
     void processRankForDicKeywordsAndGenres();
 
     void writeNoGenreItems();
+
+    List<Map<String, Object>> loadDicSearchTxt(String fileName) throws Exception;
+
+    void processSearchTxtManualAppendFile() throws Exception;
+
+    void processSearchTxtManualAppend(List<Map<String, Object>> reqMapList);
 
     void putBulkDataToEsIndex(String idxName, Map<String, Object> reqMap) throws Exception;
 

@@ -189,6 +189,20 @@
         </foreach>
     </insert>
 
+    <select id="getItemIdxByContentsAssetId" resultType="map">
+        /* getItemIdxByContentsAssetId */
+        select it.idx
+        from items it
+        inner join ccube_contents_asset_uniq cca on cca.cid = it.cid and cca.asset_id = #{asset_id}
+    </select>
+
+    <select id="getItemIdxBySeriesAssetId" resultType="map">
+        /* getItemIdxBySeriesAssetId */
+        select it.idx
+        from items it
+        inner join ccube_series_asset_uniq cca on cca.sid = it.cid and cca.asset_id = #{asset_id}
+    </select>
+
     <select id="getSeriesAssetList" resultType="map">
         /* getSeriesAssetList */
         select sid, asset_id
@@ -466,4 +480,10 @@
           ) b
 
     </select>
+
+    <insert id="insDicResultTagKeywords" parameterType="map">
+        /* insDicResultTagKeywords */
+        insert into dic_result_tag_keywords (mtype, word, wordto, wordadd, regdate, regid)
+        values (#{mtype}, #{word}, #{wordto}, #{wordadd}, now(), 'ghkdwo77')
+    </insert>
 </mapper>

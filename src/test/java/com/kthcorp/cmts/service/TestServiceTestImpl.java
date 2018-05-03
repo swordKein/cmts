@@ -1,8 +1,5 @@
 package com.kthcorp.cmts.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.ItemsMapper;
 import com.kthcorp.cmts.mapper.TestMapper;
 import com.kthcorp.cmts.model.*;
@@ -496,8 +493,19 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
+	public void test_loadDicResultTagKeywords() throws Exception {
+		Map<String,Object> result = testService.loadDicResultTagKeywords();
+		System.out.println("#RESULT:"+result.size());
+	}
+
+	@Test
 	public void test_insDicSubgenreKeywords() throws Exception {
-		//testService.insDicSubgenreKeywords();
+		testService.insDicSubgenreKeywords();
+	}
+
+	@Test
+	public void test_insDicResultTagKeywords() throws Exception {
+		testService.insDicResultTagKeywords();
 	}
 
 	@Test
@@ -600,5 +608,26 @@ public class TestServiceTestImpl {
 	public void test1() throws Exception {
 		String req = "드라마, 액션 영화";
 		System.out.println("#RES:"+ StringUtil.filterGenres(req));
+	}
+
+
+	@Test
+	public void test_loadSearchTxtFromFile() throws Exception {
+		String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\98.산출물\\0.작업중\\asset_full.txt";
+		List<Map<String, Object>> result = testService.loadDicSearchTxt(fileName);
+		System.out.println("#RESULT_MAP::"+result.toString());
+		System.out.println("#RESULT_MAP.size::"+result.size());
+
+		testService.processSearchTxtManualAppend(result);
+
+		//Set entrySet = result.entrySet();
+		//Iterator it = entrySet.iterator();
+
+		int lineCnt = 0;
+		//while(it.hasNext()) {
+			//Map.Entry me = (Map.Entry) it.next();
+			//System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
+			// lineCnt++;
+		//}
 	}
 }

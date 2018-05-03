@@ -96,6 +96,15 @@
         ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
     </insert>
 
+    <insert id="insItemsTagsMetas_0503" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* insItemsMetas */
+        insert into items_tags_metas_0503
+        (idx, tagidx, mtype, meta, regdate, regid)
+        values
+        (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid})
+        ON DUPLICATE KEY UPDATE meta = #{meta}, regid = #{regid}, regdate = now()
+    </insert>
+
     <select id="getYjTagsMetasByItemidx" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
         /* getYjTagsMetasByItemidx */
         select ym.title, ym.title2, ym.yj_id, ym.mtype, ym.meta, ym.regdate
@@ -134,4 +143,9 @@
         where idx = #{idx} and tagidx = #{tagidx} and mtype = #{mtype}
     </update>
 
+    <select id="getItemsTagsMetasByManual" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
+        /* getItemsTagsMetasByManual  */
+        select * from items_tags_metas
+        where idx = #{idx} and mtype = #{mtype}
+    </select>
 </mapper>
