@@ -5508,9 +5508,9 @@ public class TestService implements TestServiceImpl {
             System.out.println("# otype:METAS"+otype +"  size:"+metaList.size());
             //if (metaList != null && metaList.size() > 0)  System.out.println("# otype:META_"+otype +"  get One:"+metaList.get(0).toString());
             if (metaList != null && metaList.size() > 0) {
-                //for (ItemsTags it : metaList) {
-                for(int i=0; i<1; i++) {
-                    ItemsTags it = metaList.get(0);
+                for (ItemsTags it : metaList) {
+                //for(int i=0; i<1; i++) {
+                //    ItemsTags it = metaList.get(0);
                     String meta = (it != null && it.getMeta() != null ? it.getMeta() : "");
                     if (!"".equals(meta)) {
                         JsonArray metaArr = JsonUtil.getJsonArray(meta);
