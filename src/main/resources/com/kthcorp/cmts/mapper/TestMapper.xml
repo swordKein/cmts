@@ -229,12 +229,13 @@
         , cc.eng_title
         , cc.director
         , cc.year
-        , csu.asset_id
+        #, csu.asset_id
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         inner join ccube_contents cc on cc.content_id = it.cid
-        inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
-
+        #inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
+        order by iss.regdate desc
+        limit 4107
     </select>
 
     <select id="getCcubeSeriesAll" resultType="map">
@@ -400,7 +401,7 @@
 
     <select id="getContentsOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getContentsOrigItemsAll */
-        select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
+        select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id, a.regdate
             from (
             select
             co.content_id
@@ -410,12 +411,14 @@
             , co.kmrb_id
             , co.master_content_id
             , it.idx as itemidx
+            , iss.regdate
             from ccube_contents_orig co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            order by iss.regdate desc
             ) a
-        order by a.itemidx asc
+        order by a.regdate desc
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -480,6 +483,62 @@
           ) b
 
     </select>
+
+
+
+
+
+
+    <select id="getContentsOrigItemsAll_100" resultType="map">
+        /* getContentsOrigItemsAll_100 */
+        select a.cid, a.idx, a.type, a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id, a.regdate
+        , a.mcid, a.eng_title
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , co.eng_title
+            , co.master_content_id as mcid
+            , it.idx as itemidx
+            , it.idx
+            , it.type
+            , it.cid
+            , iss.regdate
+            from ccube_contents_0430 co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+
+            ) a
+        order by a.itemidx asc
+    </select>
+
+    <select id="getSeriesOrigItemsAll_100" resultType="map">
+        /* getSeriesOrigItemsAll */
+        select a.cid, a.idx, a.type, a.itemidx, a.series_id, a.series_nm, a.year, a.director
+        , a.series_nm as content_title
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            , it.idx
+            , it.type
+            , it.cid
+            from ccube_series_0430 co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+        order by a.itemidx asc
+    </select>
+
 
     <insert id="insDicResultTagKeywords" parameterType="map">
         /* insDicResultTagKeywords */

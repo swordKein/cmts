@@ -188,7 +188,11 @@ public interface TestServiceImpl {
 
     void writeCcubeContentsOutputCSV() throws Exception;
 
+    void writeCcubeContentsOutputCSV_100() throws Exception;
+
     void writeCcubeSeriesOutputCSV() throws Exception;
+
+    void writeCcubeSeriesOutputCSV_100() throws Exception;
 
     void writeCcubeContentsOutputFT() throws Exception;
 

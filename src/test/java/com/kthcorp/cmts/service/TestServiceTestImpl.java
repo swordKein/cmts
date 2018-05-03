@@ -570,6 +570,16 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
+	public void test_writeCcubeContentsOutputCSV_100() throws Exception {
+		testService.writeCcubeContentsOutputCSV_100();
+	}
+
+	@Test
+	public void test_writeCcubeSeriesOutputCSV_100() throws Exception {
+		testService.writeCcubeSeriesOutputCSV_100();
+	}
+
+	@Test
 	public void test_writeCcubeContentsOutputFT() throws Exception {
 		testService.writeCcubeContentsOutputFT();
 	}
