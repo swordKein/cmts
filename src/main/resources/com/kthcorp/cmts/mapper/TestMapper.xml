@@ -483,8 +483,8 @@
 
     <insert id="insDicResultTagKeywords" parameterType="map">
         /* insDicResultTagKeywords */
-        insert into dic_result_tag_keywords (mtype, word, wordto, wordadd, regdate, regid)
-        values (#{mtype}, #{word}, #{wordto}, #{wordadd}, now(), 'ghkdwo77')
+        insert into dic_result_tag_keywords (mtype, word, wordto, wordadd, worddel, regdate, regid)
+        values (#{mtype}, #{word}, #{wordto}, #{wordadd}, #{worddel}, now(), 'ghkdwo77')
     </insert>
 
 </mapper>
