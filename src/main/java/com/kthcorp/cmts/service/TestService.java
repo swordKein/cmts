@@ -2962,7 +2962,8 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public Map<String,Object> loadDicResultTagKeywords() throws Exception {
-        String fileName = "E:\\0502_메타_대체_추가어_사전.txt";
+        //String fileName = "E:\\0502_메타_대체_추가어_사전.txt";
+        String fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0503_WHERE_대체_키워드_최진기팀장.txt";
         return loadDicResultTagKeywords(fileName);
     }
 
@@ -3989,7 +3990,7 @@ public class TestService implements TestServiceImpl {
                         if (cntAll == 0) {
                         }
                         else {
-                            if (lines != null && lines.length > 3) {
+                            if (lines != null && lines.length > 2) {
                                 Map<String, Object> newItem = new HashMap();
 
                                 String mtype = lines[0];
@@ -4000,9 +4001,12 @@ public class TestService implements TestServiceImpl {
                                 wordto = wordto.trim();
                                 String wordadd = (lines.length > 3 && lines [3] != null ? lines[3] : "");
                                 wordadd = wordadd.trim();
+                                String worddel = (lines.length > 4 && lines [4] != null ? lines[4] : "");
+                                worddel = worddel.trim();
+
 
                                 if (!"".equals(word)) {
-                                    if (!"".equals(wordto) || !"".equals(wordadd)) {
+                                    if (!"".equals(wordto) || !"".equals(wordadd) || !"".equals(worddel)) {
                                         String newKey = mtype+"_"+word;
                                         //System.out.println(" ");
 
@@ -4010,6 +4014,7 @@ public class TestService implements TestServiceImpl {
                                         newItem.put("word",word);
                                         newItem.put("wordto",wordto);
                                         newItem.put("wordadd",wordadd);
+                                        newItem.put("worddel",worddel);
 
                                         System.out.println("#newKey:"+newKey+"  | result_tag_item::"+newItem.toString());
 
@@ -5492,11 +5497,11 @@ public class TestService implements TestServiceImpl {
         Map<String, Object> resultMap = new HashMap();
 
         List<String> origTypes = new ArrayList<String>();
-        origTypes.add("WHEN");
+        //origTypes.add("WHEN");
         origTypes.add("WHERE");
-        origTypes.add("WHO");
-        origTypes.add("WHAT");
-        origTypes.add("EMOTION");
+        //origTypes.add("WHO");
+        //origTypes.add("WHAT");
+        //origTypes.add("EMOTION");
 
         for (String otype : origTypes) {
             ItemsTags req = new ItemsTags();
@@ -5509,8 +5514,8 @@ public class TestService implements TestServiceImpl {
             //if (metaList != null && metaList.size() > 0)  System.out.println("# otype:META_"+otype +"  get One:"+metaList.get(0).toString());
             if (metaList != null && metaList.size() > 0) {
                 for (ItemsTags it : metaList) {
-                //for(int i=0; i<1; i++) {
-                //    ItemsTags it = metaList.get(0);
+                //for(int i=0; i<10; i++) {
+                    //ItemsTags it = metaList.get(0);
                     String meta = (it != null && it.getMeta() != null ? it.getMeta() : "");
                     if (!"".equals(meta)) {
                         JsonArray metaArr = JsonUtil.getJsonArray(meta);
@@ -5537,7 +5542,7 @@ public class TestService implements TestServiceImpl {
 
                                                 boolean isExist = false;
                                                 for (String ss : newSet) {
-                                                    System.out.println("# tmp compare ss:"+ss+"  vs  "+ctWord+"    isExist:"+isExist);
+                                                    //System.out.println("# tmp compare ss:"+ss+"  vs  "+ctWord+"    isExist:"+isExist);
 
                                                     if (ss.equals(ctWord)) {
                                                         isExist = true;
@@ -5569,7 +5574,7 @@ public class TestService implements TestServiceImpl {
                             it.setMeta_orig(meta);
                             it.setMeta(newMeta);
 
-                            int rti = itemsTagsMapper.insItemsTagsMetas_0503(it);
+                            //int rti = itemsTagsMapper.insItemsTagsMetas_0503(it);
                         }
                     }
 

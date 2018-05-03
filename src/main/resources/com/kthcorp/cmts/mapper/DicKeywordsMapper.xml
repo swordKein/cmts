@@ -223,7 +223,7 @@
 
     <select id="getResultTagsList" resultType="map">
         /* getResultTagsList */
-        select concat(mtype, '_', word) as key1, word, wordto, wordadd from dic_result_tag_keywords
+        select concat(mtype, '_', word) as key1, word, wordto, wordadd, worddel from dic_result_tag_keywords
         order by mtype asc, regdate desc
 
     </select>

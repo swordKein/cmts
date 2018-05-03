@@ -1151,7 +1151,11 @@ public class DicService implements DicServiceImpl {
                 if (wordResultTags.get("wordto") != null && !"".equals(wordResultTags.get("wordto"))) {
                     result.add((String) wordResultTags.get("wordto"));
                 } else {
-                    result.add(word);
+                    if (wordResultTags.get("worddel") != null && !"".equals(wordResultTags.get("worddel"))) {
+                        System.out.println("# worddel:"+wordResultTags.get("worddel")+"  /  by word:"+word);
+                    } else {
+                        result.add(word);
+                    }
                 }
                 if (wordResultTags.get("wordadd") != null && !"".equals(wordResultTags.get("wordadd"))) {
                     result.add((String) wordResultTags.get("wordadd"));
