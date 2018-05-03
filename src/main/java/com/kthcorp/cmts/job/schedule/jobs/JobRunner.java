@@ -106,7 +106,7 @@ public class JobRunner implements Job {
                     //testService.processSearchTxtManualAppendFile();
                     //testService.processItemsTagsMetasByResultTag();
                     //testService.writeCcubeContentsOutputCSV();
-                    testService.writeCcubeOutputToJsonByType("CcubeContent");
+                    //testService.writeCcubeOutputToJsonByType("CcubeContent");
                     testService.writeCcubeOutputToJsonByType("CcubeSeries");
                     break;
                 case "sftpService":
