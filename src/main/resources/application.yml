@@ -252,7 +252,7 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 35 22 * * ?
+      cronExpression : 0 40 22 * * ?
       jobType : dummyService
 
 property:
