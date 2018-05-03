@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -45,4 +46,6 @@ public interface DicKeywordsMapper {
 
     int insDicSubgenreGenres(DicSubgenre req);
     List<DicSubgenre> getDicSubgenreGenres(String mtype);
+
+    Map<String,Object> getResultTags(Map<String,Object> req);
 }

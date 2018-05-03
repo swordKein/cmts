@@ -201,4 +201,6 @@ public interface TestServiceImpl {
     void writeDicKeywordsByTypes() throws Exception;
 
     int writeCcubeOutputToJsonByType(String type);
+
+    int writeCcubeOutputToJsonByTypeWithResultTag(String type);
 }
