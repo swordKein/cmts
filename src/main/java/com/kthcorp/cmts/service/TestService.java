@@ -5487,130 +5487,96 @@ public class TestService implements TestServiceImpl {
         return rt;
     }
 
-
     @Override
-    public int writeCcubeOutputToJsonByTypeWithResultTag(String type) {
-        int rt = 0;
+    public void processItemsTagsMetasByResultTag() throws Exception {
+        Map<String, Object> resultMap = new HashMap();
 
-        int pageSize = 20;
-        Items req = new Items();
-        req.setType(type);
-        req.setPageSize(pageSize);
+        List<String> origTypes = new ArrayList<String>();
+        origTypes.add("WHEN");
+        origTypes.add("WHERE");
+        origTypes.add("WHO");
+        origTypes.add("WHAT");
+        origTypes.add("EMOTION");
 
-        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
-        List<Map<String, Object>> reqItems = null;
-        int countAll = 0;
-        if ("CcubeSeries".equals(type)) {
-            countAll = testMapper.cntSeriesOrigItemsAll();
-        } else {
-            countAll = testMapper.cntContentsOrigItemsAll();
-        }
+        for (String otype : origTypes) {
+            ItemsTags req = new ItemsTags();
+            req.setMtype("METAS"+otype);
+            List<ItemsTags> metaList = itemsTagsMapper.getItemsTagsMetasByMtype(req);
 
-countAll = 11;
+            int metaCount = 0;
 
-        JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("TOTAL_COUNT", countAll);
+            System.out.println("# otype:METAS"+otype +"  size:"+metaList.size());
+            //if (metaList != null && metaList.size() > 0)  System.out.println("# otype:META_"+otype +"  get One:"+metaList.get(0).toString());
+            if (metaList != null && metaList.size() > 0) {
+                //for (ItemsTags it : metaList) {
+                for(int i=0; i<1; i++) {
+                    ItemsTags it = metaList.get(0);
+                    String meta = (it != null && it.getMeta() != null ? it.getMeta() : "");
+                    if (!"".equals(meta)) {
+                        JsonArray metaArr = JsonUtil.getJsonArray(meta);
+                        JsonArray newArr = new JsonArray();
 
-        logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
-        if(countAll > 0) {
-            int pageAll = 0;
-            if (countAll == 0) {
-                pageAll = 1;
-            } else {
-                pageAll = countAll / pageSize + 1;
-            }
-            System.out.println("#pageAll:" + pageAll);
+                        Set<String> newSet = new HashSet();
 
-            JsonArray contents = null;
+                        if (metaArr != null && metaArr.size() > 0) {
+                            for (JsonElement je : metaArr) {
+                                JsonObject jo = (JsonObject) je;
+                                System.out.println("#tmp jo:"+jo.toString());
 
-            try {
-                for (int pno = 1; pno <= pageAll; pno++) {
-                    req.setPageNo(pno);
-                    req.setPageSize(pageSize);
+                                if (jo != null && jo.get("word") != null) {
+                                    String word1 = jo.get("word").getAsString();
+                                    word1 = word1.trim();
 
-                    reqItems = null;
-                    if ("CcubeSeries".equals(type)) {
-                        reqItems = testMapper.getSeriesOrigItemsAll(req);
-                    } else {
-                        reqItems = testMapper.getContentsOrigItemsAll(req);
-                    }
+                                    if (!"".equals(word1)) {
+                                        Set<String> combinedResultTags = dicService.getStringArrayFromWordWithResultTag(word1, otype);
 
-                    if (reqItems != null) {
-                        logger.info("#writeCcubeOutputToJson.getAll: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
-                        int oldItemIdx = 0;
-                        int cnt = 0;
-                        for (Map<String, Object> ins : reqItems) {
+                                        System.out.println("# combinedResultTags :"+combinedResultTags.toString() + "   by word:"+word1);
 
-                            /*
-                            CcubeKeys reqCk = null;
-                            // 중복방지로직, cid , title, director, year 순으로 대조
+                                        if (combinedResultTags != null && combinedResultTags.size() > 0) {
+                                            for (String ctWord : combinedResultTags) {
 
-                            if ("CcubeContent".equals(type)) {
-                                reqCk = new CcubeKeys();
-                                reqCk.setContent_id(ins.get("content_id").toString());
-                                reqCk.setMaster_content_id(ins.get("master_content_id").toString());
-                                String title = ins.get("content_title").toString();
-                                reqCk.setPurity_title(title);
-                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
-                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
-                                reqCk.setKmrb_id(ins.get("kmrb_id") != null ? ins.get("kmrb_id").toString() : "");
-                            } else if ("CcubeSeries".equals(type)) {
-                                reqCk = new CcubeKeys();
-                                reqCk.setSeries_id(ins.get("series_id").toString());
-                                String title = ins.get("series_nm").toString();
-                                reqCk.setPurity_title(title);
-                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
-                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
-                            }
+                                                boolean isExist = false;
+                                                for (String ss : newSet) {
+                                                    System.out.println("# tmp compare ss:"+ss+"  vs  "+ctWord+"    isExist:"+isExist);
 
-                            oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
-                            */
-                            long longidx = (long) ins.get("itemidx");
-                            oldItemIdx = (int) longidx;
+                                                    if (ss.equals(ctWord)) {
+                                                        isExist = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (!isExist) {
+                                                    JsonObject newJo = new JsonObject();
+                                                    newJo.addProperty("word", ctWord);
+                                                    newJo.addProperty("type", (jo.get("type") != null ? jo.get("type").getAsString() : ""));
+                                                    newJo.addProperty("ratio",(jo.get("ratio") != null ? jo.get("ratio").getAsDouble() : 0.0));
+                                                    newArr.add(newJo);
 
-                            if (oldItemIdx > 0) {
-                                // 중복방지 로직에 걸려서 ccube_keys에 등재되지 않은 content_id, series_id 재처리용
-                                /*
-                                int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
-                                if (currItemIdx == 0) {
-                                    reqCk.setItemidx(oldItemIdx);
-
-                                    if("CcubeSeries".equals(type)) {
-                                        reqCk.setMaster_content_id("0");
-                                        reqCk.setContent_id("0");
-                                    } else {
-                                        reqCk.setSeries_id("0");
+                                                    newSet.add(ctWord);
+                                                }
+                                            }
+                                        }
                                     }
-                                    int rti = ccubeMapper.insCcubeKeys(reqCk);
                                 }
-                                */
-                                ins.put("idx", oldItemIdx);
-                                contents = ccubeService.getJsonArrayForCcubeOutputWithResultTag(contents, type, ins);
-                                cnt++;
                             }
-                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+
+                        String newMeta = newArr.toString();
+
+                        System.out.println("# otype:"+otype+"  origMeta:"+meta);
+                        System.out.println("# otype:"+otype+"  newMeta:"+newMeta);
+
+                        if(!meta.equals(newMeta)) {
+                            it.setMeta_orig(meta);
+                            it.setMeta(newMeta);
+
+                            int rti = itemsTagsMapper.insItemsTagsMetas_0503(it);
                         }
                     }
 
+                    metaCount++;
                 }
-
-                resultObj.add("CONTENTS", contents);
-                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
-
-                String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
-                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
-
-                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
-                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
-                //int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
-
-                rt = 1;
-            } catch (Exception e) {
-                rt = -3;
-                logger.error("#ERROR:" + e);
-                e.printStackTrace();
             }
         }
-        return rt;
+
     }
 }

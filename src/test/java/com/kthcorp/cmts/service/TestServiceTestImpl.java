@@ -605,19 +605,6 @@ public class TestServiceTestImpl {
 	}
 
 
-
-	@Test
-	public void test_writeCcubeOutputToJsonByTypeWithResultTag() throws Exception {
-		testService.writeCcubeOutputToJsonByTypeWithResultTag("CcubeContent");
-	}
-
-	@Test
-	public void test_writeCcubeOutputToJsonByType2WithResultTag() throws Exception {
-		testService.writeCcubeOutputToJsonByTypeWithResultTag("CcubeSeries");
-	}
-
-
-
 	@Test
 	public void test1() throws Exception {
 		String req = "드라마, 액션 영화";
@@ -643,5 +630,11 @@ public class TestServiceTestImpl {
 			//System.out.println("# "+lineCnt++ +" st map data:"+(me.getKey()+":"+me.getValue()));
 			// lineCnt++;
 		//}
+	}
+
+
+	@Test
+	public void test_processItemsTagsMetasByResultTag() throws Exception {
+		testService.processItemsTagsMetasByResultTag();
 	}
 }

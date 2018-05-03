@@ -31,4 +31,6 @@ public interface ItemsTagsMapper {
 
 
     int insItemsTagsMetas_0503(ItemsTags req);
+
+    List<ItemsTags> getItemsTagsMetasByMtype(ItemsTags req);
 }

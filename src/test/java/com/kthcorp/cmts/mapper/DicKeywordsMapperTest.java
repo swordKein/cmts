@@ -12,6 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -59,5 +60,13 @@ public class DicKeywordsMapperTest {
     @Test
     public void test_getDicGenreKeywordsByGenre() throws Exception {
         System.out.println("#RESULT:"+dicKeywordsMapper.getDicGenreKeywordsByGenre("드라마"));
+    }
+
+    @Test
+    public void test_getResultTagsList() throws Exception {
+        List<Map<String,Object>> result = dicKeywordsMapper.getResultTagsList();
+        System.out.println("#RES:"+result.toString());
+        System.out.println("#RES.size:"+result.size());
+
     }
 }

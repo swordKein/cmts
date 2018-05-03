@@ -1119,27 +1119,45 @@ public class DicService implements DicServiceImpl {
         return result;
     }
 
+    private static Map<String, Object> DIC_RESULT_TAG_LIST = null;
+
     @Override
-    public List<String> getStringArrayFromWordWithResultTag(String word, String mtype) {
-        List<String> result = null;
+    public Map<String, Object> getResultTagsList() {
+        Map<String, Object> resultMap = new HashMap();
+        List<Map<String, Object>> tmpMapList = dicKeywordsMapper.getResultTagsList();
+        if (tmpMapList != null && tmpMapList.size() > 0) {
+            for (Map<String, Object> item : tmpMapList) {
+                String key1 = (String) item.get("key1");
+                resultMap.put(key1, item);
+            }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Set<String> getStringArrayFromWordWithResultTag(String word, String mtype) {
+        Set<String> result = null;
+
+        if (DIC_RESULT_TAG_LIST == null) DIC_RESULT_TAG_LIST = this.getResultTagsList();
 
         if (!"".equals(word) && !"".equals(mtype)) {
-            result = new ArrayList();
-            result.add(word);
+            result = new HashSet();
 
-            Map<String,Object> reqMap = new HashMap();
-            reqMap.put("word", word);
-            reqMap.put("mtype", mtype);
+            String key1 = mtype + "_" + word;
 
-            Map<String,Object> wordResultTags = dicKeywordsMapper.getResultTags(reqMap);
+            Map<String,Object> wordResultTags = (Map<String, Object>) DIC_RESULT_TAG_LIST.get(key1);
+
             if (wordResultTags != null) {
-                if (wordResultTags.get("wordto") != null) {
-                    result.remove(0);
+                if (wordResultTags.get("wordto") != null && !"".equals(wordResultTags.get("wordto"))) {
                     result.add((String) wordResultTags.get("wordto"));
+                } else {
+                    result.add(word);
                 }
-                if (wordResultTags.get("wordadd") != null) {
+                if (wordResultTags.get("wordadd") != null && !"".equals(wordResultTags.get("wordadd"))) {
                     result.add((String) wordResultTags.get("wordadd"));
                 }
+            } else {
+                result.add(word);
             }
         }
 

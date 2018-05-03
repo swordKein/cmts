@@ -48,4 +48,6 @@ public interface DicKeywordsMapper {
     List<DicSubgenre> getDicSubgenreGenres(String mtype);
 
     Map<String,Object> getResultTags(Map<String,Object> req);
+
+    List<Map<String, Object>> getResultTagsList();
 }

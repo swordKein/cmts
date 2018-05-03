@@ -108,5 +108,7 @@ public interface DicServiceImpl {
 
     Set getMixedNationGenreArrayFromGenre(String genre, String origin, String mtype);
 
-    List<String> getStringArrayFromWordWithResultTag(String word, String mtype);
+    Map<String, Object> getResultTagsList();
+
+    Set<String> getStringArrayFromWordWithResultTag(String word, String mtype);
 }

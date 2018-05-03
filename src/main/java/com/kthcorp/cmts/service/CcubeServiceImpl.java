@@ -35,8 +35,6 @@ public interface CcubeServiceImpl {
 
     JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception;
 
-    JsonArray getJsonArrayForCcubeOutputWithResultTag(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception;
-
     int processCcubeOutputToJson();
 
     int processCcubeOutputToJsonByType(String type);
