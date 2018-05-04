@@ -327,7 +327,7 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 0 1 * * ?
+      cronExpression : 0 0 * * * ?
       jobType : dummyService
 property:
   serverid: cmts_dev_nosched01
@@ -399,7 +399,7 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 0 1 * * ?
+      cronExpression : 0 0 * * * ?
       jobType : dummyService
 property:
   serverid: cmts_dev_crawl01
@@ -470,7 +470,7 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 0 1 * * ?
+      cronExpression : 0 0 * * * ?
       jobType : dummyService
 property:
   serverid: cmts_prod_crawl01
@@ -613,7 +613,7 @@ spring:
 schedule :
   jobs :
     -
-      cronExpression : 0 0 1 * * ?
+      cronExpression : 0 0 * * * ?
       jobType : dummyService
 property:
   serverid: cmts_prod_api01
