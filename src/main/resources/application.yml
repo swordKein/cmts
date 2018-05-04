@@ -254,6 +254,9 @@ schedule :
     -
       cronExpression : 0 40 22 * * ?
       jobType : dummyService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : processCollectHearbit
 
 property:
   serverid: cmts_dev_cm01
