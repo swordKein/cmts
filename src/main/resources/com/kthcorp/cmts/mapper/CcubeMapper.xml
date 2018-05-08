@@ -383,7 +383,7 @@
 
     <insert id="insCcubeContentOrig" parameterType="com.kthcorp.cmts.model.CcubeContent">
         /* insCcubeContentOrig */
-        insert into ccube_contents (
+        insert into ccube_contents_orig (
             MASTER_CONTENT_ID, CONTENT_ID, PURITY_TITLE, CONTENT_TITLE, ENG_TITLE, DIRECTOR, YEAR,
             ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, TITLE_BRIEF, DOMESTIC_RELEASE_DATE,
             KT_RATING, RUNNING_TIME, DETAIL_GENRE_DISPLAY_CD, DETAIL_GENRE_DISPLAY_NM, KMRB_ID, KMRB_TITLE_NM, KMRB_YEAR,
@@ -403,7 +403,7 @@
 
     <insert id="insCcubeSeriesOrig" parameterType="com.kthcorp.cmts.model.CcubeSeries">
         /* insCcubeSeriesOrig */
-        insert into ccube_series (
+        insert into ccube_series_orig (
         SERIES_ID, SERIES_NM, PURITY_TITLE , ENG_TITLE, DIRECTOR, YEAR, ACTORS_DISPLAY, POSTER_URL, COUNTRY_OF_ORIGIN, SAD_CTGRY_ID, SAD_CTGRY_NM, KT_RATING, DETAIL_GENRE_DISPLAY_CD
         , DETAIL_GENRE_DISPLAY_NM,
         regdate,
