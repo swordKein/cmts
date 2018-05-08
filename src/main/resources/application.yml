@@ -245,9 +245,9 @@ schedule :
     -
       cronExpression : 0 40 12 * * ?
       jobType : ccubeOutputAll
-    #-
-    #  cronExpression : 0 * * * * ?
-    #  jobType : sftpService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : sftpService
     -
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
