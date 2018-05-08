@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -511,7 +511,7 @@ logging:
   pattern:
     #console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/megatag/cmts/service.log
+  file: /home/megatag/logs/service.log
 
 ---
 spring:
@@ -546,7 +546,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 30 7 * * ?
+      cronExpression : 0 * * * * ?
       jobType : sftpService
     -
       cronExpression : 0 0 * * * ?
@@ -563,14 +563,15 @@ property:
   crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
   crawl_naver_kordic_url: http://10.42.150.161:8080/naver/kordic?query=#KEYWORD
 ccube_sftp:
-  ip: 10.220.147.95
+  #ip: 10.220.147.95
+  ip: 172.16.208.51
   port: 22
   user: daisy
   passwd: daisy!
   workdir: /home/ktipmedia/ccube/work/
-  downdir: /home/ktipmedia/ccube/down
+  downdir: /home/ktipmedia/DOWNLOAD
   downext: xml
-  end_after_movedir: /home/ktipmedia/ccube/done
+  end_after_movedir: /home/ktipmedia/DOWNLOAD/DONE
   uploaddir: /META_EXT
 prism_sftp:
   ip: 14.63.170.72
