@@ -745,7 +745,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration);
+				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration, sendnow);
 				if(rt > 0) {
 					rtcode = 1;
 					rtmsg = "SUCCESS";

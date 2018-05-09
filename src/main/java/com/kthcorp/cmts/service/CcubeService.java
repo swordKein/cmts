@@ -312,13 +312,13 @@ public class CcubeService implements CcubeServiceImpl {
                     newItem = JsonUtil.setEmptyMetasAndReplaceComma(newItem, origTypes);
 
 
-                    // 임시
+                    /* 임시
                     // 검색메타 삭제
                     if (newItem.get("META_SEARCH") != null) {
                         newItem.remove("META_SEARCH");
                         newItem.addProperty("META_SEARCH","");
                     }
-
+                    */
 
                     contentsArr.add(newItem);
                     //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
@@ -655,5 +655,10 @@ public class CcubeService implements CcubeServiceImpl {
         rt = ccubeMapper.insCcubeSeries(req);
 
         return rt;
+    }
+
+    @Override
+    public int insCcubeOutput(Map<String,Object> req) {
+        return ccubeMapper.insCcubeOutput(req);
     }
 }

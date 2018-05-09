@@ -43,6 +43,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private ItemsService itemsService;
     @Autowired
     private ApiService apiService;
+    @Autowired
+    private CcubeService ccubeService;
 
     @Autowired
     private ManualJobHistMapper manualJobHistMapper;
@@ -1062,7 +1064,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration) {
+    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow) {
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
@@ -1154,6 +1156,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 if (!"".equals(duration)) reqIt.setDuration(duration);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
+            }
+
+            if ("Y".equals(sendnow.toUpperCase())) {
+                Map<String,Object> reqCcube = new HashMap();
+                reqCcube.put("idx", itemid);
+                reqCcube.put("regid", serverid);
+                int rtc = ccubeService.insCcubeOutput(reqCcube);
             }
 
         } catch (Exception e) {
