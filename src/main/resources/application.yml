@@ -574,7 +574,7 @@ ccube_sftp:
   downdir: /home/ktipmedia/DOWNLOAD
   downext: xml
   end_after_movedir: /home/ktipmedia/DOWNLOAD/DONE
-  uploaddir: /META_EXT/
+  uploaddir: /home/ktipmedia/META_EXT/
 prism_sftp:
   #ip: 10.220.170.39
   ip: 172.16.208.51

@@ -297,6 +297,8 @@ public class CcubeService implements CcubeServiceImpl {
                     //limitSize = 699;
                     if (awardStr.length() < limitSize) limitSize = awardStr.length();
                     awardStr = awardStr.substring(0,limitSize);
+                    awardStr = awardStr.replace("FAIL","");
+
                     newItem.addProperty("META_AWARD",awardStr);
 
                     /* LIST_SUBGENRE */
