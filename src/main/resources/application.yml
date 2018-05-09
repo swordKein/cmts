@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -144,10 +144,10 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 00 22 * * ?
+      cronExpression : 0 * * * * ?
       jobType : ccubeOutput
     -
-      cronExpression : 0 20 11 * * ?
+      cronExpression : 0 35 12 * * ?
       jobType : ccubeOutputAll
     -
       cronExpression : 0 * * * * ?
@@ -169,7 +169,7 @@ ccube_sftp:
   downdir: /home/daisy/download
   downext: xml
   end_after_movedir: /home/daisy/download/DELETE
-  uploaddir: /home/daisy/download/META_EXT
+  uploaddir: /home/daisy/download/META_EXT/
   #uploaddir: /META_EXT
 prism_sftp:
   ip: 14.63.170.72
@@ -177,9 +177,9 @@ prism_sftp:
   user: daisy
   passwd: daisy!
   workdir: d:\\upload\\
-  downdir: /home/daisy/service/cmts
+  downdir: /home/daisy/prism/download/#DATE#
   downext: dat
-  uploaddir: /home/daisy/service/cmts/upload/
+  uploaddir: /home/daisy/prism/upload/#DATE#
 elasticsearch:
   host: 14.63.170.72
   port: 9200
@@ -240,7 +240,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 00 22 * * ?
+      cronExpression : 0 * * * * ?
       jobType : ccubeOutput
     -
       cronExpression : 0 40 12 * * ?
@@ -552,7 +552,7 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 00 22 * * ?
+      cronExpression : 0 * * * * ?
       jobType : ccubeOutput
     -
       cronExpression : 0 * * * * ?
@@ -566,22 +566,29 @@ ccube_sftp:
   #ip: 10.220.147.95
   ip: 172.16.208.51
   port: 22
-  user: daisy
-  passwd: daisy!
+  #user: tgg
+  user: ktipmedia
+  #passwd: ttgg@1234
+  passwd: 3!aleldj
   workdir: /home/ktipmedia/ccube/work/
   downdir: /home/ktipmedia/DOWNLOAD
   downext: xml
   end_after_movedir: /home/ktipmedia/DOWNLOAD/DONE
-  uploaddir: /META_EXT
+  uploaddir: /META_EXT/
 prism_sftp:
-  ip: 14.63.170.72
+  #ip: 10.220.170.39
+  ip: 172.16.208.51
   port: 22
-  user: daisy
-  passwd: daisy!
+  #user: otvmeta_user
+  user: ktipmedia
+  #passwd: otvmeta1234$
+  passwd: 3!aleldj
   workdir: /home/ktipmedia/prism/work/
-  downdir: /home/ktipmedia/prism/down
+  #downdir: /data/otvmeta_user/#DATE#/
+  downdir: /home/ktipmedia/prism/down/#DATE#
   downext: dat
-  uploaddir: /home/ktipmedia/prism/upload
+  #uploaddir: /data/otvmeta_user/#DATE#/
+  uploaddir: /home/ktipmedia/prism/upload/#DATE#
 elasticsearch:
   host: 172.16.208.52
   port: 9200

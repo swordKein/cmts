@@ -48,7 +48,7 @@ public class ItemsTagsServiceImplTest {
 
 		String req = "[{\"meta\":\"압도적인2\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"mod\"}]";
 
-		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "");
+		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "", "Y");
 		System.out.println("#Result:"+result);
 	}
 

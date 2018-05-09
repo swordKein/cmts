@@ -328,6 +328,16 @@
         /* getCcubeOutputListStandby */
         select co.*, it.title, it.title2, it.director, it.year, it.cid, it.type from ccube_output co
         inner join items it on it.idx = co.idx
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        <if test='type != null and type == "CcubeContent"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+            inner join ccube_contents_orig coo on coo.content_id = ck.content_id
+            or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)
+        </if>
+        <if test='type != null and type == "CcubeSeries"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+            inner join ccube_series_orig coo on coo.series_id = ck.series_id
+        </if>
         where co.stat = 'Y' and it.type like concat(#{type}, '%')
         and co.uptcnt <![CDATA[ < ]]> 4
         order by co.regdate asc, co.idx asc
@@ -338,6 +348,16 @@
         /* cntCcubeOutputListStandby */
         select count(*) as cnt from ccube_output co
         inner join items it on it.idx = co.idx
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        <if test='type != null and type == "CcubeContent"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+            inner join ccube_contents_orig coo on coo.content_id = ck.content_id
+            or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)
+        </if>
+        <if test='type != null and type == "CcubeSeries"'>
+            inner join ccube_keys ck on ck.itemidx = it.idx
+            inner join ccube_series_orig coo on coo.series_id = ck.series_id
+        </if>
         where co.stat = 'Y' and it.type like concat(#{type}, '%')
         and co.uptcnt <![CDATA[ < ]]> 4
     </select>

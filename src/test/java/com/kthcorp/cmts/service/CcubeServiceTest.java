@@ -53,6 +53,40 @@ public class CcubeServiceTest {
 
 	}
 
+
+
+	@Test
+	public void test_loopReadCcubeDatasSeries() throws Exception {
+
+		int pageSize = 20;
+		Items req = new Items();
+		req.setType("CcubeSeries");
+		req.setPageSize(pageSize);
+
+		List<Map<String, Object>> reqItems = null;
+		int countAll = 0;
+		countAll = ccubeMapper.cntCcubeOutputListStandby(req);
+		System.out.println("#countAll:"+countAll);
+		int pageAll = 0;
+		if (countAll == 0) {
+			pageAll = 1;
+		} else {
+			pageAll = countAll / pageSize + 1;
+		}
+		System.out.println("#pageAll:"+pageAll);
+
+		for (int pno = 1; pno <= pageAll; pno++) {
+			req.setPageNo(pno);
+			reqItems = ccubeMapper.getCcubeOutputListStandby(req);
+
+			//if (reqItems != null && reqItems.size() > 0) {
+			System.out.println("#RES pno:"+pno+" / pno.size:"+reqItems.size());
+			//}
+		}
+
+
+	}
+
 	@Test
 	public void test_getCcubeDatasByItemIdx() throws Exception{
 		JsonObject result = ccubeService.getCcubeDatasByItemIdx(10410);
