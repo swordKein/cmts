@@ -20,9 +20,11 @@ public class WordCountJob {
             job.setReducerClass(WordCountReducer.class);
             job.setOutputKeyClass(Text.class);
             job.setOutputValueClass(IntWritable.class);
-            FileInputFormat.addInputPath(job, new Path("e:/tmp/hadoop-wodus77/in"));
+            //FileInputFormat.addInputPath(job, new Path("e:/tmp/hadoop-wodus77/in"));
+            FileInputFormat.addInputPath(job, new Path("tmp/hadoop/in"));
             int i = (int) (Math.random() * 10) + 1;
-            FileOutputFormat.setOutputPath(job, new Path("e:/tmp/hadoop-wodus77/out"+i));
+            //FileOutputFormat.setOutputPath(job, new Path("e:/tmp/hadoop-wodus77/out"+i));
+            FileOutputFormat.setOutputPath(job, new Path("/tmp/hadoop/out"+i));
             System.exit(job.waitForCompletion(true) ? 0 : 1);
         } catch (Exception e) {
             e.printStackTrace();

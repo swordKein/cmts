@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.job.schedule.jobs;
 
 import com.kthcorp.cmts.service.*;
+import com.kthcorp.cmts.util.hadoop.WordCountJob;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +121,10 @@ public class JobRunner implements Job {
                 case "processCollectHearbit":
                     rt = schedTriggerService.processCollectHearbit();
                     logger.info("#MLOG schedule.check processCollectHearbit");
+                    break;
+                case "hadoopWordCount":
+                    WordCountJob.main(null);
+                    logger.info("#MLOG schedule.hadoopWordCount");
                     break;
             }
         } catch (Exception e) {
