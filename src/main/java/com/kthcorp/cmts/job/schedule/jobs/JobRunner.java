@@ -50,20 +50,20 @@ public class JobRunner implements Job {
                     }
                     break;
                 case "refineService":
-                    if(schedTriggerService.checkActiveServerByServerid()) {
+                    //if(schedTriggerService.checkActiveServerByServerid()) {
                         rt = refineService.ollehTvMetaRefineScheduleCheck();
                         logger.info("#MLOG schedule.start jobType:" + jobType + "/rt:" + rt);
-                    } else {
-                        logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
-                    }
+                    //} else {
+                    //    logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    //}
                     break;
                 case "analyzeService":
-                    if(schedTriggerService.checkActiveServerByServerid()) {
+                    //if(schedTriggerService.checkActiveServerByServerid()) {
                         rt = analyzeService.ollehTvMetaAnalyzeScheduleCheck();
                         logger.info("#MLOG schedule.start jobType:" + jobType + "/rt:" + rt);
-                    } else {
-                        logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
-                    }
+                    //} else {
+                    //    logger.info("#MLOG schedule.not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    //}
                     break;
                 case "itemsService":
                     if(schedTriggerService.checkActiveServerByServerid()) {
