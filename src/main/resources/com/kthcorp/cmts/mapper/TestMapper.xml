@@ -229,13 +229,13 @@
         , cc.eng_title
         , cc.director
         , cc.year
-        #, csu.asset_id
+        , csu.asset_id
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         inner join ccube_contents cc on cc.content_id = it.cid
         #inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
         order by iss.regdate desc
-        limit 4107
+
     </select>
 
     <select id="getCcubeSeriesAll" resultType="map">
