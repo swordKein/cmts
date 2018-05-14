@@ -183,11 +183,15 @@ public class CollectService implements CollectServiceImpl {
                                         if (!"award".equals(dest)) meta = CommonUtil.removeTex(meta);
                                         System.out.println("## insert! itemIdx:"+itemIdx+ " metas:"+dest+" data::"+metasObj.get(dest));
 
-                                        ItemsMetas newMeta = new ItemsMetas();
-                                        newMeta.setIdx(itemIdx);
-                                        newMeta.setMtype(dest);
-                                        newMeta.setMeta(meta);
-                                        int rtItm = itemsService.insItemsMetas(newMeta);
+
+                                        /* 다음영화 수상정보 취득 저장 막음 2018.05.14 */
+                                        if (!"award".equals(dest)) {
+                                            ItemsMetas newMeta = new ItemsMetas();
+                                            newMeta.setIdx(itemIdx);
+                                            newMeta.setMtype(dest);
+                                            newMeta.setMeta(meta);
+                                            int rtItm = itemsService.insItemsMetas(newMeta);
+                                        }
                                     }
                                 }
 

@@ -388,4 +388,88 @@
         update server_active set regdate = now()
         where stype = #{stype} and serverid = #{serverid}
     </update>
+
+
+
+    <update id="uptSchedRetryCollectManual_6m">
+    /* 수동 6m :: duration = 6m 이고, 승인일이 -6m 인 경우 */
+    update sched_trigger set stat = 'Y' , regdate = now()
+    where sc_id in (
+    select a.sc_id from (
+    select iss.idx, st.sc_id
+    from items_stat iss
+    inner join items it on it.idx = iss.idx and it.duration = '6m'
+    inner join items_sched_mapping ism on ism.idx = it.idx
+    inner join sched_trigger st on st.sc_id = ism.sc_id and st.type = 'C'
+    where iss.stat = 'ST' and date_format(iss.regdate, '%Y%m%d') = date_format(date_sub(now(), INTERVAL 6 MONTH), '%Y%m%d')
+    and iss.regdate < '2018-12-31 23:59:59'
+    ) a
+    )
+    </update>
+
+    /* 수동 1y :: #2 duration = 1y 이고, 승인일이 -1y 인 경우 */
+    update sched_trigger set stat = 'Y' , regdate = now()
+    where sc_id in (
+    select a.sc_id from (
+    select iss.idx, st.sc_id
+    from items_stat iss
+    inner join items it on it.idx = iss.idx and it.duration = '1y'
+    inner join items_sched_mapping ism on ism.idx = it.idx
+    inner join sched_trigger st on st.sc_id = ism.sc_id and st.type = 'C'
+    where iss.stat = 'ST' and date_format(iss.regdate, '%Y%m%d') = date_format(date_sub(now(), INTERVAL 1 YEAR), '%Y%m%d')
+    and iss.regdate < '2018-12-31 23:59:59'
+    ) a
+    )
+    ;
+
+    /* 자동 6m :: #3 승인일이 -6m 이고, 출시년도가 해당년, 작년 인 경우 */
+    update sched_trigger set stat = 'Y' , regdate = now()
+    where sc_id in (
+    select a.sc_id from (
+    select iss.idx, st.sc_id
+    from items_stat iss
+    inner join items it on it.idx = iss.idx and it.year in (
+    select compyear.year from (
+    select date_format(now(), '%Y') year
+    union
+    select date_format(date_sub(now(), INTERVAL 1 YEAR), '%Y') year
+    ) compyear
+    )
+    inner join items_sched_mapping ism on ism.idx = it.idx
+    inner join sched_trigger st on st.sc_id = ism.sc_id and st.type = 'C'
+    where iss.stat = 'ST' and date_format(iss.regdate, '%Y%m%d') = date_format(date_sub(now(), INTERVAL 6 MONTH), '%Y%m%d')
+    and iss.regdate < '2018-12-31 23:59:59'
+    ) a
+    )
+    ;
+
+    /* 자동 1y :: #3 승인일이 -1y 이고, 출시년도가 -2y, -3y, -4y, -5y 인 경우 */
+    update sched_trigger set stat = 'Y' , regdate = now()
+    where sc_id in (
+    select a.sc_id from (
+    select iss.idx, st.sc_id
+    from items_stat iss
+    inner join items it on it.idx = iss.idx and it.year in (
+    select compyear.year from (
+    #select date_format(now(), '%Y') year
+    #union
+    #select date_format(date_sub(now(), INTERVAL 1 YEAR), '%Y') year
+    #union
+    select date_format(date_sub(now(), INTERVAL 2 YEAR), '%Y') year
+    union
+    select date_format(date_sub(now(), INTERVAL 3 YEAR), '%Y') year
+    union
+    select date_format(date_sub(now(), INTERVAL 4 YEAR), '%Y') year
+    union
+    select date_format(date_sub(now(), INTERVAL 5 YEAR), '%Y') year
+    ) compyear
+    )
+    inner join items_sched_mapping ism on ism.idx = it.idx
+    inner join sched_trigger st on st.sc_id = ism.sc_id and st.type = 'C'
+    where iss.stat = 'ST' and date_format(iss.regdate, '%Y%m%d') = date_format(date_sub(now(), INTERVAL 1 YEAR), '%Y%m%d')
+    and iss.regdate < '2018-12-31 23:59:59'
+    ) a
+    )
+    ;
+
 </mapper>

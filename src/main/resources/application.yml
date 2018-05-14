@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -152,9 +152,6 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
-    -
-      cronExpression : 0 * * * * ?
-      jobType : hadoopWordCount
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -196,7 +193,8 @@ logging:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/daisy/ometa/debug.log
+    filePattern: "d:\\upload\\service.log.%d{yyyyMMdd}"
+  file: "d:\\upload\\service.log"
   #file: e:/home/debug.log
 
 ---
@@ -298,7 +296,8 @@ logging:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/daisy/ometa/debug.log
+    filePattern: "/home/daisy/logs/service.log.%d{yyyyMMdd}"
+  file: /home/daisy/logs/service.log
   #file: e:/home/debug.log
 
 ---
@@ -372,7 +371,8 @@ logging:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/daisy/ometa/debug.log
+    filePattern: "/home/daisy/logs/service.log.%d{yyyyMMdd}"
+  file: /home/daisy/logs/service.log
   #file: e:/home/debug.log
 
 ---
@@ -407,6 +407,9 @@ schedule :
     -
       cronExpression : 0 0 * * * ?
       jobType : dummyService
+    -
+      cronExpression : 0 48 18 * * ?
+      jobType : manualJobs
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
@@ -444,7 +447,8 @@ logging:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file: /home/daisy/ometa/debug.log
+    filePattern: "/home/daisy/logs/service.log.%d{yyyyMMdd}"
+  file: /home/daisy/logs/service.log
   #file: e:/home/debug.log
 
 ---
@@ -514,6 +518,7 @@ logging:
   pattern:
     #console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    filePattern: "/home/megatag/logs/service.log.%d{yyyyMMdd}"
   file: /home/megatag/logs/service.log
 
 ---
@@ -533,15 +538,12 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://172.16.208.41:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: ktipmedia
-    password: 2!dlqnsrl
+    password: ipaleldj1!
 schedule :
   jobs :
     -
       cronExpression : 0 * * * * ?
       jobType : collectService
-    -
-      cronExpression : 0 * * * * ?
-      jobType : itemsService
     -
       cronExpression : 0 * * * * ?
       jobType : sftpService
@@ -598,6 +600,7 @@ logging:
   pattern:
     #console: "PROD::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    filePattern: "/home/ktipmedia/logs/service.log.%d{yyyyMMdd}"
   file: /home/ktipmedia/logs/service.log
 
 ---
@@ -617,21 +620,15 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://172.16.208.41:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: ktipmedia
-    password: 2!dlqnsrl
+    password: ipaleldj1!
 schedule :
   jobs :
-    -
-      cronExpression : 0 0 * * * ?
-      jobType : dummyService
     -
       cronExpression : 0 * * * * ?
       jobType : refineService
     -
       cronExpression : 0 * * * * ?
       jobType : analyzeService
-    -
-      cronExpression : 0 * * * * ?
-      jobType : hadoopWordCount
 property:
   serverid: cmts_prod_api01
   crawl_api_url:
@@ -668,6 +665,7 @@ logging:
   pattern:
     #console: "PROD::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    filePattern: "/home/ktipmedia/logs/service.log.%d{yyyyMMdd}"
   file: /home/ktipmedia/logs/service.log
 
 
@@ -709,9 +707,6 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : analyzeService
-    -
-      cronExpression : 0 * * * * ?
-      jobType : itemsService
 property:
   serverid: cmts_staging_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix

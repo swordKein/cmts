@@ -126,6 +126,11 @@ public class JobRunner implements Job {
                     WordCountJob.main(null);
                     logger.info("#MLOG schedule.hadoopWordCount");
                     break;
+                case "manualJobs":
+                    testService.writeCcubeContentsOutputCSV();
+                    testService.writeCcubeSeriesOutputCSV();
+                    logger.info("#MLOG schedule.manualJobs");
+                    break;
             }
         } catch (Exception e) {
             logger.info("#MLOG schedule.error jobType:"+jobType+"/rt:"+rt);

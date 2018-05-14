@@ -5053,7 +5053,7 @@ public class TestService implements TestServiceImpl {
             cnt++;
         }
 
-        String fileNameContent = "METAS_BY_CONTENTS_4107_180503.tsv";
+        String fileNameContent = "METAS_BY_CONTENTS_WITH_ASSET_180514.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
     }
@@ -5290,7 +5290,7 @@ public class TestService implements TestServiceImpl {
             cnt++;
         }
 
-        String fileNameContent = "METAS_BY_SERIES_AND_OTV_180419.tsv";
+        String fileNameContent = "METAS_BY_SERIES_WITH_OTV_180514.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
     }
