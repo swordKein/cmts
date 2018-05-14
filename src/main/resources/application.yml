@@ -262,7 +262,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 29 19 * * ?
+      cronExpression : 0 38 19 * * ?
       jobType : manualJobs
 property:
   serverid: cmts_dev_cm01
