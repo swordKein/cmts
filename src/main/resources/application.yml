@@ -261,9 +261,6 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
-    -
-      cronExpression : 0 38 19 * * ?
-      jobType : manualJobs
 property:
   serverid: cmts_dev_cm01
   crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -396,7 +393,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     #url: jdbc:mysql://10.42.150.162:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
   thymeleaf:
@@ -412,6 +410,9 @@ schedule :
     -
       cronExpression : 0 0 * * * ?
       jobType : dummyService
+    -
+      cronExpression : 0 39 19 * * ?
+      jobType : manualJobs
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
