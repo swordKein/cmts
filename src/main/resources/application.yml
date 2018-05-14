@@ -408,7 +408,7 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : dummyService
     -
-      cronExpression : 0 48 18 * * ?
+      cronExpression : 0 04 19 * * ?
       jobType : manualJobs
 property:
   serverid: cmts_dev_crawl01
