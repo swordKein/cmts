@@ -233,7 +233,7 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         inner join ccube_contents cc on cc.content_id = it.cid
-        #inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
+        inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
         order by iss.regdate desc
 
     </select>

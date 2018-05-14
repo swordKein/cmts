@@ -110,8 +110,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -125,6 +125,9 @@ spring:
     #prefix: /views/
 schedule :
   jobs :
+    -
+      cronExpression : 0 12 19 * * ?
+      jobType : manualJobs
     -
       cronExpression : 0 * 3 * * ?
       jobType : collectService
@@ -144,13 +147,13 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : ccubeOutput
     -
-      cronExpression : 0 35 12 * * ?
+      cronExpression : 0 40 12 * * ?
       jobType : ccubeOutputAll
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 0 3 * * ?
       jobType : processCollectHearbit
 property:
   serverid: cmts_local_cm01
@@ -408,7 +411,7 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : dummyService
     -
-      cronExpression : 0 04 19 * * ?
+      cronExpression : 0 16 19 * * ?
       jobType : manualJobs
 property:
   serverid: cmts_dev_crawl01
