@@ -1227,6 +1227,62 @@ public class ApiController {
 		return result_all.toString();
 	}
 
+
+
+	// #24
+	@RequestMapping(value = "/pop/meta/getsubgenre", method = RequestMethod.POST)
+	@ResponseBody
+	public String post__pop_meta_subgenre(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "items", required = false, defaultValue = "") String items
+			, @RequestParam(value = "itemid") String itemid
+	) {
+		logger.info("#CLOG:API/pop/meta/subgenre input itemid:" + itemid+"/items:"+items);
+
+		int itemIdx = 0;
+		if(!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
+
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonArray resultArr = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				//rtcode = itemsTagsService.restorePrevTag(itemIdx);
+				resultArr = new JsonArray();
+				resultArr.add("테스트 서브장르1");
+				resultArr.add("테스트 서브장르2");
+
+				rtcode = 1;
+
+				if(rtcode > 0) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Item getSubgenre fail!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		if(rtcode > 1) rtcode = 1;
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", resultArr);
+
+		return result_all.toString();
+	}
+
+
 	// Danger!!! only for admin, 매우조심!!!
 	@RequestMapping(value = "/manual/batchChange", method = RequestMethod.POST)
 	@ResponseBody
