@@ -1259,10 +1259,11 @@ public class ApiController {
 				item1.addProperty("word","테스트 서브장르1");
 				resultArr.add(item1);
 
-				item1.addProperty("type","");
-				item1.addProperty("ratio",0.0);
-				item1.addProperty("word","테스트 서브장르2");
-				resultArr.add(item1);
+				JsonObject item2 = new JsonObject();
+				item2.addProperty("type","");
+				item2.addProperty("ratio",0.0);
+				item2.addProperty("word","테스트 서브장르2");
+				resultArr.add(item2);
 
 				rtcode = 1;
 
