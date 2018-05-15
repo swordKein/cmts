@@ -392,7 +392,9 @@ public class ApiService implements ApiServiceImpl {
         // 빠진 type은 공백이라도 채워준다
         if(reqObj != null) {
             for(String type : origTypes) {
-                if(reqObj.get(type) == null) reqObj.addProperty(type, "");
+                if(reqObj.get(type) == null) {
+                    reqObj.addProperty(type, "");
+                }
             }
         }
 
