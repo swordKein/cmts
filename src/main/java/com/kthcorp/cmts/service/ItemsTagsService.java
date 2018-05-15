@@ -312,8 +312,16 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonArray awardArr = null;
         if (metaAwardObj != null && metaAwardObj.get("AWARD") != null) {
             System.out.println("#AWARD obj :"+ metaAwardObj.get("AWARD"));
-            //String awardArrStr = metaAwardObj.get("AWARD").getAsString();
-            awardArr = (JsonArray) metaAwardObj.get("AWARD");
+            JsonElement awardArrElm = metaAwardObj.get("AWARD");
+            String awardArrStr = String.valueOf(awardArrElm);
+
+            System.out.println("#AWARD str :"+ awardArrStr);
+
+            if (!"".equals(awardArrStr) && !"\"\"".equals(awardArrStr)) {
+                awardArr = (JsonArray) awardArrElm;
+            } else {
+                awardArr = new JsonArray();
+            }
             resultObj2.add("META_AWARD", awardArr);
         }
 
