@@ -38,7 +38,7 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getItemsMetasByIdx(int itemIdx, List<String> origTypes, String getStat);
 
-    JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode);
+    JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode) throws Exception;
 
     JsonObject getWordsAssoc(int itemIdx, JsonObject resultObj2);
 
