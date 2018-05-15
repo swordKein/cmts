@@ -1229,7 +1229,7 @@ public class ApiController {
 
 
 
-	// #24
+	// #18
 	@RequestMapping(value = "/pop/meta/getsubgenre", method = RequestMethod.POST)
 	@ResponseBody
 	public String post__pop_meta_subgenre(Map<String, Object> model
@@ -1253,8 +1253,16 @@ public class ApiController {
 			if (rtcode == 1) {
 				//rtcode = itemsTagsService.restorePrevTag(itemIdx);
 				resultArr = new JsonArray();
-				resultArr.add("테스트 서브장르1");
-				resultArr.add("테스트 서브장르2");
+				JsonObject item1 = new JsonObject();
+				item1.addProperty("type","");
+				item1.addProperty("ratio",0.0);
+				item1.addProperty("word","테스트 서브장르1");
+				resultArr.add(item1);
+
+				item1.addProperty("type","");
+				item1.addProperty("ratio",0.0);
+				item1.addProperty("word","테스트 서브장르2");
+				resultArr.add(item1);
 
 				rtcode = 1;
 
