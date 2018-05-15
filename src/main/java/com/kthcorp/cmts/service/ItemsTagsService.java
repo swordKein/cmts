@@ -308,6 +308,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         /* LIST_SUBGENRE */
         resultObj2 = getSubgenres(itemIdx, resultObj2);
 
+        /* LIST_AWARD */
+        resultObj2 = getAwardObject(itemIdx, resultObj2);
+
+        return resultObj2;
+    }
+
+    private JsonObject getAwardObject(int itemIdx, JsonObject resultObj2) throws Exception {
+
         JsonObject metaAwardObj = apiService.getAwardArrInfoByIdx(itemIdx);
         JsonArray awardArr = null;
         if (metaAwardObj != null && metaAwardObj.get("AWARD") != null) {
@@ -322,9 +330,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             } else {
                 awardArr = new JsonArray();
             }
-            resultObj2.add("META_AWARD", awardArr);
+            resultObj2.add("LIST_AWARD", awardArr);
         }
-
         return resultObj2;
     }
 
@@ -941,6 +948,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASWHAT");
         dicTypes.add("METASEMOTION");
         dicTypes.add("METASCHARACTER");
+
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
             if (actionItemsArraysByType.get(dicType) != null) {
@@ -993,6 +1001,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 String destMeta = "";
 
                 if (origMetasArraysByType2.get(atype) != null) {
+                    System.out.println("#Change type(" + atype + ") orig meta::"+origMetasArraysByType2.toString());
                     origMetaArr = (JsonArray) origMetasArraysByType2.get(atype);
                     System.out.println("#Change type(" + atype + ") orig meta datas::" + origMetaArr);
                 }
@@ -1006,7 +1015,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     /* get meta data for saving */
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
-                    if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype)) {
+                    if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype) && !"LIST_AWARD".equals(atype)) {
                             //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
                         destArr2 = this.getRemoveDupTargetMetasArray(destArr);
@@ -1022,14 +1031,26 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destMeta.toString());
 
                         /* 기존 메타와 추가 액션아이템들이 반영된 TYPE(ex> METASWHEN) 별 메타JsonArray가 준비되면 현재 tagIdx를 기준으로 업데이트 */
-                        ItemsTags reqMeta = new ItemsTags();
-                        reqMeta.setIdx(itemid);
-                        reqMeta.setTagidx(curTagIdx);
-                        reqMeta.setMtype(atype);
-                        reqMeta.setMeta(destMeta);
+                        if (!atype.toUpperCase().contains("AWARD")) {
+                            ItemsTags reqMeta = new ItemsTags();
+                            reqMeta.setIdx(itemid);
+                            reqMeta.setTagidx(curTagIdx);
+                            reqMeta.setMtype(atype);
+                            reqMeta.setMeta(destMeta);
 
-                        //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
-                        rt = this.insItemsTagsMetas(reqMeta);
+                            //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
+                            rt = this.insItemsTagsMetas(reqMeta);
+                        } else {
+                            // AWARD의 경우 items_metas에 기존메타를 유지한다 18.05.15
+                            ItemsMetas reqM = new ItemsMetas();
+                            reqM.setIdx(itemid);
+                            reqM.setMtype("award");
+                            reqM.setMeta(destMeta);
+                            reqM.setRegid(serverid);
+
+                            rt = itemsMetasMapper.insItemsMetas(reqM);
+                            System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
+                        }
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);
                     }
@@ -1037,14 +1058,26 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     if (origMetaArr != null) {
                         destMeta = origMetaArr.toString();
                         /* 기존 메타에서 추가 액션 아이템들이 없는 경우 기존 메타 그대로 현재 tagIdx에 업데이트 */
-                        ItemsTags reqMeta = new ItemsTags();
-                        reqMeta.setIdx(itemid);
-                        reqMeta.setTagidx(curTagIdx);
-                        reqMeta.setMtype(atype);
-                        reqMeta.setMeta(destMeta);
+                        if (!atype.toUpperCase().contains("AWARD")) {
+                            ItemsTags reqMeta = new ItemsTags();
+                            reqMeta.setIdx(itemid);
+                            reqMeta.setTagidx(curTagIdx);
+                            reqMeta.setMtype(atype);
+                            reqMeta.setMeta(destMeta);
 
-                        //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
-                        rt = this.insItemsTagsMetas(reqMeta);
+                            //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
+                            rt = this.insItemsTagsMetas(reqMeta);
+                        } else {
+                            // AWARD의 경우 items_metas에 기존메타를 유지한다 18.05.15
+                            ItemsMetas reqM = new ItemsMetas();
+                            reqM.setIdx(itemid);
+                            reqM.setMtype("award");
+                            reqM.setMeta(destMeta);
+                            reqM.setRegid(serverid);
+                            rt = itemsMetasMapper.insItemsMetas(reqM);
+
+                            System.out.println("#insItemsMetas for AWARD2:"+reqM.toString());
+                        }
                     }
                 }
             }
@@ -1068,6 +1101,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("LIST_RECO_TARGET");
         origTypes.add("LIST_RECO_SITUATION");
+
+        origTypes.add("LIST_AWARD");
 
         /* 타입 별 액션 아이템 중 add,mod는 사전에 추가
         ArrayList<String> dicTypes = new ArrayList<String>();
@@ -1108,6 +1143,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             /* 기승인된 메타가 없을 경우 (최근 tagIdx가 미승인인 경우) 메타수정 후 상태변경, 승인 처리한다 */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
+
+                // AWARD 처리를 위해 ITEMS_METAS에서 읽어서 구조체에 추가
+                origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
+
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
                 /* action_item이 있는 경우 타입별 meta 수정 */
@@ -1130,6 +1169,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             } else {
                 /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid, this.getOrigTypes());
+
+                // AWARD 처리를 위해 ITEMS_METAS에서 읽어서 구조체에 추가
+                origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
+
+                System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
                 /* action_item이 있는 경우 타입별 meta 수정 */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
