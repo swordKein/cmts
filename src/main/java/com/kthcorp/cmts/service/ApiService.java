@@ -221,6 +221,46 @@ public class ApiService implements ApiServiceImpl {
         return resultObj;
     }
 
+    @Override
+    public JsonObject getAwardArrInfoByIdx(int itemIdx) throws Exception {
+        ArrayList<String> origTypes = new ArrayList<String>();
+        origTypes.add("AWARD");
+
+        JsonObject resultObj = getItemsMetasArrByIdx(itemIdx, origTypes);
+        return resultObj;
+    }
+
+    private JsonObject getItemsMetasArrByIdx(int itemIdx, ArrayList<String> origTypes) throws Exception {
+        JsonObject resultObj = new JsonObject();
+
+        ItemsMetas req = new ItemsMetas();
+        req.setIdx(itemIdx);
+        List<ItemsMetas> result = itemsMetasMapper.getItemsMetasByIdx(req);
+
+        if (result != null && result.size() > 0) {
+            for (ItemsMetas im : result) {
+                if(im != null && im.getMtype() != null && im.getMeta() != null) {
+                    for(String ot : origTypes) {
+                        if(ot.equals(im.getMtype().toUpperCase())) {
+                            String thisMeta = im.getMeta();
+                            JsonArray thisArr = null;
+                            if (!"".equals(thisMeta)) {
+                                thisArr = JsonUtil.getJsonArray(thisMeta);
+                            } else {
+                                thisArr = new JsonArray();
+                            }
+                            resultObj.add(im.getMtype().toUpperCase(), thisArr);
+                        }
+                    }
+                }
+            }
+        }
+
+        resultObj = setEmptyMovieInfo(resultObj, origTypes);
+
+        return resultObj;
+    }
+
     private JsonObject convertCcubeSeriesToJsonObject(CcubeSeries cser) {
         JsonObject resultObj = null;
 

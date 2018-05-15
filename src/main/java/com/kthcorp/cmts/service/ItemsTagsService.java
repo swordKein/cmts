@@ -269,7 +269,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode) {
+    public JsonObject getItemsMetasByItemIdx(int itemIdx, boolean isColorCode) throws Exception {
         ArrayList<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
         origTypes.add("METASWHERE");
@@ -307,6 +307,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         /* LIST_SUBGENRE */
         resultObj2 = getSubgenres(itemIdx, resultObj2);
+
+        JsonObject metaAwardObj = apiService.getAwardArrInfoByIdx(itemIdx);
+        JsonArray awardArr = null;
+        if (metaAwardObj != null && metaAwardObj.get("AWARD") != null) {
+            System.out.println("#AWARD obj :"+ metaAwardObj.get("AWARD"));
+            //String awardArrStr = metaAwardObj.get("AWARD").getAsString();
+            awardArr = (JsonArray) metaAwardObj.get("AWARD");
+            resultObj2.add("META_AWARD", awardArr);
+        }
 
         return resultObj2;
     }

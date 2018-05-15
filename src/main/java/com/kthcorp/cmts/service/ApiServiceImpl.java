@@ -29,6 +29,8 @@ public interface ApiServiceImpl {
 
     JsonObject getAwardInfoByIdx(int itemIdx);
 
+    JsonObject getAwardArrInfoByIdx(int itemIdx) throws Exception;
+
     String getFilteredGenre(String origGenre);
 
     JsonObject getCine21DatasByIdx(int itemIdx);
