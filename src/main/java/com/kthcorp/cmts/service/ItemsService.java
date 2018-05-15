@@ -170,9 +170,22 @@ public class ItemsService implements ItemsServiceImpl {
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
             if (oldItemIdx > 0) {
                 itemIdx = oldItemIdx;
-                System.out.println("### item Exists:: itemIdx:"+itemIdx+"  by  cid:"+reqCk.getContent_id()+"/title:"+reqCk.getPurity_title()+"/year:"+reqCk.getYear()+"/director:"+reqCk.getDirector());
+                System.out.println("### item Exists:: itemIdx:"+itemIdx+"  by  cid:"+reqCk.getContent_id()+"/title:"+title+"/year:"+reqCk.getYear()+"/director:"+reqCk.getDirector());
+
+                // 2018.05.15
+                // 기존 itemIdx가 있을 경우 ccube_keys에 키 등록
+                CcubeKeys reqKey = new CcubeKeys();
+                reqKey.setContent_id(req.getContent_id());
+                reqKey.setMaster_content_id((req.getMaster_content_id() != null) ? req.getMaster_content_id() : "0");
+                reqKey.setSeries_id("0");
+                reqKey.setKmrb_id((req.getKmrb_id() != null) ? req.getKmrb_id() : "0");
+                reqKey.setPurity_title(title);
+                reqKey.setYear(req.getYear());
+                reqKey.setDirector(req.getDirector());
+
+                reqKey.setItemidx(oldItemIdx);
+                int rtkeyei = ccubeService.insCcubeKeys(reqKey);
             }
-            int rtkey = 0;
 
             if (oldItemIdx < 1) {
                 Items item = new Items();
@@ -189,7 +202,6 @@ public class ItemsService implements ItemsServiceImpl {
                 rtitem = this.insItems(item);
 
                 // 2018.04.20
-                // 기존 itemIdx가 있을 경우 ccube_keys에 키 등록 (삭제 : 18.04.27 중복키 등록 )
                 // 신규 itemIdx로 등록된 경우에도 ccube_keys에 키 등록
                 CcubeKeys reqKey = new CcubeKeys();
                 reqKey.setContent_id(req.getContent_id());
@@ -201,7 +213,7 @@ public class ItemsService implements ItemsServiceImpl {
                 reqKey.setDirector(req.getDirector());
 
                 reqKey.setItemidx(rtitem);
-                rtkey = ccubeService.insCcubeKeys(reqKey);
+                int rtkeyi = ccubeService.insCcubeKeys(reqKey);
             }
 
             if (rtitem > 0) {
@@ -281,8 +293,22 @@ public class ItemsService implements ItemsServiceImpl {
             reqCk.setDirector(req.getDirector());
 
             int oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
-            if (oldItemIdx > 0) itemIdx = oldItemIdx;
-            int rtkey = 0;
+            if (oldItemIdx > 0) {
+                itemIdx = oldItemIdx;
+
+                /*
+                2018.05.15
+                기존 itemIdx 있는 경우 ccube_keys 등록
+                 */
+                CcubeKeys reqKey = new CcubeKeys();
+                reqKey.setContent_id("0");
+                reqKey.setMaster_content_id("0");
+                reqKey.setSeries_id(req.getSeries_id());
+                reqKey.setKmrb_id("0");
+                reqKey.setPurity_title(req.getSeries_nm().trim());
+                reqKey.setItemidx(itemIdx);
+                int rtkeyei = ccubeService.insCcubeKeys(reqKey);
+            }
 
             if (oldItemIdx < 1) {
                 Items item = new Items();
@@ -306,7 +332,7 @@ public class ItemsService implements ItemsServiceImpl {
                     reqKey.setKmrb_id("0");
                     reqKey.setPurity_title(req.getPurity_title());
                     reqKey.setItemidx(rtitem);
-                    rtkey = ccubeService.insCcubeKeys(reqKey);
+                    int rtkeyi = ccubeService.insCcubeKeys(reqKey);
                 }
             }
 

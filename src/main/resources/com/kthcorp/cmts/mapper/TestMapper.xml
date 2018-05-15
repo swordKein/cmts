@@ -256,6 +256,7 @@
 
     <select id="getCcubeContentsFT" resultType="map">
         /* getCcubeContentsFT */
+        /*
         select
         it.idx
         , it.type
@@ -265,11 +266,20 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FT'
         inner join ccube_contents cc on cc.content_id = it.cid
-
+        */
+        select
+        0 as idx,
+        'CcubeContent' as type,
+        content_id as cid,
+        master_content_id as mcid,
+        content_title
+        from ccube_contents
+        where regdate <![CDATA[ > ]]> '2018-05-14 19:00:00'
     </select>
 
     <select id="getCcubeSeriesFT" resultType="map">
         /* getCcubeSeriesFT */
+        /*
         select
         it.idx
         , it.type
@@ -278,7 +288,15 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'FT'
         inner join ccube_series cc on cc.series_id = it.cid
+        */
 
+        select
+        0 as idx,
+        'CcubeSeries' as type,
+        series_id as cid,
+        series_nm as content_title
+        from ccube_series
+        where regdate <![CDATA[ > ]]> '2018-05-14 19:00:00'
     </select>
 
     <select id="getItemsAndAwardAll" resultType="map">

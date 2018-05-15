@@ -5434,7 +5434,7 @@ public class TestService implements TestServiceImpl {
             cnt++;
         }
 
-        String fileNameContent = "FAIL_TAGGING_CONTENTS_180418.tsv";
+        String fileNameContent = "READY_TAGGING_CONTENTS_180514.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
 
     }
