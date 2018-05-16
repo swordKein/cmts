@@ -1290,6 +1290,8 @@ public class ApiController {
 		result_all.addProperty("RT_MSG", rtmsg);
 		result_all.add("RESULT", resultArr);
 
+		logger.info("#CLOG:API/pop/meta/subgenre:RESULT by input itemid:" + itemid+"/items:"+items+" // "+resultArr.toString());
+
 		return result_all.toString();
 	}
 
