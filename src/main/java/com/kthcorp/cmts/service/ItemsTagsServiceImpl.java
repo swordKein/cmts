@@ -74,7 +74,11 @@ public interface ItemsTagsServiceImpl {
 
     ItemsTags getLastTagCntInfo(Integer itemid);
 
+    ItemsTags getLastTagSuccessInfo(Integer itemid);
+
     List<ItemsTags> getTagCntInfo(Integer itemid);
+
+    List<ItemsTags> getSuccessTagidxListDesc(Integer itemid);
 
     void processManualTagsMetasChange(String target_mtype, String from_keyword, String to_keyword, String action);
 

@@ -95,4 +95,9 @@ public class ItemsTagsServiceImplTest {
 		Thread.sleep(10000);
 
 	}
+
+	@Test
+	public void test_restorePrevTag() throws Exception {
+		itemsTagsService.restorePrevTag(2855);
+	}
 }

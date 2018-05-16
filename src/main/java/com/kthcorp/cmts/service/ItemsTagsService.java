@@ -815,6 +815,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public int restorePrevTag(int itemIdx) {
         int rt = 0;
         if (itemIdx > 0) {
+            /*
             // S -> C
             ItemsTags reqO = new ItemsTags();
             reqO.setIdx(itemIdx);
@@ -848,17 +849,40 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 int rt2 = itemsTagsMapper.uptItemsTagsKeysStat(reqCC);
                 rt += rt2;
             }
+            */
+
+            // 최초 승인 차수
+            ItemsTags reqO = new ItemsTags();
+            reqO.setIdx(itemIdx);
+            reqO.setStat("S");
+            int firstTaggedIdx = itemsTagsMapper.getMinTagsIdxByItemIdx(reqO);
+
+            // 최초 승인 차수와 마지막 차수 (승인 여부 무관) 가 다른 경우만  마지막 차수 삭제
+            ItemsTags req1 = new ItemsTags();
+            req1.setIdx(itemIdx);
+            int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(req1);
+            if (maxTagIdx != firstTaggedIdx) {
+                req1.setTagidx(maxTagIdx);
+                rt = itemsTagsMapper.delItemsTagsKeys(req1);
+            }
+
+            int curTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
 
             if (rt > 0) {
                 Items reqIt = new Items();
                 reqIt.setIdx(itemIdx);
-                int rtx = itemsMapper.uptItemsTagcntMinus(reqIt);
+                //int rtx = itemsMapper.uptItemsTagcntMinus(reqIt);
 
                 //items_hist에 등록 for 통계
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
-                int rthist = itemsService.insItemsHist(itemIdx, "meta", "RECV", movietitle, "RESTORE_META", oldTagIdx);
+                int rthist = itemsService.insItemsHist(itemIdx, "meta", "RECV", movietitle, "RESTORE_META", curTagIdx);
+
+                // items 의 tagcnt를 마지막 tagidx 로 수정
+                //int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
+                reqIt.setTagcnt(curTagIdx);
+                int rtu = itemsService.uptItemsTagcnt(reqIt);
             }
         }
         return rt;
@@ -1125,6 +1149,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
         List<ItemsTags> tagIdxArr = this.getTagCntInfo(itemid);
+        //List<ItemsTags> tagIdxArr = this.getSuccessTagidxListDesc(itemid);
         int curTagIdx = 0;
         if (tagIdxArr != null && tagIdxArr.size() > 0) {
             curTagIdx = tagIdxArr.get(0).getTagidx();
@@ -1132,7 +1157,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         System.out.println("#MLOG /pop/meta/upt/array curTagIdx:"+curTagIdx);
 
         try {
-            ItemsTags lastTag = this.getLastTagCntInfo(itemid);
+            ItemsTags lastTag = this.getLastTagSuccessInfo(itemid);
             Items reqIt = null;
 
             /* get action TYPE to Arrays */
@@ -1171,6 +1196,36 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 rt = 1;
             } else {
+                /* 이전 상태 코드 확인하여 승인완료(ST)가 아닌 경우 승인완료로 처리  added 2018.04.11 */
+                String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
+                if (!"ST".equals(oldItemsStat)) {
+                    /* 해당 items_tags_keys 를 승인으로 업데이트 한다
+                    ItemsTags reqConfirm = new ItemsTags();
+                    reqConfirm.setIdx(itemid);
+                    reqConfirm.setTagidx(curTagIdx);
+                    reqConfirm.setStat("S");
+                    int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
+
+                    /* 해당 items_stat 를 승인으로 업데이트 한다 */
+                    reqIt = new Items();
+                    reqIt.setIdx(itemid);
+                    reqIt.setStat("ST");
+                    int rti = itemsMapper.insItemsStat(reqIt);
+                } else {
+                    /* 기승인된 메타가 있을 경우 tagidx를 신규 생성한다..  18.05.16 */
+                    curTagIdx =  this.getCurrTagsIdxForInsert(itemid);
+
+                    /* 해당 items_tags_keys 를 승인으로 업데이트 한다
+                    ItemsTags reqConfirm = new ItemsTags();
+                    reqConfirm.setIdx(itemid);
+                    reqConfirm.setTagidx(curTagIdx);
+                    reqConfirm.setStat("S");
+                    int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
+
+                    /* 해당 items의 tagcnt를 최종 tagidx로 수정한다 */
+                    // 아래 마지막 라인 참조
+                }
+
                 /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid, this.getOrigTypes());
 
@@ -1182,28 +1237,19 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 /* action_item이 있는 경우 타입별 meta 수정 */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
 
-                /* 이전 상태 코드 확인하여 승인완료(ST)가 아닌 경우 승인완료로 처리  added 2018.04.11 */
-                String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
-                if (!"ST".equals(oldItemsStat)) {
-                    /* 해당 items_tags_keys 를 승인으로 업데이트 한다 */
-                    ItemsTags reqConfirm = new ItemsTags();
-                    reqConfirm.setIdx(itemid);
-                    reqConfirm.setTagidx(curTagIdx);
-                    reqConfirm.setStat("S");
-                    int rts = this.uptItemsTagsKeysStat(reqConfirm);
-
-                    /* 해당 items_stat 를 승인으로 업데이트 한다 */
-                    reqIt = new Items();
-                    reqIt.setIdx(itemid);
-                    reqIt.setStat("ST");
-                    int rti = itemsMapper.insItemsStat(reqIt);
-                }
                 rt = 1;
             }
 
             System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
 
             if (rt > 0) {
+                /* 해당 items_tags_keys 를 승인으로 업데이트 한다  */
+                ItemsTags reqConfirm = new ItemsTags();
+                reqConfirm.setIdx(itemid);
+                reqConfirm.setTagidx(curTagIdx);
+                reqConfirm.setStat("S");
+                int rts = this.uptItemsTagsKeysStat(reqConfirm);
+
                 //items_hist에 등록 for 통계
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
@@ -1219,6 +1265,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
                 if (!"".equals(duration)) reqIt.setDuration(duration);
+                reqIt.setTagcnt(curTagIdx);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
 
@@ -1479,8 +1526,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
+    public ItemsTags getLastTagSuccessInfo(Integer itemid) {
+        return itemsTagsMapper.getLastTagSuccessInfo(itemid);
+    }
+
+    @Override
     public List<ItemsTags> getTagCntInfo(Integer itemid) {
         return itemsTagsMapper.getTagCntInfo(itemid);
+    }
+
+    @Override
+    public List<ItemsTags> getSuccessTagidxListDesc(Integer itemid) {
+        return itemsTagsMapper.getSuccessTagList(itemid);
     }
 
     @Override
