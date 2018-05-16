@@ -4946,6 +4946,7 @@ public class TestService implements TestServiceImpl {
             long longIdx = (long) item.get("idx");
             int idx = (int) longIdx;
             String type = (String) item.get("type");
+            String asset_id = (String) item.get("asset_id");
             String cid = (String) item.get("cid");
             String mcid = (String) item.get("mcid");
             String content_title = (String) item.get("content_title");
@@ -5007,7 +5008,8 @@ public class TestService implements TestServiceImpl {
         String lineFeed = System.getProperty("line.separator");
 
         String resultStr = "";
-        resultStr = "content_id" + seperator + "master_content_id" + seperator + "content_title" + seperator + "eng_title"
+        resultStr = "content_id" + seperator + "master_content_id" + seperator + "asset_id"
+                + seperator + "content_title" + seperator + "eng_title"
                 + seperator + "director"
                 + seperator + "year"
                 //+ seperator + "asset_id"
@@ -5030,6 +5032,7 @@ public class TestService implements TestServiceImpl {
             //itemStr = item.get("idx").toString();
             itemStr = item.get("cid").toString();
             itemStr = itemStr + seperator + item.get("mcid").toString();
+            itemStr = itemStr + seperator + item.get("asset_id").toString();
             itemStr = itemStr + seperator + item.get("content_title").toString();
             itemStr = itemStr + seperator + item.get("eng_title").toString();
             itemStr = itemStr + seperator + item.get("director").toString();
