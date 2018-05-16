@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,4 +90,6 @@ public interface ItemsTagsServiceImpl {
     int uptManualJobHist(ManualChange req);
 
     int delItemsMetasAward(int itemIdx);
+
+    JsonArray getMetaSubgenre(Integer itemid, String reqJsonObjStr) throws Exception;
 }

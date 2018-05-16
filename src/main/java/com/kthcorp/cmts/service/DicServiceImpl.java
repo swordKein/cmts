@@ -104,7 +104,7 @@ public interface DicServiceImpl {
 
     Set getMetaSingleFromGenre(String genre, String mtype);
 
-    Set getMetaGenreFromGenre(String genre, String mtype);
+    Set getMetaGenreFromGenre(Set<String> genres, String mtype);
 
     Set getMixedGenreArrayFromGenre(String genre, String mtype);
 

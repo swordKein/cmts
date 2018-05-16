@@ -100,4 +100,22 @@ public class ItemsTagsServiceImplTest {
 	public void test_restorePrevTag() throws Exception {
 		itemsTagsService.restorePrevTag(2855);
 	}
+
+	@Test
+	public void test_getMetaSubgenre() throws Exception {
+		String reqStr = "[{\"type\":\"what\", \"meta\":\"감동\"}, {\"type\":\"emotion\", \"meta\":\"감동적인\"}" +
+				", {\"type\":\"emotion\", \"meta\":\"인간적인\"}, {\"type\":\"what\", \"meta\":\"사랑\"}" +
+				", {\"type\":\"what\", \"meta\":\"교훈\"}, {\"type\":\"what\", \"meta\":\"가족애\"}" +
+				"]";
+
+		/*
+		reqStr = "[{\"type\":\"who\", \"meta\":\"갱스터\"}, {\"type\":\"what\", \"meta\":\"범죄\"}" +
+				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"who\", \"meta\":\"깡패\"}" +
+				"]";
+				*/
+
+		JsonArray resultArr = itemsTagsService.getMetaSubgenre(145, reqStr);
+
+		System.out.println("#RESULT:"+resultArr.toString());
+	}
 }
