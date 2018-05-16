@@ -1251,8 +1251,9 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				//rtcode = itemsTagsService.restorePrevTag(itemIdx);
-				resultArr = new JsonArray();
+
+				resultArr = itemsTagsService.getMetaSubgenre(itemIdx, items);
+				/*
 				JsonObject item1 = new JsonObject();
 				item1.addProperty("type","");
 				item1.addProperty("ratio",0.0);
@@ -1264,6 +1265,7 @@ public class ApiController {
 				item2.addProperty("ratio",0.0);
 				item2.addProperty("word","테스트 서브장르2");
 				resultArr.add(item2);
+				*/
 
 				rtcode = 1;
 

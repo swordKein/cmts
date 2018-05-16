@@ -4,6 +4,13 @@ import com.google.gson.*;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.nio.entity.NStringEntity;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +35,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private String serverid;
     @Value("${property.crawl_naver_kordic_url}")
     private String crawl_naver_kordic_url;
+
+    @Value("${cmts.property.es_cut_point}")
+    private Double es_cut_point;
 
     @Autowired
     private ItemsTagsMapper itemsTagsMapper;
@@ -1741,5 +1751,367 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         req.setMtype("award");
         int rt = itemsMetasMapper.delItemsMetas(req);
         return rt;
+    }
+
+    private String getMetasStringFromJsonObject(JsonObject resultObj, List<String> origTypes) {
+        String result = "";
+
+        List<String> resultArr = new ArrayList();
+        JsonArray metaArr = null;
+        if (resultObj != null && origTypes != null) {
+            for(String type : origTypes) {
+                String typeStr = type.replace("METAS","");
+                if (resultObj.get(type) != null) {
+                    metaArr = (JsonArray) resultObj.get(type);
+                    //System.out.println("#metaArr:"+metaArr.toString());
+                    JsonObject jo = null;
+                    if(metaArr != null && metaArr.size() > 0) {
+                        for(JsonElement je : metaArr) {
+                            jo = (JsonObject) je;
+                            String keyOne = (jo.get("word") != null) ? jo.get("word").toString() : "";
+                            if((!"".equals(keyOne.trim()))) {
+                                keyOne = keyOne.replace("\"","");
+                                keyOne = keyOne.replace("\'","");
+                                keyOne = typeStr +"___"+ keyOne.trim();
+                                //System.out.println("#word:"+keyOne);
+                                resultArr.add(keyOne);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(resultArr != null && resultArr.size() > 0) {
+            result = resultArr.toString();
+            result = result.replace(",","");
+            result = CommonUtil.removeBrackets(result);
+        }
+        return result;
+    }
+
+
+    private String getMetasStringFromJsonArray(JsonArray reqJsonArr, List<String> origTypes) {
+        String result = "";
+
+        Set<String> resultSet = null;
+        if (reqJsonArr != null && origTypes != null) {
+            resultSet = new HashSet<String>();
+
+            for (JsonElement je : reqJsonArr) {
+                JsonObject jo = (JsonObject) je;
+                String type = "";
+                String meta = "";
+                String toMeta = "";
+                if (jo != null) {
+                    type = (jo.get("type") != null ? jo.get("type").toString() : "");
+                    type = type.toUpperCase();
+                    type = type.replace("\"","");
+                    meta = (jo.get("meta") != null ? jo.get("meta").toString() : "");
+                    meta = meta.replace("\"","");
+                }
+                if (!"".equals(type) && !"".equals(meta)) {
+                    toMeta = type + "___" + meta;
+                    resultSet.add(toMeta);
+                }
+            }
+
+        }
+        if (resultSet != null) {
+            result = resultSet.toString();
+            result = result.replace(", ", " ");
+            result = result.replace(",", " ");
+            result = CommonUtil.removeBrackets(result);
+        }
+
+        return result;
+    }
+
+    private static EsConfig esConfig = null;
+    private static RestClient restClient = null;
+
+    private JsonObject getSearchedEsData(String idxName, String fieldName, String reqStr) throws Exception {
+        //String result = "";
+        JsonObject result = new JsonObject();
+
+        try {
+            if (restClient == null) {
+                esConfig = new EsConfig();
+                System.out.println("##REST::ElasticSearch server:" + EsConfig.INSTANCE.getEs_host() + ":" + EsConfig.INSTANCE.getEs_port() + "//:request_param:" + reqStr);
+                restClient = RestClient.builder(
+                        new HttpHost(EsConfig.INSTANCE.getEs_host(), EsConfig.INSTANCE.getEs_port(), "http")).build();
+            }
+            //HttpEntity entity = new NStringEntity(reqStr, ContentType.APPLICATION_JSON);
+
+            /*
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("keywords", reqStr);
+            paramMap.put("pretty", "true");
+            */
+            HttpEntity entity = new NStringEntity(
+                    "{\n" +
+                            "    \"query\" : {\n" +
+                            "    \"match\": { \""+fieldName+"\":\""+reqStr+"\"} \n" +
+                            "} \n"+
+                            "}",
+                    ContentType.APPLICATION_JSON
+            );
+            Response response = restClient.performRequest(
+                    "GET",
+                    "/"+idxName+"/_search",
+                    Collections.singletonMap("pretty", "true"),
+                    entity
+            );
+
+
+            /*
+            Response response = restClient.performRequest(
+                    "GET",
+                    "/"+idxName+"/_search",
+                    paramMap
+            );
+            */
+
+            //System.out.println(EntityUtils.toString(response.getEntity()));
+            //result = response.getEntity().toString();
+            String resultStr = EntityUtils.toString(response.getEntity());
+            result = JsonUtil.getJsonObject(resultStr);
+
+            //System.out.println("#REST::ElasticSearch Result:"+result.toString());
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+
+        return result;
+    }
+
+    private JsonObject getEsTopWords(JsonObject reqObj) {
+        JsonObject result = null;
+        JsonArray words = null;
+        if(reqObj != null) {
+            result = new JsonObject();
+            words = new JsonArray();
+
+            JsonObject hitsObj = null;
+            if(reqObj.get("hits") != null) hitsObj = (JsonObject) reqObj.get("hits");
+            //System.out.println("#hits:"+hitsObj.toString());
+            JsonArray hitsArr = null;
+            if(hitsObj != null && hitsObj.get("hits") !=null) hitsArr = hitsObj.get("hits").getAsJsonArray();
+            //System.out.println("#hitsArr:"+hitsArr.toString());
+            int cnt = 0;
+            for(JsonElement je : hitsArr) {
+                if (cnt < 10) {
+                    JsonObject jo = (JsonObject) je;
+                    JsonObject jobj = null;
+                    String wordOne = "";
+
+                    double score = 0.0;
+                    if (jo != null && jo.get("_score") != null) score = jo.get("_score").getAsDouble();
+                    if (jo != null && jo.get("_source") != null) jobj = jo.get("_source").getAsJsonObject();
+                    if (jobj != null && jobj.get("topic") != null) wordOne = jobj.get("topic").getAsString();
+                    System.out.println("# score:"+score+"  /  word:"+wordOne);
+                    JsonObject word1 = new JsonObject();
+                    word1.addProperty("score", String.valueOf(score));
+                    word1.addProperty("word", wordOne);
+                    words.add(word1);
+                } else {
+                    break;
+                }
+                cnt++;
+            }
+            result.add("words", words);
+        }
+
+        return result;
+    }
+
+
+    private JsonObject getEsTopWordsWithPointCut(JsonObject reqObj, Double limitPoint) {
+        JsonObject result = null;
+        JsonArray words = null;
+        if(reqObj != null) {
+            result = new JsonObject();
+            words = new JsonArray();
+
+            JsonObject hitsObj = null;
+            if(reqObj.get("hits") != null) hitsObj = (JsonObject) reqObj.get("hits");
+            //System.out.println("#hits:"+hitsObj.toString());
+            JsonArray hitsArr = null;
+            if(hitsObj != null && hitsObj.get("hits") !=null) hitsArr = hitsObj.get("hits").getAsJsonArray();
+            //System.out.println("#hitsArr:"+hitsArr.toString());
+            int cnt = 0;
+            for(JsonElement je : hitsArr) {
+                if (cnt < 2) {
+                    JsonObject jo = (JsonObject) je;
+                    JsonObject jobj = null;
+                    String wordOne = "";
+
+                    double score = 0.0;
+                    if (jo != null && jo.get("_score") != null) score = jo.get("_score").getAsDouble();
+                    if (jo != null && jo.get("_source") != null) jobj = jo.get("_source").getAsJsonObject();
+                    if (jobj != null && jobj.get("topic") != null) wordOne = jobj.get("topic").getAsString();
+                    System.out.println("# score:"+score+"  /  word:"+wordOne);
+                    if (score > limitPoint) {
+                        JsonObject word1 = new JsonObject();
+                        word1.addProperty("score", String.valueOf(score));
+                        word1.addProperty("word", wordOne);
+                        words.add(word1);
+                    }
+                } else {
+                    break;
+                }
+                cnt++;
+            }
+            result.add("words", words);
+        }
+
+        return result;
+    }
+
+    private Set<String> getCombindEsAndGenre(String esReturnWord, String itemGenres) {
+        Set<String> resultSet = null;
+        if (!"".equals(esReturnWord) && !"".equals(itemGenres)) {
+            resultSet = new HashSet<String>();
+
+            if (itemGenres.trim().contains(" ")) {
+                String genreR[] = itemGenres.trim().split(" ");
+                for (String genre : genreR) {
+                    resultSet.add(esReturnWord + "___" + genre);
+                }
+            } else {
+                resultSet.add(esReturnWord + "___" + itemGenres);
+            }
+        }
+        return resultSet;
+    }
+
+    @Override
+    public JsonArray getMetaSubgenre(Integer itemid, String reqJsonObjStr) throws Exception {
+        List<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+
+        //long itemIdx0 = (long) 0;
+        //int itemIdx = 0;
+        JsonArray resultArr = null;
+        int cnt = 0;
+        JsonObject jo = null;
+        String word = "";
+        double score = 0.0;
+
+        ItemsMetas newMeta = null;
+        int intIdx = 0;
+        int rtItm1 = -1;
+        long longIdx = 0;
+        if (itemid > 0 && !"".equals(reqJsonObjStr)) {
+
+            try {
+
+                // 입력 JsonArray를 META_WORD 형태의 공백으로 구분된 1개의 문자열로 치환
+                JsonArray reqArr = JsonUtil.getJsonArray(reqJsonObjStr);
+                String reqStr = this.getMetasStringFromJsonArray(reqArr, origTypes);
+
+                // 입력 reqStr을 엘라스틱 서치를 통해 유사도 평가
+                JsonObject resultEs = null;
+                List<String> esReturnArr = new ArrayList<String>();
+                String esReturnWord = "";
+                String meta_single = "";
+                String meta_genre = "";
+                String esWords = "";
+                JsonArray words = null;
+                JsonObject hits = null;
+
+                System.out.println("#requestEs for reqStr:" + reqStr);
+                resultEs = getSearchedEsData("idx_subgenre", "keywords"
+                        , reqStr);
+
+                System.out.println("#resultEs:" + resultEs.toString());
+                // 1차 ES response에서 10개를 포인트 상관없이 취득
+                hits = this.getEsTopWords(resultEs);
+                System.out.println("#resultEs.words top1::" + hits.toString());
+
+                words = null;
+                if (hits != null && hits.get("words") != null) {
+                    words = hits.get("words").getAsJsonArray();
+                    cnt = 0;
+                    jo = null;
+                    word = "";
+                    score = 0.0;
+                    for (JsonElement je : words) {
+                        jo = (JsonObject) je;
+                        word = "";
+                        word = (jo.get("word") != null) ? jo.get("word").getAsString() : "";
+
+                        //if (cnt == 0) {
+                        score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
+                        if (score > es_cut_point) {
+                            esReturnArr.add(word);
+                        }
+                        //}
+                        cnt++;
+                    }
+                    esWords = hits.get("words").toString();
+                }
+
+                if (esReturnArr != null && esReturnArr.size() > 0) {
+                    esReturnWord = esReturnArr.get(0);
+                }
+
+                System.out.println("#esReturnWord:(cut " + es_cut_point + ")::" + esReturnWord + " / esWords:" + esWords);
+
+                // 컷포인트 통과한 ES 검색 토픽 TOP 1을 resultArr에 저장
+                if (!"".equals(esReturnWord)) {
+                    resultArr = new JsonArray();
+                    /*
+                    JsonObject newWord = new JsonObject();
+                    newWord.addProperty("type", "");
+                    newWord.addProperty("ratio", 0.0);
+                    newWord.addProperty("word", esReturnWord);
+                    resultArr.add(newWord);
+                    */
+
+                    // 토픽 TOP 1 을 dic_subgenre_genres 의 mtype=meta_single과 대조하여 추가어 취득 후 resultArr에 저장
+                    Set<String> metaSingleArr = dicService.getMetaSingleFromGenre(esReturnWord, "meta_single");
+                    if (metaSingleArr != null && metaSingleArr.size() > 0) meta_single = metaSingleArr.toString();
+                    System.out.println("#meta_single:" + metaSingleArr);
+                    if (!"".equals(meta_single)) {
+                        JsonObject newWord2 = new JsonObject();
+                        newWord2.addProperty("type", "");
+                        newWord2.addProperty("ratio", 0.0);
+                        newWord2.addProperty("word", meta_single);
+                        resultArr.add(newWord2);
+                    }
+
+                    // 토픽 TOP 1과 genre를 dic_subgenre_genres 의 mtype=meta_genre 와 대조하여 추가어 취득 후 resultArr에 저장
+                    // 저장된 장르를 가져온다.
+                    ItemsMetas reqIm = new ItemsMetas();
+                    reqIm.setIdx(itemid);
+                    reqIm.setMtype("genre");
+                    ItemsMetas genreMetas = itemsMetasMapper.getItemsMetas(reqIm);
+                    String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
+                    System.out.println("#item_genre:"+itemGenre);
+
+                    // 장르가 있으면 ES토픽___장르  조합으로 사전과 대조하여 리스트 추출
+                    if (!"".equals(itemGenre)) {
+                        Set<String> combinedEsWordAndGenres = this.getCombindEsAndGenre(esReturnWord, itemGenre);
+                        System.out.println("#combinedEsWordAndGenres:"+combinedEsWordAndGenres.toString());
+
+                        Set<String> metaGenreArr = dicService.getMetaGenreFromGenre(combinedEsWordAndGenres, "meta_genre");
+                        if (metaGenreArr != null && metaGenreArr.size() > 0) {
+                            System.out.println("#meta_genre:" + metaGenreArr);
+                            for (String meta_genre_one : metaGenreArr) {
+                                resultArr.add(JsonUtil.getObjFromMatchedGenre(meta_genre_one));
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return resultArr;
     }
 }

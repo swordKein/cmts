@@ -1056,32 +1056,21 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public Set getMetaGenreFromGenre(String genre, String mtype) {
-        genre = genre.trim();
+    public Set getMetaGenreFromGenre(Set<String> genres, String mtype) {
         if (dicMetaGenre == null) dicMetaGenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
         Set result = new HashSet();
-        if(genre.trim().contains(" ")) {
-            String[] origGenres = genre.split(" ");
-            Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
-
+        for (String genre : genres){
+            //String[] origGenres = genre.split(" ");
+           // Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
             for(DicSubgenre ds : dicMetaGenre) {
-                for(String origGenre : noDupMixedGenres) {
+                ////for(String origGenre : noDupMixedGenres) {
                     String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
 
-                    if(ds1.equals(origGenre)) {
+                    if(ds1.equals(genre)) {
                         result.add(ds.getMeta());
                     }
-                }
-            }
-        } else if (!"".equals(genre.trim())) {
-            String origGenre = genre;
-            for(DicSubgenre ds : dicMetaGenre) {
-                String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
-
-                if(ds1.equals(origGenre)) {
-                    result.add(ds.getMeta());
-                }
+                //}
             }
         }
         return result;

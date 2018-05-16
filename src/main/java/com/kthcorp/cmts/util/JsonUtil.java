@@ -507,4 +507,16 @@ public class JsonUtil {
 
 		return reqObj;
 	}
+
+	public static JsonObject getObjFromMatchedGenre(String matchGenre) {
+		JsonObject result = null;
+		if (!"".equals(matchGenre.trim())) {
+			result = new JsonObject();
+
+			result.addProperty("type", "");
+			result.addProperty("ratio", 0.0);
+			result.addProperty("word", matchGenre);
+		}
+		return result;
+	}
 }

@@ -12,6 +12,7 @@ cmts:
     sns_stat_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetTopKeywords&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&topN=10&categorySetName=SM&categoryList%5b%5d=7/1/160
     naver_kordic_url: http://krdic.naver.com/search.nhn?query=#KEYWORD&kind=all
     hdfs_url: hdfs://210.122.36.199:8020
+    es_cut_point: 7.0
   admin:
     page_size: 20
   collector:
