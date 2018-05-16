@@ -2075,7 +2075,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     // 토픽 TOP 1 을 dic_subgenre_genres 의 mtype=meta_single과 대조하여 추가어 취득 후 resultArr에 저장
                     Set<String> metaSingleArr = dicService.getMetaSingleFromGenre(esReturnWord, "meta_single");
-                    if (metaSingleArr != null && metaSingleArr.size() > 0) meta_single = metaSingleArr.toString();
+                    if (metaSingleArr != null && metaSingleArr.size() > 0) {
+                        meta_single = metaSingleArr.toString();
+                        meta_single = StringUtil.removeBracket(meta_single);
+                    }
+
                     System.out.println("#meta_single:" + metaSingleArr);
                     if (!"".equals(meta_single)) {
                         JsonObject newWord2 = new JsonObject();
