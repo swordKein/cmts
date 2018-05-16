@@ -45,6 +45,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private ApiService apiService;
     @Autowired
     private CcubeService ccubeService;
+    @Autowired
+    private SchedTriggerService schedTriggerService;
 
     @Autowired
     private ManualJobHistMapper manualJobHistMapper;
@@ -306,7 +308,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         // resultObj2 = getWordsSns(itemIdx, resultObj2);
 
         /* LIST_SUBGENRE */
-        resultObj2 = getSubgenres(itemIdx, resultObj2);
+        if (resultObj2 != null && resultObj2.get("LIST_SUBGENRE") == null) {
+            resultObj2 = getSubgenres(itemIdx, resultObj2);
+        }
 
         /* LIST_AWARD */
         resultObj2 = getAwardObject(itemIdx, resultObj2);
@@ -1217,6 +1221,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 if (!"".equals(duration)) reqIt.setDuration(duration);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
+
+                /* 해당 items의 sched_target_content 원문을 모두 삭제한다  18.05.16 */
+                int rtd = schedTriggerService.deleteSchedTargetContentOrigin(itemid);
             }
 
             if ("Y".equals(sendnow.toUpperCase())) {

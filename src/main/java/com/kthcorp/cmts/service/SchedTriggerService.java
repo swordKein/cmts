@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.kthcorp.cmts.mapper.ConfTargetMapper;
+import com.kthcorp.cmts.mapper.SchedTargetContentMapper;
 import com.kthcorp.cmts.mapper.SchedTriggerMapper;
 import com.kthcorp.cmts.model.ConfTarget;
 import com.kthcorp.cmts.model.SchedTrigger;
@@ -25,6 +26,8 @@ public class SchedTriggerService implements SchedTriggerServiceImpl {
 
     @Autowired
     private SchedTriggerMapper schedTriggerMapper;
+    @Autowired
+    private SchedTargetContentMapper schedTargetContentMapper;
 
     @Override
     public int uptSchedTriggerComplete(SchedTrigger req) {
@@ -98,6 +101,11 @@ public class SchedTriggerService implements SchedTriggerServiceImpl {
             isAlive = true;
         }
         return isAlive;
+    }
+
+    @Override
+    public int deleteSchedTargetContentOrigin(Integer itemidx) {
+        return schedTargetContentMapper.deleteSchedTargetContentOrigin(itemidx);
     }
 
 }

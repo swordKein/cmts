@@ -17,4 +17,6 @@ public interface SchedTargetContentMapper {
 
     SchedTargetContent getSchedTargetContentLastOne(SchedTargetContent req);
     List<SchedTargetContent> getSchedTargetContentList(SchedTargetContent req);
+
+    int deleteSchedTargetContentOrigin(Integer itemidx);
 }
