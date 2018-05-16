@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kthcorp.cmts.mapper.ItemsMapper">
-    <cache eviction="LRU" flushInterval="300000" size="512" readOnly="true"/>
+    <cache eviction="LRU" flushInterval="2000" size="64" readOnly="true"/>
 
     <resultMap id="Items" type="com.kthcorp.cmts.model.Items">
         <id property="idx" column="idx" />
@@ -648,7 +648,7 @@
 
     <update id="uptItemsTagcnt" parameterType="com.kthcorp.cmts.model.Items">
         /* uptItemsTagcnt */
-        update items set tagcnt = tagcnt + 1
+        update items set tagcnt = #{tagcnt}
         , regdate = now()
         <if test='duration != null and duration != ""'>
             , duration = #{duration}

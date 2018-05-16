@@ -42,6 +42,23 @@
         </if>
     </select>
 
+    <select id="getMinTagsIdxByItemIdx" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* getMinTagsIdxByItemIdx */
+        select
+        ifnull(min(tagidx), 0) as tagidx
+        from items_tags_keys
+        where idx = #{idx}
+        <if test='stat != null and stat != ""'>
+            and stat = #{stat}
+        </if>
+    </select>
+
+    <delete id="delItemsTagsKeys" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* delItemsTagsKeys */
+        delete from items_tags_keys
+        where idx = #{idx} and tagidx = #{tagidx}
+    </delete>
+
     <select id="cntConfirmedTags" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* cntConfirmedTags */
         select
@@ -63,6 +80,16 @@
         limit 1
     </select>
 
+    <select id="getLastTagSuccessInfo" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="java.lang.Integer">
+        /* getLastTagSuccessInfo */
+        select
+        idx, tagidx, stat, regdate
+        from items_tags_keys
+        where idx = #{idx} and stat = 'S'
+        order by tagidx DESC
+        limit 1
+    </select>
+
     <select id="getTagCntInfo" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="java.lang.Integer">
         /* getTagCntInfo */
         select
@@ -71,6 +98,16 @@
         where idx = #{idx}
         order by tagidx DESC
     </select>
+
+    <select id="getSuccessTagList" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="java.lang.Integer">
+        /* getSuccessTagList */
+        select
+        idx, tagidx, stat, regdate
+        from items_tags_keys
+        where idx = #{idx} and stat = 'S'
+        order by tagidx DESC
+    </select>
+
 
     <insert id="insItemsTagsKeys" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insItemsTagsKeys */

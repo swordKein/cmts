@@ -510,7 +510,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_processSubgenre2ByKeywords() throws Exception {
-		//testService.processSubgenre2ByKeywords();
+		testService.processSubgenre2ByKeywords();
 	}
 
 	@Test

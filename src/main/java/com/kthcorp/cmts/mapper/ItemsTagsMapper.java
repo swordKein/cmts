@@ -33,4 +33,11 @@ public interface ItemsTagsMapper {
     int insItemsTagsMetas_0503(ItemsTags req);
 
     List<ItemsTags> getItemsTagsMetasByMtype(ItemsTags req);
+
+    int delItemsTagsKeys(ItemsTags req);
+
+    int getMinTagsIdxByItemIdx(ItemsTags req);
+
+    List<ItemsTags> getSuccessTagList(Integer itemid);
+    ItemsTags getLastTagSuccessInfo(Integer itemid);
 }
