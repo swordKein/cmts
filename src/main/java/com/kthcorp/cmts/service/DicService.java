@@ -1212,6 +1212,8 @@ public class DicService implements DicServiceImpl {
 
             Map<String,Object> wordResultTags = (Map<String, Object>) DIC_RESULT_TAG_LIST.get(key1);
 
+            //#TODO 추가 -> 삭제 -> 대채
+
             if (wordResultTags != null) {
                 if (wordResultTags.get("wordto") != null && !"".equals(wordResultTags.get("wordto"))) {
                     result.add((String) wordResultTags.get("wordto"));

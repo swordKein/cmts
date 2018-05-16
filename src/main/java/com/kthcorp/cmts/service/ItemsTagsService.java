@@ -2112,6 +2112,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 e.printStackTrace();
             }
         }
+
+        if (resultArr == null) resultArr = new JsonArray();
+
         return resultArr;
     }
 }

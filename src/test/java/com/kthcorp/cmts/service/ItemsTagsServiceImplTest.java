@@ -108,11 +108,11 @@ public class ItemsTagsServiceImplTest {
 				", {\"type\":\"what\", \"meta\":\"교훈\"}, {\"type\":\"what\", \"meta\":\"가족애\"}" +
 				"]";
 
-		/*
+
 		reqStr = "[{\"type\":\"who\", \"meta\":\"갱스터\"}, {\"type\":\"what\", \"meta\":\"범죄\"}" +
 				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"who\", \"meta\":\"깡패\"}" +
-				"]";
-				*/
+				", {\"type\":\"who\", \"meta\":\"마피아\"}]";
+
 
 		JsonArray resultArr = itemsTagsService.getMetaSubgenre(145, reqStr);
 
