@@ -102,6 +102,10 @@ public interface DicServiceImpl {
 
     List<String> getKeywordTypes();
 
+    Set getMetaSingleFromGenre(String genre, String mtype);
+
+    Set getMetaGenreFromGenre(String genre, String mtype);
+
     Set getMixedGenreArrayFromGenre(String genre, String mtype);
 
     List<String> getMixedGenreArrayFromFilter(String genre, String mtype);

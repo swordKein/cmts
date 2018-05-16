@@ -1158,6 +1158,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         try {
             ItemsTags lastTag = this.getLastTagSuccessInfo(itemid);
+            if (lastTag != null) {
+                System.out.println("#lastTag:" + lastTag.toString());
+            }
+            //else {
+            //    lastTag = this.getLastTagCntInfo(itemid);
+            //    System.out.println("#lastTag:" + lastTag.toString());
+            //}
+
             Items reqIt = null;
 
             /* get action TYPE to Arrays */
@@ -1168,7 +1176,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 typesArr = (JsonArray) actionItemsArraysByType.get("typesArr");
             //System.out.println("#typesArr:"+typesArr.toString());
 
-            System.out.println("#lastTag:"+lastTag.toString());
+            int tagcnt = 0;
+
             /* 기승인된 메타가 없을 경우 (최근 tagIdx가 미승인인 경우) 메타수정 후 상태변경, 승인 처리한다 */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
@@ -1195,6 +1204,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 int rti = itemsMapper.insItemsStat(reqIt);
 
                 rt = 1;
+
+                tagcnt = curTagIdx + 1;
             } else {
                 /* 이전 상태 코드 확인하여 승인완료(ST)가 아닌 경우 승인완료로 처리  added 2018.04.11 */
                 String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
@@ -1238,6 +1249,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
 
                 rt = 1;
+
+                tagcnt = curTagIdx;
             }
 
             System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
@@ -1265,7 +1278,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* 해당 items 정보를 변경한다.  tagcnt++,  duration */
                 if (!"".equals(duration)) reqIt.setDuration(duration);
-                reqIt.setTagcnt(curTagIdx);
+                reqIt.setTagcnt(tagcnt);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
 

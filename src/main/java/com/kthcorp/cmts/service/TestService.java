@@ -2949,7 +2949,7 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public Map<String,Object> loadDicSubgenreKeywords() throws Exception {
-        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords4.txt";
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords0516.txt";
         return loadDicSubgenreKeywords(fileName);
     }
 
@@ -4208,7 +4208,7 @@ public class TestService implements TestServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
-        origTypes.add("METASCHARACTER");
+        //origTypes.add("METASCHARACTER");
 
         long itemIdx0 = (long) 0;
         JsonObject hits = null;
@@ -4298,15 +4298,15 @@ public class TestService implements TestServiceImpl {
             longIdx = (Long) nmap.get("idx");
             intIdx = (int) longIdx;
             newMeta.setIdx(intIdx);
-            newMeta.setMtype("subgenreword1");
+            newMeta.setMtype("subgenremeta1");
             newMeta.setMeta(subGenreWord1);
             System.out.println("#save itemsMetas.1:" + newMeta.toString());
-            rtItm1 = itemsService.insItemsMetas(newMeta);
+            //rtItm1 = itemsService.insItemsMetas(newMeta);
 
-            newMeta.setMtype("subgenreword2");
+            newMeta.setMtype("subgenremeta2");
             newMeta.setMeta(subGenreWord2);
             System.out.println("#save itemsMetas.2:" + newMeta.toString());
-            rtItm1 = itemsService.insItemsMetas(newMeta);
+            //rtItm1 = itemsService.insItemsMetas(newMeta);
 
             newMeta.setMtype("subgenrewords");
             newMeta.setMeta(subGenreWords);
@@ -4330,6 +4330,211 @@ public class TestService implements TestServiceImpl {
             rtItm1 = itemsService.insItemsMetas(newMeta);
 
             System.out.println("###subGenreTopic2 subgenreWord2:"+subGenreWord2+ "  ::itemGenre::"+itemGenre+" ::"+subGenreTopic2);
+
+
+            //}
+
+        }
+    }
+
+
+
+    @Override
+    public void processSubgenre2ByMetaKeywords() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        List<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+        //origTypes.add("METASCHARACTER");
+
+        long itemIdx0 = (long) 0;
+        int itemIdx = 0;
+        JsonObject resultObj = null;
+
+        int cnt = 0;
+        JsonObject jo = null;
+        String word = "";
+        double score = 0.0;
+
+        ItemsMetas newMeta = null;
+        int intIdx = 0;
+        int rtItm1 = -1;
+        long longIdx = 0;
+        //Map<String, Object> nmap = null;
+        //for(int i=0; i<itemList.size(); i++) {
+          //  nmap = itemList.get(i);
+            //for(nmap : itemList) {
+            for(int i=0; i<5; i++) {
+            Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            JsonObject resultEs = null;
+
+            String esWord1 = ""; String esWord2 = ""; String esWord3 = ""; String esWord4 = "";
+            String esWords = "";
+
+            String meta_single1 = ""; String meta_single2 = ""; String meta_single3 = ""; String meta_single4 = "";
+            String meta_genre1 = ""; String meta_genre2 = ""; String meta_genre3 = ""; String meta_genre4 = "";
+
+            JsonArray words = null;
+            String reqStr = "";
+
+            JsonObject hits = null;
+
+            Set<String> esWarr1 = new HashSet<String>();
+            Set<String> esWarr2 = new HashSet<String>();
+            Set<String> esWarr3 = new HashSet<String>();
+            Set<String> esWarr4 = new HashSet<String>();
+
+            itemIdx0 = (long) nmap.get("idx");
+            itemIdx = (int) itemIdx0;
+            resultObj = itemsTagsService.getItemsMetasByIdx(itemIdx, origTypes, "S");
+
+            String itemGenre = (nmap.get("genre") != null) ? nmap.get("genre").toString() : "";
+
+            //System.out.println("#resultObj:"+resultObj.toString());
+            //System.out.println("#resultSet:"+getMetasStringFromJsonObject(resultObj, origTypes));
+            reqStr = "";
+            reqStr = getMetasStringFromJsonObject(resultObj, origTypes);
+            System.out.println("#requestEs for reqStr:"+reqStr);
+            resultEs = getSearchedEsData("idx_subgenre", "keywords"
+                    , reqStr);
+
+            System.out.println("#resultEs:"+resultEs.toString());
+            hits = getEsTopWords(resultEs);
+            System.out.println("#resultEs.words top1::"+hits.toString());
+
+            words = null;
+            if (hits != null && hits.get("words") != null) {
+                words = hits.get("words").getAsJsonArray();
+                cnt = 0;
+                jo = null;
+                word = "";
+                score = 0.0;
+                for (JsonElement je : words) {
+                    jo = (JsonObject) je;
+                    word = "";
+                    word = (jo.get("word") != null) ? jo.get("word").getAsString() : "";
+
+                    if (cnt == 0) {
+                        score = (jo.get("score") != null) ? jo.get("score").getAsDouble() : 0.0;
+                        if (score > 6.0) esWarr1.add(word);
+                        if (score > 12.0) esWarr2.add(word);
+                        if (score > 18.0) esWarr3.add(word);
+                        if (score > 24.0) esWarr3.add(word);
+                    } else {
+                        //subGenreWord2 = word;
+                    }
+                    cnt++;
+                }
+                esWords = hits.get("words").toString();
+            }
+
+            if (esWarr1 != null) esWord1 = esWarr1.toString(); esWord1 = esWord1.replace(", "," ");
+                if (esWarr2 != null) esWord2 = esWarr2.toString(); esWord2 = esWord2.replace(", "," ");
+                if (esWarr3 != null) esWord3 = esWarr3.toString(); esWord3 = esWord3.replace(", "," ");
+                if (esWarr4 != null) esWord4 = esWarr4.toString(); esWord4 = esWord4.replace(", "," ");
+
+            System.out.println("#esWord1:(6.0)::"+esWord1+" / esWord2:(12.0):"+esWord2
+                    +" / esWords:"+esWords);
+            //if(nmap.get("genre") != null) reqStr = nmap.get("genre").toString();
+            //if(nmap.get("kt_rating") != null) reqStr = reqStr + " " + nmap.get("kt_rating").toString();
+
+            if(!"".equals(esWord1)) {
+                newMeta = new ItemsMetas();
+                longIdx = (Long) nmap.get("idx");
+                intIdx = (int) longIdx;
+                newMeta.setIdx(intIdx);
+                newMeta.setMtype("esWord1");
+                newMeta.setMeta(esWord1);
+                System.out.println("#save itemsMetas.1:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+                Set<String> metaSingleArr1 = null;
+                if (!"".equals(esWord1)) metaSingleArr1 = dicService.getMetaSingleFromGenre(esWord1, "meta_single");
+                if (metaSingleArr1 != null) meta_single1 = metaSingleArr1.toString();
+                System.out.println("#meta_single1:"+meta_single1);
+            }
+
+            if (!"".equals(esWord2)) {
+                newMeta.setMtype("esWord2");
+                newMeta.setMeta(esWord2);
+                System.out.println("#save itemsMetas.2:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+                Set<String> metaSingleArr2 = null;
+                if (!"".equals(esWord2)) metaSingleArr2 = dicService.getMetaSingleFromGenre(esWord2, "meta_single");
+                if (metaSingleArr2 != null) meta_single2 = metaSingleArr2.toString();
+                System.out.println("#meta_single2:"+meta_single2);
+            }
+
+            if (!"".equals(esWord3)) {
+                newMeta.setMtype("esWord3");
+                newMeta.setMeta(esWord3);
+                System.out.println("#save itemsMetas.3:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+                Set<String> metaSingleArr3 = null;
+                if (!"".equals(esWord3)) metaSingleArr3 = dicService.getMetaSingleFromGenre(esWord3, "meta_single");
+                if (metaSingleArr3 != null) meta_single3 = metaSingleArr3.toString();
+                System.out.println("#meta_single3:"+meta_single3);
+            }
+
+            if (!"".equals(esWord4)) {
+                newMeta.setMtype("esWord4");
+                newMeta.setMeta(esWord4);
+                System.out.println("#save itemsMetas.2:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+                Set<String> metaSingleArr4 = null;
+                if (!"".equals(esWord4)) metaSingleArr4 = dicService.getMetaSingleFromGenre(esWord4, "meta_single");
+                if (metaSingleArr4 != null) meta_single4 = metaSingleArr4.toString();
+                System.out.println("#meta_single4:"+meta_single4);
+            }
+
+            if (!"".equals(esWords)) {
+                newMeta.setMtype("esWords");
+                newMeta.setMeta(esWords);
+                System.out.println("#save itemsMetas.esWords:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+            }
+
+            if(!"".equals(meta_single1)) {
+                newMeta.setMtype("meta_single1");
+                newMeta.setMeta(meta_single1);
+                System.out.println("#save itemsMetas.meta_single1:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+            }
+
+            if(!"".equals(meta_single2)) {
+                newMeta.setMtype("meta_single1");
+                newMeta.setMeta(meta_single2);
+                System.out.println("#save itemsMetas.meta_single2:" + newMeta.toString());
+                //rtItm1 = itemsService.insItemsMetas(newMeta);
+            }
+
+            //List<Set> genreTopic01 = dicService.getMixedGenreArrayFromFilter(subGenreWord1 + " " + itemGenre, "subgenre_filter");
+            //String subGenreTopic1 = genreTopic01.toString();
+            //subGenreTopic1 = CommonUtil.removeBrackets(subGenreTopic1);
+
+            //System.out.println("###subGenreTopic1 subgenreWord1:"+subGenreWord1+ "  ::itemGenre::"+itemGenre+" ::"+subGenreTopic1);
+            //newMeta.setMtype("subgenretopic1");
+            //newMeta.setMeta(subGenreTopic1);
+            //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+            //List<String> genreTopic02 = dicService.getMixedGenreArrayFromFilter(subGenreWord2 + " " + itemGenre, "subgenre_filter");
+            //String subGenreTopic2 = genreTopic02.toString();
+            //subGenreTopic2 = CommonUtil.removeBrackets(subGenreTopic2);
+            //newMeta.setMtype("subgenretopic2");
+            //newMeta.setMeta(subGenreTopic2);
+            //rtItm1 = itemsService.insItemsMetas(newMeta);
+
+            //System.out.println("###subGenreTopic2 subgenreWord2:"+subGenreWord2+ "  ::itemGenre::"+itemGenre+" ::"+subGenreTopic2);
 
 
             //}
@@ -4424,6 +4629,49 @@ public class TestService implements TestServiceImpl {
                     word1.addProperty("score", String.valueOf(score));
                     word1.addProperty("word", wordOne);
                     words.add(word1);
+                } else {
+                    break;
+                }
+                cnt++;
+            }
+            result.add("words", words);
+        }
+
+        return result;
+    }
+
+
+    private JsonObject getEsTopWordsWithPointCut(JsonObject reqObj, Double limitPoint) {
+        JsonObject result = null;
+        JsonArray words = null;
+        if(reqObj != null) {
+            result = new JsonObject();
+            words = new JsonArray();
+
+            JsonObject hitsObj = null;
+            if(reqObj.get("hits") != null) hitsObj = (JsonObject) reqObj.get("hits");
+            //System.out.println("#hits:"+hitsObj.toString());
+            JsonArray hitsArr = null;
+            if(hitsObj != null && hitsObj.get("hits") !=null) hitsArr = hitsObj.get("hits").getAsJsonArray();
+            //System.out.println("#hitsArr:"+hitsArr.toString());
+            int cnt = 0;
+            for(JsonElement je : hitsArr) {
+                if (cnt < 2) {
+                    JsonObject jo = (JsonObject) je;
+                    JsonObject jobj = null;
+                    String wordOne = "";
+
+                    double score = 0.0;
+                    if (jo != null && jo.get("_score") != null) score = jo.get("_score").getAsDouble();
+                    if (jo != null && jo.get("_source") != null) jobj = jo.get("_source").getAsJsonObject();
+                    if (jobj != null && jobj.get("topic") != null) wordOne = jobj.get("topic").getAsString();
+                    System.out.println("# score:"+score+"  /  word:"+wordOne);
+                    if (score > limitPoint) {
+                        JsonObject word1 = new JsonObject();
+                        word1.addProperty("score", String.valueOf(score));
+                        word1.addProperty("word", wordOne);
+                        words.add(word1);
+                    }
                 } else {
                     break;
                 }

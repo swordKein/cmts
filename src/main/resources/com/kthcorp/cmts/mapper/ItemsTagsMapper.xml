@@ -85,7 +85,7 @@
         select
         idx, tagidx, stat, regdate
         from items_tags_keys
-        where idx = #{idx} and stat = 'S'
+        where idx = #{idx} and stat in ('S', 'Y')
         order by tagidx DESC
         limit 1
     </select>
