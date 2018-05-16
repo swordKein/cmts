@@ -48,4 +48,9 @@ public class ItemsServiceTest {
 		//}
 	}
 
+	@Test
+	public void test_getItemsInfoByIdx() throws Exception {
+		System.out.println("#RES:"+itemsService.getItemsInfoByIdx(2855));
+	}
+
 }

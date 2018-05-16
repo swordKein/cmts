@@ -878,10 +878,13 @@ public class AnalyzeService implements AnalyzeServiceImpl {
                 int rtinsmeta = insItemsTagsMetaFromPointArraysObj(keywordPointArraysObj, sc_id);
             }
 
+            // MIX된 서브장르를 ITEMS_TAGS_METAS에 저장
+            int rtsg = insItemsTagsMetaFromMixSubgenres(sc_id);
+
             // SNS감성어를 ITEMS_TAGS_METAS에 WORDS_SNS type으로 저장
             //JsonObject resultRefineObj = resultRefine.get("result").getAsJsonObject();
             //if (resultRefineObj != null) {
-            /*
+
             String movietitle = sched.getMovietitle();
             if (!"".equals(movietitle)) {
                 JsonArray wordsSnsArray = wordsSnsArray = apiService.getSnsKeywords(movietitle);
@@ -889,7 +892,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
 
                 int rtws = insItemsTagsMetaFromWordsSns(wordsSnsArray, sc_id);
             }
-            */
+
             //}
 
         } catch (Exception e) {
@@ -960,6 +963,22 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         }
 
         return rt;
+    }
+
+    private int insItemsTagsMetaFromMixSubgenres(int sc_id) throws Exception {
+        int rt = 0;
+
+        // 일단 sc_id를 통해 itemIdx를 취득
+        ItemsSchedMapping reqIsm = new ItemsSchedMapping();
+        reqIsm.setSc_id(sc_id);
+        int itemIdx = itemsSchedMappingMapper.getItemIdxByScid(reqIsm);
+
+        // items_tags_keys를 통해 itemIdx - tagIdx 를 최신으로 추가
+        int maxTagidx = itemsTagsService.getCurrTagsIdxForInsert(itemIdx);
+
+        JsonArray subgenreArr = itemsTagsService.getMixedSubgenre2(itemIdx);
+        int resitm2 = saveItemsTagsMetas(subgenreArr.toString(), itemIdx, maxTagidx, "LIST_SUBGENRE");
+        return resitm2;
     }
 
     private int insItemsTagsMetaFromPointArraysObj(JsonObject keywordPointArraysObj, int sc_id) {
