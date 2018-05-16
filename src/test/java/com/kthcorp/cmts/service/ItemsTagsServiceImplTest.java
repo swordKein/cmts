@@ -118,4 +118,15 @@ public class ItemsTagsServiceImplTest {
 
 		System.out.println("#RESULT:"+resultArr.toString());
 	}
+
+	@Test
+	public void test_getSubgenres() throws Exception {
+		JsonObject result = itemsTagsService.getSubgenres(21951, new JsonObject());
+		System.out.println("#RES:"+result.toString());
+	}
+
+	@Test
+	public void test_getMixedSubgenre2() throws Exception {
+		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(21951));
+	}
 }

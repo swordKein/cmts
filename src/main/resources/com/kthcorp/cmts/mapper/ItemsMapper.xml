@@ -19,6 +19,11 @@
         <result property="stat" column="stat" />
         <result property="director" column="director" />
         <result property="year" column="year" />
+        <result property="kt_rating" column="kt_rating" />
+        <result property="genre" column="genre" />
+        <result property="corigin" column="corigin" />
+        <result property="sorigin" column="sorigin" />
+
         <collection property="metaList" column="idx" ofType="com.kthcorp.cmts.model.ItemsMetas"
                     javaType="ArrayList" resultMap="ItemsMetas"/>
         <collection property="schedList" column="sc_id" ofType="com.kthcorp.cmts.model.SchedTrigger"
@@ -85,6 +90,10 @@
         t.idx, t.type, t.cid, t.title, t.title1, t.title2,
         t.regdate, t.regdate1, t.regdate2, t.regid, t.stat, t.director, t.year,
         t.duration, t.tagcnt
+        , ( select kt_rating from ccube_contents where content_id = t.cid order by regdate desc limit 1 ) as kt_rating
+        , ( select meta from items_metas where idx = t.idx and mtype = 'genre' ) as genre
+        , ( select country_of_origin from ccube_contents where content_id = t.cid order by regdate desc limit 1 ) as corigin
+        , ( select country_of_origin from ccube_series where series_id = t.cid order by regdate desc limit 1 ) as sorigin
         from items t
         where t.idx = #{idx}
     </select>

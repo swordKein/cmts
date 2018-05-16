@@ -601,4 +601,9 @@ public class ItemsService implements ItemsServiceImpl {
 
         return item;
     }
+
+    @Override
+    public Items getItemsInfoByIdx(Integer itemid) {
+        return itemsMapper.getItemsInfoByIdx(itemid);
+    }
 }

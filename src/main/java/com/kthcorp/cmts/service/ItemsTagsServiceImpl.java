@@ -92,4 +92,6 @@ public interface ItemsTagsServiceImpl {
     int delItemsMetasAward(int itemIdx);
 
     JsonArray getMetaSubgenre(Integer itemid, String reqJsonObjStr) throws Exception;
+
+    JsonArray getMixedSubgenre2(Integer itemid) throws Exception;
 }

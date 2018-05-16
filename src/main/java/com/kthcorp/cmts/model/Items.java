@@ -59,6 +59,51 @@ public class Items extends Paging {
     private List<ItemsMetas> metaList;
     private List<SchedTrigger> schedList;
     private List<ItemsTags> tagsMetasList;
+    private String genre;
+    private String kt_rating;
+    private String origin;
+    private String corigin;
+    private String sorigin;
+
+    public String getCorigin() {
+        return corigin;
+    }
+
+    public void setCorigin(String corigin) {
+        this.corigin = corigin;
+    }
+
+    public String getSorigin() {
+        return sorigin;
+    }
+
+    public void setSorigin(String sorigin) {
+        this.sorigin = sorigin;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getKt_rating() {
+        return kt_rating;
+    }
+
+    public void setKt_rating(String kt_rating) {
+        this.kt_rating = kt_rating;
+    }
 
     public List<ItemsTags> getTagsMetasList() {
         return tagsMetasList;

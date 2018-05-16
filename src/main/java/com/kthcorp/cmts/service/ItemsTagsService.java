@@ -1996,7 +1996,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         //long itemIdx0 = (long) 0;
         //int itemIdx = 0;
-        JsonArray resultArr = null;
+        JsonArray resultArr = this.getMixedSubgenre2(itemid);
         int cnt = 0;
         JsonObject jo = null;
         String word = "";
@@ -2064,7 +2064,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 // 컷포인트 통과한 ES 검색 토픽 TOP 1을 resultArr에 저장
                 if (!"".equals(esReturnWord)) {
-                    resultArr = new JsonArray();
+                    if (resultArr == null) resultArr = new JsonArray();
                     /*
                     JsonObject newWord = new JsonObject();
                     newWord.addProperty("type", "");
@@ -2118,6 +2118,80 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         if (resultArr == null) resultArr = new JsonArray();
+
+        return resultArr;
+    }
+
+
+    @Override
+    public JsonArray getMixedSubgenre2(Integer itemid) throws Exception {
+        JsonArray resultArr = null;
+
+        if (itemid > 0) {
+            resultArr = new JsonArray();
+            Items itemInfo = itemsService.getItemsInfoByIdx(itemid);
+
+            String reqStr0 = "";
+            String reqStr = "";
+            if(itemInfo.getGenre() != null) reqStr0 = itemInfo.getGenre();
+            if(itemInfo.getKt_rating() != null) reqStr = reqStr0 + " " + itemInfo.getKt_rating();
+            System.out.println("#req str: genre/kt_rating::"+reqStr);
+
+            String toMeta = "";
+            if(!"".equals(reqStr)) {
+                Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
+                toMeta = result.toString();
+                toMeta = CommonUtil.removeNationStr(toMeta);
+                toMeta = toMeta.replace("영화", "시리즈");
+            }
+
+            String origin = "";
+            if(itemInfo.getCorigin() != null) {
+                origin = itemInfo.getCorigin();
+            } else if(itemInfo.getSorigin() != null) {
+                origin = itemInfo.getSorigin();
+            }
+
+            String toMetaOrigin = "";
+            if (!"".equals(origin) && !"".equals(reqStr0)) {
+                System.out.println("###REQ_STR2::origin:" + origin);
+                Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
+                System.out.println("#RESULT_NATION:" + resultNation.toString());
+                toMetaOrigin = resultNation.toString();
+                toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
+                toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+            }
+
+            if(!"".equals(toMeta)) {
+                //ItemsMetas newMeta = new ItemsMetas();
+                //long longIdx = itemid;
+                //int intIdx = (int) longIdx;
+                //newMeta.setIdx(itemid);
+                //newMeta.setMtype("subgenreMix2");
+                //newMeta.setMeta(toMeta);
+                //System.out.println("#save itemsMetas:" + newMeta.toString());
+                //int rtItm = itemsService.insItemsMetas(newMeta);
+                String[] toMetas = toMeta.split(", ");
+                for (String toM : toMetas) {
+                    resultArr.add(JsonUtil.getObjFromMatchedGenre(toM));
+                }
+            }
+
+            if(!"".equals(toMetaOrigin)) {
+                //ItemsMetas newMeta = new ItemsMetas();
+                //long longIdx = (Long) nmap.get("idx");
+                //int intIdx = (int) longIdx;
+                //newMeta.setIdx(itemid);
+                //newMeta.setMtype("subgenreOrgin2");
+                //newMeta.setMeta(toMetaOrigin);
+                //System.out.println("#save itemsMetas2:" + newMeta.toString());
+                //int rtItm = itemsService.insItemsMetas(newMeta);
+                String[] toMetaOs = toMetaOrigin.split(", ");
+                for (String toM : toMetaOs) {
+                    resultArr.add(JsonUtil.getObjFromMatchedGenre(toM));
+                }
+            }
+        }
 
         return resultArr;
     }
