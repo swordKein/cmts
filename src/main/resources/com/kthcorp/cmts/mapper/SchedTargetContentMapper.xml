@@ -55,4 +55,16 @@
         order by c.stmh_id desc limit 1
     </select>
 
+    <delete id="deleteSchedTargetContentOrigin" parameterType="java.lang.Integer">
+        /* deleteSchedTargetContentOrigin */
+        delete from sched_target_content where stc_id in (
+            select a.* from (
+                select stc.stc_id
+                from sched_target_content stc
+                inner join items_sched_mapping ism on ism.sc_id = stc.sc_id
+                inner join items it on it.idx = ism.idx and it.idx = #{itemidx}
+            ) a
+        )
+    </delete>
+
 </mapper>

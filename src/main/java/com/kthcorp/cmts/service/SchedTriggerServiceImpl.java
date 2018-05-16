@@ -15,4 +15,6 @@ public interface SchedTriggerServiceImpl {
     int processCollectHearbit() throws Exception;
 
     boolean checkActiveServerByServerid() throws Exception;
+
+    int deleteSchedTargetContentOrigin(Integer itemidx);
 }
