@@ -5992,6 +5992,134 @@ public class TestService implements TestServiceImpl {
         return rt;
     }
 
+
+    @Override
+    public int writeCcubeOutputDayToJsonByType(String type) {
+        int rt = 0;
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        if ("CcubeSeries".equals(type)) {
+            countAll = testMapper.cntSeriesOrigItemsDay();
+        } else {
+            countAll = testMapper.cntContentsOrigItemsDay();
+        }
+
+//countAll = 4107;
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("TOTAL_COUNT", countAll);
+
+        logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    req.setPageSize(pageSize);
+
+                    reqItems = null;
+                    if ("CcubeSeries".equals(type)) {
+                        reqItems = testMapper.getSeriesOrigItemsDay(req);
+                    } else {
+                        reqItems = testMapper.getContentsOrigItemsDay(req);
+                    }
+
+                    if (reqItems != null) {
+                        logger.info("#writeCcubeOutputToJson.getAll: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        int oldItemIdx = 0;
+                        int cnt = 0;
+                        for (Map<String, Object> ins : reqItems) {
+
+                            /*
+                            CcubeKeys reqCk = null;
+                            // 중복방지로직, cid , title, director, year 순으로 대조
+
+                            if ("CcubeContent".equals(type)) {
+                                reqCk = new CcubeKeys();
+                                reqCk.setContent_id(ins.get("content_id").toString());
+                                reqCk.setMaster_content_id(ins.get("master_content_id").toString());
+                                String title = ins.get("content_title").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
+                                reqCk.setKmrb_id(ins.get("kmrb_id") != null ? ins.get("kmrb_id").toString() : "");
+                            } else if ("CcubeSeries".equals(type)) {
+                                reqCk = new CcubeKeys();
+                                reqCk.setSeries_id(ins.get("series_id").toString());
+                                String title = ins.get("series_nm").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
+                            }
+
+                            oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+                            */
+                            long longidx = (long) ins.get("itemidx");
+                            oldItemIdx = (int) longidx;
+
+                            if (oldItemIdx > 0) {
+                                // 중복방지 로직에 걸려서 ccube_keys에 등재되지 않은 content_id, series_id 재처리용
+                                /*
+                                int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
+                                if (currItemIdx == 0) {
+                                    reqCk.setItemidx(oldItemIdx);
+
+                                    if("CcubeSeries".equals(type)) {
+                                        reqCk.setMaster_content_id("0");
+                                        reqCk.setContent_id("0");
+                                    } else {
+                                        reqCk.setSeries_id("0");
+                                    }
+                                    int rti = ccubeMapper.insCcubeKeys(reqCk);
+                                }
+                                */
+                                ins.put("idx", oldItemIdx);
+                                contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
+
+                                cnt++;
+                            }
+                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+                    }
+
+                }
+
+                resultObj.add("CONTENTS", contents);
+                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
+                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                //int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+
+                rt = 1;
+            } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+                e.printStackTrace();
+            }
+        }
+        return rt;
+    }
+
     @Override
     public void processItemsTagsMetasByResultTag() throws Exception {
         Map<String, Object> resultMap = new HashMap();
