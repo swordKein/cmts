@@ -888,7 +888,11 @@ public class AnalyzeService implements AnalyzeServiceImpl {
             String movietitle = sched.getMovietitle();
             if (!"".equals(movietitle)) {
                 JsonArray wordsSnsArray = wordsSnsArray = apiService.getSnsKeywords(movietitle);
-                if (wordsSnsArray == null) wordsSnsArray = new JsonArray();
+                if (wordsSnsArray == null) {
+                    wordsSnsArray = new JsonArray();
+                } else {
+                    logger.info("#MLOG WORDS_SNS result::  by title:"+movietitle+" // result : "+wordsSnsArray.toString());
+                }
 
                 int rtws = insItemsTagsMetaFromWordsSns(wordsSnsArray, sc_id);
             }

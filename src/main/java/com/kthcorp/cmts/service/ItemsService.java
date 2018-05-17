@@ -288,7 +288,10 @@ public class ItemsService implements ItemsServiceImpl {
             CcubeKeys reqCk = new CcubeKeys();
             //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
             if (req.getSeries_id() != null) reqCk.setSeries_id(req.getSeries_id().trim());
-            if (req.getSeries_nm() != null) reqCk.setPurity_title(req.getSeries_nm().trim());
+            //if (req.getSeries_nm() != null) reqCk.setPurity_title(req.getSeries_nm().trim());
+            String title = (req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getSeries_nm();
+            reqCk.setPurity_title(title);
+
             reqCk.setYear(req.getYear());
             reqCk.setDirector(req.getDirector());
 
@@ -316,7 +319,7 @@ public class ItemsService implements ItemsServiceImpl {
                 item.setCid((req.getSeries_id() != null) ? req.getSeries_id() : "0");
                 item.setDirector((req.getDirector() != null) ? req.getDirector() : "");
                 item.setYear((req.getYear() != null) ? req.getYear() : "");
-                item.setTitle(req.getPurity_title());
+                item.setTitle(title);
                 item.setTitle1(req.getSeries_nm());
                 item.setTitle2(req.getEng_title());
                 item.setStat("Y");

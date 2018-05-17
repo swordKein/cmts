@@ -435,4 +435,18 @@
         #{stat}
         )
     </insert>
+
+    <select id="cntCcubeKeysByCidOrSid" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.CcubeKeys">
+        /* cntCcubeKeysByCidOrSid */
+        select count(*) as cnt
+        from ccube_keys
+        where 1 = 1
+        <if test='content_id != null and content_id > 0'>
+            and content_id = #{content_id}
+        </if>
+        <if test='series_id != null and series_id > 0'>
+            and series_id = #{series_id}
+        </if>
+
+    </select>
 </mapper>

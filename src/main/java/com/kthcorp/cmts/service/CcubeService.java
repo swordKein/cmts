@@ -103,9 +103,14 @@ public class CcubeService implements CcubeServiceImpl {
             if (req.getMaster_content_id() != null && "".equals(req.getMaster_content_id())) req.setMaster_content_id("");
             if (req.getSeries_id() != null && "".equals(req.getSeries_id())) req.setSeries_id("");
 
-            result = ccubeMapper.insCcubeKeys(req);
-            if (result > 0 && req.getCidx() > 0) {
-                result = req.getCidx();
+            int countCcubeKeys = ccubeMapper.cntCcubeKeysByCidOrSid(req);
+
+            // cid/sid 중복 등록 방지 로직 추가  18.05.17
+            if (countCcubeKeys < 1) {
+                result = ccubeMapper.insCcubeKeys(req);
+                if (result > 0 && req.getCidx() > 0) {
+                    result = req.getCidx();
+                }
             }
         }
 

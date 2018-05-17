@@ -45,4 +45,6 @@ public interface CcubeMapper {
 
     List<Map<String,Object>> getCcubeOutputListSeriesAll();
     int cntCcubeOutputListSeriesAll();
+
+    int cntCcubeKeysByCidOrSid(CcubeKeys req);
 }
