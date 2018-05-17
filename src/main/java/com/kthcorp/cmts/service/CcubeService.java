@@ -205,7 +205,7 @@ public class CcubeService implements CcubeServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
-        origTypes.add("LIST_SUBGENRE");
+        //origTypes.add("LIST_SUBGENRE");
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("METASCHARACTER");
         origTypes.add("LIST_RECO_TARGET");

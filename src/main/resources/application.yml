@@ -145,7 +145,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 0 3 * * ?
+      cronExpression : 0 * * * * ?
       jobType : ccubeOutputNow
     -
       cronExpression : 0 0 3 * * ?
