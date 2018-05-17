@@ -111,8 +111,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -159,9 +159,9 @@ schedule :
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
-  crawl_api_url: http://localhost:8080/crawl/byprefix
+  crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
   crawl_sns_topwords_url: http://14.63.174.158:8080/sns/topwords
-  crawl_naver_kordic_url: http://localhost:8080/naver/kordic?query=#KEYWORD
+  crawl_naver_kordic_url: http://14.63.174.158:8080/naver/kordic?query=#KEYWORD
 ccube_sftp:
   ip: 14.63.170.72
   port: 22
