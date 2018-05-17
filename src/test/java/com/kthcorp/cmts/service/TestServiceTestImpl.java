@@ -492,11 +492,6 @@ public class TestServiceTestImpl {
 		System.out.println("#RESULT:"+result.toString());
 	}
 
-	@Test
-	public void test_loadDicResultTagKeywords() throws Exception {
-		Map<String,Object> result = testService.loadDicResultTagKeywords();
-		System.out.println("#RESULT:"+result.size());
-	}
 
 	@Test
 	public void test_insDicSubgenreKeywords() throws Exception {
@@ -646,6 +641,13 @@ public class TestServiceTestImpl {
 		//}
 	}
 
+
+
+	@Test
+	public void test_loadDicResultTagKeywords() throws Exception {
+		Map<String,Object> result = testService.loadDicResultTagKeywords();
+		System.out.println("#RESULT:"+result.size());
+	}
 
 	@Test
 	public void test_processItemsTagsMetasByResultTag() throws Exception {

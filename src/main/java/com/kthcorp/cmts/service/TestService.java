@@ -2964,6 +2964,8 @@ public class TestService implements TestServiceImpl {
     public Map<String,Object> loadDicResultTagKeywords() throws Exception {
         //String fileName = "E:\\0502_메타_대체_추가어_사전.txt";
         String fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0503_WHERE_대체_키워드_최진기팀장.txt";
+        fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0517_메타태깅_매핑키워드.txt";
+        fileName="/home/daisy/upload/0517_meta_dic.txt";
         return loadDicResultTagKeywords(fileName);
     }
 
@@ -3995,14 +3997,21 @@ public class TestService implements TestServiceImpl {
 
                                 String mtype = lines[0];
                                 mtype = mtype.trim();
+
                                 String word = lines[1];
                                 word = word.trim();
+
                                 String wordto = (lines.length > 2 && lines[2] != null ? lines[2] : "");
                                 wordto = wordto.trim();
+                                wordto = wordto.replace("_","");
+
                                 String wordadd = (lines.length > 3 && lines [3] != null ? lines[3] : "");
                                 wordadd = wordadd.trim();
+                                wordadd = wordadd.replace("_", "");
+
                                 String worddel = (lines.length > 4 && lines [4] != null ? lines[4] : "");
                                 worddel = worddel.trim();
+                                worddel = worddel.replace("_","");
 
 
                                 if (!"".equals(word)) {
@@ -5988,11 +5997,11 @@ public class TestService implements TestServiceImpl {
         Map<String, Object> resultMap = new HashMap();
 
         List<String> origTypes = new ArrayList<String>();
-        //origTypes.add("WHEN");
+        origTypes.add("WHEN");
         origTypes.add("WHERE");
-        //origTypes.add("WHO");
-        //origTypes.add("WHAT");
-        //origTypes.add("EMOTION");
+        origTypes.add("WHO");
+        origTypes.add("WHAT");
+        origTypes.add("EMOTION");
 
         for (String otype : origTypes) {
             ItemsTags req = new ItemsTags();
