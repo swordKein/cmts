@@ -302,8 +302,9 @@
         ) a group by a.date1, a.type, a.stat;
     </select>
 
-    <select id="getCountInsertedDaily" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
-        /* getCountInsertedDaily */
+    <select id="getCountInsertedDaily_bak" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountInsertedDaily_bak */
+
         select sum(a.cnt) as cnt_all from (
             (
             select count(*) as cnt from ccube_contents
@@ -315,6 +316,12 @@
             and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
             )
         ) a
+    </select>
+
+    <select id="getCountInsertedDaily" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
+        /* getCountInsertedDaily */
+        select count(*) from items
+        where regdate1 between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
     </select>
 
     <select id="getCountItemsHistByType" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">

@@ -306,7 +306,7 @@ public class CollectService implements CollectServiceImpl {
                         reqSth.setRt_code("FAIL");
                         reqSth.setRt_msg("FAIL");
                         rtcode = -1;
-                        rt_stat = "F";
+                        rt_stat = "S";
                     } else {
                         reqSth.setStat("S");
                         reqSth.setRt_code("OK");
@@ -1166,7 +1166,7 @@ public class CollectService implements CollectServiceImpl {
                     // 네이버 블로그의 경우 obj:[array:[obj;array:[obj]]] 형태 이므로 1 depth 더 내려간 array를 발췌하여 content 통합
                     // 예시   resultObj:[array[sub_url:'http:...', contents:[ obj:["plot":"txt"       ], [ ]                    ], array[].....]
 
-                    if (resultArr != null && resultArr.get(0) != null) {
+                    if (resultArr != null && resultArr.size() > 0 && resultArr.get(0) != null) {
                             //&& ((JsonObject) resultArr.get(0)).get("contents") != null) {
                         JsonArray tmpJarr = JsonUtil.getListFromJsonArray(resultArr);
                         contentAll = JsonUtil.getStringFromJsonArraysValues(tmpJarr);
