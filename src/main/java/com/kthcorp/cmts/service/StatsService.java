@@ -296,6 +296,10 @@ public class StatsService implements StatsServiceImpl {
         result.add("LIST_ITEMS", listItems);
 
         JsonObject stat_search = this.getCountsForStat(reqSt);
+//        if (stat_search != null && stat_search.get("COUNT_IN") != null) {
+//            stat_search.remove("COUNT_IN");
+//            stat_search.addProperty("COUNT_IN", countItems);
+//        }
         result.add("COUNTS_STAT", stat_search);
 
         result.add("LIST_ITEMS", listItems);
