@@ -2130,6 +2130,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         if (itemid > 0) {
             resultArr = new JsonArray();
             Items itemInfo = itemsService.getItemsInfoByIdx(itemid);
+            String cont_type = itemInfo.getType();
 
             String reqStr0 = "";
             String reqStr = "";
@@ -2142,7 +2143,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
                 toMeta = result.toString();
                 toMeta = CommonUtil.removeNationStr(toMeta);
-                toMeta = toMeta.replace("영화", "시리즈");
+                if (cont_type.contains("CcubeSeries")) {
+                    toMeta = toMeta.replace("영화", "시리즈");
+                }
             }
 
             String origin = "";
@@ -2159,7 +2162,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 System.out.println("#RESULT_NATION:" + resultNation.toString());
                 toMetaOrigin = resultNation.toString();
                 toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
-                toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+                if (cont_type.contains("CcubeSeries")) {
+                    toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+                }
             }
 
             if(!"".equals(toMeta)) {
