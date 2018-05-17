@@ -127,8 +127,11 @@ public class JobRunner implements Job {
                     logger.info("#MLOG schedule.hadoopWordCount");
                     break;
                 case "manualJobs":
-                    testService.writeCcubeContentsOutputCSV();
-                    testService.writeCcubeSeriesOutputCSV();
+                    //testService.writeCcubeContentsOutputCSV();
+                    //testService.writeCcubeSeriesOutputCSV();
+                    testService.loadDicResultTagKeywords();
+
+                    testService.processItemsTagsMetasByResultTag();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
             }
