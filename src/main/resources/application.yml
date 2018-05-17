@@ -154,7 +154,7 @@ schedule :
       cronExpression : 0 0 3 * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 55 16 * * ?
+      cronExpression : 0 03 17 * * ?
       jobType : manualJobs
 property:
   serverid: cmts_local_cm01

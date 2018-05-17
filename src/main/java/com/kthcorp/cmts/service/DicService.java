@@ -1215,6 +1215,7 @@ public class DicService implements DicServiceImpl {
             //#TODO 추가 -> 삭제 -> 대채
 
             if (wordResultTags != null) {
+                /*
                 if (wordResultTags.get("wordto") != null && !"".equals(wordResultTags.get("wordto"))) {
                     result.add((String) wordResultTags.get("wordto"));
                 } else {
@@ -1227,6 +1228,23 @@ public class DicService implements DicServiceImpl {
                 if (wordResultTags.get("wordadd") != null && !"".equals(wordResultTags.get("wordadd"))) {
                     result.add((String) wordResultTags.get("wordadd"));
                 }
+
+                */
+
+                if (wordResultTags.get("wordadd") != null && !"".equals(wordResultTags.get("wordadd"))) {
+                    result.add((String) wordResultTags.get("wordadd"));
+                }
+
+                if (wordResultTags.get("worddel") != null && !"".equals(wordResultTags.get("worddel"))) {
+                    System.out.println("# worddel:"+wordResultTags.get("worddel")+"  /  by word:"+word);
+                    result.remove(word);
+                }
+
+                if (wordResultTags.get("wordto") != null && !"".equals(wordResultTags.get("wordto"))) {
+                    result.remove(word);
+                    result.add((String) wordResultTags.get("wordto"));
+                }
+
             } else {
                 result.add(word);
             }
