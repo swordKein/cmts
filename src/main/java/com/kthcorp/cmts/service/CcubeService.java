@@ -474,7 +474,9 @@ public class CcubeService implements CcubeServiceImpl {
 
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
                 logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
-                int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+                if (rtFileC > 0) {
+                    int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+                }
 
                 rt = 1;
             } catch (Exception e) {
