@@ -349,7 +349,6 @@
         select count(*) as cnt from ccube_output co
         inner join items it on it.idx = co.idx
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-        and regdate
         <if test='type != null and type == "CcubeContent"'>
             inner join ccube_keys ck on ck.itemidx = it.idx
             inner join ccube_contents_orig coo on coo.content_id = ck.content_id

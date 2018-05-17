@@ -81,7 +81,7 @@ public class JobRunner implements Job {
                         logger.info("#MLOG schedule.snsTopKeywords not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
                     }
                     break;
-                case "ccubeOutput":
+                case "ccubeOutputNow":
                     if(schedTriggerService.checkActiveServerByServerid()) {
                         rt = ccubeService.processCcubeOutputToJson();
                         //testService.processRankForDicKeywordsAndGenres();
@@ -91,6 +91,15 @@ public class JobRunner implements Job {
                         logger.info("#MLOG schedule.ccubeOutput.start jobType:" + jobType + "/rt:" + rt);
                     } else {
                         logger.info("#MLOG schedule.ccubeOutput not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
+                    break;
+                case "ccubeOutputDay":
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        testService.writeCcubeOutputToJsonByType("CcubeContent");
+                        testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                        logger.info("#MLOG schedule.ccubeOutputAll.start jobType:" + jobType);
+                    } else {
+                        logger.info("#MLOG schedule.ccubeOutputAll not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
                     }
                     break;
                 case "ccubeOutputAll":
