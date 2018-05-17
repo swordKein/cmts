@@ -266,7 +266,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 06 18 * * ?
+      cronExpression : 0 16 18 * * ?
       jobType : manualJobs
 
 property:

@@ -463,6 +463,55 @@
     </select>
 
 
+
+    <select id="getContentsOrigItemsDay" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getContentsOrigItemsDay */
+        select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id, a.regdate
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            , iss.regdate
+            from ccube_contents_orig co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            order by iss.regdate desc
+            ) a
+        order by a.regdate desc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntContentsOrigItemsDay" resultType="java.lang.Integer">
+        /* cntContentsOrigItemsDay */
+          select count(*) as cnt from (
+            select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            from ccube_contents_orig co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+          ) b
+
+    </select>
+
+
+
+
     <select id="getSeriesOrigItemsAll" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getSeriesOrigItemsAll */
         select a.itemidx, a.series_id, a.series_nm, a.year, a.director
@@ -504,6 +553,44 @@
 
 
 
+    <select id="getSeriesOrigItemsDay" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getSeriesOrigItemsAll */
+        select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series_orig co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+        order by a.itemidx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+    <select id="cntSeriesOrigItemsDay" resultType="java.lang.Integer">
+        /* cntSeriesOrigItemsAll */
+          select count(*) as cnt from (
+            select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series_orig co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            ) a
+          ) b
+
+    </select>
 
 
 

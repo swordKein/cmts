@@ -84,10 +84,6 @@ public class JobRunner implements Job {
                 case "ccubeOutputNow":
                     if(schedTriggerService.checkActiveServerByServerid()) {
                         rt = ccubeService.processCcubeOutputToJson();
-                        //testService.processRankForDicKeywordsAndGenres();
-                        //testService.processSubgenre2ByKeywords();
-                        //testService.processMixedSubgenre();
-                        //testService.processMixedSubgenre2();
                         logger.info("#MLOG schedule.ccubeOutput.start jobType:" + jobType + "/rt:" + rt);
                     } else {
                         logger.info("#MLOG schedule.ccubeOutput not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
@@ -113,11 +109,6 @@ public class JobRunner implements Job {
                     break;
                 case "dummyService":
                     logger.info("#MLOG schedule.check dummyService");
-                    //testService.processSearchTxtManualAppendFile();
-                    //testService.processItemsTagsMetasByResultTag();
-                    //testService.writeCcubeContentsOutputCSV();
-                    //testService.writeCcubeOutputToJsonByType("CcubeContent");
-                    //testService.writeCcubeOutputToJsonByType("CcubeSeries");
                     break;
                 case "sftpService":
                     if(schedTriggerService.checkActiveServerByServerid()) {
@@ -136,6 +127,15 @@ public class JobRunner implements Job {
                     logger.info("#MLOG schedule.hadoopWordCount");
                     break;
                 case "manualJobs":
+                    //testService.processSearchTxtManualAppendFile();
+                    //testService.processItemsTagsMetasByResultTag();
+                    //testService.writeCcubeContentsOutputCSV();
+                    //testService.writeCcubeOutputToJsonByType("CcubeContent");
+                    //testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                    //testService.processRankForDicKeywordsAndGenres();
+                    //testService.processSubgenre2ByKeywords();
+                    //testService.processMixedSubgenre();
+                    //testService.processMixedSubgenre2();
                     //testService.writeCcubeContentsOutputCSV();
                     //testService.writeCcubeSeriesOutputCSV();
                     //testService.loadDicResultTagKeywords();
