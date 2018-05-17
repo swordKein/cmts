@@ -1233,8 +1233,8 @@ public class DicService implements DicServiceImpl {
                 boolean isAction = false;
 
                 if (wordResultTags.get("wordadd") != null && !"".equals(wordResultTags.get("wordadd"))) {
+                    result.add(word);
                     result.add((String) wordResultTags.get("wordadd"));
-                    isAction = true;
                 }
 
                 if (wordResultTags.get("worddel") != null && !"".equals(wordResultTags.get("worddel"))) {
