@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kthcorp.cmts.mapper.StatsMapper">
-    <cache eviction="LRU" flushInterval="300000" size="512" readOnly="true"/>
+    <cache eviction="LRU" flushInterval="5000" size="512" readOnly="true"/>
 
     <select id="top_countInItems" resultType="java.lang.Integer" useCache="true">
       /* -------- 상단 통계 ---------*/
@@ -225,15 +225,13 @@
                 (
                 select cc.content_id as cid, DATE(cc.regdate) as date from ccube_contents cc
                 where
-                DATE(cc.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-                AND DATE(cc.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                cc.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 )
                 union
                 (
                 select cs.series_id as cid, DATE(cs.regdate) as date from ccube_series cs
                 where
-                DATE(cs.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-                AND DATE(cs.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                cs.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 )
             ) a
         ) b group by b.date
@@ -250,8 +248,7 @@
                 select ism.idx, st.regdate from sched_trigger st
                 inner join items_sched_mapping ism on ism.sc_id = st.sc_id
                 inner join items it on it.idx = ism.idx
-                where  DATE(st.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-                AND DATE(st.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                where st.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 and st.type = 'C' and st.stat in ('S','F')
                 group by ism.idx
             ) a
@@ -269,8 +266,7 @@
                 select ism.idx, st.regdate from sched_trigger st
                 inner join items_sched_mapping ism on ism.sc_id = st.sc_id
                 inner join items it on it.idx = ism.idx
-                where  DATE(st.regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d')
-                AND DATE(st.regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d')
+                where  st.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 and st.type = 'A' and st.stat in ('S')
                 group by ism.idx
             ) a
@@ -296,8 +292,7 @@
         select count(*) as cnt, date1 as date, type, stat from (
         select count(*), substr(regdate, 1,10) as date1, type, stat, idx from items_hist
         where type = 'meta' and stat = 'S'
-        and DATE(regdate) <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-        and DATE(regdate) <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        and regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by substr(regdate, 1, 10), type, stat, idx
         ) a group by a.date1, a.type, a.stat;
     </select>
@@ -308,12 +303,10 @@
         select sum(a.cnt) as cnt_all from (
             (
             select count(*) as cnt from ccube_contents
-            where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+            where regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
             ) union (
             select count(*) as cnt from ccube_series
-            where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+            where regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
             )
         ) a
     </select>
@@ -329,8 +322,7 @@
         select type, stat, count(*) as cnt
         from items_hist
         where type in ( 'collect', 'analyze', 'meta' )
-        and regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        and regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by type, stat
 
     </select>
@@ -339,8 +331,7 @@
         /* getCountsItemsStatByStat  */
         select count(*) as cnt, stat
         from items_stat
-        where regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        where regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by stat
     </select>
 
@@ -350,8 +341,7 @@
         select type, stat, idx
         from items_hist
         where type in ('collect', 'analyze', 'meta')
-        and regdate <![CDATA[ >= ]]> STR_TO_DATE(#{sdate}, '%Y-%m-%d 00:00:00')
-            and regdate <![CDATA[ <= ]]> STR_TO_DATE(#{edate}, '%Y-%m-%d 23:59:59')
+        and regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by type, stat, idx
         ) a group by a.type, a.stat
     </select>
