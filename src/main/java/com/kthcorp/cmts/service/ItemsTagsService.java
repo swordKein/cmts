@@ -459,6 +459,37 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     public JsonObject getSubgenresString(int itemIdx, JsonObject resultObj2) {
         resultObj2 = this.getSubgenres(itemIdx, resultObj2);
+        //System.out.println("#first subgenre:"+resultObj2.toString());
+
+        Set subgenreArr = new HashSet();
+        String subgenreStr = "";
+
+        if (resultObj2 != null && resultObj2.get("LIST_SUBGENRE") != null) {
+            JsonArray listSubgenres = resultObj2.get("LIST_SUBGENRE").getAsJsonArray();
+            resultObj2.remove("LIST_SUBGENRE");
+            if (listSubgenres != null && listSubgenres.size() > 0) {
+                for (JsonElement je : listSubgenres) {
+                    JsonObject jo = (JsonObject) je;
+                    if (jo != null && jo.get("word") != null) {
+                        String as = jo.get("word").getAsString();
+                        if (!"".equals(as.trim())) {
+                            subgenreArr.add(as);
+                        }
+                    }
+                }
+                if (subgenreArr != null) {
+                    subgenreStr = subgenreArr.toString();
+                    subgenreStr = StringUtil.removeBracket(subgenreStr);
+                }
+                resultObj2.addProperty("META_SUBGENRE", subgenreStr);
+            }
+        }
+        return resultObj2;
+    }
+
+    @Override
+    public JsonObject getSubgenresStringForJson(int itemIdx, JsonObject resultObj2) {
+        //resultObj2 = this.getSubgenres(itemIdx, resultObj2);
         Set subgenreArr = new HashSet();
         String subgenreStr = "";
 
@@ -511,7 +542,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             for (ItemsMetas mm : resultMovieMeta) {
                 //System.out.println("#TMP::mm:"+mm.toString());
                 if (mm != null && mm.getMtype() != null && "subgenreMix2".equals(mm.getMtype()) && mm.getMeta() != null) {
-                    result = mm.getMeta();
+                    System.out.println("#ELOG mtype:"+mm.getMtype()+ "  / meta:"+mm.getMeta());
+
+                    //result = mm.getMeta();
+                    String resultGenreMix = (StringUtil.filterSubgenreMix(mm.getMeta()));
+                    result = resultGenreMix;
                 }
                 if (mm != null && mm.getMtype() != null && "subgenreOrgin2".equals(mm.getMtype()) && mm.getMeta() != null) {
                     if (!"".equals(result)) {

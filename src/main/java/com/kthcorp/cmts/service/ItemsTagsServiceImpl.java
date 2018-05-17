@@ -49,6 +49,8 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getSubgenresString(int itemIdx, JsonObject resultObj2);
 
+    JsonObject getSubgenresStringForJson(int itemIdx, JsonObject resultObj2);
+
     List<String> getGenreWordsListByGenre(String genre);
 
     List<String> getNaverKindWordsByList(List<String> keywordList, int limit) throws Exception;
