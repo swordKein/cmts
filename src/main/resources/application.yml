@@ -146,7 +146,10 @@ schedule :
       jobType : snsTopWords
     -
       cronExpression : 0 0 3 * * ?
-      jobType : ccubeOutput
+      jobType : ccubeOutputNow
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : ccubeOutputDay
     -
       cronExpression : 0 40 12 * * ?
       jobType : ccubeOutputAll
@@ -242,8 +245,11 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : itemsService
     -
-      cronExpression : 0 * * * * ?
-      jobType : ccubeOutput
+      cronExpression : 0 0 3 * * ?
+      jobType : ccubeOutputNow
+    -
+      cronExpression : 0 0 3 * * ?
+      jobType : ccubeOutputDay
     -
       cronExpression : 0 40 12 * * ?
       jobType : ccubeOutputAll
@@ -260,7 +266,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 53 17 * * ?
+      cronExpression : 0 06 18 * * ?
       jobType : manualJobs
 
 property:
@@ -553,8 +559,14 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 10 00 * * ?
-      jobType : ccubeOutput
+      cronExpression : 0 * * * * ?
+      jobType : ccubeOutputNow
+    -
+      cronExpression : 0 10 0 * * ?
+      jobType : ccubeOutputDay
+    -
+      cronExpression : 0 30 18 * * ?
+      jobType : ccubeOutputAll
     -
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
