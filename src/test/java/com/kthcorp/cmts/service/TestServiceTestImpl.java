@@ -653,4 +653,10 @@ public class TestServiceTestImpl {
 	public void test_processItemsTagsMetasByResultTag() throws Exception {
 		testService.processItemsTagsMetasByResultTag();
 	}
+
+	@Test
+	public void test_writeJsonDay() throws Exception {
+		testService.writeCcubeOutputDayToJsonByType("CcubeContent");
+		testService.writeCcubeOutputDayToJsonByType("CcubeSeries");
+	}
 }

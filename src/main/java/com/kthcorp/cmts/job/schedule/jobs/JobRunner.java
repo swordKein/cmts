@@ -84,18 +84,18 @@ public class JobRunner implements Job {
                 case "ccubeOutputNow":
                     if(schedTriggerService.checkActiveServerByServerid()) {
                         rt = ccubeService.processCcubeOutputToJson();
-                        logger.info("#MLOG schedule.ccubeOutput.start jobType:" + jobType + "/rt:" + rt);
+                        logger.info("#MLOG schedule.ccubeOutputNow.start jobType:" + jobType + "/rt:" + rt);
                     } else {
-                        logger.info("#MLOG schedule.ccubeOutput not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                        logger.info("#MLOG schedule.ccubeOutputNow not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
                     }
                     break;
                 case "ccubeOutputDay":
                     if(schedTriggerService.checkActiveServerByServerid()) {
-                        testService.writeCcubeOutputToJsonByType("CcubeContent");
-                        testService.writeCcubeOutputToJsonByType("CcubeSeries");
-                        logger.info("#MLOG schedule.ccubeOutputAll.start jobType:" + jobType);
+                        testService.writeCcubeOutputDayToJsonByType("CcubeContent");
+                        testService.writeCcubeOutputDayToJsonByType("CcubeSeries");
+                        logger.info("#MLOG schedule.ccubeOutputDay.start jobType:" + jobType);
                     } else {
-                        logger.info("#MLOG schedule.ccubeOutputAll not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                        logger.info("#MLOG schedule.ccubeOutputDay not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
                     }
                     break;
                 case "ccubeOutputAll":

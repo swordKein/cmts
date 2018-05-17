@@ -70,6 +70,15 @@ public interface TestMapper {
     Integer cntSeriesOrigItemsAll();
 
 
+
+    List<Map<String, Object>> getContentsOrigItemsDay(Items req);
+    Integer cntContentsOrigItemsDay();
+
+    List<Map<String, Object>> getSeriesOrigItemsDay(Items req);
+    Integer cntSeriesOrigItemsDay();
+
+
+
     List<Map<String, Object>> getContentsOrigItemsAll_100();
     List<Map<String, Object>> getSeriesOrigItemsAll_100();
 
