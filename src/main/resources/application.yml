@@ -153,9 +153,6 @@ schedule :
     -
       cronExpression : 0 0 3 * * ?
       jobType : processCollectHearbit
-    -
-      cronExpression : 0 03 17 * * ?
-      jobType : manualJobs
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -263,7 +260,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 10 11 * * ?
+      cronExpression : 0 08 17 * * ?
       jobType : manualJobs
 
 property:
@@ -550,13 +547,13 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : collectService
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 30 01 * * ?
       jobType : sftpService
     -
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 0 10 00 * * ?
       jobType : ccubeOutput
     -
       cronExpression : 0 * * * * ?
@@ -567,34 +564,35 @@ property:
   crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
   crawl_naver_kordic_url: http://10.42.150.161:8080/naver/kordic?query=#KEYWORD
 ccube_sftp:
-  #ip: 10.220.147.95
-  ip: 172.16.208.51
+  ip: 10.220.147.95
+  #ip: 172.16.208.51
   port: 22
-  #user: tgg
-  user: ktipmedia
-  #passwd: ttgg@1234
-  passwd: 3!aleldj
+  user: tgg
+  #user: ktipmedia
+  passwd: tgg@1234
+  #passwd: 3!aleldj
   workdir: /home/ktipmedia/ccube/work/
-  downdir: /home/ktipmedia/DOWNLOAD
+  downdir: /DOWNLOAD
   downext: xml
-  end_after_movedir: /home/ktipmedia/DOWNLOAD/DONE
-  uploaddir: /home/ktipmedia/META_EXT/
+  end_after_movedir: /DOWNLOAD/DELETE
+  uploaddir: /META_EXT/
 prism_sftp:
-  #ip: 10.220.170.39
-  ip: 172.16.208.51
+  ip: 10.220.170.39
+  #ip: 172.16.208.51
   port: 22
-  #user: otvmeta_user
-  user: ktipmedia
-  #passwd: otvmeta1234$
-  passwd: 3!aleldj
+  user: otvmeta_user
+  #user: ktipmedia
+  passwd: otvmeta1234$
+  #passwd: 3!aleldj
   workdir: /home/ktipmedia/prism/work/
-  #downdir: /data/otvmeta_user/#DATE#/
-  downdir: /home/ktipmedia/prism/down/#DATE#
+  downdir: /data/otvmeta_user/#DATE#/
+  #downdir: /home/ktipmedia/prism/down/#DATE#
   downext: dat
-  #uploaddir: /data/otvmeta_user/#DATE#/
-  uploaddir: /home/ktipmedia/prism/upload/#DATE#
+  uploaddir: /data/otvmeta_user/#DATE#/
+  #uploaddir: /home/ktipmedia/prism/upload/#DATE#
 elasticsearch:
-  host: 172.16.208.52
+  #host: 172.16.208.52
+  host: 127.0.0.1
   port: 9200
 
 logging:
