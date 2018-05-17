@@ -85,4 +85,14 @@ public class CcubeMapperTest {
         System.out.println("#RES:"+ccubeMapper.getCcubeOutputListStandby(reqi));
     }
 
+    @Test
+    public void test_cntCcubeKeysByCidOrSid() throws Exception {
+        CcubeKeys req = new CcubeKeys();
+        //req.setContent_id("02001873900002");
+        req.setSeries_id("");
+
+        int count = ccubeMapper.cntCcubeKeysByCidOrSid(req);
+        System.out.println("#COUNT:"+count);
+
+    }
 }
