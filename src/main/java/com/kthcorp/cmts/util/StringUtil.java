@@ -457,4 +457,41 @@ public class StringUtil {
         }
         return result;
     }
+
+    public static String filterSubgenreMix(String subgenre) {
+        String resStr = "";
+        List<String> result = null;
+
+        subgenre = subgenre.trim();
+        if(!"".equals(subgenre)) {
+            result = new ArrayList<String>();
+
+            if (subgenre.contains(",")) {
+                String genres[] = subgenre.split(",");
+                for (String gen : genres) {
+                    gen = gen.trim();
+
+                    if (!gen.equals("액션 영화") && !gen.equals("모험 영화") && !gen.equals("SF 영화")
+                            && !gen.equals("판타지 영화") && !gen.equals("범죄 영화") && !gen.equals("미스터리 영화")
+                            && !gen.equals("스릴러 영화") && !gen.equals("서부 영화") && !gen.equals("에로 영화")) {
+                        result.add(gen);
+                    }
+                }
+
+                int i = 0;
+                for(String gen2 : result) {
+                    if (i == 0) {
+                        resStr = gen2;
+                    } else {
+                        resStr = resStr + ", " + gen2;
+                    }
+
+                    i++;
+                }
+            } else {
+                resStr = subgenre;
+            }
+        }
+        return resStr;
+    }
 }
