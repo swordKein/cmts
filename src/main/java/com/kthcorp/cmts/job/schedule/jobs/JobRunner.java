@@ -129,7 +129,7 @@ public class JobRunner implements Job {
                 case "manualJobs":
                     //testService.writeCcubeContentsOutputCSV();
                     //testService.writeCcubeSeriesOutputCSV();
-                    testService.loadDicResultTagKeywords();
+                    //testService.loadDicResultTagKeywords();
 
                     testService.processItemsTagsMetasByResultTag();
                     logger.info("#MLOG schedule.manualJobs");

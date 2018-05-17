@@ -260,7 +260,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 08 17 * * ?
+      cronExpression : 0 33 17 * * ?
       jobType : manualJobs
 
 property:
