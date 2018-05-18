@@ -489,7 +489,11 @@ public class StringUtil {
                     i++;
                 }
             } else {
-                resStr = subgenre;
+                if (!subgenre.equals("액션 영화") && !subgenre.equals("모험 영화") && !subgenre.equals("SF 영화")
+                        && !subgenre.equals("판타지 영화") && !subgenre.equals("범죄 영화") && !subgenre.equals("미스터리 영화")
+                        && !subgenre.equals("스릴러 영화") && !subgenre.equals("서부 영화") && !subgenre.equals("에로 영화")) {
+                    resStr = subgenre;
+                }
             }
         }
         return resStr;
