@@ -659,4 +659,10 @@
         values (#{mtype}, #{word}, #{wordto}, #{wordadd}, #{worddel}, now(), 'ghkdwo77')
     </insert>
 
+    <select id="getMetaKeywordsByMtype" parameterType="map" resultType="map">
+        /* getMetaKeywordsByMtype */
+        select * from items_tags_metas where mtype = #{mtype}
+        and length(meta) > 2 order by regdate asc
+        /* limit 10 */
+    </select>
 </mapper>

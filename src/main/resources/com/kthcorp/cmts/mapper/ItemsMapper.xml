@@ -556,6 +556,11 @@
         <if test='searchStat != null and searchStat == "FA"'>
             and iss.stat in ('FR', 'FA')
         </if>
+
+
+        inner join ccube_keys ck on ck.itemidx = it.idx
+
+
         <if test='searchMetasYn != null and searchMetasYn == "Y"'>
             inner join (
             select distinct(idx) as idx from items_metas where mtype in

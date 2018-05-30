@@ -659,4 +659,9 @@ public class TestServiceTestImpl {
 		testService.writeCcubeOutputDayToJsonByType("CcubeContent");
 		testService.writeCcubeOutputDayToJsonByType("CcubeSeries");
 	}
+
+	@Test
+	public void test_writeMetaDicKeywordsByTypes() throws Exception {
+		testService.writeMetaDicKeywordsByTypes();
+	}
 }
