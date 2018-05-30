@@ -6212,4 +6212,93 @@ public class TestService implements TestServiceImpl {
         }
 
     }
+
+
+    @Override
+    public void writeMetaDicKeywordsByTypes() throws Exception {
+        List<String> types = new ArrayList();
+        types.add("METASEMOTION");
+        types.add("METASWHAT");
+        types.add("METASWHEN");
+        types.add("METASWHERE");
+        types.add("METASWHO");
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        Map<String, Object> reqMap = null;
+        List<Map<String, Object>> itemList = null;
+        Set<String> newSet = null;
+
+        for(String type : types) {
+            reqMap = new HashMap();
+            reqMap.put("mtype", type);
+            itemList = testMapper.getMetaKeywordsByMtype(reqMap);
+            //System.out.println("#orig itemList:"+itemList.toString());
+
+
+            if (itemList != null) {
+                newSet = new TreeSet();
+                for (Map<String,Object> item : itemList) {
+                    if(item != null && item.get("meta") != null) {
+                        String metaStr = item.get("meta").toString();
+
+                        if (!"".equals(metaStr) && metaStr.contains("[")) {
+                            JsonArray metaArr = JsonUtil.getJsonArray(metaStr);
+
+                            if (metaArr != null && metaArr.size() > 0) {
+
+                                for (JsonElement je : metaArr) {
+                                    JsonObject jo = (JsonObject) je;
+                                    if (jo != null && jo.get("word") != null) {
+
+                                        String word = jo.get("word").getAsString();
+
+                                        if (!"".equals(word)) {
+                                            newSet.add(word);
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+            }
+
+            String resultStr = "";
+            int cnt = 1;
+
+            resultStr = "keyword"
+                    + lineFeed;
+
+            /*
+            for (Map<String, Object> item : itemList) {
+                System.out.println("#RES:: idx:" + item.get("idx").toString() + "/ title:" + item.get("title"));
+
+                String itemStr = "";
+                String tag = item.get("keyword").toString();
+                tag = tag.replace(",","");
+
+                if(!"".equals(tag.trim()) && !",".equals(tag) && !".".equals(tag.trim()) && !"'".equals(tag.trim()) && !"\"".equals(tag.trim())
+                        ) {
+                    itemStr = tag;
+                    resultStr += itemStr + lineFeed;
+                    System.out.println("#write " + cnt + "'s item::" + itemStr);
+                    cnt++;
+                }
+            }
+            */
+            for (String word : newSet) {
+                resultStr += word + lineFeed;
+                System.out.println("#write " + cnt + "'s item::" + word);
+                cnt++;
+            }
+
+            String fileNameContent = "META_DIC_TYPE_"+type+"_180529.tsv";
+            int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+        }
+    }
 }

@@ -146,6 +146,7 @@
         */
         select count(*) from items_stat iss
         inner join items it on it.idx = iss.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx
         where iss.stat in ('FC');
     </select>
 
@@ -173,6 +174,7 @@
         */
         select count(*) from items_stat iss
         inner join items it on it.idx = iss.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx
         where iss.stat in ('FR','FA');
     </select>
 
@@ -191,6 +193,7 @@
         select count(*)
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'RT'
+        inner join ccube_keys ck on ck.itemidx = it.idx
     </select>
 
     <select id="mid_down_stats" resultType="java.lang.Integer" useCache="true">

@@ -87,4 +87,6 @@ public interface TestMapper {
     List<Map<String, Object>> getItemIdxBySeriesAssetId(String asset);
 
     int insDicResultTagKeywords(Map<String,Object> req);
+
+    List<Map<String, Object>> getMetaKeywordsByMtype(Map<String, Object> req);
 }

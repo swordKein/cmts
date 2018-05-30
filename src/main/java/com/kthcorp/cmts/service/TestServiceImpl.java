@@ -211,4 +211,6 @@ public interface TestServiceImpl {
     int writeCcubeOutputDayToJsonByType(String type);
 
     void processItemsTagsMetasByResultTag() throws Exception;
+
+    void writeMetaDicKeywordsByTypes() throws Exception;
 }
