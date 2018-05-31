@@ -609,4 +609,9 @@ public class ItemsService implements ItemsServiceImpl {
     public Items getItemsInfoByIdx(Integer itemid) {
         return itemsMapper.getItemsInfoByIdx(itemid);
     }
+
+    @Override
+    public List<Map<String,Object>> getItemsInfoForPrism(Map<String,Object> req) {
+        return itemsMapper.getItemsInfoForPrism(req);
+    }
 }

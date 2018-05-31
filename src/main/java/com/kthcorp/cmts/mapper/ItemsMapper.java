@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -52,4 +53,6 @@ public interface ItemsMapper {
     int uptItemsTagcntMinus(Items req);
     int uptItemsRegdate(Items req);
     String getItemsStatByIdx(int idx);
+
+    List<Map<String,Object>> getItemsInfoForPrism(Map<String,Object> req);
 }

@@ -688,4 +688,14 @@
         update items set regdate = now()
         where idx = #{idx}
     </update>
+
+
+    <select id="getItemsInfoForPrism" resultType="map" parameterType="map">
+        /* getItemsInfoForPrism */
+
+        select idx,title,regdate,regdate1 from items
+        where regdate1 > #{regdate1}
+        order by regdate1 desc
+        limit 50
+    </select>
 </mapper>

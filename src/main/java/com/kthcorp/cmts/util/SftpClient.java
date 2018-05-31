@@ -115,6 +115,36 @@ public class SftpClient {
         return rtcode;
     }
 
+    public static void dirCheckAndCreate(String filePath, String add_path) throws Exception {
+        if (c == null || session == null || !session.isConnected() || !c.isConnected()) {
+            throw new Exception("Connection to server is closed. Open it first.");
+        }
+
+        try {
+            //String currentDirectory = c.pwd();
+
+            SftpATTRS attrs = null;
+            try {
+                c.cd(filePath);
+                c.stat(filePath + "/" + add_path);
+            } catch (Exception de) {
+            }
+
+            if (attrs != null) {
+                System.out.println("#sftp dest DIR:" + attrs.isDir());
+            } else {
+                System.out.println("#sftp create DIR:" + filePath);
+                try {
+                    c.mkdir(filePath);
+                } catch (Exception e) {}
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage(), e);
+        }
+    }
+
     public static String getOneFileNameFromlistFilePath(String filePath) throws Exception {
         if (c == null || session == null || !session.isConnected() || !c.isConnected()) {
             throw new Exception("Connection to server is closed. Open it first.");

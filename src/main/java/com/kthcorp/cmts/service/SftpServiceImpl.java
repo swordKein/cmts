@@ -13,4 +13,15 @@ public interface SftpServiceImpl {
 
     int uploadSftpToCcubeOutput(String ip, int port, String user, String passwd
             , String upload_dir, String work_dir, String fileName);
+
+    int uploadToPrismReq();
+
+    int uploadToPrism(String work_add_path, String fileName);
+
+    int uploadSftpToPrism(String ip, int port, String user, String passwd
+            , String upload_dir, String work_dir, String work_add_path, String fileName);
+
+    int pollingPrismSftp();
+    int pollingSftpDirByExtAndFin(String ip, int port, String user, String passwd
+            , String fromPath, String toPath, String work_add_path);
 }
