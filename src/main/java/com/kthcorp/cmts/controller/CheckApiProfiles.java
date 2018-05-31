@@ -20,6 +20,7 @@ public class CheckApiProfiles implements Condition {
                 || context.getEnvironment().acceptsProfiles("dev_no_sched")
                 || context.getEnvironment().acceptsProfiles("staging")
                 || context.getEnvironment().acceptsProfiles("prod_api")
+                || context.getEnvironment().acceptsProfiles("prod_crawl")
         );
         logger.info("##CheckApiProfiles result isActive:"+isActive);
         return isActive;
