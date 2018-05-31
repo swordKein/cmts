@@ -378,10 +378,6 @@ public class SftpService implements SftpServiceImpl {
                         + yesterDate
                         + lineFeed;
 
-                //if (itemsList.size() != cnt) {
-                //    thisStr += lineFeed;
-                //}
-
                 result += thisStr;
             }
             cnt++;
