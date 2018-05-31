@@ -327,9 +327,9 @@ public class SftpService implements SftpServiceImpl {
                 // 전일자 디렉토리 생성 확인
                 String yesterDate3 = yesterDate.replace("-","");
                 FileUtils.checkDirAndCreate(prism_sftp_workdir);
-                String dayDir = prism_sftp_workdir+"\\"+yesterDate3;
+                String dayDir = prism_sftp_workdir+"/"+yesterDate3;
                 FileUtils.checkDirAndCreate(dayDir);
-                dayDir += "\\";
+                dayDir += "/";
 
                 // 파일 쓰기
                 String fileContent = this.generatePrismReqFileContent(itemsList, yesterDate3);
@@ -377,10 +377,6 @@ public class SftpService implements SftpServiceImpl {
                         + fromDate + seperator
                         + yesterDate
                         + lineFeed;
-
-                //if (itemsList.size() != cnt) {
-                //    thisStr += lineFeed;
-                //}
 
                 result += thisStr;
             }
