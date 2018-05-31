@@ -130,6 +130,12 @@ schedule :
       cronExpression : 0 * 3 * * ?
       jobType : collectService
     -
+      cronExpression : 0 14 17 * * ?
+      jobType : prismUpService
+    -
+      cronExpression : 0 15 17 * * ?
+      jobType : prismDownService
+    -
       cronExpression : 0 * 3 * * ?
       jobType : refineService
     -
@@ -180,10 +186,9 @@ prism_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: d:\\upload\\
-  downdir: /home/daisy/prism/download/#DATE#
-  downext: dat
-  uploaddir: /home/daisy/prism/upload/#DATE#
+  workdir: d:\\upload\\prism\\
+  downdir: /home/daisy/prism/
+  uploaddir: /home/daisy/prism/
 elasticsearch:
   host: 14.63.170.72
   port: 9200
@@ -200,6 +205,7 @@ logging:
     filePattern: "d:\\upload\\service.log.%d{yyyyMMdd}"
   file: "d:\\upload\\service.log"
   #file: e:/home/debug.log
+  config: classpath:logback.xml
 
 ---
 spring:
@@ -289,10 +295,9 @@ prism_sftp:
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: /home/daisy/service/cmts/
-  downdir: /home/daisy/service/cmts
-  downext: dat
-  uploaddir: /home/daisy/service/cmts/upload/
+  workdir: /home/daisy/prism/
+  downdir: /home/daisy/prism/
+  uploaddir: /home/daisy/prism/
 elasticsearch:
   host: 14.63.170.72
   port: 9200
@@ -366,7 +371,6 @@ prism_sftp:
   passwd:
   workdir:
   downdir:
-  downext:
   uploaddir:
 elasticsearch:
   host:
@@ -440,7 +444,6 @@ prism_sftp:
   passwd:
   workdir:
   downdir:
-  downext:
   uploaddir:
 elasticsearch:
   host:
@@ -512,7 +515,6 @@ prism_sftp:
   passwd:
   workdir:
   downdir:
-  downext:
   uploaddir:
 elasticsearch:
   host:
@@ -553,8 +555,17 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : collectService
     -
+      cronExpression : 0 00 01 * * ?
+      jobType : prismUpService
+    -
+      cronExpression : 0 00 02 * * ?
+      jobType : prismDownService
+    -
       cronExpression : 0 30 01 * * ?
       jobType : sftpService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : itemsService
     -
       cronExpression : 0 0 * * * ?
       jobType : snsTopWords
@@ -576,32 +587,40 @@ property:
   crawl_sns_topwords_url: http://10.42.150.161:8080/sns/topwords
   crawl_naver_kordic_url: http://10.42.150.161:8080/naver/kordic?query=#KEYWORD
 ccube_sftp:
-  ip: 10.220.147.95
-  #ip: 172.16.208.51
   port: 22
+  downext: xml
+
+  ip: 10.220.147.95
   user: tgg
-  #user: ktipmedia
-  passwd: tgg@1234
-  #passwd: 3!aleldj
+  passwd: tgg@1234!
   workdir: /home/ktipmedia/ccube/work/
   downdir: /DOWNLOAD
-  downext: xml
   end_after_movedir: /DOWNLOAD/DELETE
   uploaddir: /META_EXT/
-prism_sftp:
-  ip: 10.220.170.39
+
   #ip: 172.16.208.51
-  port: 22
-  user: otvmeta_user
   #user: ktipmedia
-  passwd: otvmeta1234$
   #passwd: 3!aleldj
+  #workdir: /home/ktipmedia/ccube/work/
+  #downdir: /DOWNLOAD
+  #end_after_movedir: /DOWNLOAD/DELETE
+  #uploaddir: /META_EXT/
+
+prism_sftp:
+  port: 22
+  ip: 10.220.170.39
+  user: otvmeta_user
+  passwd: otvmeta1234$
   workdir: /home/ktipmedia/prism/work/
-  downdir: /data/otvmeta_user/#DATE#/
-  #downdir: /home/ktipmedia/prism/down/#DATE#
-  downext: dat
-  uploaddir: /data/otvmeta_user/#DATE#/
-  #uploaddir: /home/ktipmedia/prism/upload/#DATE#
+  uploaddir: /data/otvmeta_user/
+  downdir: /data/otvmeta_user/
+
+  #ip: 172.16.208.51
+  #user: ktipmedia
+  #passwd: 3!aleldj
+  #workdir: /home/ktipmedia/prism/work/
+  #uploaddir: /home/ktipmedia/prism/upload/
+  #downdir: /home/ktipmedia/prism/down/
 elasticsearch:
   #host: 172.16.208.52
   host: 127.0.0.1
@@ -617,6 +636,7 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     filePattern: "/home/ktipmedia/logs/service.log.%d{yyyyMMdd}"
   file: /home/ktipmedia/logs/service.log
+  config: classpath:logback.xml
 
 ---
 spring:

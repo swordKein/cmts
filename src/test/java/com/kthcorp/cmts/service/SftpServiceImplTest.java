@@ -65,4 +65,14 @@ public class SftpServiceImplTest {
 		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
 
 	}
+
+	@Test
+	public void test_uploadToPrismReq() {
+		int rt = sftpService.uploadToPrismReq();
+	}
+	@Test
+	public void test_pollingPrismSftp() {
+		int rt = sftpService.pollingPrismSftp();
+	}
+
 }

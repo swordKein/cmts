@@ -2,9 +2,11 @@ package com.kthcorp.cmts.service;
 
 import com.kthcorp.cmts.model.CcubeContent;
 import com.kthcorp.cmts.model.CcubeSeries;
+import com.kthcorp.cmts.util.DateUtils;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.SftpClient;
 import com.kthcorp.cmts.util.XmlUtil;
+import org.apache.directory.api.util.exception.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SftpService implements SftpServiceImpl {
@@ -47,10 +48,33 @@ public class SftpService implements SftpServiceImpl {
     @Autowired
     private CcubeService ccubeService;
 
+    @Autowired
+    private ItemsService itemsService;
+
+    @Value("${prism_sftp.ip}")
+    private String prism_sftp_ip;
+    @Value("${prism_sftp.port}")
+    private Integer prism_sftp_port;
+    @Value("${prism_sftp.user}")
+    private String prism_sftp_user;
+    @Value("${prism_sftp.passwd}")
+    private String prism_sftp_passwd;
+    @Value("${prism_sftp.workdir}")
+    private String prism_sftp_workdir;
+    @Value("${prism_sftp.downdir}")
+    private String prism_sftp_downdir;
+    @Value("${prism_sftp.uploaddir}")
+    private String prism_sftp_uploaddir;
+
     @PostConstruct
     public void checkDirs() {
         logger.info("#Ccube_Sftp_check:: workdir:"+ccube_sftp_workdir);
         FileUtils.checkDirAndCreate(ccube_sftp_workdir);
+    }
+    @PostConstruct
+    public void checkDirsForPrism() {
+        logger.info("#Prism_Sftp_check:: workdir:"+prism_sftp_workdir);
+        FileUtils.checkDirAndCreate(prism_sftp_workdir);
     }
 
     @Override
@@ -277,5 +301,205 @@ public class SftpService implements SftpServiceImpl {
         }
 
         return rt;
+    }
+
+
+    @Override
+    public int uploadToPrismReq() {
+        int rt = 0;
+
+        logger.info("#SftpService:uploadToPrismReq start!");
+
+        try {
+            // 전일 입수된 아이템 기준으로 REQ dat 파일을 생성한다.
+            // 데이터 조회
+            String yesterDate = DateUtils.calculateDate_(GregorianCalendar.DATE, -1, DateUtils.getLocalDate("yyyyMMdd"));
+            System.out.println("#SftpPrism getYesterday :: "+yesterDate);
+
+            Map<String,Object> reqMap = new HashMap();
+            String yesterDate2 = yesterDate + " 00:00:00";
+            reqMap.put("regdate1", yesterDate2);
+
+            List<Map<String, Object>> itemsList = itemsService.getItemsInfoForPrism(reqMap);
+            System.out.println("#SftpPrism itemsList:"+itemsList.size());
+
+            if (itemsList != null && itemsList.size() > 0) {
+                // 전일자 디렉토리 생성 확인
+                String yesterDate3 = yesterDate.replace("-","");
+                FileUtils.checkDirAndCreate(prism_sftp_workdir);
+                String dayDir = prism_sftp_workdir+"\\"+yesterDate3;
+                FileUtils.checkDirAndCreate(dayDir);
+                dayDir += "\\";
+
+                // 파일 쓰기
+                String fileContent = this.generatePrismReqFileContent(itemsList, yesterDate3);
+                //System.out.println("#SftpPrism getFileContent:"+fileContent);
+                String fileName = "OTVMETA_REQ_"+yesterDate3;
+                FileUtils.writeFileFromStr(fileContent, dayDir, fileName+".dat", "utf-8");
+                FileUtils.writeFileFromStr("", dayDir, fileName+".fin", "utf-8");
+
+                // REQ dat 파일을 PRISM 경로/yyyymmdd/ 아래에 업로드한다.
+                // 이후 REQ fin 파일을 업로드한다.
+                // 일자별 디렉토리 생성 확인
+                // dat -> fin 파일 순으로 업로드
+                int rtu = 0;
+                try {
+                    rtu = this.uploadToPrism(yesterDate3, fileName);
+                } catch (Exception ue) {
+                    logger.error("#SftpPrism "+yesterDate+" :: upload fail:"+fileName+".dat  caused by "
+                            +(ue.getMessage() != null ? ue.getMessage() : ue.getCause()));
+                } finally {
+                    logger.info("#SftpPrism "+yesterDate+" :: upload success:"+fileName+".dat & fin file");
+                }
+
+            }
+
+        } catch (Exception e) {
+            rt = -2;
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+    public String generatePrismReqFileContent(List<Map<String,Object>> itemsList, String yesterDate) {
+        String result = "";
+
+        String seperator = "|";
+        String lineFeed = "\n";
+        String fromDate = DateUtils.calculateDate(GregorianCalendar.DATE, -180, yesterDate);
+
+        int cnt = 1;
+        for(Map<String, Object> item : itemsList) {
+            if (item.get("idx") != null && item.get("title") != null) {
+                String thisStr = item.get("idx").toString() + seperator
+                        + item.get("title").toString().replace("\\","").replace("|","") + seperator
+                        + "" + seperator
+                        + fromDate + seperator
+                        + yesterDate
+                        + lineFeed;
+
+                //if (itemsList.size() != cnt) {
+                //    thisStr += lineFeed;
+                //}
+
+                result += thisStr;
+            }
+            cnt++;
+        }
+        return result;
+    }
+
+    @Override
+    public int uploadToPrism(String work_add_path, String fileName) {
+        int rt = 0;
+
+        logger.info("#SftpService:uploadToPrism:: from:"+prism_sftp_workdir+work_add_path+"/"+fileName);
+        try {
+            String work_dir2 = prism_sftp_workdir;
+            String upload_dir2 = prism_sftp_uploaddir;
+            if (!"".equals(work_add_path)) {
+                work_dir2 += work_add_path + "/";
+                upload_dir2 += work_add_path;
+            }
+
+            rt = this.uploadSftpToPrism(prism_sftp_ip, prism_sftp_port, prism_sftp_user, prism_sftp_passwd
+                    , upload_dir2, work_dir2, work_add_path, fileName);
+        } catch (Exception e) {
+            rt = -2;
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+    @Override
+    public int uploadSftpToPrism(String ip, int port, String user, String passwd
+            , String upload_dir, String work_dir, String work_add_path, String fileName) {
+        int rt = 0;
+
+        SftpClient client = new SftpClient();
+        client.setServer(ip);
+        client.setPort(port);
+        client.setLogin(user);
+        client.setPassword(passwd);
+        client.connect();
+
+        try {
+            logger.info("#SftpService:uploadSftpToPrism:: to:"+upload_dir+fileName+".dat");
+
+            //String upload_dir2 = upload_dir;
+            //if (!"".equals(work_add_path)) {
+            //    upload_dir2 += work_add_path;
+            //}
+            client.dirCheckAndCreate(upload_dir, work_add_path);
+
+            client.uploadFile(work_dir+fileName+".dat", upload_dir+"/"+fileName+".dat");
+            client.uploadFile(work_dir+fileName+".fin", upload_dir+"/"+fileName+".fin");
+            rt = 1;
+        } catch (Exception e) {
+            rt = -1;
+            logger.error("", e);
+        } finally {
+            client.disconnect();
+        }
+
+        return rt;
+    }
+
+
+    @Override
+    public int pollingPrismSftp() {
+        logger.info("#SftpService:pollingCcubeSftp:: fromDir:"+ccube_sftp_downdir);
+
+        String yesterDate = DateUtils.calculateDate_(GregorianCalendar.DATE, -1, DateUtils.getLocalDate("yyyyMMdd"));
+        String yesterDate3 = yesterDate.replace("-","");
+
+        return pollingSftpDirByExtAndFin(prism_sftp_ip, prism_sftp_port, prism_sftp_user, prism_sftp_passwd
+                , prism_sftp_downdir, prism_sftp_workdir, yesterDate3);
+    }
+
+    @Override
+    public int pollingSftpDirByExtAndFin(String ip, int port, String user, String passwd
+            , String fromPath, String toPath, String work_add_path) {
+        int rtcode = 0;
+
+        SftpClient client = new SftpClient();
+        client.setServer(ip);
+        client.setPort(port);
+        client.setLogin(user);
+        client.setPassword(passwd);
+        client.connect();
+
+        try {
+            //String fileName = SftpClient.getOneFileName(ccube_sftp_downdir, ccube_sftp_downext);
+            String fromPath2 = fromPath;
+            String toPath2 = toPath;
+            if (!"".equals(work_add_path)) {
+                fromPath2 = fromPath2 + "/" + work_add_path;
+                toPath2 = toPath2 + "/" + work_add_path + "/";
+            }
+            List<String> fileNames = SftpClient.getLs(fromPath2 , "fin");
+            for (String fileName : fileNames) {
+                fileName = fileName.trim();
+                String dataFileName = fileName.replace(".fin",".dat");
+
+                // fin 파일 확인하여 dat 파일을 다운로드 한다.
+                // 파일명에 REQ가 없는 경우만 다운로드 한다.
+                // 실제로는 API 연동을 통해 데이터 취득하므로 다운로드 한 파일을 처리하지는 않는다.
+
+                if (!"".equals(fileName)) {
+                    System.out.println("#PrismSftp::Start Download file::" + dataFileName);
+                    int rt = SftpClient.retrieveFile(fromPath2, dataFileName, toPath2 + dataFileName);
+                    System.out.println("#PrismSftp::Start Download result::" + rt);
+
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            client.disconnect();
+        }
+
+        return rtcode;
     }
 }

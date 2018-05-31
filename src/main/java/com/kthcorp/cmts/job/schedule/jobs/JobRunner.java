@@ -118,6 +118,25 @@ public class JobRunner implements Job {
                         logger.info("#MLOG schedule.sftpService not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
                     }
                     break;
+
+                case "prismUpService":
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = sftpService.uploadToPrismReq();
+                        logger.info("#MLOG schedule.prismUpService start jobType:" + jobType);
+                    } else {
+                        //rt = sftpService.uploadToPrismReq();
+                        logger.info("#MLOG schedule.prismUpService not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
+                    break;
+                case "prismDownService":
+                    if(schedTriggerService.checkActiveServerByServerid()) {
+                        rt = sftpService.pollingPrismSftp();
+                        logger.info("#MLOG schedule.prismDownService start jobType:" + jobType);
+                    } else {
+                        //rt = sftpService.pollingPrismSftp();
+                        logger.info("#MLOG schedule.prismDownService not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");
+                    }
+                    break;
                 case "processCollectHearbit":
                     rt = schedTriggerService.processCollectHearbit();
                     logger.info("#MLOG schedule.check processCollectHearbit");

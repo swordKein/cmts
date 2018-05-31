@@ -738,4 +738,26 @@ public class FileUtils {
 
         return rt;
     }
+
+    public static int writeFileFromStr(String reqStr, String upload_dir, String fileName, String charset) {
+        int rt = 0;
+
+        BufferedWriter output = null;
+        try {
+
+            File targetFile = new File(upload_dir + fileName);
+            targetFile.createNewFile();
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), charset));
+
+            output.write(reqStr);
+
+            output.close();
+            rt = 1;
+        } catch (Exception e) {
+            rt = -1;
+            e.printStackTrace();
+        }
+
+        return rt;
+    }
 }

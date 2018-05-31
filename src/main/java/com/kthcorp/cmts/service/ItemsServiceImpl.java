@@ -62,4 +62,6 @@ public interface ItemsServiceImpl {
     Items getItemInfoOne(int idx);
 
     Items getItemsInfoByIdx(Integer itemid);
+
+    List<Map<String,Object>> getItemsInfoForPrism(Map<String, Object> req);
 }
