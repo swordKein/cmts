@@ -6,7 +6,7 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <prudent>true</prudent>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>d:\\upload\\service_%d{yyyyMMdd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
