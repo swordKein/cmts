@@ -404,7 +404,7 @@
         left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
+        where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
         </if>
@@ -448,7 +448,7 @@
         ELSE 'OTH' END AS type ) END AS type
         , a.regdate
         , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
-        , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as content_id
+        , it.cid as content_id
         from
         (	select j.* from
         (
@@ -475,7 +475,8 @@
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        where iss.regdate <![CDATA[ >= ]]> #{searchSdate} and iss.regdate <![CDATA[ <= ]]> #{searchEdate}
+        where iss.regdate between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
+
         order by iss.regdate desc, iss.idx desc limit ${pageSize} offset ${offsetIdx}
 
         )
