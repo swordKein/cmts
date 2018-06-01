@@ -224,7 +224,7 @@ public class StatsService implements StatsServiceImpl {
     }
 
     @Override
-    public JsonObject getStatsList(int pageSize, int pageno, String searchSdate, String searchEdate) {
+    public JsonObject getStatsList(int pageSize, int pageno, String searchSdate, String searchEdate, String searchStat) {
         JsonObject result = new JsonObject();
 
         Items reqIt = new Items();
@@ -246,7 +246,9 @@ public class StatsService implements StatsServiceImpl {
         }
         reqIt.setSearchSdate(newSdate);
         reqIt.setSearchEdate(newEdate);
-        reqIt.setStat("ST");
+        //reqIt.setStat("ST");
+        reqIt.setStat(searchStat);
+
 
         Stats reqSt = new Stats();
         reqSt.setSdate(nSdate);

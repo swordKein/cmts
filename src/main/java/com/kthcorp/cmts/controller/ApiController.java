@@ -1146,12 +1146,12 @@ public class ApiController {
 			, @RequestParam(value = "pagesize", required = false, defaultValue = "50") String spagesize
 			, @RequestParam(value = "pageno", required = false, defaultValue = "1") String spageno
 
-			//, @RequestParam(value = "searchstat", required = false, defaultValue = "") String searchstat
+			, @RequestParam(value = "searchstat", required = false, defaultValue = "") String searchstat
 			, @RequestParam(value = "searchsdate", required = false, defaultValue = "2018-02-26") String searchsdate
 			, @RequestParam(value = "searchedate", required = false, defaultValue = "2018-02-28") String searchedate
 	) {
 		logger.info("#CLOG:API/stat/list get pageno:"+spageno+"/pagesize:"+spagesize+"/stat:"
-				//+searchstat
+				+searchstat
 				+"/sdate:"+searchsdate+"/edate:"+searchedate);
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -1164,7 +1164,7 @@ public class ApiController {
 
 		JsonObject result = null;
 		try {
-			result = statsService.getStatsList(pageSize, pageNo, searchsdate, searchedate);
+			result = statsService.getStatsList(pageSize, pageNo, searchsdate, searchedate, searchstat);
 			rt_code = 1;
 			rtmsg = "SUCCESS";
 		} catch (Exception e) {
