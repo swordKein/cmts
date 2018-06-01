@@ -55,6 +55,6 @@ public class StatsServiceImplTest {
 	@Test
 	public void test_getStatsList() throws Exception {
 		System.out.println("#RESULT:"+statsService.getStatsList(20, 1
-				, "2018-05-17", "2018-06-01", "ST"));
+				, "2018-02-17", "2018-06-01", "ST"));
 	}
 }
