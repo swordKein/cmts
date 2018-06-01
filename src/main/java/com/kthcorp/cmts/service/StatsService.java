@@ -247,7 +247,7 @@ public class StatsService implements StatsServiceImpl {
         reqIt.setSearchSdate(newSdate);
         reqIt.setSearchEdate(newEdate);
         //reqIt.setStat("ST");
-        reqIt.setStat(searchStat);
+        reqIt.setSearchStat(searchStat);
 
 
         Stats reqSt = new Stats();
