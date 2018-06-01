@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,8 +248,9 @@ public class StatsService implements StatsServiceImpl {
         reqIt.setSearchSdate(newSdate);
         reqIt.setSearchEdate(newEdate);
         //reqIt.setStat("ST");
-        reqIt.setSearchStat(searchStat);
-
+        if (!"IN".equals(searchStat)) {
+            reqIt.setSearchStat(searchStat);
+        }
 
         Stats reqSt = new Stats();
         reqSt.setSdate(nSdate);
@@ -256,12 +258,34 @@ public class StatsService implements StatsServiceImpl {
 
         //int countItems = itemsMapper.countItems(reqIt);
         //System.out.println("#ELOG.searchItems:: req:"+reqIt.toString());
-        int countItems = itemsMapper.countItemsPaging(reqIt);
-        int countAll = itemsMapper.countItemsAll();
+        int countItems = 0;
+        if (!"ST".equals(searchStat) && !"FT".equals(searchStat)) {
+            countItems = itemsMapper.countItemsPaging(reqIt);
+        } else {
+            // 승인 완료 or 승인 불가의 경우 items_stat 테이블 직접 조회
+            Stats reqSt2 = new Stats();
+            reqSt2.setSdate(nSdate);
+            reqSt2.setEdate(nEdate);
+            reqSt2.setStat(searchStat);
+            List<Stats> countList = statsMapper.getCountsItemsStatByStat(reqSt2);
+            for(Stats ss : countList) {
+                if (ss != null && ss.getStat().equals(searchStat) && ss.getCnt() != null) {
+                    countItems = ss.getCnt();
+                }
+            }
+        }
+        //int countAll = itemsMapper.countItemsAll();
 
         System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
 
-        List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
+        List<Items> list_items = null;
+
+        if (!"ST".equals(searchStat) && !"FT".equals(searchStat)) {
+            list_items = itemsMapper.searchItemsPaging(reqIt);
+        } else {
+            list_items = itemsMapper.searchItemsPagingByStatDate(reqIt);
+        }
+
         JsonArray listItems = apiService.getListItemsFromArray(list_items);
         //n1.addProperty("STAT", "RT");
         //n1.addProperty("CNT_IN", 1);
@@ -411,9 +435,11 @@ public class StatsService implements StatsServiceImpl {
             }
         }
 
-        int count_st = 0;
-        int count_rt = 0;
-        int count_ft = 0;
+        int count_st = 0; // success tagging
+        int count_rt = 0; // ready tagging
+        int count_ft = 0; // do stop tagging
+        int count_et = 0; // error
+        int count_ct = 0; // cancel
         List<Stats> listCounts2 = statsMapper.getCountsItemsStatByStat(reqSt);
         if (listCounts2 != null) {
             for (Stats s2 : listCounts2) {
@@ -428,11 +454,11 @@ public class StatsService implements StatsServiceImpl {
                     } else if ("FT".equals(stat)) {
                         count_ft += cnt;
                     } else if ("FR".equals(stat)) {
-                        count_ft += cnt;
+                        count_et += cnt;
                     } else if ("FA".equals(stat)) {
-                        count_ft += cnt;
+                        count_et += cnt;
                     } else if ("FC".equals(stat)) {
-                        count_ft += cnt;
+                        count_ct += cnt;
                     }
                 }
             }
