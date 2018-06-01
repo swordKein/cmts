@@ -202,10 +202,15 @@ logging:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    filePattern: "d:\\upload\\service.log.%d{yyyyMMdd}"
-  file: "d:\\upload\\service.log"
+    filePattern: "d:\\upload\\service.%d{yyyyMMdd}.log"
+  file: d:\\upload\\service.log
   #file: e:/home/debug.log
-  config: classpath:logback.xml
+
+---
+spring:
+  profiles: logging-daily
+  logging:
+    config: classpath:logback.xml
 
 ---
 spring:
@@ -636,7 +641,6 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     filePattern: "/home/ktipmedia/logs/service.log.%d{yyyyMMdd}"
   file: /home/ktipmedia/logs/service.log
-  config: classpath:logback.xml
 
 ---
 spring:
