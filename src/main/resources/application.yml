@@ -307,12 +307,12 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: /home/daisy/logs/service.log
-    pattern:
-        file: /home/daisy/logs/service_%d{yyyyMMdd}.log
-    filepattern:
-      #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-      console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
-      file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  pattern:
+      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
+  filepattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 ---
 spring:
@@ -381,12 +381,12 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: /home/daisy/logs/service.log
-    pattern:
-        file: /home/daisy/logs/service_%d{yyyyMMdd}.log
-    filepattern:
-      #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-      console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
-      file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  pattern:
+      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
+  filepattern:
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 ---
 spring:
