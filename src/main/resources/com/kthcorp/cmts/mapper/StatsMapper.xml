@@ -324,8 +324,6 @@
         /* getCountItemsHistByType  */
         select ith.type, ith.stat, count(*) as cnt
         from items_hist ith
-        inner join items it on it.idx = ith.idx
-        inner join ccube_keys ck on ck.itemidx = it.idx
         where ith.type in ( 'collect', 'analyze', 'meta' )
         and ith.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by ith.type, ith.stat
