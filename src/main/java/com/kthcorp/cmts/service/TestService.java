@@ -2964,15 +2964,15 @@ public class TestService implements TestServiceImpl {
     public Map<String,Object> loadDicResultTagKeywords() throws Exception {
         //String fileName = "E:\\0502_메타_대체_추가어_사전.txt";
         String fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0503_WHERE_대체_키워드_최진기팀장.txt";
-        fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0517_메타태깅_매핑키워드.txt";
-        fileName="/home/daisy/upload/0517_meta_dic.txt";
+        fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\97.뭐지이건\\0607_meta_dic.txt";
+        fileName="/home/daisy/upload/0607_meta_dic.txt";
         return loadDicResultTagKeywords(fileName);
     }
 
     @Override
     public void insDicSubgenreKeywords() throws Exception {
         Map<String,Object> reqMap = loadDicSubgenreKeywords();
-        putBulkDataToEsIndex("idx_subgenre", reqMap);
+        //putBulkDataToEsIndex("idx_subgenre", reqMap);
     }
 
     @Override
@@ -3974,7 +3974,7 @@ public class TestService implements TestServiceImpl {
         List<String> topGenreArr = new ArrayList();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(fileName), "ms949"))) {
+                new FileInputStream(fileName), "utf-8"))) {
             while ((line = reader.readLine()) != null
                 //&& cntAll < 100
                     ){
