@@ -147,9 +147,6 @@
         <if test='title2 != null and title2 != ""'>
             , title2 = #{title2}
         </if>
-        <if test='regdate1 != null and regdate1 != ""'>
-            , regdate1 = #{regdate1}
-        </if>
         <if test='regdate2 != null and regdate2 != ""'>
             , regdate2 = #{regdate2}
         </if>
