@@ -664,4 +664,9 @@ public class TestServiceTestImpl {
 	public void test_writeMetaDicKeywordsByTypes() throws Exception {
 		testService.writeMetaDicKeywordsByTypes();
 	}
+
+	@Test
+	public void test_writeCcubeOutputToJsonDevide() throws Exception {
+		testService.writeCcubeOutputToJsonDevide("CcubeSeries",120);
+	}
 }

@@ -101,7 +101,7 @@ public class JobRunner implements Job {
                 case "ccubeOutputAll":
                     if(schedTriggerService.checkActiveServerByServerid()) {
                         testService.writeCcubeOutputToJsonByType("CcubeContent");
-                        testService.writeCcubeOutputToJsonByType("CcubeSeries");
+                        testService.writeCcubeOutputToJsonDevide("CcubeSeries",120);
                         logger.info("#MLOG schedule.ccubeOutputAll.start jobType:" + jobType);
                     } else {
                         logger.info("#MLOG schedule.ccubeOutputAll not start jobType:" + jobType + ". because serverid:"+serverid+" is not Active.");

@@ -208,6 +208,8 @@ public interface TestServiceImpl {
 
     int writeCcubeOutputToJsonByType(String type);
 
+    int writeCcubeOutputToJsonDevide(String type, int limit);
+
     int writeCcubeOutputDayToJsonByType(String type);
 
     void processItemsTagsMetasByResultTag() throws Exception;
