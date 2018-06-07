@@ -390,7 +390,7 @@
         and meta like concat('%',#{searchKeyword},'%')
         ) itm on itm.idx = it.idx
 
-        inner join (
+        left outer join (
         select t.* from (
         select tk.idx, tk.tagidx
         , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
@@ -533,7 +533,7 @@
             and meta like concat('%',#{searchKeyword},'%')
             ) itm on itm.idx = it.idx
 
-            inner join (
+            left outer join (
             select t.* from (
             select tk.idx, tk.tagidx
             , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
@@ -572,6 +572,8 @@
 
         ) j
         ) a
+        inner join items it on it.idx = a.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx
     </select>
 
 
