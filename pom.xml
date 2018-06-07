@@ -46,9 +46,24 @@
 		<elasticsearch.version>5.5.2</elasticsearch.version>
 		<!-- benchmark -->
 		<jmh.version>1.19</jmh.version>
+		<logback.version>1.2.3</logback.version>
 	</properties>
 
 	<dependencies>
+		<!--
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.springframework/springloaded
 		<dependency>
 			<groupId>org.springframework</groupId>

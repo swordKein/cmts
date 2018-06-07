@@ -199,8 +199,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: d:\\upload\\service.log
-  pattern:
-      file: d:\\upload\\service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -307,8 +305,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: /home/daisy/logs/service.log
-  pattern:
-      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -381,8 +377,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: /home/daisy/logs/service.log
-  pattern:
-      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -454,8 +448,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: DEBUG
   file: /home/daisy/logs/service.log
-  pattern:
-      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -525,8 +517,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: INFO
   file: /home/megatag/logs/service.log
-  pattern:
-      file: /home/megatag/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     #console: "PROD::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -595,9 +585,9 @@ ccube_sftp:
   user: tgg
   passwd: tgg@1234!
   workdir: /home/ktipmedia/ccube/work/
-  downdir: /DOWNLOAD
-  end_after_movedir: /DOWNLOAD/DELETE
-  uploaddir: /META_EXT/
+  downdir: /caims/SFTP/TGG/DOWNLOAD
+  end_after_movedir: /caims/SFTP/TGG/DOWNLOAD/DELETE
+  uploaddir: /caims/SFTP/TGG/META_EXT/
 
   #ip: 172.16.208.51
   #user: ktipmedia
@@ -633,8 +623,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: INFO
   file: /home/ktipmedia/logs/service.log
-  pattern:
-      file: /home/daisy/ktipmedia/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     #console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -700,8 +688,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: INFO
   file: /home/ktipmedia/logs/service.log
-  pattern:
-      file: /home/ktipmedia/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -782,8 +768,6 @@ logging:
     org.springframework: INFO
     com.kthcorp: INFO
   file: /home/daisy/logs/service.log
-  pattern:
-      file: /home/daisy/logs/service_%d{yyyyMMdd}.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
