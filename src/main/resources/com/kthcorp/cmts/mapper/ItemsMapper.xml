@@ -124,7 +124,7 @@
             regdate, regdate1, regdate2, regid, stat, director, year)
         values
           (#{type}, #{cid}, #{title}, #{title1}, #{title2},
-          now(), #{regdate1}, #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
+          now(), now(), #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
     </insert>
 
     <delete id="delItems" parameterType="com.kthcorp.cmts.model.Items">
