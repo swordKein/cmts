@@ -135,7 +135,7 @@
 
     <insert id="insItemsTagsMetas_0503" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* insItemsMetas */
-        insert into items_tags_metas_0517
+        insert into items_tags_metas_0607
         (idx, tagidx, mtype, meta, regdate, regid, meta_orig)
         values
         (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid}, #{meta_orig})
