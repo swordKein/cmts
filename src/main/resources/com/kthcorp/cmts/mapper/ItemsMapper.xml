@@ -124,7 +124,7 @@
             regdate, regdate1, regdate2, regid, stat, director, year)
         values
           (#{type}, #{cid}, #{title}, #{title1}, #{title2},
-          now(), #{regdate1}, #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
+          now(), now(), #{regdate2}, #{regid}, #{stat}, #{director}, #{year} )
     </insert>
 
     <delete id="delItems" parameterType="com.kthcorp.cmts.model.Items">
@@ -146,9 +146,6 @@
         </if>
         <if test='title2 != null and title2 != ""'>
             , title2 = #{title2}
-        </if>
-        <if test='regdate1 != null and regdate1 != ""'>
-            , regdate1 = #{regdate1}
         </if>
         <if test='regdate2 != null and regdate2 != ""'>
             , regdate2 = #{regdate2}
