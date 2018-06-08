@@ -4206,6 +4206,14 @@ public class TestService implements TestServiceImpl {
                 toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
             }
 
+            if (!"".equals(toMeta)) {
+                if (!"".equals(toMetaOrigin)) {
+                    toMeta += " ," + toMetaOrigin;
+                }
+            } else {
+                toMeta = toMetaOrigin;
+            }
+
             long longidx = (long) nmap.get("idx");
             int itemid = (int) longidx;
             //max tagidx 를 찾는다.

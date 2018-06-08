@@ -127,6 +127,6 @@ public class ItemsTagsServiceImplTest {
 
 	@Test
 	public void test_getMixedSubgenre2() throws Exception {
-		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(21954));
+		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(645));
 	}
 }
