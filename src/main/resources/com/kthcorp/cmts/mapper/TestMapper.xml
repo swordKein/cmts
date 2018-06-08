@@ -101,7 +101,7 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         inner join items_metas itm on itm.idx = it.idx and itm.mtype = 'genre' and length(itm.meta) > 2
-        where it.idx = 645 and it.type like concat ('CcubeContent', '%')
+        where it.type like concat ('CcubeContent', '%')
     </select>
 
     <select id="getItemsForSubgenre2" resultType="map">
