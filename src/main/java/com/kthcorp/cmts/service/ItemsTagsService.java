@@ -222,7 +222,26 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             JsonArray metas = (JsonArray) jsonParser.parse(it.getMeta());
 
                             //System.out.println("#metas JsonArray : " + metas.toString());
-                            result.add(it.getMtype(), metas);
+                            JsonArray metas2 = new JsonArray();
+                            if (metas != null && metas.size() > 0) {
+                                if (it.getMtype().toUpperCase().contains("SUBGENRE")) {
+                                    // 마지막 제외 대상 필터 적용
+                                    for (JsonElement je : metas) {
+                                        JsonObject jo1 = (JsonObject) je;
+                                        boolean isValid = StringUtil.filterLastTagValid(jo1);
+
+                                        if (isValid) {
+                                            //System.out.println("#ELOG metas jo: added:"+jo1.toString());
+                                            metas2.add(jo1);
+                                        }
+                                    }
+                                    result.add(it.getMtype(), metas2);
+                                    //System.out.println("#ELOG metas2:"+metas2.toString()+" by mtype:"+it.getMtype());
+                                } else {
+                                    result.add(it.getMtype(), metas);
+                                    //System.out.println("#ELOG metas1:"+metas.toString()+" by mtype:"+it.getMtype());
+                                }
+                            }
                         }
                     }
                 }
@@ -299,7 +318,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_RECO_SITUATION");
 
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
-        //System.out.println("#ELOG.getItemsMetasByItemIdx:: old.datas::"+resultObj.toString());
+        System.out.println("#ELOG.getItemsMetasByItemIdx:: old.datas::"+resultObj.toString());
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
         System.out.println("#ELOG.getItemsMetasByItemIdx:: dupCheck.datas::"+resultObj2.toString());
@@ -450,6 +469,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if (resultObj2.get("LIST_SUBGENRE") != null) {
                 resultObj2.remove("LIST_SUBGENRE");
             }
+
             resultObj2.add("LIST_SUBGENRE", listSubGenres);
 
         }
@@ -737,6 +757,26 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 JsonArray sortedJsonArray = JsonUtil.getSortedJsonArray(typeResultArr, "word", "ratio", "type", 100);
                 if (sortedJsonArray != null && sortedJsonArray.size() > 0) typeResultArr = sortedJsonArray;
             }
+
+            if("LIST_SUBGENRE".equals(type)) {
+                JsonArray listSubgenre2 = new JsonArray();
+                if (typeResultArr != null && typeResultArr.size() > 0) {
+                    // 마지막 제외 대상 필터 적용
+                    for (JsonElement je : typeResultArr) {
+                        JsonObject jo1 = (JsonObject) je;
+                        boolean isValid = StringUtil.filterLastTagValid(jo1);
+
+                        if (isValid) {
+                            //System.out.println("#ELOG metas jo: added:"+jo1.toString());
+                            listSubgenre2.add(jo1);
+                        }
+                    }
+                }
+                typeResultArr = null;
+                //typeResultArr = new JsonArray();
+                typeResultArr = listSubgenre2;
+            }
+
             if (resultObj.get(type) != null) resultObj.remove(type);
             resultObj.add(type, typeResultArr);
         }

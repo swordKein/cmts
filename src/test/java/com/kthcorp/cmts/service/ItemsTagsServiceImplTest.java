@@ -25,7 +25,7 @@ public class ItemsTagsServiceImplTest {
 
 	@Test
 	public void test_getItemsMetasByItemIdx() throws Exception{
-		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(2855, false);
+		JsonObject result = itemsTagsService.getItemsMetasByItemIdx(21825, false);
 		System.out.println("#Result:"+result.toString());
 	}
 
