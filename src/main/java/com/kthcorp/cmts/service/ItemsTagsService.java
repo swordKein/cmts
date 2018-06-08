@@ -2234,6 +2234,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
                 toMeta = result.toString();
                 toMeta = CommonUtil.removeNationStr(toMeta);
+                System.out.println("#toMeta:"+toMeta);
                 if (cont_type.contains("CcubeSeries")) {
                     toMeta = toMeta.replace("영화", "시리즈");
                 }
