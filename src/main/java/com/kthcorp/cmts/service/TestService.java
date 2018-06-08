@@ -4169,6 +4169,132 @@ public class TestService implements TestServiceImpl {
         System.out.println("#itemsList.size:"+itemList.size());
     }
 
+
+    @Override
+    public void processSubgenreToTags() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        for(Map<String, Object> nmap : itemList) {
+            //for(int i=0; i<10; i++) {
+            //Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            String reqStr0 = "";
+            String reqStr = "";
+            if(nmap.get("genre") != null) reqStr0 = nmap.get("genre").toString();
+            if(nmap.get("kt_rating") != null) reqStr = reqStr0 + " " + nmap.get("kt_rating").toString();
+            System.out.println("#req str: genre/kt_rating::"+reqStr);
+
+            Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
+            String toMeta = result.toString();
+            toMeta = CommonUtil.removeNationStr(toMeta);
+            if (nmap.get("type").toString().contains("CcubeSeries")) {
+                toMeta = toMeta.replace("영화", "시리즈");
+            }
+
+            String origin = "";
+            if(nmap.get("origin") != null) origin = nmap.get("origin").toString();
+
+            System.out.println("###REQ_STR2::origin:"+origin);
+            Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
+            System.out.println("#RESULT_NATION:"+resultNation.toString());
+            String toMetaOrigin = resultNation.toString();
+            toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
+
+            if (nmap.get("type").toString().contains("CcubeSeries")) {
+                toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+            }
+
+            long longidx = (long) nmap.get("idx");
+            int itemid = (int) longidx;
+            //max tagidx 를 찾는다.
+            ItemsTags reqit = new ItemsTags();
+            reqit.setIdx(itemid);
+            reqit.setStat("S");
+            int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqit);
+
+            if(!"".equals(toMeta)) {
+                //String newList[] = toMeta.split(",");
+                JsonArray newArr = JsonUtil.convertStringToJsonArrayForObjWithDelemeter(toMeta, ",");
+
+                ItemsTags reqMeta = new ItemsTags();
+                reqMeta.setIdx(itemid);
+                reqMeta.setTagidx(maxTagIdx);
+                reqMeta.setMtype("LIST_SUBGENRE");
+                reqMeta.setMeta(newArr.toString());
+
+                System.out.println("#MLOG run insItemsTagsMetas data:"+reqMeta.toString());
+                int rt = itemsTagsService.insItemsTagsMetas(reqMeta);
+            }
+        }
+
+        System.out.println("#itemsList.size:"+itemList.size());
+    }
+
+
+    @Override
+    public void processSubgenreToTagsSer() throws Exception {
+        List<Map<String, Object>> itemList = testMapper.getItemsForSubgenre2();
+        System.out.println("#itemsList.size:"+itemList.size());
+
+        for(Map<String, Object> nmap : itemList) {
+            //for(int i=0; i<10; i++) {
+            //Map<String, Object>   nmap = itemList.get(i);
+            System.out.println("#req::"+nmap.toString());
+
+            String reqStr0 = "";
+            String reqStr = "";
+            if(nmap.get("genre") != null) reqStr0 = nmap.get("genre").toString();
+            if(nmap.get("kt_rating") != null) reqStr = reqStr0 + " " + nmap.get("kt_rating").toString();
+            System.out.println("#req str: genre/kt_rating::"+reqStr);
+
+            Set result = dicService.getMixedGenreArrayFromGenre(reqStr, "subgenre_filter");
+            String toMeta = result.toString();
+            toMeta = CommonUtil.removeNationStr(toMeta);
+            if (nmap.get("type").toString().contains("CcubeSeries")) {
+                toMeta = toMeta.replace("영화", "시리즈");
+            }
+
+            String origin = "";
+            if(nmap.get("origin") != null) origin = nmap.get("origin").toString();
+
+            System.out.println("###REQ_STR2::origin:"+origin);
+            Set resultNation = dicService.getMixedNationGenreArrayFromGenre(reqStr0, origin, "origin");
+            System.out.println("#RESULT_NATION:"+resultNation.toString());
+            String toMetaOrigin = resultNation.toString();
+            toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
+
+            if (nmap.get("type").toString().contains("CcubeSeries")) {
+                toMetaOrigin = toMetaOrigin.replace("영화", "시리즈");
+            }
+
+            long longidx = (long) nmap.get("idx");
+            int itemid = (int) longidx;
+            //max tagidx 를 찾는다.
+            ItemsTags reqit = new ItemsTags();
+            reqit.setIdx(itemid);
+            reqit.setStat("S");
+            int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqit);
+
+            if(!"".equals(toMeta)) {
+                //String newList[] = toMeta.split(",");
+                JsonArray newArr = JsonUtil.convertStringToJsonArrayForObjWithDelemeter(toMeta, ",");
+
+                ItemsTags reqMeta = new ItemsTags();
+                reqMeta.setIdx(itemid);
+                reqMeta.setTagidx(maxTagIdx);
+                reqMeta.setMtype("LIST_SUBGENRE");
+                reqMeta.setMeta(newArr.toString());
+
+                System.out.println("#MLOG run insItemsTagsMetas data:"+reqMeta.toString());
+                int rt = itemsTagsService.insItemsTagsMetas(reqMeta);
+            }
+        }
+
+        System.out.println("#itemsList.size:"+itemList.size());
+    }
+
     private String getMetasStringFromJsonObject(JsonObject resultObj, List<String> origTypes) {
         String result = "";
 

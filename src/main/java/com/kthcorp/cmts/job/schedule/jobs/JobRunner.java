@@ -157,9 +157,10 @@ public class JobRunner implements Job {
                     //testService.processMixedSubgenre2();
                     //testService.writeCcubeContentsOutputCSV();
                     //testService.writeCcubeSeriesOutputCSV();
-                    testService.loadDicResultTagKeywords();
-
-                    testService.processItemsTagsMetasByResultTag();
+                    //testService.loadDicResultTagKeywords();
+                    //testService.processItemsTagsMetasByResultTag();
+                    testService.processSubgenreToTags();
+                    testService.processSubgenreToTagsSer();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
             }

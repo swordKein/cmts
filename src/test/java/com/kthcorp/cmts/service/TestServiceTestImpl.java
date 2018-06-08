@@ -487,6 +487,16 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
+	public void test_processSubgenreToTags() throws Exception {
+		testService.processSubgenreToTags();
+	}
+	@Test
+	public void test_processSubgenreToTagsSer() throws Exception {
+		testService.processSubgenreToTagsSer();
+	}
+
+
+	@Test
 	public void test_loadDicSubgenreKeywords() throws Exception {
 		Map<String,Object> result = testService.loadDicSubgenreKeywords();
 		System.out.println("#RESULT:"+result.toString());
@@ -514,7 +524,7 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void test_writeItemsAndSubgenre() throws Exception {
-		//testService.writeItemsAndSubgenre();
+		testService.writeItemsAndSubgenre();
 	}
 
 	@Test

@@ -83,6 +83,45 @@ public class JsonUtil {
 				}.getType());
 	}
 
+	/* String 을 JsonArray로 convert with delemiter */
+	public static JsonArray convertStringToJsonArrayWithDelemeter(String reqList, String delemeter) {
+		JsonArray result = null;
+		if (!"".equals(reqList.trim())) {
+			result = new JsonArray();
+
+			String newArr[] = reqList.split(delemeter);
+			for (String ns : newArr) {
+				String ns2 = ns.trim();
+				if (!"".equals(ns2)) {
+					result.add(ns2);
+				}
+			}
+		}
+		return result;
+	}
+
+
+	/* String 을 JsonArray로 convert with delemiter */
+	public static JsonArray convertStringToJsonArrayForObjWithDelemeter(String reqList, String delemeter) {
+		JsonArray result = null;
+		if (!"".equals(reqList.trim())) {
+			result = new JsonArray();
+
+			String newArr[] = reqList.split(delemeter);
+			for (String ns : newArr) {
+				String ns2 = ns.trim();
+				if (!"".equals(ns2)) {
+					JsonObject newObj = new JsonObject();
+					newObj.addProperty("type","");
+					newObj.addProperty("ratio", 0.0);
+					newObj.addProperty("word", ns2);
+					result.add(newObj);
+				}
+			}
+		}
+		return result;
+	}
+
 	/* String 을 JsonObject로 convert */
 	public static JsonObject convertStringToJsonObject(String reqStr) {
 		com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
