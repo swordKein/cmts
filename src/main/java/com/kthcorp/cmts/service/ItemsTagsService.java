@@ -465,6 +465,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         String subgenreStr = "";
 
         if (resultObj2 != null && resultObj2.get("LIST_SUBGENRE") != null) {
+            System.out.println("#ELOG getTagsMeta for SUBGENRE:"+resultObj2.get("LIST_SUBGENRE").toString());
+
             JsonArray listSubgenres = resultObj2.get("LIST_SUBGENRE").getAsJsonArray();
             resultObj2.remove("LIST_SUBGENRE");
             if (listSubgenres != null && listSubgenres.size() > 0) {
@@ -2032,6 +2034,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         //long itemIdx0 = (long) 0;
         //int itemIdx = 0;
         JsonArray resultArr = this.getMixedSubgenre2(itemid);
+        if (resultArr == null) resultArr = new JsonArray();
+
         int cnt = 0;
         JsonObject jo = null;
         String word = "";
@@ -2152,9 +2156,21 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
         }
 
-        if (resultArr == null) resultArr = new JsonArray();
+        JsonArray resultArr2 = new JsonArray();
+        if (resultArr != null && resultArr.size() > 0) {
+            // 마지막 제외 대상 필터 적용
+            for (JsonElement je : resultArr) {
+                JsonObject jo1 = (JsonObject) je;
+                boolean isValid = StringUtil.filterLastTagValid(jo1);
 
-        return resultArr;
+                if(isValid) {
+                    System.out.println("#ELOG jo: added:"+jo1.toString());
+                    resultArr2.add(jo1);
+                }
+            }
+        }
+
+        return resultArr2;
     }
 
 

@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.CcubeMapper;
 import com.kthcorp.cmts.model.InItems;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -105,4 +107,11 @@ public class CcubeServiceTest {
 		int rt = ccubeService.processCcubeSeriesOutputToJsonTest();
 	}
 
+	@Test
+	public void test_getJsonArrayForCcubeOutput() throws Exception {
+		Map<String, Object> ins = new HashMap();
+		ins.put("idx",21825);
+		JsonArray contents = ccubeService.getJsonArrayForCcubeOutput(null, "CcubeContent", ins);
+		System.out.println("#RES:"+contents.toString());
+	}
 }

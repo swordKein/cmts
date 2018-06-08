@@ -114,7 +114,7 @@ public class ItemsTagsServiceImplTest {
 				", {\"type\":\"who\", \"meta\":\"마피아\"}]";
 
 
-		JsonArray resultArr = itemsTagsService.getMetaSubgenre(145, reqStr);
+		JsonArray resultArr = itemsTagsService.getMetaSubgenre(21825, reqStr);
 
 		System.out.println("#RESULT:"+resultArr.toString());
 	}
