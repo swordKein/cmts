@@ -537,6 +537,18 @@ public class StringUtil {
 
         filterSet.add("코믹 스릴러");
 
+        filterSet.add("서브 장르");
+        filterSet.add("테스트 서브장르1");
+        filterSet.add("테스트 서브장르2");
+        filterSet.add("테스트 서브장르3");
+        filterSet.add("테스트 서브장르4");
+        filterSet.add("테스트 서브장르5");
+        filterSet.add("테스트 서브장르6");
+        filterSet.add("테스트 서브장르7");
+        filterSet.add("테스트 서브장르8");
+        filterSet.add("테스트 서브장르9");
+
+
         for (String fs : filterSet) {
             //System.out.println("#compare filterset fs:"+fs+"  vs  req:"+req);
             req = req.replace(fs, "");
