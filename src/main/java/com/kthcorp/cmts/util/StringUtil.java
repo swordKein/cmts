@@ -1,5 +1,7 @@
 package com.kthcorp.cmts.util;
 
+import com.google.gson.JsonObject;
+
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -429,6 +431,8 @@ public class StringUtil {
         filterSet.add("성인 시리즈");
         filterSet.add("단편 시리즈");
 
+        filterSet.add("한국 영화");
+
         for(String fs : filterSet) {
             String fs2 = ", " + fs;
             req = req.replace(fs2, "");
@@ -497,5 +501,46 @@ public class StringUtil {
             }
         }
         return resStr;
+    }
+
+    public static boolean filterLastTagValid(JsonObject jo) {
+        boolean isValid = false;
+
+        if (jo != null && jo.get("word") != null) {
+            String word = jo.get("word").getAsString();
+            if (!"".equals(word)) {
+                String wordto = filterLastGenre(word);
+                if (!"".equals(wordto)) {
+                    isValid = true;
+                }
+            }
+        }
+        return isValid;
+    }
+
+    public static String filterLastGenre(String req) {
+        req = req.trim();
+
+        Set<String> filterSet = new HashSet();
+        filterSet.add("한국 영화");
+        filterSet.add("미국 영화");
+        filterSet.add("영국 영화");
+        filterSet.add("프랑스 영화");
+        filterSet.add("일본 영화");
+        filterSet.add("인도 영화");
+        filterSet.add("중국 영화");
+        filterSet.add("홍콩 영화");
+        filterSet.add("대만 영화");
+        filterSet.add("독일 영화");
+        filterSet.add("태국 영화");
+        filterSet.add("이탈리아 영화");
+
+        filterSet.add("코믹 스릴러");
+
+        for (String fs : filterSet) {
+            //System.out.println("#compare filterset fs:"+fs+"  vs  req:"+req);
+            req = req.replace(fs, "");
+        }
+        return req;
     }
 }

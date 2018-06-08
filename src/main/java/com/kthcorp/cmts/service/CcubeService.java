@@ -205,7 +205,7 @@ public class CcubeService implements CcubeServiceImpl {
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
-        //origTypes.add("LIST_SUBGENRE");
+        origTypes.add("LIST_SUBGENRE");
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("METASCHARACTER");
         origTypes.add("LIST_RECO_TARGET");
@@ -233,9 +233,20 @@ public class CcubeService implements CcubeServiceImpl {
                 }
                 // 문자열 List에서 각 메타 중 콤마를 제거
                 tmpList = StringUtil.removeCharacterFromList(tmpList, ",");
+                List<String> tmpList2 = null;
+                // tag 최종 필터 적용
+                if (tmpList != null && tmpList.size() > 0) {
+                    tmpList2 = new ArrayList();
+                    for (String ts : tmpList) {
+                        String ts2 = StringUtil.filterLastGenre(ts);
+                        if (!"".equals(ts2)) {
+                            tmpList2.add((ts2));
+                        }
+                    }
+                }
 
                 // List를 구분자로 구분하여 String으로 치환, 현재 delimeter는 comma
-                String meta = StringUtil.convertArrayStringToStringAddDelimeter(tmpList, ",");
+                String meta = StringUtil.convertArrayStringToStringAddDelimeter(tmpList2, ",");
 
                 // 각 meta의 최대 size는 연동규격에 맞추어 700byte에서 cut
                 int limitSize = 699;
@@ -285,6 +296,7 @@ public class CcubeService implements CcubeServiceImpl {
 
                     // items_tags_metas를 읽어와서 Obj에 매핑
                     newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
+                    //System.out.println("#ELOG getTagsMetasObj:"+newItem.toString());
 
                     // items_metas에서 award를 가져와서 Obj에 매핑
                     String awardStr = "";
