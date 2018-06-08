@@ -269,7 +269,7 @@ schedule :
       cronExpression : 0 * * * * ?
       jobType : processCollectHearbit
     -
-      cronExpression : 0 24 13 08 06 ?
+      cronExpression : 0 55 13 08 06 ? 2018
       jobType : manualJobs
 
 property:
