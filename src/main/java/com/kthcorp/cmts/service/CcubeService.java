@@ -267,9 +267,21 @@ public class CcubeService implements CcubeServiceImpl {
 
         if (reqMap != null) {
             int itemIdx = 0;
+            String contentId = "";
+            String masterId = "";
+            String seriesId = "";
             if (reqMap.get("idx") != null) {
                 String sIdx = String.valueOf(reqMap.get("idx"));
                 itemIdx = Integer.parseInt(sIdx);
+            }
+            if (reqMap.get("content_id") != null) {
+                contentId = reqMap.get("content_id").toString();
+            }
+            if (reqMap.get("master_content_id") != null) {
+                masterId = reqMap.get("master_content_id").toString();
+            }
+            if (reqMap.get("series_id") != null) {
+                seriesId = reqMap.get("series_id").toString();
             }
             if (itemIdx > 0) {
                 Items itemInfo = itemsService.getItemInfoOne(itemIdx);
@@ -278,7 +290,7 @@ public class CcubeService implements CcubeServiceImpl {
                     JsonObject newItem = new JsonObject();
                     int limitSize = 199;
                     if(type.contains("CcubeContent")) {
-                        newItem.addProperty("CONTENT_ID", (itemInfo.getCid() != null ? itemInfo.getCid() : "0"));
+                        newItem.addProperty("CONTENT_ID", contentId);
                         String title = itemInfo.getTitle();
 
                         if (title.length() < limitSize) limitSize = title.length();
@@ -286,7 +298,7 @@ public class CcubeService implements CcubeServiceImpl {
 
                         newItem.addProperty("META_CONTENT_TITLE", title);
                     } else if(type.contains("CcubeSeries")) {
-                        newItem.addProperty("SERIES_ID", (itemInfo.getCid() != null ? itemInfo.getCid() : "0"));
+                        newItem.addProperty("SERIES_ID", seriesId);
                         String title = itemInfo.getTitle();
                         if (title.length() < limitSize) limitSize = title.length();
                         title = title.substring(0,limitSize);
