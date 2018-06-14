@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TestService implements TestServiceImpl {
@@ -6017,6 +6018,7 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
+        countAll=42;
 //countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
@@ -6486,5 +6488,80 @@ public class TestService implements TestServiceImpl {
             String fileNameContent = "META_DIC_TYPE_"+type+"_180614.tsv";
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
+    }
+
+
+    @Override
+    public void checkJsonFileDup() throws Exception {
+        //String fileName = "E:\\0608.tar\\0608\\0608\\METAS_MOVIE_2018060814.json";
+        String fileName = "D:\\upload\\METAS_MOVIE_2018061414.json";
+        List<CcubeContent> result = new ArrayList();
+        int cntAll = 0;
+        String line = "";
+        String origStr = "";
+        List<String> cids = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "utf-8"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                origStr += line;
+            }
+
+            JsonObject allObj = JsonUtil.getJsonObject(origStr);
+            JsonArray allArr = allObj.get("CONTENTS").getAsJsonArray();
+
+            int ccnt = 0;
+            for(JsonElement je : allArr) {
+                JsonObject jo = (JsonObject) je;
+
+                String cid = jo.get("CONTENT_ID").getAsString();
+
+                cids.add(cid);
+
+                if (cid.equals("10027326330001")) {
+                    System.out.println("## "+ccnt+" 'th 10027326330001 data:"+jo.toString());
+                }
+
+                ccnt++;
+            }
+
+            System.out.println("#allObj:"+ cids.size());
+
+            int lcnt = 0;
+            for(String cid : cids) {
+                if (cid.equals("10027326330001")) {
+                    System.out.println("## 10027326330001 line:" + lcnt);
+                }
+                lcnt++;
+            }
+
+            Map<String, Long> counts =
+                    cids.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+
+
+
+
+            Set entrySet = counts.entrySet();
+            Iterator it = entrySet.iterator();
+
+            while(it.hasNext()){
+                Map.Entry me = (Map.Entry)it.next();
+                String cid = (String) me.getKey();
+                long cnt= (long) me.getValue();
+                if (cnt > 1) {
+                    System.out.println("#dup cid:"+cid+" / cnt:"+cnt);
+                }
+
+            }
+
+
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
     }
 }

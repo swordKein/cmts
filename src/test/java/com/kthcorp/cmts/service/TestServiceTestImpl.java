@@ -613,16 +613,6 @@ public class TestServiceTestImpl {
 	    testService.writeDicKeywordsByTypes();
     }
 
-    @Test
-    public void test_writeCcubeOutputToJsonByType() throws Exception {
-	    testService.writeCcubeOutputToJsonByType("CcubeContent");
-    }
-
-	@Test
-	public void test_writeCcubeOutputToJsonByType2() throws Exception {
-		testService.writeCcubeOutputToJsonByType("CcubeSeries");
-	}
-
 
 	@Test
 	public void test1() throws Exception {
@@ -667,7 +657,7 @@ public class TestServiceTestImpl {
 	@Test
 	public void test_writeJsonDay() throws Exception {
 		testService.writeCcubeOutputDayToJsonByType("CcubeContent");
-		testService.writeCcubeOutputDayToJsonByType("CcubeSeries");
+	//	testService.writeCcubeOutputDayToJsonByType("CcubeSeries");
 	}
 
 	@Test
@@ -679,4 +669,22 @@ public class TestServiceTestImpl {
 	public void test_writeCcubeOutputToJsonDevide() throws Exception {
 		testService.writeCcubeOutputToJsonDevide("CcubeSeries",120);
 	}
+
+	@Test
+	public void test_checkJsonFileDup() throws Exception {
+		testService.checkJsonFileDup();
+		//testService.insCcubeMovies(reqList);
+	}
+
+
+	@Test
+	public void test_writeCcubeOutputToJsonByType() throws Exception {
+		testService.writeCcubeOutputToJsonByType("CcubeContent");
+	}
+
+	@Test
+	public void test_writeCcubeOutputToJsonByType2() throws Exception {
+		testService.writeCcubeOutputToJsonByType("CcubeSeries");
+	}
+
 }

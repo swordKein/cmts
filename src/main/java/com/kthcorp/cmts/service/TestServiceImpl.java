@@ -219,4 +219,6 @@ public interface TestServiceImpl {
     void processItemsTagsMetasByResultTag() throws Exception;
 
     void writeMetaDicKeywordsByTypes() throws Exception;
+
+    void checkJsonFileDup() throws Exception;
 }
