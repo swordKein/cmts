@@ -6018,7 +6018,6 @@ public class TestService implements TestServiceImpl {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
 
-        countAll=42;
 //countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
