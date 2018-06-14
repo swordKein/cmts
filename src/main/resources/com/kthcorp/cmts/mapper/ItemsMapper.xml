@@ -378,14 +378,6 @@
         </if>
 
         <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
-        inner join (
-        select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
-            <foreach item="item2" index="index" collection="searchTagsArr"
-                     open="(" separator="," close=")">
-                #{item2}
-            </foreach>
-        and meta like concat('%',#{searchKeyword},'%')
-        ) itm on itm.idx = it.idx
 
         left outer join (
         select t.* from (
@@ -394,7 +386,16 @@
         from items_tags_keys tk
         where tk.stat = 'S'
         ) t where t.tagidx = t.maxTagIdx
-        ) itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx
+        ) itk on itk.idx = it.idx
+
+        inner join (
+        select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
+            <foreach item="item2" index="index" collection="searchTagsArr"
+                     open="(" separator="," close=")">
+                #{item2}
+            </foreach>
+        and meta like concat('%',#{searchKeyword},'%')
+        ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
         </if>
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
         left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
@@ -521,14 +522,6 @@
         </if>
 
         <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
-            inner join (
-            select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
-            <foreach item="item2" index="index" collection="searchTagsArr"
-                     open="(" separator="," close=")">
-                #{item2}
-            </foreach>
-            and meta like concat('%',#{searchKeyword},'%')
-            ) itm on itm.idx = it.idx
 
             left outer join (
             select t.* from (
@@ -537,7 +530,16 @@
             from items_tags_keys tk
             where tk.stat = 'S'
             ) t where t.tagidx = t.maxTagIdx
-            ) itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx
+            ) itk on itk.idx = it.idx
+
+            inner join (
+            select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
+            <foreach item="item2" index="index" collection="searchTagsArr"
+                     open="(" separator="," close=")">
+                #{item2}
+            </foreach>
+            and meta like concat('%',#{searchKeyword},'%')
+            ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
         </if>
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
             left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
