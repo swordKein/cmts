@@ -5447,7 +5447,7 @@ public class TestService implements TestServiceImpl {
             cnt++;
         }
 
-        String fileNameContent = "METAS_BY_CONTENTS_WITH_ASSET_180514.tsv";
+        String fileNameContent = "METAS_BY_CONTENTS_WITH_ASSET_180611.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
     }
@@ -5684,7 +5684,7 @@ public class TestService implements TestServiceImpl {
             cnt++;
         }
 
-        String fileNameContent = "METAS_BY_SERIES_WITH_OTV_180514.tsv";
+        String fileNameContent = "METAS_BY_SERIES_WITH_OTV_180611.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
     }
@@ -6403,10 +6403,10 @@ public class TestService implements TestServiceImpl {
     @Override
     public void writeMetaDicKeywordsByTypes() throws Exception {
         List<String> types = new ArrayList();
-        types.add("METASEMOTION");
-        types.add("METASWHAT");
-        types.add("METASWHEN");
-        types.add("METASWHERE");
+        //types.add("METASEMOTION");
+        //types.add("METASWHAT");
+        //types.add("METASWHEN");
+        //types.add("METASWHERE");
         types.add("METASWHO");
 
         String seperator = "\t";
@@ -6483,7 +6483,7 @@ public class TestService implements TestServiceImpl {
                 cnt++;
             }
 
-            String fileNameContent = "META_DIC_TYPE_"+type+"_180529.tsv";
+            String fileNameContent = "META_DIC_TYPE_"+type+"_180614.tsv";
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
     }
