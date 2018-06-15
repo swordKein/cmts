@@ -6021,7 +6021,6 @@ public class TestService implements TestServiceImpl {
 //countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("TOTAL_COUNT", countAll);
 
         logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
         if(countAll > 0) {
@@ -6068,6 +6067,9 @@ public class TestService implements TestServiceImpl {
                 }
 
                 resultObj.add("CONTENTS", contents);
+
+                resultObj.addProperty("TOTAL_COUNT", contents.size());
+
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 
                 String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
@@ -6494,6 +6496,7 @@ public class TestService implements TestServiceImpl {
     public void checkJsonFileDup() throws Exception {
         //String fileName = "E:\\0608.tar\\0608\\0608\\METAS_MOVIE_2018060814.json";
         String fileName = "D:\\upload\\METAS_MOVIE_2018061414.json";
+        fileName = "E:\\20180614.tar\\20180614\\METAS_MOVIE_2018061415.json";
         List<CcubeContent> result = new ArrayList();
         int cntAll = 0;
         String line = "";

@@ -261,9 +261,22 @@ public class CcubeService implements CcubeServiceImpl {
         return origObj;
     }
 
+    public static Map<String, Object> insertedCidList;
+
+    private boolean isExistCid(String cid) {
+        boolean isExist = false;
+        if (insertedCidList.get(cid) != null) {
+            isExist = true;
+        } else {
+            insertedCidList.put(cid, null);
+        }
+        return isExist;
+    }
+
     @Override
     public JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
         if (contentsArr == null) contentsArr = new JsonArray();
+        if (insertedCidList == null) insertedCidList = new HashMap<String, Object>();
 
         if (reqMap != null) {
             int itemIdx = 0;
@@ -289,22 +302,29 @@ public class CcubeService implements CcubeServiceImpl {
                 if (itemInfo != null) {
                     JsonObject newItem = new JsonObject();
                     int limitSize = 199;
-                    if(type.contains("CcubeContent")) {
-                        newItem.addProperty("CONTENT_ID", contentId);
-                        String title = itemInfo.getTitle();
+                    /* contentId or seriesId 기준으로 중복 제거 */
+                    if (isExistCid(contentId) || isExistCid(seriesId)) {
 
-                        if (title.length() < limitSize) limitSize = title.length();
-                        title = title.substring(0,limitSize);
+                        if(type.contains("CcubeContent")) {
+                            newItem.addProperty("CONTENT_ID", contentId);
+                            String title = itemInfo.getTitle();
 
-                        newItem.addProperty("META_CONTENT_TITLE", title);
-                    } else if(type.contains("CcubeSeries")) {
-                        newItem.addProperty("SERIES_ID", seriesId);
-                        String title = itemInfo.getTitle();
-                        if (title.length() < limitSize) limitSize = title.length();
-                        title = title.substring(0,limitSize);
+                            if (title.length() < limitSize) limitSize = title.length();
+                            title = title.substring(0,limitSize);
 
-                        newItem.addProperty("META_SERIES_TITLE", title);
+                            newItem.addProperty("META_CONTENT_TITLE", title);
+                        } else if(type.contains("CcubeSeries")) {
+                            newItem.addProperty("SERIES_ID", seriesId);
+                            String title = itemInfo.getTitle();
+                            if (title.length() < limitSize) limitSize = title.length();
+                            title = title.substring(0,limitSize);
+
+                            newItem.addProperty("META_SERIES_TITLE", title);
+                        }
+
                     }
+
+                    //System.out.println("#ELOG insertedCidList :: "+insertedCidList.toString());
 
                     // items_tags_metas를 읽어와서 Obj에 매핑
                     newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
