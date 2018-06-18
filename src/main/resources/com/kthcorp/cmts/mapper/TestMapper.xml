@@ -397,8 +397,8 @@
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 00:00:00')
-				and concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 23:59:59')
+            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 23:59:59')
 
             ) a
         order by a.itemidx asc
@@ -422,8 +422,8 @@
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 00:00:00')
-				and concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 23:59:59')
+            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 23:59:59')
             ) a
           ) b
 
@@ -487,8 +487,8 @@
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 00:00:00')
-				and concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 23:59:59')
+            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 23:59:59')
             ) a
         order by a.itemidx asc
         limit ${pageSize} offset ${offsetIdx}
@@ -509,8 +509,8 @@
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 00:00:00')
-				and concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 23:59:59')
+            and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(date_sub(now(), INTERVAL 5 DAY), '%Y-%m-%d'), ' 23:59:59')
             ) a
           ) b
 

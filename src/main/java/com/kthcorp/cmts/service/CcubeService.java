@@ -303,7 +303,9 @@ public class CcubeService implements CcubeServiceImpl {
                     JsonObject newItem = new JsonObject();
                     int limitSize = 199;
                     /* contentId or seriesId 기준으로 중복 제거 */
-                    if (isExistCid(contentId) || isExistCid(seriesId)) {
+                    System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isExistCid(seriesId));
+
+                    if (!isExistCid(contentId) || !isExistCid(seriesId)) {
 
                         if(type.contains("CcubeContent")) {
                             newItem.addProperty("CONTENT_ID", contentId);
@@ -322,57 +324,58 @@ public class CcubeService implements CcubeServiceImpl {
                             newItem.addProperty("META_SERIES_TITLE", title);
                         }
 
-                    }
+                        //System.out.println("#ELOG insertedCidList :: "+insertedCidList.toString());
 
-                    //System.out.println("#ELOG insertedCidList :: "+insertedCidList.toString());
+                        // items_tags_metas를 읽어와서 Obj에 매핑
+                        //System.out.println("#ELOG newItem-first:"+newItem.toString());
+                        newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
+                        //System.out.println("#ELOG newItem-second:"+newItem.toString());
+                        //System.out.println("#ELOG getTagsMetasObj:"+newItem.toString());
 
-                    // items_tags_metas를 읽어와서 Obj에 매핑
-                    newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
-                    //System.out.println("#ELOG getTagsMetasObj:"+newItem.toString());
-
-                    // items_metas에서 award를 가져와서 Obj에 매핑
-                    String awardStr = "";
-                    if (itemInfo.getMetaList() != null) {
-                        for (ItemsMetas im : itemInfo.getMetaList()) {
-                            if (im != null && im.getMtype() != null && im.getMeta() != null
-                                    && "award".equals(im.getMtype())) {
-                                awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
-                                awardStr = CommonUtil.removeTag(awardStr);
-                                awardStr = CommonUtil.removeAllSpec1(awardStr);
+                        // items_metas에서 award를 가져와서 Obj에 매핑
+                        String awardStr = "";
+                        if (itemInfo.getMetaList() != null) {
+                            for (ItemsMetas im : itemInfo.getMetaList()) {
+                                if (im != null && im.getMtype() != null && im.getMeta() != null
+                                        && "award".equals(im.getMtype())) {
+                                    awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
+                                    awardStr = CommonUtil.removeTag(awardStr);
+                                    awardStr = CommonUtil.removeAllSpec1(awardStr);
+                                }
                             }
                         }
+                        limitSize = 3999;
+                        //limitSize = 699;
+                        if (awardStr.length() < limitSize) limitSize = awardStr.length();
+                        awardStr = awardStr.substring(0,limitSize);
+                        awardStr = awardStr.replace("FAIL","");
+
+                        newItem.addProperty("META_AWARD",awardStr);
+
+                        /* LIST_SUBGENRE */
+                        newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
+
+                        // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
+                        List<String> origTypes = null;
+                        if(type.contains("CcubeContent")) {
+                            origTypes = this.getContentOutputMetaTypes();
+                        } else if(type.contains("CcubeSeries")) {
+                            origTypes = this.getSeriesOutputMetaTypes();
+                        }
+                        newItem = JsonUtil.setEmptyMetasAndReplaceComma(newItem, origTypes);
+
+
+                        /* 임시
+                        // 검색메타 삭제
+                        if (newItem.get("META_SEARCH") != null) {
+                            newItem.remove("META_SEARCH");
+                            newItem.addProperty("META_SEARCH","");
+                        }
+                        */
+
+                        contentsArr.add(newItem);
+                        //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
                     }
-                    limitSize = 3999;
-                    //limitSize = 699;
-                    if (awardStr.length() < limitSize) limitSize = awardStr.length();
-                    awardStr = awardStr.substring(0,limitSize);
-                    awardStr = awardStr.replace("FAIL","");
-
-                    newItem.addProperty("META_AWARD",awardStr);
-
-                    /* LIST_SUBGENRE */
-                    newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
-
-                    // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
-                    List<String> origTypes = null;
-                    if(type.contains("CcubeContent")) {
-                        origTypes = this.getContentOutputMetaTypes();
-                    } else if(type.contains("CcubeSeries")) {
-                        origTypes = this.getSeriesOutputMetaTypes();
-                    }
-                    newItem = JsonUtil.setEmptyMetasAndReplaceComma(newItem, origTypes);
-
-
-                    /* 임시
-                    // 검색메타 삭제
-                    if (newItem.get("META_SEARCH") != null) {
-                        newItem.remove("META_SEARCH");
-                        newItem.addProperty("META_SEARCH","");
-                    }
-                    */
-
-                    contentsArr.add(newItem);
-                    //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
                 }
 
             }

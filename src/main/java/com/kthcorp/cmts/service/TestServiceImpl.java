@@ -221,4 +221,6 @@ public interface TestServiceImpl {
     void writeMetaDicKeywordsByTypes() throws Exception;
 
     void checkJsonFileDup() throws Exception;
+
+    void checkJsonFileToCsv() throws Exception;
 }

@@ -676,6 +676,11 @@ public class TestServiceTestImpl {
 		//testService.insCcubeMovies(reqList);
 	}
 
+	@Test
+	public void test_checkJsonFileToCsv() throws Exception {
+		testService.checkJsonFileToCsv();
+	}
+
 
 	@Test
 	public void test_writeCcubeOutputToJsonByType() throws Exception {

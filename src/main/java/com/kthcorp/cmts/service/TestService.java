@@ -6017,7 +6017,6 @@ public class TestService implements TestServiceImpl {
         } else {
             countAll = testMapper.cntContentsOrigItemsAll();
         }
-
 //countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
@@ -6056,6 +6055,9 @@ public class TestService implements TestServiceImpl {
 
                             if (oldItemIdx > 0) {
                                 ins.put("idx", oldItemIdx);
+
+                                //System.out.println("#ELOG ins-reqItem:"+ins.toString());
+
                                 contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
 
                                 cnt++;
@@ -6496,7 +6498,8 @@ public class TestService implements TestServiceImpl {
     public void checkJsonFileDup() throws Exception {
         //String fileName = "E:\\0608.tar\\0608\\0608\\METAS_MOVIE_2018060814.json";
         String fileName = "D:\\upload\\METAS_MOVIE_2018061414.json";
-        fileName = "E:\\20180614.tar\\20180614\\METAS_MOVIE_2018061415.json";
+        //fileName = "E:\\20180614.tar\\20180614\\METAS_MOVIE_2018061415.json";
+        fileName = "D:\\upload\\T180618\\METAS_MOVIE_2018061815.json";
         List<CcubeContent> result = new ArrayList();
         int cntAll = 0;
         String line = "";
@@ -6557,6 +6560,92 @@ public class TestService implements TestServiceImpl {
                 }
 
             }
+
+
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
+    }
+
+
+
+    @Override
+    public void checkJsonFileToCsv() throws Exception {
+        //String fileName = "E:\\0608.tar\\0608\\0608\\METAS_MOVIE_2018060814.json";
+        String fileName = "D:\\upload\\METAS_MOVIE_2018061414.json";
+        //fileName = "E:\\20180614.tar\\20180614\\METAS_MOVIE_2018061415.json";
+        fileName = "D:\\upload\\T180618\\METAS_MOVIE_2018061815.json";
+        List<CcubeContent> result = new ArrayList();
+        int cntAll = 0;
+        String line = "";
+        String origStr = "";
+        List<String> cids = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "utf-8"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                origStr += line;
+            }
+
+            JsonObject allObj = JsonUtil.getJsonObject(origStr);
+            JsonArray allArr = allObj.get("CONTENTS").getAsJsonArray();
+
+
+            String seperator = "\t";
+            String lineFeed = System.getProperty("line.separator");
+
+            String resultStr = "";
+            resultStr = "content_id" + seperator + "content_title"
+                    + lineFeed;
+
+            String itemStr = "";
+
+            int ccnt = 0;
+            for(JsonElement je : allArr) {
+                JsonObject jo = (JsonObject) je;
+
+                System.out.println("#jo:"+jo.toString());
+
+                String cid = jo.get("CONTENT_ID").getAsString();
+                String title = jo.get("CONTENT_TITLE").getAsString();
+
+                if (!"".equals(cid)) {
+                    cids.add(cid);
+                    itemStr = cid + seperator + title;
+
+                    resultStr += itemStr + lineFeed;
+                }
+
+                ccnt++;
+            }
+
+            System.out.println("#allObj:"+ cids.size());
+
+
+            Map<String, Long> counts =
+                    cids.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+
+            Set entrySet = counts.entrySet();
+            Iterator it = entrySet.iterator();
+
+            while(it.hasNext()){
+                Map.Entry me = (Map.Entry)it.next();
+                String cid = (String) me.getKey();
+                long cnt= (long) me.getValue();
+                if (cnt > 1) {
+                    System.out.println("#dup cid:"+cid+" / cnt:"+cnt);
+                }
+
+            }
+
+
+            String fileNameContent = "LIST_CONTENTS_180618.tsv";
+            int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
 
             reader.close();
