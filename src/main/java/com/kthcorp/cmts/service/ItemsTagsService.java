@@ -1322,6 +1322,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     /* 해당 items의 tagcnt를 최종 tagidx로 수정한다 */
                     // 아래 마지막 라인 참조
+                    /* 해당 items_stat 를 승인으로 업데이트 한다 */
+                    reqIt = new Items();
+                    reqIt.setIdx(itemid);
+                    reqIt.setStat("ST");
+                    int rti = itemsMapper.insItemsStat(reqIt);
                 }
 
                 /* 기승인된 메타가 있을 경우, items_tags_metas 만 수정한다 */
