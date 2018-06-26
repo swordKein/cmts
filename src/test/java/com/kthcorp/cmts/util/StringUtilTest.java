@@ -828,4 +828,11 @@ public class StringUtilTest {
         List<String> s = DateUtils.getArrayDateFromInput(-6);
         System.out.println("#result:"+s.toString());
     }
+
+    @Test
+    public void test_filterLastGenre() {
+        String req = "미국 영화";
+        req = StringUtil.filterLastGenre(req);
+        System.out.println("#RES:"+req);
+    }
 }
