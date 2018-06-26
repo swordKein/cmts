@@ -494,6 +494,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonObject jo = (JsonObject) je;
                     if (jo != null && jo.get("word") != null) {
                         String as = jo.get("word").getAsString();
+
+                        // last sub_genre filter
+                        as = StringUtil.filterLastGenre(as);
+
                         if (!"".equals(as.trim())) {
                             subgenreArr.add(as);
                         }
