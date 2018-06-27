@@ -196,6 +196,7 @@ public class CcubeService implements CcubeServiceImpl {
         return resMap;
     }
 
+    // LIST_ -> META_
     private JsonObject getTagsMetasObj(JsonObject origObj, List<ItemsTags> tagsMetasList) throws Exception {
         if(origObj == null) origObj = new JsonObject();
 
@@ -255,6 +256,7 @@ public class CcubeService implements CcubeServiceImpl {
                 meta = meta.substring(0,limitSize);
 
                 origObj.addProperty(mtype, meta);
+                //System.out.println("#ELOG getTagsMetasObj.result:"+origObj.toString());
             }
         }
 
@@ -329,7 +331,7 @@ public class CcubeService implements CcubeServiceImpl {
                         // items_tags_metas를 읽어와서 Obj에 매핑
                         //System.out.println("#ELOG newItem-first:"+newItem.toString());
                         newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
-                        //System.out.println("#ELOG newItem-second:"+newItem.toString());
+                        System.out.println("#ELOG newItem-second:"+newItem.toString());
                         //System.out.println("#ELOG getTagsMetasObj:"+newItem.toString());
 
                         // items_metas에서 award를 가져와서 Obj에 매핑
@@ -352,8 +354,8 @@ public class CcubeService implements CcubeServiceImpl {
 
                         newItem.addProperty("META_AWARD",awardStr);
 
-                        /* LIST_SUBGENRE */
-                        newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
+                        /* META_SUBGENRE */
+                        //newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
 
                         // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
                         List<String> origTypes = null;
@@ -506,9 +508,12 @@ public class CcubeService implements CcubeServiceImpl {
                     if (reqItems != null) {
                         logger.info("#SCHEDULE processCcubeOutputToJson.getCcubeOutputListStandby: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
                         for (Map<String, Object> ins : reqItems) {
+
+                            logger.info("#SCHEDULE processCcubeOutputToJson.reqMap:"+ins.toString());
                             contents = this.getJsonArrayForCcubeOutput(contents, type, ins);
+
                             uptKeyAndTagCntList.put((Long) ins.get("hidx"), (Integer) ins.get("uptcnt"));
-                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                            logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
                         }
                     }
 

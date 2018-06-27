@@ -453,6 +453,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             String[] arrSubGenres = subGenreMix.split(",");
             for (String as : arrSubGenres) {
 
+                // last sub_genre filter
                 String as2 = as.trim();
                 as2 = StringUtil.filterGenres(as2);
 
@@ -476,6 +477,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return resultObj2;
     }
 
+    /*
+        LIST_SUBGENRE -> META_SUBGENRE
+     */
     @Override
     public JsonObject getSubgenresString(int itemIdx, JsonObject resultObj2) {
         resultObj2 = this.getSubgenres(itemIdx, resultObj2);
@@ -484,8 +488,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         Set subgenreArr = new HashSet();
         String subgenreStr = "";
 
+        //System.out.println("#ELOG itemsTagsMetas ALL:"+resultObj2.toString());
+
         if (resultObj2 != null && resultObj2.get("LIST_SUBGENRE") != null) {
-            System.out.println("#ELOG getTagsMeta for SUBGENRE:"+resultObj2.get("LIST_SUBGENRE").toString());
+            System.out.println("#ELOG jsonArray for LIST_SUBGENRE:"+resultObj2.get("LIST_SUBGENRE").toString());
 
             JsonArray listSubgenres = resultObj2.get("LIST_SUBGENRE").getAsJsonArray();
             resultObj2.remove("LIST_SUBGENRE");

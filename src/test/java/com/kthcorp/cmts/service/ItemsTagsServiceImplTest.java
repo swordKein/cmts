@@ -121,7 +121,7 @@ public class ItemsTagsServiceImplTest {
 
 	@Test
 	public void test_getSubgenres() throws Exception {
-		JsonObject result = itemsTagsService.getSubgenres(21951, new JsonObject());
+		JsonObject result = itemsTagsService.getSubgenres(9473, new JsonObject());
 		System.out.println("#RES:"+result.toString());
 	}
 
