@@ -110,7 +110,7 @@ public class CcubeServiceTest {
 	@Test
 	public void test_getJsonArrayForCcubeOutput() throws Exception {
 		Map<String, Object> ins = new HashMap();
-		ins.put("idx",21825);
+		ins.put("idx",22);
 		JsonArray contents = ccubeService.getJsonArrayForCcubeOutput(null, "CcubeContent", ins);
 		System.out.println("#RES:"+contents.toString());
 	}

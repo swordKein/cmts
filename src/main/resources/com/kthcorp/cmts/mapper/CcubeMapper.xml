@@ -326,7 +326,15 @@
 
     <select id="getCcubeOutputListStandby" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
         /* getCcubeOutputListStandby */
-        select co.*, it.title, it.title2, it.director, it.year, it.cid, it.type from ccube_output co
+        select co.*, it.title, it.title2, it.director, it.year, it.cid, it.type
+        <if test='type != null and type == "CcubeContent"'>
+              , coo.CONTENT_ID as content_id
+              , coo.MASTER_CONTENT_ID as master_content_id
+        </if>
+        <if test='type != null and type == "CcubeSeries"'>
+              , coo.SERIES_ID as series_id
+        </if>
+        from ccube_output co
         inner join items it on it.idx = co.idx
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         <if test='type != null and type == "CcubeContent"'>
