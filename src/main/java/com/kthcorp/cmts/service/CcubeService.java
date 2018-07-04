@@ -304,7 +304,8 @@ public class CcubeService implements CcubeServiceImpl {
                 if (itemInfo != null) {
                     JsonObject newItem = new JsonObject();
                     int limitSize = 199;
-                    /* contentId or seriesId 기준으로 중복 제거 */
+
+                    /* ##PAHSE #2 contentId or seriesId 기준으로 중복 제거 */
                     System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isExistCid(seriesId));
 
                     if (!isExistCid(contentId) || !isExistCid(seriesId)) {

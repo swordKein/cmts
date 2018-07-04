@@ -346,7 +346,7 @@
             , co.master_content_id
             , it.idx as itemidx
             , iss.regdate
-            from ccube_contents co
+            from ccube_contents_orig co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -369,7 +369,7 @@
             , co.kmrb_id
             , co.master_content_id
             , it.idx as itemidx
-            from ccube_contents co
+            from ccube_contents_orig co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -393,7 +393,7 @@
             , co.master_content_id
             , it.idx as itemidx
             , iss.regdate
-            from ccube_contents co
+            from ccube_contents_orig co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -418,7 +418,7 @@
             , co.kmrb_id
             , co.master_content_id
             , it.idx as itemidx
-            from ccube_contents co
+            from ccube_contents_orig co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -442,7 +442,7 @@
             , co.year
             , co.director
             , it.idx as itemidx
-            from ccube_series co
+            from ccube_series_orig co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -462,7 +462,7 @@
             , co.year
             , co.director
             , it.idx as itemidx
-            from ccube_series co
+            from ccube_series_orig co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -483,7 +483,7 @@
             , co.year
             , co.director
             , it.idx as itemidx
-            from ccube_series co
+            from ccube_series_orig co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
@@ -505,7 +505,7 @@
             , co.year
             , co.director
             , it.idx as itemidx
-            from ccube_series co
+            from ccube_series_orig co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
