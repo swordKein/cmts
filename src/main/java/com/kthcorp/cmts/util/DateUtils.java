@@ -17,6 +17,40 @@ public class DateUtils {
 	public static final int MONTHFIRST = 4;
 	public static final int MONTHEND = 5;
 
+	// 주어진 날짜 String을 규격에 맞춘 String으로 리턴
+	public static String getDateStr(String dateStr) {
+		String result = "";
+		try {
+			if (dateStr.length() == 8) {
+				String new_yy = dateStr.substring(0, 4);
+				String new_mm = dateStr.substring(4, 6);
+				String new_dd = dateStr.substring(6, 8);
+				result = new_yy + "-" + new_mm + "-" + new_dd + " 00:00:00.000";
+			} else if(dateStr.length() == 10) {
+				String new_yy = dateStr.substring(0, 4);
+				String new_mm = dateStr.substring(4, 6);
+				String new_dd = dateStr.substring(6, 8);
+				String new_hh = dateStr.substring(8,10);
+				result = new_yy + "-" + new_mm + "-" + new_dd + " " + new_hh + ":00:00.000";
+			}
+		} catch (Exception e) {}
+
+		return result;
+	}
+
+	// 주어진 날짜 String을 timestamp 으로 리턴
+	public static Timestamp getTimeFromStr(String dateStr) {
+		Timestamp timestamp = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+			Date parsedDate = dateFormat.parse(dateStr);
+			timestamp = new java.sql.Timestamp(parsedDate.getTime());
+		} catch (Exception e) {
+
+		}
+		return timestamp;
+	}
+
 	// 현재 날짜를 date type 으로 리턴
 	public static Date getCurrTime() {
 		Timestamp stamp = new Timestamp(System.currentTimeMillis());

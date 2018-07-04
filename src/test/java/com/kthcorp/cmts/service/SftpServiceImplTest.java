@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.kthcorp.cmts.util.DateUtils;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.pool.concurrent.monitor.TaskPoolMonitorThread;
 import com.kthcorp.cmts.util.pool.concurrent.task.JobTask;
@@ -29,6 +30,17 @@ public class SftpServiceImplTest {
 	public void testPollingCcubeSftp() throws Exception{
 		sftpService.pollingCcubeSftp();
 	}
+
+	@Test
+	public void testManualCcubeSftp() throws Exception{
+		sftpService.manualCcubeSftp();
+	}
+
+	@Test
+	public void test_date() throws Exception {
+		System.out.println("#res::"+DateUtils.getTimeFromStr(DateUtils.getDateStr("2018062813")));
+	}
+
 
 	@Test
 	public void test_processDownloadMultipleXmlFileToDB() throws Exception {

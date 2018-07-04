@@ -32,6 +32,9 @@ public interface CcubeMapper {
     int insCcubeContentOrig(CcubeContent req);
     int insCcubeSeriesOrig(CcubeSeries req);
 
+    int insCcubeContentOrigManual(CcubeContent req);
+    int insCcubeSeriesOrigManual(CcubeSeries req);
+
     List<CcubeContent> getCcubeContentByYjid();
     List<CcubeContent> getCcubeContentByYjidNot();
 

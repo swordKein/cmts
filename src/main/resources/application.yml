@@ -176,7 +176,7 @@ ccube_sftp:
   #workdir: /home/daisy/ccube_work/
   workdir: d:\\upload\\
   #downdir: /home/daisy/service/cmts
-  downdir: /home/daisy/download
+  downdir: /home/daisy/down_tmp
   downext: xml
   end_after_movedir: /home/daisy/download/DELETE
   uploaddir: /home/daisy/download/META_EXT/
