@@ -6073,9 +6073,9 @@ public class TestService implements TestServiceImpl {
 
                 }
 
-                resultObj.add("CONTENTS", contents);
-
                 resultObj.addProperty("TOTAL_COUNT", contents.size());
+
+                resultObj.add("CONTENTS", contents);
 
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 
