@@ -4604,7 +4604,7 @@ public class TestService implements TestServiceImpl {
                 //rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 Set<String> metaSingleArr1 = null;
-                if (!"".equals(esWord1)) metaSingleArr1 = dicService.getMetaSingleFromGenre(esWord1, "meta_single");
+                if (!"".equals(esWord1)) metaSingleArr1 = dicService.getMetaSingleFromGenre(metaSingleArr1, esWord1, "meta_single");
                 if (metaSingleArr1 != null) meta_single1 = metaSingleArr1.toString();
                 System.out.println("#meta_single1:"+meta_single1);
             }
@@ -4616,7 +4616,7 @@ public class TestService implements TestServiceImpl {
                 //rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 Set<String> metaSingleArr2 = null;
-                if (!"".equals(esWord2)) metaSingleArr2 = dicService.getMetaSingleFromGenre(esWord2, "meta_single");
+                if (!"".equals(esWord2)) metaSingleArr2 = dicService.getMetaSingleFromGenre(metaSingleArr2, esWord2, "meta_single");
                 if (metaSingleArr2 != null) meta_single2 = metaSingleArr2.toString();
                 System.out.println("#meta_single2:"+meta_single2);
             }
@@ -4628,7 +4628,7 @@ public class TestService implements TestServiceImpl {
                 //rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 Set<String> metaSingleArr3 = null;
-                if (!"".equals(esWord3)) metaSingleArr3 = dicService.getMetaSingleFromGenre(esWord3, "meta_single");
+                if (!"".equals(esWord3)) metaSingleArr3 = dicService.getMetaSingleFromGenre(metaSingleArr3, esWord3, "meta_single");
                 if (metaSingleArr3 != null) meta_single3 = metaSingleArr3.toString();
                 System.out.println("#meta_single3:"+meta_single3);
             }
@@ -4640,7 +4640,7 @@ public class TestService implements TestServiceImpl {
                 //rtItm1 = itemsService.insItemsMetas(newMeta);
 
                 Set<String> metaSingleArr4 = null;
-                if (!"".equals(esWord4)) metaSingleArr4 = dicService.getMetaSingleFromGenre(esWord4, "meta_single");
+                if (!"".equals(esWord4)) metaSingleArr4 = dicService.getMetaSingleFromGenre(metaSingleArr4, esWord4, "meta_single");
                 if (metaSingleArr4 != null) meta_single4 = metaSingleArr4.toString();
                 System.out.println("#meta_single4:"+meta_single4);
             }

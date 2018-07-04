@@ -111,17 +111,17 @@ public class ItemsTagsServiceImplTest {
 
 		reqStr = "[{\"type\":\"who\", \"meta\":\"갱스터\"}, {\"type\":\"what\", \"meta\":\"범죄\"}" +
 				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"who\", \"meta\":\"깡패\"}" +
-				", {\"type\":\"who\", \"meta\":\"마피아\"}]";
+				", {\"type\":\"who\", \"meta\":\"마피아\"}, {\"type\":\"who\", \"meta\":\"좀비\"}, {\"type\":\"who\", \"meta\":\"살인마\"}]";
 
 
-		JsonArray resultArr = itemsTagsService.getMetaSubgenre(21825, reqStr);
+		JsonArray resultArr = itemsTagsService.getMetaSubgenre(730, reqStr);
 
 		System.out.println("#RESULT:"+resultArr.toString());
 	}
 
 	@Test
 	public void test_getSubgenres() throws Exception {
-		JsonObject result = itemsTagsService.getSubgenres(9473, new JsonObject());
+		JsonObject result = itemsTagsService.getSubgenres(645, new JsonObject());
 		System.out.println("#RES:"+result.toString());
 	}
 

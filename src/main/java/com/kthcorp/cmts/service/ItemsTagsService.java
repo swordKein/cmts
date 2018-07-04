@@ -2060,10 +2060,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return result;
     }
 
-    private Set<String> getCombindEsAndGenre(String esReturnWord, String itemGenres) {
-        Set<String> resultSet = null;
+    private Set<String> getCombindEsAndGenre(Set<String> resultSet, String esReturnWord, String itemGenres) {
+        if (resultSet == null) resultSet = new HashSet();
+
         if (!"".equals(esReturnWord) && !"".equals(itemGenres)) {
-            resultSet = new HashSet<String>();
 
             if (itemGenres.trim().contains(" ")) {
                 String genreR[] = itemGenres.trim().split(" ");
@@ -2110,13 +2110,35 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 // 입력 reqStr을 엘라스틱 서치를 통해 유사도 평가
                 JsonObject resultEs = null;
-                List<String> esReturnArr = new ArrayList<String>();
+                //Set<String> esReturnArr = new HashSet<String>();
+                List<String> esReturnArr = new ArrayList<>();
+
                 String esReturnWord = "";
                 String meta_single = "";
                 String meta_genre = "";
                 String esWords = "";
                 JsonArray words = null;
                 JsonObject hits = null;
+
+                // 저장된 장르를 가져온다.
+                ItemsMetas reqIm = new ItemsMetas();
+                reqIm.setIdx(itemid);
+                reqIm.setMtype("genre");
+                ItemsMetas genreMetas = itemsMetasMapper.getItemsMetas(reqIm);
+                String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
+                System.out.println("#item_genre:"+itemGenre);
+
+                // 다른 것과 아무 상관없이 특정 키워드가 있으면 ES 검색 결과에 그 장르명을 추가한다. dic_subgenre_genres의 mtype=genre_word
+                Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
+                System.out.println("#ELOG genre_add_arr by genre_add:"+genre_add_arr.toString());
+                // 장르 추가가 존재한다면 미리 장르 조합과 결합한다.
+                Set<String> combinedEsWordAndGenres = new HashSet();
+                if (genre_add_arr != null) {
+                    for(String ga : genre_add_arr) {
+                        combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, ga, itemGenre);
+                    }
+                }
+                System.out.println("#ELOG combinedEsWordAndGenres by genre_add:"+combinedEsWordAndGenres.toString());
 
                 System.out.println("#requestEs for reqStr:" + reqStr);
                 resultEs = getSearchedEsData("idx_subgenre", "keywords"
@@ -2168,11 +2190,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     */
 
                     // 토픽 TOP 1 을 dic_subgenre_genres 의 mtype=meta_single과 대조하여 추가어 취득 후 resultArr에 저장
-                    Set<String> metaSingleArr = dicService.getMetaSingleFromGenre(esReturnWord, "meta_single");
+                    Set<String> metaSingleArr = dicService.getMetaSingleFromGenre(null, esReturnWord, "meta_single");
+                    System.out.println("#ELOG metaSingleArr final ::"+metaSingleArr.toString());
+
                     if (metaSingleArr != null && metaSingleArr.size() > 0) {
                         meta_single = metaSingleArr.toString();
                         meta_single = StringUtil.removeBracket(meta_single);
                     }
+
 
                     System.out.println("#meta_single:" + metaSingleArr);
                     if (!"".equals(meta_single)) {
@@ -2184,17 +2209,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     }
 
                     // 토픽 TOP 1과 genre를 dic_subgenre_genres 의 mtype=meta_genre 와 대조하여 추가어 취득 후 resultArr에 저장
-                    // 저장된 장르를 가져온다.
-                    ItemsMetas reqIm = new ItemsMetas();
-                    reqIm.setIdx(itemid);
-                    reqIm.setMtype("genre");
-                    ItemsMetas genreMetas = itemsMetasMapper.getItemsMetas(reqIm);
-                    String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
-                    System.out.println("#item_genre:"+itemGenre);
 
                     // 장르가 있으면 ES토픽___장르  조합으로 사전과 대조하여 리스트 추출
                     if (!"".equals(itemGenre)) {
-                        Set<String> combinedEsWordAndGenres = this.getCombindEsAndGenre(esReturnWord, itemGenre);
+                        combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, esReturnWord, itemGenre);
                         System.out.println("#combinedEsWordAndGenres:"+combinedEsWordAndGenres.toString());
 
                         Set<String> metaGenreArr = dicService.getMetaGenreFromGenre(combinedEsWordAndGenres, "meta_genre");
