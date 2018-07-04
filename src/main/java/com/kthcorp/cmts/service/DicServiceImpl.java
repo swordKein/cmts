@@ -102,7 +102,9 @@ public interface DicServiceImpl {
 
     List<String> getKeywordTypes();
 
-    Set getMetaSingleFromGenre(String genre, String mtype);
+    Set getMetaSingleFromGenre(Set<String> metaSingleArr, String genre, String mtype);
+
+    Set getGenreAddByReqKeywords(String reqStr, String mtype);
 
     Set getMetaGenreFromGenre(Set<String> genres, String mtype);
 

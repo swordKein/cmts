@@ -208,7 +208,7 @@
         select idx, mtype, genre, meta, regid, regdate
         from dic_subgenre_genres
         where mtype = #{value}
-            <if test='value != "origin"'>
+            <if test='value != "origin" and value != "meta_single" and value != "genre_add"'>
             or mtype = 'rating'
             </if>
     </select>

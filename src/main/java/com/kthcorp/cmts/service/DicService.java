@@ -1021,14 +1021,16 @@ public class DicService implements DicServiceImpl {
 
     static List<DicSubgenre> dicMetaSingle = null;
     static List<DicSubgenre> dicMetaGenre = null;
-
+    static List<DicSubgenre> dicGenreAdd = null;
 
     @Override
-    public Set getMetaSingleFromGenre(String genre, String mtype) {
+    public Set getMetaSingleFromGenre(Set<String> result, String genre, String mtype) {
+        if (result == null) result = new HashSet();
+
         genre = genre.trim();
         if (dicMetaSingle == null) dicMetaSingle = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
-        Set result = new HashSet();
+        //Set result = new HashSet();
         if(genre.trim().contains(" ")) {
             String[] origGenres = genre.split(" ");
             Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);
@@ -1048,6 +1050,45 @@ public class DicService implements DicServiceImpl {
                 String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
 
                 if(ds1.equals(origGenre)) {
+                    result.add(ds.getMeta());
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Set getGenreAddByReqKeywords(String reqStr, String mtype) {
+        reqStr = reqStr.trim();
+        if (dicGenreAdd == null) dicGenreAdd = dicKeywordsMapper.getDicSubgenreGenres(mtype);
+
+        Set result = new HashSet();
+        if(reqStr.trim().contains(" ")) {
+            String[] reqStrs = reqStr.split(" ");
+            //for (String rs : reqStrs) {
+            //    System.out.println("#ELOG getGenreAddByReqKeywords reqStrs:" + rs);
+            //}
+
+            //Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(reqStrs);
+
+            //System.out.println("#ELOG getGenreAddBYReqKeywords noDupMixedGenres:"+noDupMixedGenres);
+
+            for(DicSubgenre ds : dicGenreAdd) {
+                for(String origGenre : reqStrs) {
+                    String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+                    //System.out.println("#ELOG compare ogenre:"+origGenre+" vs DicGenre:"+ds1);
+
+                    if(ds1.equals(origGenre)) {
+                        result.add(ds.getMeta());
+                    }
+                }
+            }
+        } else if (!"".equals(reqStr.trim())) {
+            String reqStrs = reqStr;
+            for(DicSubgenre ds : dicGenreAdd) {
+                String ds1 = (ds != null && ds.getGenre() != null) ? ds.getGenre() : "";
+
+                if(ds1.equals(reqStrs)) {
                     result.add(ds.getMeta());
                 }
             }
