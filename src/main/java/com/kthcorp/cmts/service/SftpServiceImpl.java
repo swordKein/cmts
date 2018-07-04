@@ -4,10 +4,17 @@ package com.kthcorp.cmts.service;
 public interface SftpServiceImpl {
     int pollingCcubeSftp();
 
+    int manualCcubeSftp();
+
     int pollingSftpDirByExtAndAfterMove(String ip, int port, String user, String passwd
             , String fromPath, String fileExt, String toPath, String movePath);
 
+    int manualSftpDirByExtAndAfterMove(String ip, int port, String user, String passwd
+            , String fromPath, String fileExt, String toPath, String movePath);
+
     int processDownloadMultipleXmlFileToDB(String fileName);
+
+    int manualDownloadMultipleXmlFileToDB(String fileName);
 
     int uploadToCcube(String work_dir, String fileName);
 

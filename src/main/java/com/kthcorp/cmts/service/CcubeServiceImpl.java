@@ -49,5 +49,9 @@ public interface CcubeServiceImpl {
 
     int insCcubeSeries(CcubeSeries req);
 
+    int insCcubeContentManual(CcubeContent req);
+
+    int insCcubeSeriesManual(CcubeSeries req);
+
     int insCcubeOutput(Map<String, Object> req);
 }

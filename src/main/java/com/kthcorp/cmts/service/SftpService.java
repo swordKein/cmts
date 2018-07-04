@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.PostConstruct;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -86,6 +87,14 @@ public class SftpService implements SftpServiceImpl {
     }
 
     @Override
+    public int manualCcubeSftp() {
+        logger.info("#SftpService:pollingCcubeSftp:: fromDir:"+ccube_sftp_downdir);
+
+        return manualSftpDirByExtAndAfterMove(ccube_sftp_ip, ccube_sftp_port, ccube_sftp_user, ccube_sftp_passwd
+                , ccube_sftp_downdir, ccube_sftp_downext, ccube_sftp_workdir, ccube_sftp_end_after_movedir);
+    }
+
+    @Override
     public int pollingSftpDirByExtAndAfterMove(String ip, int port, String user, String passwd
             , String fromPath, String fileExt, String toPath, String movePath) {
         int rtcode = 0;
@@ -112,6 +121,51 @@ public class SftpService implements SftpServiceImpl {
                     // _orig 테이블은 등록 당시 stat = Y ,  태깅 완료 후 sftp 전송 완료 후 stat = S
                     // ccube_contents, ccube_series 테이블은 등록 당시 stat = Y , items 테이블 등록 시 stat = S
                     rt = this.processDownloadMultipleXmlFileToDB(ccube_sftp_workdir + fileName);
+
+                    if (rt > 0) {
+                        SftpClient.move_by_rename_command(fromPath + "/" + fileName, movePath + "/" + fileNameAddOk(fileName));
+                        rtcode++;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            client.disconnect();
+        }
+
+        return rtcode;
+    }
+
+
+    @Override
+    public int manualSftpDirByExtAndAfterMove(String ip, int port, String user, String passwd
+            , String fromPath, String fileExt, String toPath, String movePath) {
+        int rtcode = 0;
+
+        SftpClient client = new SftpClient();
+        client.setServer(ip);
+        client.setPort(port);
+        client.setLogin(user);
+        client.setPassword(passwd);
+        client.connect();
+
+        try {
+            //String fileName = SftpClient.getOneFileName(ccube_sftp_downdir, ccube_sftp_downext);
+            List<String> fileNames = SftpClient.getLs(fromPath, fileExt);
+            for (String fileName : fileNames) {
+                fileName = fileName.trim();
+
+                if (!"".equals(fileName)) {
+                    System.out.println("#CcubeSftp::Start Download file::" + fileName);
+                    int rt = SftpClient.retrieveFile(fromPath, fileName, toPath + fileName);
+                    System.out.println("#CcubeSftp::Start Download result::" + rt);
+
+                    // xml 파싱하여 ccube_contents_orig / ccube_contents,  or  ccube_series_orig / ccube_series 에 등록한다.
+                    // _orig 테이블은 등록 당시 stat = Y ,  태깅 완료 후 sftp 전송 완료 후 stat = S
+                    // ccube_contents, ccube_series 테이블은 등록 당시 stat = Y , items 테이블 등록 시 stat = S
+                    rt = this.manualDownloadMultipleXmlFileToDB(ccube_sftp_workdir + fileName);
 
                     if (rt > 0) {
                         SftpClient.move_by_rename_command(fromPath + "/" + fileName, movePath + "/" + fileNameAddOk(fileName));
@@ -167,6 +221,61 @@ public class SftpService implements SftpServiceImpl {
                 for(CcubeSeries cs : seriesList) {
                     cs.setStat("Y");
                     rt = ccubeService.insCcubeSeries(cs);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rt;
+    }
+
+
+    @Override
+    public int manualDownloadMultipleXmlFileToDB(String fileName) {
+        int rt = 0;
+
+        try {
+
+            Timestamp file_date = null;
+            try {
+
+                System.out.println("#MLOG fileName:"+fileName);
+                String fileNameStr[] = fileName.split(".xml");
+                String fileNameStr2 = fileNameStr[0];
+                String fileNameStr3[] = fileNameStr2.split("_");
+                String fileNameStr4 = "";
+                for (String fs : fileNameStr3) {
+                    fileNameStr4 = fs;
+                }
+                //String fileNameStr3 = fileNameStr2.substring(fileNameStr2.length() - 6, fileNameStr2.length() -1);
+                System.out.println("#MLOG fileNameDateStr:"+fileNameStr4);
+                file_date = DateUtils.getTimeFromStr(DateUtils.getDateStr(fileNameStr4));
+            } catch (Exception xe) { }
+
+            NodeList nodeList = null;
+            if (fileName.toUpperCase().contains("CONTENT")) {
+                nodeList = XmlUtil.readXmlFile(fileName, "CONTENT");
+
+                List<CcubeContent> contentList = this.convertNodeListToCcubeContentList(nodeList);
+                System.out.println("#contentList.size:"+contentList.size());
+
+                for(CcubeContent cc : contentList) {
+                    cc.setStat("Y");
+                    cc.setRegdate(file_date);
+                    rt = ccubeService.insCcubeContentManual(cc);
+                }
+
+            } else if (fileName.toUpperCase().contains("SERIES")) {
+                nodeList = XmlUtil.readXmlFile(fileName, "SERIES");
+
+                List<CcubeSeries> seriesList = this.convertNodeListToCcubeSeriesList(nodeList);
+                System.out.println("#seriesList.size:"+seriesList.size());
+
+                for(CcubeSeries cs : seriesList) {
+                    cs.setStat("Y");
+                    cs.setRegdate(file_date);
+                    rt = ccubeService.insCcubeSeriesManual(cs);
                 }
             }
 

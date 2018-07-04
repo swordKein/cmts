@@ -304,7 +304,8 @@ public class CcubeService implements CcubeServiceImpl {
                 if (itemInfo != null) {
                     JsonObject newItem = new JsonObject();
                     int limitSize = 199;
-                    /* contentId or seriesId 기준으로 중복 제거 */
+
+                    /* ##PAHSE #2 contentId or seriesId 기준으로 중복 제거 */
                     System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isExistCid(seriesId));
 
                     if (!isExistCid(contentId) || !isExistCid(seriesId)) {
@@ -714,6 +715,27 @@ public class CcubeService implements CcubeServiceImpl {
 
         // SID 중복제거 시리즈 등록
         rt = ccubeMapper.insCcubeSeries(req);
+
+        return rt;
+    }
+
+    @Override
+    public int insCcubeContentManual(CcubeContent req) {
+        int rt = 0;
+        rt = ccubeMapper.insCcubeContentOrigManual(req);
+
+        // CID 중복 제거 컨텐츠 등록
+        //rt = ccubeMapper.insCcubeContent(req);
+
+        return rt;
+    }
+    @Override
+    public int insCcubeSeriesManual(CcubeSeries req) {
+        int rt = 0;
+        rt = ccubeMapper.insCcubeSeriesOrigManual(req);
+
+        // SID 중복제거 시리즈 등록
+        //rt = ccubeMapper.insCcubeSeries(req);
 
         return rt;
     }
