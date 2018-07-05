@@ -106,7 +106,7 @@ public interface DicServiceImpl {
 
     Set getGenreAddByReqKeywords(String reqStr, String mtype);
 
-    Set getMetaGenreFromGenre(Set<String> genres, String mtype);
+    Set getMetaGenreFromGenre(Set<String> result, Set<String> genres, String mtype);
 
     Set getMixedGenreArrayFromGenre(String genre, String mtype);
 

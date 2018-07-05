@@ -111,22 +111,22 @@ public class ItemsTagsServiceImplTest {
 
 		reqStr = "[{\"type\":\"who\", \"meta\":\"갱스터\"}, {\"type\":\"what\", \"meta\":\"범죄\"}" +
 				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"who\", \"meta\":\"깡패\"}" +
-				", {\"type\":\"who\", \"meta\":\"마피아\"}, {\"type\":\"who\", \"meta\":\"좀비\"}, {\"type\":\"who\", \"meta\":\"살인마\"}]";
+				", {\"type\":\"who\", \"meta\":\"히어로\"}, {\"type\":\"who\", \"meta\":\"좀비\"}, {\"type\":\"who\", \"meta\":\"살인마\"}]";
 
 
-		JsonArray resultArr = itemsTagsService.getMetaSubgenre(730, reqStr);
+		JsonArray resultArr = itemsTagsService.getMetaSubgenre(13260, reqStr);
 
 		System.out.println("#RESULT:"+resultArr.toString());
 	}
 
 	@Test
 	public void test_getSubgenres() throws Exception {
-		JsonObject result = itemsTagsService.getSubgenres(645, new JsonObject());
+		JsonObject result = itemsTagsService.getSubgenres(13260, new JsonObject());
 		System.out.println("#RES:"+result.toString());
 	}
 
 	@Test
 	public void test_getMixedSubgenre2() throws Exception {
-		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(645));
+		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(13260));
 	}
 }
