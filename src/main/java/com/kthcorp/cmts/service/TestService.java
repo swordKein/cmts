@@ -77,7 +77,7 @@ public class TestService implements TestServiceImpl {
     @Value("${elasticsearch.host}")
     private String ES_HOST;
     @Value("${elasticsearch.port}")
-    private int ES_PORT;
+    private String ES_PORT;
 
     @Override
     public void getTest1() throws Exception {
@@ -3841,8 +3841,15 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public void putBulkDataToEsIndex(String idxName, Map<String,Object> reqMap) throws Exception {
+        int es_port = 9200;
+        try {
+            if (!"".equals(ES_PORT)) {
+                es_port = Integer.parseInt(ES_PORT);
+            }
+        } catch (Exception e) {}
+
         TransportClient client = new PreBuiltTransportClient(Settings.EMPTY)
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), ES_PORT));
+                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), es_port));
 
         IndicesAdminClient indicesAdminClient = client.admin().indices();
 
