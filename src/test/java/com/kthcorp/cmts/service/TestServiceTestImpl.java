@@ -503,6 +503,7 @@ public class TestServiceTestImpl {
 	}
 
 
+	/* 검색엔진 색인에 데이터 추가 idx_subgenre */
 	@Test
 	public void test_insDicSubgenreKeywords() throws Exception {
 		testService.insDicSubgenreKeywords();
