@@ -74,6 +74,11 @@ public class TestService implements TestServiceImpl {
     @Value("${spring.static.resource.location}")
     private String WORK_DIR;
 
+    @Value("${elasticsearch.host}")
+    private String ES_HOST;
+    @Value("${elasticsearch.port}")
+    private int ES_PORT;
+
     @Override
     public void getTest1() throws Exception {
         TestVO req = new TestVO();
@@ -3830,9 +3835,14 @@ public class TestService implements TestServiceImpl {
     }
 
     @Override
+    public void checkEsProperty() {
+        System.out.println("ES host:"+ES_HOST+" / port:"+ES_PORT);
+    }
+
+    @Override
     public void putBulkDataToEsIndex(String idxName, Map<String,Object> reqMap) throws Exception {
         TransportClient client = new PreBuiltTransportClient(Settings.EMPTY)
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("14.63.170.72"), 9300));
+                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), ES_PORT));
 
         IndicesAdminClient indicesAdminClient = client.admin().indices();
 

@@ -502,6 +502,10 @@ public class TestServiceTestImpl {
 		System.out.println("#RESULT:"+result.toString());
 	}
 
+	@Test
+	public void test_checkEsProperty() throws Exception {
+		testService.checkEsProperty();
+	}
 
 	/* 검색엔진 색인에 데이터 추가 idx_subgenre */
 	@Test

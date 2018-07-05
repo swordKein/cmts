@@ -156,6 +156,8 @@ public interface TestServiceImpl {
 
     void processSearchTxtManualAppend(List<Map<String, Object>> reqMapList);
 
+    void checkEsProperty();
+
     void putBulkDataToEsIndex(String idxName, Map<String, Object> reqMap) throws Exception;
 
     void processMixedSubgenre() throws Exception;
