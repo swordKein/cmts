@@ -1097,10 +1097,11 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public Set getMetaGenreFromGenre(Set<String> genres, String mtype) {
+    public Set getMetaGenreFromGenre(Set<String> result, Set<String> genres, String mtype) {
         if (dicMetaGenre == null) dicMetaGenre = dicKeywordsMapper.getDicSubgenreGenres(mtype);
 
-        Set result = new HashSet();
+        if(result == null) result = new HashSet();
+
         for (String genre : genres){
             //String[] origGenres = genre.split(" ");
            // Set<String> noDupMixedGenres = MapUtil.getNoDupSetFromStringArray(origGenres);

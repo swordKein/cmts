@@ -2120,7 +2120,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 JsonArray words = null;
                 JsonObject hits = null;
 
-                // 저장된 장르를 가져온다.
+                Set<String> metaSingleArr = new HashSet();
+                Set<String> metaGenreArr = new HashSet();
+
+                        // 저장된 장르를 가져온다.
                 ItemsMetas reqIm = new ItemsMetas();
                 reqIm.setIdx(itemid);
                 reqIm.setMtype("genre");
@@ -2128,17 +2131,29 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
                 System.out.println("#item_genre:"+itemGenre);
 
-                // 다른 것과 아무 상관없이 특정 키워드가 있으면 ES 검색 결과에 그 장르명을 추가한다. dic_subgenre_genres의 mtype=genre_word
+                // 다른 것과 아무 상관없이 특정 키워드가 있으면 결과에 그 장르명을 추가한다. dic_subgenre_genres의 mtype=genre_word
                 Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
                 System.out.println("#ELOG genre_add_arr by genre_add:"+genre_add_arr.toString());
-                // 장르 추가가 존재한다면 미리 장르 조합과 결합한다.
-                Set<String> combinedEsWordAndGenres = new HashSet();
+
+                Set<String> combinedWordAndGenres = new HashSet();
                 if (genre_add_arr != null) {
+                    // meta_single과 대조하여 결과에 저장
+                    for(String gs : genre_add_arr) {
+                        metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, gs, "meta_single");
+                    }
+                    System.out.println("#ELOG metaSingleArr after genre_add:"+metaSingleArr.toString());
+
+                    // meta_genre 와 대조하여 결과에 저장
                     for(String ga : genre_add_arr) {
-                        combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, ga, itemGenre);
+                        combinedWordAndGenres = this.getCombindEsAndGenre(combinedWordAndGenres, ga, itemGenre);
+                    }
+
+                    //System.out.println("#ELOG combinedWordAndGenres by genre_add:"+combinedWordAndGenres.toString());
+                    if (combinedWordAndGenres != null && combinedWordAndGenres.size() > 0) {
+                        metaGenreArr = dicService.getMetaGenreFromGenre(null, combinedWordAndGenres, "meta_genre");
+                        System.out.println("#ELOG metaGenreArr after genre_add:"+metaGenreArr.toString());
                     }
                 }
-                System.out.println("#ELOG combinedEsWordAndGenres by genre_add:"+combinedEsWordAndGenres.toString());
 
                 System.out.println("#requestEs for reqStr:" + reqStr);
                 resultEs = getSearchedEsData("idx_subgenre", "keywords"
@@ -2190,34 +2205,36 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     */
 
                     // 토픽 TOP 1 을 dic_subgenre_genres 의 mtype=meta_single과 대조하여 추가어 취득 후 resultArr에 저장
-                    Set<String> metaSingleArr = dicService.getMetaSingleFromGenre(null, esReturnWord, "meta_single");
+                    metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, esReturnWord, "meta_single");
                     System.out.println("#ELOG metaSingleArr final ::"+metaSingleArr.toString());
 
                     if (metaSingleArr != null && metaSingleArr.size() > 0) {
-                        meta_single = metaSingleArr.toString();
-                        meta_single = StringUtil.removeBracket(meta_single);
-                    }
-
-
-                    System.out.println("#meta_single:" + metaSingleArr);
-                    if (!"".equals(meta_single)) {
-                        JsonObject newWord2 = new JsonObject();
-                        newWord2.addProperty("type", "");
-                        newWord2.addProperty("ratio", 0.0);
-                        newWord2.addProperty("word", meta_single);
-                        resultArr.add(newWord2);
+                        for (String ms : metaSingleArr) {
+                            meta_single = ms;
+                            meta_single = StringUtil.removeBracket(meta_single);
+                            System.out.println("#meta_single:" + meta_single);
+                            if (!"".equals(meta_single)) {
+                                JsonObject newWord2 = new JsonObject();
+                                newWord2.addProperty("type", "");
+                                newWord2.addProperty("ratio", 0.0);
+                                newWord2.addProperty("word", meta_single);
+                                resultArr.add(newWord2);
+                            }
+                        }
                     }
 
                     // 토픽 TOP 1과 genre를 dic_subgenre_genres 의 mtype=meta_genre 와 대조하여 추가어 취득 후 resultArr에 저장
 
                     // 장르가 있으면 ES토픽___장르  조합으로 사전과 대조하여 리스트 추출
+                    Set<String> combinedEsWordAndGenres = new HashSet();
                     if (!"".equals(itemGenre)) {
                         combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, esReturnWord, itemGenre);
                         System.out.println("#combinedEsWordAndGenres:"+combinedEsWordAndGenres.toString());
 
-                        Set<String> metaGenreArr = dicService.getMetaGenreFromGenre(combinedEsWordAndGenres, "meta_genre");
+                        metaGenreArr = dicService.getMetaGenreFromGenre(metaGenreArr, combinedEsWordAndGenres, "meta_genre");
+                        System.out.println("#ELOG metaGenreArr final ::"+metaGenreArr.toString());
+
                         if (metaGenreArr != null && metaGenreArr.size() > 0) {
-                            System.out.println("#meta_genre:" + metaGenreArr);
                             for (String meta_genre_one : metaGenreArr) {
                                 resultArr.add(JsonUtil.getObjFromMatchedGenre(meta_genre_one));
                             }
