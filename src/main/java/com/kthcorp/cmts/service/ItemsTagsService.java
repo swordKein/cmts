@@ -2135,6 +2135,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 System.out.println("#item_genre:"+itemGenre);
 
                 // 다른 것과 아무 상관없이 특정 키워드가 있으면 결과에 그 장르명을 추가한다. dic_subgenre_genres의 mtype=genre_word
+
+                System.out.println("#ELOG genre_add_arr from reqStr:"+reqStr.toString());
                 Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
                 System.out.println("#ELOG genre_add_arr by genre_add:"+genre_add_arr.toString());
 
