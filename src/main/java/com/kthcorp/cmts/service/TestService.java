@@ -2954,7 +2954,8 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public Map<String,Object> loadDicSubgenreKeywords() throws Exception {
-        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords0516.txt";
+        //String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords0705.txt";
+        String fileName = "/home/ktipmedia/BAK/dic_subgenre_keywords0705.txt";
         return loadDicSubgenreKeywords(fileName);
     }
 
@@ -2977,7 +2978,7 @@ public class TestService implements TestServiceImpl {
     @Override
     public void insDicSubgenreKeywords() throws Exception {
         Map<String,Object> reqMap = loadDicSubgenreKeywords();
-        //putBulkDataToEsIndex("idx_subgenre", reqMap);
+        putBulkDataToEsIndex("idx_subgenre", reqMap);
     }
 
     @Override
@@ -3891,12 +3892,12 @@ public class TestService implements TestServiceImpl {
             while ((line = reader.readLine()) != null
                 //&& cntAll < 10000
                     ){
-                if (cntAll > -1) {
+                if (cntAll > 0) {
                     if (!"".equals(line.trim())) {
                         String lines[] = line.trim().split(seperator);
 
                         for(int j=0; j < lines.length; j++) {
-                            System.out.print("#j:"+j+"::"+lines[j]+" | ");
+                            System.out.print("#orig j:"+j+"::"+lines[j]+" | ");
                         }
                         System.out.println(" ");
 
