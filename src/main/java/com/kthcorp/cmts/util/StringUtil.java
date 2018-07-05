@@ -8,6 +8,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil {
+    public static String removeMetaTag(String req) {
+        req = req.replace("metawho","who");
+        req = req.replace("metawhen","when");
+        req = req.replace("metawhat","what");
+        req = req.replace("metawhere","where");
+        req = req.replace("metaemotion","emotion");
+
+        return req;
+    }
+
     public void findCountAlphabets() {
         String txt = "http://cofs.tistory.com?param1=a123&param2=한글&param3=개발자&param4=cofs";
         char[] txtChar = txt.toCharArray();

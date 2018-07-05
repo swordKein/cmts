@@ -2086,6 +2086,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
 
+        // request param 변조 metawho -> who
+        reqJsonObjStr = StringUtil.removeMetaTag(reqJsonObjStr);
+
         //long itemIdx0 = (long) 0;
         //int itemIdx = 0;
         JsonArray resultArr = this.getMixedSubgenre2(itemid);

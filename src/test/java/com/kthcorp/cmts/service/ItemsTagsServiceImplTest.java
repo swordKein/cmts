@@ -110,8 +110,8 @@ public class ItemsTagsServiceImplTest {
 
 
 		reqStr = "[{\"type\":\"who\", \"meta\":\"갱스터\"}, {\"type\":\"what\", \"meta\":\"범죄\"}" +
-				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"who\", \"meta\":\"깡패\"}" +
-				", {\"type\":\"who\", \"meta\":\"히어로\"}, {\"type\":\"who\", \"meta\":\"좀비\"}, {\"type\":\"who\", \"meta\":\"살인마\"}]";
+				", {\"type\":\"what\", \"meta\":\"폭력\"}, {\"type\":\"metawho\", \"meta\":\"깡패\"}" +
+				", {\"type\":\"metawho\", \"meta\":\"히어로\"}, {\"type\":\"who\", \"meta\":\"좀비\"}, {\"type\":\"who\", \"meta\":\"살인마\"}]";
 
 
 		JsonArray resultArr = itemsTagsService.getMetaSubgenre(13260, reqStr);
