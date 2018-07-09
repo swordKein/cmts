@@ -6433,10 +6433,10 @@ public class TestService implements TestServiceImpl {
     @Override
     public void writeMetaDicKeywordsByTypes() throws Exception {
         List<String> types = new ArrayList();
-        //types.add("METASEMOTION");
-        //types.add("METASWHAT");
-        //types.add("METASWHEN");
-        //types.add("METASWHERE");
+        types.add("METASEMOTION");
+        types.add("METASWHAT");
+        types.add("METASWHEN");
+        types.add("METASWHERE");
         types.add("METASWHO");
 
         String seperator = "\t";
@@ -6446,12 +6446,14 @@ public class TestService implements TestServiceImpl {
         List<Map<String, Object>> itemList = null;
         Set<String> newSet = null;
 
+        Map<String, Object> itemCountByType = new HashMap();
+
         for(String type : types) {
             reqMap = new HashMap();
             reqMap.put("mtype", type);
             itemList = testMapper.getMetaKeywordsByMtype(reqMap);
             //System.out.println("#orig itemList:"+itemList.toString());
-
+            itemCountByType.put(type, itemList.size());
 
             if (itemList != null) {
                 newSet = new TreeSet();
@@ -6513,9 +6515,10 @@ public class TestService implements TestServiceImpl {
                 cnt++;
             }
 
-            String fileNameContent = "META_DIC_TYPE_"+type+"_180614.tsv";
+            String fileNameContent = "META_DIC_TYPE_"+type+"_180705.tsv";
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
+        System.out.println("#ALL count by type:"+itemCountByType.toString());
     }
 
 
