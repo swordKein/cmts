@@ -3,6 +3,7 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kthcorp.cmts.mapper.AuthUserMapper;
 import com.kthcorp.cmts.mapper.CcubeMapper;
 import com.kthcorp.cmts.mapper.ItemsMapper;
@@ -211,6 +212,7 @@ public class CcubeService implements CcubeServiceImpl {
         origTypes.add("METASCHARACTER");
         origTypes.add("LIST_RECO_TARGET");
         origTypes.add("LIST_RECO_SITUATION");
+        //origTypes.add("LIST_AWARD");
 
         Map<String, Object> tagsMetasMap = this.getTagsMetasMap(tagsMetasList);
 
@@ -337,16 +339,38 @@ public class CcubeService implements CcubeServiceImpl {
 
                         // items_metas에서 award를 가져와서 Obj에 매핑
                         String awardStr = "";
+                        /*
+                        JsonObject awardObj = new JsonObject();
+                        awardObj = itemsTagsService.getAwardObject(itemIdx, awardObj);
+                        if (awardObj != null && awardObj.get("LIST_AWARD") != null) {
+                            JsonParser jsonParser = new JsonParser();
+                            JsonArray metas = (JsonArray) jsonParser.parse(it.getMeta());
+
+                            JsonArray awardArr = awardObj.get("LIST_AWARD").getAsJsonArray();
+                            System.out.println("#ELOG awardArr:" + awardArr.toString());
+
+                            awardStr = JsonUtil.convertJsonArrayToStringByDelimeter(awardArr, "|");
+                            System.out.println("#ELOG awardStr:" + awardStr);
+                        }
+                        */
                         if (itemInfo.getMetaList() != null) {
                             for (ItemsMetas im : itemInfo.getMetaList()) {
                                 if (im != null && im.getMtype() != null && im.getMeta() != null
                                         && "award".equals(im.getMtype())) {
-                                    awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
-                                    awardStr = CommonUtil.removeTag(awardStr);
-                                    awardStr = CommonUtil.removeAllSpec1(awardStr);
+                                    //awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
+                                    //awardStr = CommonUtil.removeTag(awardStr);
+                                    //awardStr = CommonUtil.removeAllSpec1(awardStr);
+                                    String tmpAwardStr = im.getMeta().trim();
+                                    if (!"".equals(tmpAwardStr)) {
+                                        System.out.println("#ELOG tmpAwardStr:" + tmpAwardStr);
+                                        JsonParser jsonParser = new JsonParser();
+                                        JsonArray awardArr = (JsonArray) jsonParser.parse(tmpAwardStr);
+                                        awardStr = JsonUtil.convertJsonArrayToStringByDelimeter(awardArr, "|");
+                                    }
                                 }
                             }
                         }
+
                         limitSize = 3999;
                         //limitSize = 699;
                         if (awardStr.length() < limitSize) limitSize = awardStr.length();

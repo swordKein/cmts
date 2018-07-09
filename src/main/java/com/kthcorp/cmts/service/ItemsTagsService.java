@@ -347,7 +347,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return resultObj2;
     }
 
-    private JsonObject getAwardObject(int itemIdx, JsonObject resultObj2) throws Exception {
+    @Override
+    public JsonObject getAwardObject(int itemIdx, JsonObject resultObj2) throws Exception {
 
         JsonObject metaAwardObj = apiService.getAwardArrInfoByIdx(itemIdx);
         JsonArray awardArr = null;

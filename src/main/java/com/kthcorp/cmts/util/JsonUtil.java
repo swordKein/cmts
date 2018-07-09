@@ -143,6 +143,26 @@ public class JsonUtil {
 				}.getType());
 	}
 
+	/* JsonArray를 String으로 convert, delemiter 추가 */
+	public static String convertJsonArrayToStringByDelimeter(JsonArray reqArray, String delimeter) {
+		String result = "";
+		if (reqArray != null && reqArray.size() > 0) {
+			for (JsonElement je : reqArray) {
+				//JsonObject jo = (JsonObject) je;
+				String s = je.getAsString().trim();
+
+				if (!"".equals(s)) {
+					if (!"".equals(result)) {
+						result += delimeter + s;
+					} else {
+						result = s;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	/* JsonArray를 List<String>  으로 convert */
 	public static List<String> convertJsonArrayToList(JsonArray reqArray) {
 		return new Gson().fromJson(reqArray, new TypeToken<List<String>>(){}.getType());
