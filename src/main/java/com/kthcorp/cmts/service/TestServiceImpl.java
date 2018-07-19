@@ -225,4 +225,6 @@ public interface TestServiceImpl {
     void checkJsonFileDup() throws Exception;
 
     void checkJsonFileToCsv() throws Exception;
+
+    void writeAllContentsByMcid() throws Exception;
 }

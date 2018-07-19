@@ -581,4 +581,12 @@
         and length(meta) > 2 order by regdate asc
         /* limit 10 */
     </select>
+
+    <select id="getAllContentsByMcid" resultType="map">
+        /* getAllContentsByMcid */
+        select cc.master_content_id, cc.content_id, it.title, it.idx as itemidx
+        from ccube_contents cc
+        inner join ccube_keys ck on ck.content_id = cc.content_id and length(ck.content_id) > 2
+        inner join items it on it.idx = ck.itemidx
+    </select>
 </mapper>

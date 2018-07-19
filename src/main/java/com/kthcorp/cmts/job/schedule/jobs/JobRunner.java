@@ -161,7 +161,8 @@ public class JobRunner implements Job {
                     //testService.processItemsTagsMetasByResultTag();
                     //testService.processSubgenreToTags();
                     //testService.processSubgenreToTagsSer();
-                    testService.insDicSubgenreKeywords();
+                    //testService.insDicSubgenreKeywords();
+                    testService.writeAllContentsByMcid();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
             }

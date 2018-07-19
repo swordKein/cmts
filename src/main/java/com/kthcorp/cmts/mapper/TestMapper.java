@@ -89,4 +89,7 @@ public interface TestMapper {
     int insDicResultTagKeywords(Map<String,Object> req);
 
     List<Map<String, Object>> getMetaKeywordsByMtype(Map<String, Object> req);
+
+
+    List<Map<String, Object>> getAllContentsByMcid();
 }

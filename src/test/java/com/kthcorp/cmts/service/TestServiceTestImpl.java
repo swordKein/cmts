@@ -697,4 +697,8 @@ public class TestServiceTestImpl {
 		testService.writeCcubeOutputToJsonByType("CcubeSeries");
 	}
 
+	@Test
+	public void test_writeAllContentsByMcid() throws Exception {
+		testService.writeAllContentsByMcid();
+	}
 }
