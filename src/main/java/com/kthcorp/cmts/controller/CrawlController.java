@@ -3,10 +3,7 @@ package com.kthcorp.cmts.controller;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.service.*;
-import com.kthcorp.cmts.service.crawl.DaumblogService;
-import com.kthcorp.cmts.service.crawl.ImdbService;
-import com.kthcorp.cmts.service.crawl.NaverMovieService;
-import com.kthcorp.cmts.service.crawl.NaverblogService;
+import com.kthcorp.cmts.service.crawl.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.HttpClientUtil;
 import groovy.transform.Synchronized;
@@ -51,6 +48,10 @@ public class CrawlController {
 	private NaverMovieService naverMovieService;
 	@Autowired
 	private CollectService collectService;
+	@Autowired
+	private NavernewsService navernewsService;
+	@Autowired
+	private DaumnewsService daumnewsService;
 
 	@RequestMapping(value="/crawl/byprefix", method=RequestMethod.GET)
 	@ResponseBody
@@ -127,6 +128,12 @@ public class CrawlController {
 					break;
 				case "DAUM_MOVIE":
 					result = naverMovieService.getContents(prefix, reqInfo);
+					break;
+				case "NAVER_NEWS":
+					result = navernewsService.getSearchNews(reqInfo);
+					break;
+				case "DAUM_NEWS":
+					result = daumnewsService.getSearchNews(reqInfo);
 					break;
 			}
 		} catch (Exception e) {

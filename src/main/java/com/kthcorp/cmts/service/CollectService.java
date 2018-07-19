@@ -1133,12 +1133,14 @@ public class CollectService implements CollectServiceImpl {
                     break;
                 case "NAVER_NEWS":
                     logger.info("#STEP:03:daum_movie:: collecting start NAVER_NEWS: by sc_id:" + sc_id);
-                    resultCollect = navernewsService.getSearchNews(tg);
+                    //resultCollect = navernewsService.getSearchNews(tg);
+                    resultCollect = this.step03_ByHtml(tg);
 
                     break;
                 case "DAUM_NEWS":
                     logger.info("#STEP:03:daum_movie:: collecting start DAUM_NEWS: by sc_id:" + sc_id);
-                    resultCollect = daumNewsService.getSearchNews(tg);
+                    //resultCollect = daumNewsService.getSearchNews(tg);
+                    resultCollect = this.step03_ByHtml(tg);
 
                     break;
             }
