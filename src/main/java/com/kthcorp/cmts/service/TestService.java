@@ -6683,4 +6683,42 @@ public class TestService implements TestServiceImpl {
 
 
     }
+
+
+
+    @Override
+    public void writeAllContentsByMcid() throws Exception {
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        List<Map<String, Object>> itemList = null;
+
+        itemList = testMapper.getAllContentsByMcid();
+        System.out.println("#orig itemList.size:"+itemList.size());
+
+        String resultStr = "master_content_id" + seperator + "content_id" + seperator + "title" + seperator + "itemidx" + lineFeed;
+
+        if (itemList != null && itemList.size() > 0) {
+            for (Map<String,Object> item : itemList) {
+                if(item != null && item.get("master_content_id") != null) {
+                    String master_content_id = item.get("master_content_id").toString();
+                    String content_id = item.get("content_id").toString();
+                    String title = item.get("title").toString();
+                    String itemidx = item.get("itemidx").toString();
+
+                    String itemOne = master_content_id + seperator + content_id + seperator + title + seperator + itemidx + lineFeed;
+                    if (!"".equals(itemOne)) {
+                        resultStr += itemOne;
+                    }
+                }
+            }
+        }
+
+
+        String fileNameContent = "180719__ALL_CONTENTS__by_MCID_CID_ITEMIDX.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+
+    }
+
 }
