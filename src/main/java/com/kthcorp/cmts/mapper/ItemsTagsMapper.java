@@ -11,6 +11,9 @@ import java.util.List;
 @Repository
 public interface ItemsTagsMapper {
     List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req);
+    List<ItemsTags> tmp_getItemsTagsMetasByItemIdx(ItemsTags req);
+
+
     ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req);
     int getMaxTagsIdxByItemIdx(ItemsTags req);
     int cntConfirmedTags(ItemsTags req);

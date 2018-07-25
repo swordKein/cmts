@@ -15,6 +15,10 @@ public interface ItemsTagsServiceImpl {
 
     String getItemsTagsMetasStringByItemIdx(ItemsTags req) throws Exception;
 
+    String getWordArrStringFromItemsTagsMetasIdxAndMtype(ItemsTags req) throws Exception;
+
+    String tmp_getWordArrStringFromItemsTagsMetasIdxAndMtype(ItemsTags req) throws Exception;
+
     ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req);
 
     int getCurrTagsIdxOld(int itemIdx);
@@ -54,6 +58,8 @@ public interface ItemsTagsServiceImpl {
     JsonObject getSubgenresString(int itemIdx, JsonObject resultObj2);
 
     JsonObject getSubgenresStringForJson(int itemIdx, JsonObject resultObj2);
+
+    String getMovieGenreFromCcubeContents(int itemIdx);
 
     List<String> getGenreWordsListByGenre(String genre);
 

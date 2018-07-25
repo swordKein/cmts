@@ -229,4 +229,6 @@ public interface TestServiceImpl {
     void writeAllContentsByMcid() throws Exception;
 
     void processGenSubgenre_0725(String type) throws Exception;
+
+    void writeGenSubgenre_0725(String type) throws Exception;
 }

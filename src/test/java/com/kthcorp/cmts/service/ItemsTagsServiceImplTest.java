@@ -131,6 +131,15 @@ public class ItemsTagsServiceImplTest {
 	}
 
 	@Test
+	public void getWordArrStringFromItemsTagsMetasIdxAndMtype() throws Exception {
+		ItemsTags it = new ItemsTags();
+		it.setIdx(20);
+		it.setMtype("LIST_SUBGENRE");
+		it.setStat("S");
+		System.out.println(itemsTagsService.tmp_getWordArrStringFromItemsTagsMetasIdxAndMtype(it));
+	}
+
+	@Test
 	public void test_getSubgenres() throws Exception {
 		JsonObject result = itemsTagsService.getSubgenres(13260, new JsonObject());
 		System.out.println("#RES:"+result.toString());

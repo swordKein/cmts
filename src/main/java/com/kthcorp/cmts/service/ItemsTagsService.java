@@ -113,6 +113,81 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         return result;
     }
 
+
+    @Override
+    public String getWordArrStringFromItemsTagsMetasIdxAndMtype(ItemsTags req) throws Exception {
+        String result = "";
+
+        JsonArray resultArr = new JsonArray();
+        String reqMtype = req.getMtype();
+
+        List<ItemsTags> itemsTags = itemsTagsMapper.getItemsTagsMetasByItemIdx(req);
+
+        for(ItemsTags ta : itemsTags) {
+            String mtype = ta.getMtype().toUpperCase();
+            String mtype2 = mtype.replace("METAS","").toLowerCase();
+
+            String meta = "";
+            if (mtype.equals(reqMtype)) {
+                meta = ta.getMeta().trim();
+                JsonArray metaArr = null;
+                if (!"".equals(meta)) {
+                    metaArr = JsonUtil.getJsonArray(meta);
+                    if (metaArr != null && metaArr.size() > 0) {
+
+                        for (JsonElement je : metaArr) {
+                            JsonObject jo = (JsonObject) je;
+                            String ns = jo.get("word").getAsString();
+                            resultArr.add(ns);
+                        }
+                    }
+                }
+            }
+        }
+
+        //System.out.println("#ELOG resultArr:"+resultArr.toString());
+        result = resultArr.toString();
+
+        return result;
+    }
+
+    @Override
+    public String tmp_getWordArrStringFromItemsTagsMetasIdxAndMtype(ItemsTags req) throws Exception {
+        String result = "";
+
+        JsonArray resultArr = new JsonArray();
+        String reqMtype = req.getMtype();
+
+        List<ItemsTags> itemsTags = itemsTagsMapper.tmp_getItemsTagsMetasByItemIdx(req);
+
+        for(ItemsTags ta : itemsTags) {
+            String mtype = ta.getMtype().toUpperCase();
+            String mtype2 = mtype.replace("METAS","").toLowerCase();
+
+            String meta = "";
+            if (mtype.equals(reqMtype)) {
+                meta = ta.getMeta().trim();
+                JsonArray metaArr = null;
+                if (!"".equals(meta)) {
+                    metaArr = JsonUtil.getJsonArray(meta);
+                    if (metaArr != null && metaArr.size() > 0) {
+
+                        for (JsonElement je : metaArr) {
+                            JsonObject jo = (JsonObject) je;
+                            String ns = jo.get("word").getAsString();
+                            resultArr.add(ns);
+                        }
+                    }
+                }
+            }
+        }
+
+        //System.out.println("#ELOG resultArr:"+resultArr.toString());
+        result = resultArr.toString();
+
+        return result;
+    }
+
     @Override
     public ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req) {
         return itemsTagsMapper.getItemsTagsMetasByItemIdxAndMtype(req);
@@ -597,7 +672,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
 
-    private String getMovieGenreFromCcubeContents(int itemIdx) {
+    @Override
+    public String getMovieGenreFromCcubeContents(int itemIdx) {
         ItemsMetas req = new ItemsMetas();
         req.setIdx(itemIdx);
         List<ItemsMetas> resultMovieMeta = itemsMetasMapper.getItemsMetasByIdx(req);
