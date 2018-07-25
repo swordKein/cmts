@@ -79,6 +79,9 @@ public class TestService implements TestServiceImpl {
     @Value("${elasticsearch.port}")
     private String ES_PORT;
 
+    final String seperator = "\t";
+    final String lineFeed = System.getProperty("line.separator");
+
     @Override
     public void getTest1() throws Exception {
         TestVO req = new TestVO();
@@ -6799,4 +6802,87 @@ public class TestService implements TestServiceImpl {
         }
     }
 
+
+    @Override
+    public void writeGenSubgenre_0725(String type) throws Exception {
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        if ("CcubeSeries".equals(type)) {
+            countAll = testMapper.cntSeriesOrigItemsAll();
+        } else {
+            countAll = testMapper.cntContentsOrigItemsAll();
+        }
+
+//countAll = 40;
+
+        JsonObject resultObj = new JsonObject();
+
+        logger.info("#MLLOG: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+
+            String resultStr = "master_content_id" + seperator + "content_id" + seperator + "title" + seperator + "itemidx"
+                    + seperator + "movie_genre" + seperator + "sub_genre" + lineFeed;
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    req.setPageSize(pageSize);
+
+                    reqItems = null;
+                    if ("CcubeSeries".equals(type)) {
+                        reqItems = testMapper.getSeriesOrigItemsAll(req);
+                    } else {
+                        reqItems = testMapper.getContentsOrigItemsAll(req);
+                    }
+
+                    if (reqItems != null) {
+                        for (Map<String, Object> item : reqItems) {
+                            long longidx = (long) item.get("itemidx");
+                            int idx = (int) longidx;
+                            ItemsTags it = new ItemsTags();
+                            it.setIdx(idx);
+                            it.setStat("S");
+                            it.setMtype("LIST_SUBGENRE");
+
+                            String getSubgenre = itemsTagsService.tmp_getWordArrStringFromItemsTagsMetasIdxAndMtype(it);
+
+                            String master_content_id = item.get("master_content_id").toString();
+                            String content_id = item.get("content_id").toString();
+                            String title = item.get("content_title").toString();
+                            String itemidx = item.get("itemidx").toString();
+                            String movieGenre = itemsTagsService.getMovieGenreFromCcubeContents(idx);
+
+                            String itemOne = master_content_id + seperator + content_id + seperator + title + seperator + itemidx
+                                    + seperator + movieGenre + seperator + getSubgenre + lineFeed;
+                            if (!"".equals(itemOne)) {
+                                resultStr += itemOne;
+                            }
+                        }
+
+                    }
+                }
+
+
+                String fileNameContent = "180725__ALL_CONTENTS__WITH__SUB_GENRE.tsv";
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

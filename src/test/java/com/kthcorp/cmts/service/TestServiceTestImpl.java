@@ -706,4 +706,9 @@ public class TestServiceTestImpl {
 	public void processGenSubgenre_0725() throws Exception {
 		testService.processGenSubgenre_0725("CcubeContents");
 	}
+
+	@Test
+	public void writeGenSubgenre_0725() throws Exception {
+		testService.writeGenSubgenre_0725("CcubeContents");
+	}
 }

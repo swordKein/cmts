@@ -17,6 +17,19 @@
         order by im.mtype asc
     </select>
 
+    <select id="tmp_getItemsTagsMetasByItemIdx" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* tmp_getItemsTagsMetasByItemIdx */
+        select
+            im.idx, im.tagidx, im.mtype, im.meta, im.regdate, im.regid
+        from items_tags_metas_0725 im
+        where im.idx = #{idx} and im.TAGIDX = (
+            select itt.tagidx from items_tags_keys itt
+            where itt.idx = im.idx and itt.stat = #{stat}
+            order by regdate desc limit 1
+        )
+        order by im.mtype asc
+    </select>
+
     <select id="getItemsTagsMetasByItemIdxAndMtype" resultType="com.kthcorp.cmts.model.ItemsTags" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* getItemsTagsMetasByItemIdxAndMtype */
         select
