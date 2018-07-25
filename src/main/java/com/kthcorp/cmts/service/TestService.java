@@ -2959,8 +2959,8 @@ public class TestService implements TestServiceImpl {
 
     @Override
     public Map<String,Object> loadDicSubgenreKeywords() throws Exception {
-        //String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords0705.txt";
-        String fileName = "/home/ktipmedia/BAK/dic_subgenre_keywords0705.txt";
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\서브장르__추출_____\\dic_subgenre_keywords0705.txt";
+        //String fileName = "/home/ktipmedia/BAK/dic_subgenre_keywords0705.txt";
         return loadDicSubgenreKeywords(fileName);
     }
 
@@ -6719,6 +6719,84 @@ public class TestService implements TestServiceImpl {
         String fileNameContent = "180719__ALL_CONTENTS__by_MCID_CID_ITEMIDX.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
+    }
+
+
+
+
+    @Override
+    public void processGenSubgenre_0725(String type) throws Exception {
+
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        if ("CcubeSeries".equals(type)) {
+            countAll = testMapper.cntSeriesOrigItemsAll();
+        } else {
+            countAll = testMapper.cntContentsOrigItemsAll();
+        }
+
+//countAll = 40;
+
+        JsonObject resultObj = new JsonObject();
+
+        logger.info("#MLLOG: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            JsonArray contents = null;
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    req.setPageSize(pageSize);
+
+                    reqItems = null;
+                    if ("CcubeSeries".equals(type)) {
+                        reqItems = testMapper.getSeriesOrigItemsAll(req);
+                    } else {
+                        reqItems = testMapper.getContentsOrigItemsAll(req);
+                    }
+
+                    if (reqItems != null) {
+                        for (Map<String, Object> nmap : reqItems) {
+                            long longidx = (long) nmap.get("itemidx");
+                            int idx = (int) longidx;
+                            ItemsTags it = new ItemsTags();
+                            it.setIdx(idx);
+                            it.setStat("S");
+                            int maxTagIdx = itemsTagsService.getMaxTagsIdxByItemIdx(it);
+                            String tagsArr = itemsTagsService.getItemsTagsMetasStringByItemIdx(it);
+
+                            JsonArray genSubGenreArr = itemsTagsService.getMetaSubgenre(idx, tagsArr);
+
+                            if (genSubGenreArr != null && genSubGenreArr.size() > 0) {
+                                it.setTagidx(maxTagIdx);
+                                it.setMtype("LIST_SUBGENRE");
+                                it.setMeta(genSubGenreArr.toString());
+                                it.setRegid("ghkdwo77");
+
+                                int rt0 = itemsTagsMapper.insItemsTagsMetas_0725(it);
+                            }
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

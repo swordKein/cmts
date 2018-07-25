@@ -227,4 +227,6 @@ public interface TestServiceImpl {
     void checkJsonFileToCsv() throws Exception;
 
     void writeAllContentsByMcid() throws Exception;
+
+    void processGenSubgenre_0725(String type) throws Exception;
 }

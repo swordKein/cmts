@@ -40,4 +40,6 @@ public interface ItemsTagsMapper {
 
     List<ItemsTags> getSuccessTagList(Integer itemid);
     ItemsTags getLastTagSuccessInfo(Integer itemid);
+
+    int insItemsTagsMetas_0725(ItemsTags req);
 }
