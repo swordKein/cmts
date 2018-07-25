@@ -701,4 +701,9 @@ public class TestServiceTestImpl {
 	public void test_writeAllContentsByMcid() throws Exception {
 		testService.writeAllContentsByMcid();
 	}
+
+	@Test
+	public void processGenSubgenre_0725() throws Exception {
+		testService.processGenSubgenre_0725("CcubeContents");
+	}
 }

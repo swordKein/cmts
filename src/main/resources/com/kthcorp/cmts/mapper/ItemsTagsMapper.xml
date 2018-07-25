@@ -192,4 +192,13 @@
         where mtype = #{mtype}
         and length(meta) > 2
     </select>
+
+    <insert id="insItemsTagsMetas_0725" parameterType="com.kthcorp.cmts.model.ItemsTags">
+        /* insItemsMetas */
+        insert into items_tags_metas_0725
+        (idx, tagidx, mtype, meta, regdate, regid, meta_orig)
+        values
+        (#{idx}, #{tagidx}, #{mtype}, #{meta}, now(), #{regid}, #{meta_orig})
+        ON DUPLICATE KEY UPDATE meta = #{meta}, meta_orig = #{meta_orig}, regid = #{regid}, regdate = now()
+    </insert>
 </mapper>

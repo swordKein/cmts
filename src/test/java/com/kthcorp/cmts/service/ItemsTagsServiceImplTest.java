@@ -2,6 +2,7 @@ package com.kthcorp.cmts.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.kthcorp.cmts.model.ItemsTags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,16 @@ public class ItemsTagsServiceImplTest {
 		JsonArray resultArr = itemsTagsService.getMetaSubgenre(13260, reqStr);
 
 		System.out.println("#RESULT:"+resultArr.toString());
+	}
+
+	@Test
+	public void getItemsTagsMetasStringByItemIdx() throws Exception {
+		ItemsTags it = new ItemsTags();
+		it.setIdx(20);
+		it.setStat("S");
+		String reqStr = itemsTagsService.getItemsTagsMetasStringByItemIdx(it);
+		System.out.println(reqStr);
+		System.out.println(itemsTagsService.getMetaSubgenre(13260, reqStr));
 	}
 
 	@Test

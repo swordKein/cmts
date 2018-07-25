@@ -67,6 +67,53 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
+    public String getItemsTagsMetasStringByItemIdx(ItemsTags req) throws Exception {
+        String result = "";
+
+        JsonArray resultArr = new JsonArray();
+        List<String> origTypes = new ArrayList<String>();
+        origTypes.add("METASWHEN");
+        origTypes.add("METASWHERE");
+        origTypes.add("METASWHO");
+        origTypes.add("METASWHAT");
+        origTypes.add("METASEMOTION");
+
+        List<ItemsTags> itemsTags = itemsTagsMapper.getItemsTagsMetasByItemIdx(req);
+
+        for(ItemsTags ta : itemsTags) {
+            String mtype = ta.getMtype().toUpperCase();
+            String mtype2 = mtype.replace("METAS","").toLowerCase();
+
+            String meta = "";
+            for (String otype : origTypes) {
+                if (mtype.equals(otype)) {
+                    meta = ta.getMeta().trim();
+                    JsonArray metaArr = null;
+                    if (!"".equals(meta)) {
+                        metaArr = JsonUtil.getJsonArray(meta);
+                        if (metaArr != null && metaArr.size() > 0) {
+                            JsonObject newJo = null;
+                            for (JsonElement je : metaArr) {
+                                JsonObject jo = (JsonObject) je;
+                                //System.out.println("#ELOG jo:"+jo.toString());
+                                newJo = new JsonObject();
+                                newJo.addProperty("type", mtype2);
+                                newJo.addProperty("meta", jo.get("word").getAsString());
+                                resultArr.add(newJo);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //System.out.println("#ELOG resultArr:"+resultArr.toString());
+        result = resultArr.toString();
+
+        return result;
+    }
+
+    @Override
     public ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req) {
         return itemsTagsMapper.getItemsTagsMetasByItemIdxAndMtype(req);
     }
@@ -2127,19 +2174,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Set<String> metaSingleArr = new HashSet();
                 Set<String> metaGenreArr = new HashSet();
 
-                        // 저장된 장르를 가져온다.
+                // 저장된 장르를 가져온다.
                 ItemsMetas reqIm = new ItemsMetas();
                 reqIm.setIdx(itemid);
                 reqIm.setMtype("genre");
                 ItemsMetas genreMetas = itemsMetasMapper.getItemsMetas(reqIm);
                 String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
-                System.out.println("#item_genre:"+itemGenre);
+                System.out.println("#ELOG ORIG item's GENRE:"+itemGenre);
 
                 // 다른 것과 아무 상관없이 특정 키워드가 있으면 결과에 그 장르명을 추가한다. dic_subgenre_genres의 mtype=genre_word
-
                 System.out.println("#ELOG genre_add_arr from reqStr:"+reqStr.toString());
                 Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
-                System.out.println("#ELOG genre_add_arr by genre_add:"+genre_add_arr.toString());
+                System.out.println("#ELOG GENRE_ADD by genre_add:"+genre_add_arr.toString());
 
                 Set<String> combinedWordAndGenres = new HashSet();
                 if (genre_add_arr != null) {

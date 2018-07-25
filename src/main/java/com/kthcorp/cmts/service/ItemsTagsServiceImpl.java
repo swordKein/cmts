@@ -13,6 +13,8 @@ public interface ItemsTagsServiceImpl {
 
     List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req);
 
+    String getItemsTagsMetasStringByItemIdx(ItemsTags req) throws Exception;
+
     ItemsTags getItemsTagsMetasByItemIdxAndMtype(ItemsTags req);
 
     int getCurrTagsIdxOld(int itemIdx);
