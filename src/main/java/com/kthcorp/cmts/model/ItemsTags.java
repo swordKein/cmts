@@ -27,7 +27,15 @@ public class ItemsTags extends Paging{
     private String keyword;
 
     private String meta_orig;
+    private Integer cnt;
 
+    public Integer getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(Integer cnt) {
+        this.cnt = cnt;
+    }
 
     public String getMeta_orig() {
         return meta_orig;

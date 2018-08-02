@@ -6525,6 +6525,108 @@ public class TestService implements TestServiceImpl {
     }
 
 
+
+    @Override
+    public void insMetaCountByKeyword() throws Exception {
+        String seperator = "___";
+
+        List<String> types = new ArrayList();
+        //types.add("METASEMOTION");
+        //types.add("METASWHAT");
+        //types.add("METASWHEN");
+        //types.add("METASWHERE");
+        //types.add("METASWHO");
+        types.add("LIST_SUBGENRE");
+
+        Map<String, Object> reqMap = null;
+        List<Map<String, Object>> itemList = null;
+
+        Map<String, Object> itemCountByType = new HashMap();
+        Map<String, Object> itemCountsByKeywords = null;
+
+        Map<String, Object> itemInsCountByType = new HashMap();
+
+        for(String type : types) {
+            reqMap = new HashMap();
+            reqMap.put("mtype", type);
+            itemList = testMapper.getMetaKeywordsByMtypeByLastTagidx(reqMap);
+            //System.out.println("#orig itemList:"+itemList.toString());
+            itemCountByType.put(type, itemList.size());
+
+            if (itemList != null) {
+                itemCountsByKeywords = new HashMap();
+
+                for (Map<String,Object> item : itemList) {
+                    if(item != null && item.get("meta") != null) {
+                        String metaStr = item.get("meta").toString();
+
+                        if (!"".equals(metaStr) && metaStr.contains("[")) {
+                            JsonArray metaArr = JsonUtil.getJsonArray(metaStr);
+
+                            if (metaArr != null && metaArr.size() > 0) {
+
+                                for (JsonElement je : metaArr) {
+                                    JsonObject jo = (JsonObject) je;
+                                    if (jo != null && jo.get("word") != null) {
+
+                                        String word = jo.get("word").getAsString();
+                                        word = word.trim();
+                                        word = word.replaceAll(" ","");
+
+                                        String mtype_word = type+ seperator +word;
+
+                                        if (!"".equals(word)) {
+                                            int wordCnt = (itemCountsByKeywords.get(mtype_word) != null) ? (int) itemCountsByKeywords.get(mtype_word) : 0;
+                                            wordCnt++;
+                                            System.out.println("#WORD::"+mtype_word+" : cnt:"+wordCnt);
+                                            itemCountsByKeywords.put(mtype_word, wordCnt);
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+
+
+                if(itemCountsByKeywords != null) {
+                    //System.out.println("#MTYPE::"+type+" writeKeywordMap.size:"+itemCountsByKeywords.size());
+                    //Iterator itr = itemCountsByKeywords.keySet().iterator();
+                    Set entrySet = itemCountsByKeywords.entrySet();
+                    Iterator itr = entrySet.iterator();
+
+                    while(itr.hasNext()){
+                        Map.Entry me = (Map.Entry) itr.next();
+                        if (me != null && me.getKey() != null) {
+                            String mtype_word = (String) me.getKey();
+                            String mtype_words[] = mtype_word.split(seperator);
+                            String mtype = mtype_words[0];
+                            String word = mtype_words[1];
+                            Integer cnt = (Integer) me.getValue();
+
+                            ItemsTags reqIt = new ItemsTags();
+                            reqIt.setMtype(mtype);
+                            reqIt.setKeyword(word);
+                            reqIt.setCnt(cnt);
+                            itemsTagsService.insTmpCountKeyword(reqIt);
+                        }
+                    }
+
+                    System.out.println("#MTYPE::"+type+" writeKeywordMap.size:"+itemCountsByKeywords.size());
+                    itemInsCountByType.put(type, itemCountsByKeywords.size());
+                }
+            }
+
+
+        }
+        System.out.println("#ALL count by type:"+itemCountByType.toString());
+        System.out.println("#ALL insert count by type:"+itemInsCountByType.toString());
+    }
+
+
     @Override
     public void checkJsonFileDup() throws Exception {
         //String fileName = "E:\\0608.tar\\0608\\0608\\METAS_MOVIE_2018060814.json";
@@ -6885,4 +6987,44 @@ public class TestService implements TestServiceImpl {
             }
         }
     }
+
+
+
+    @Override
+    public void writeKeywordsAndCount() throws Exception {
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        Map<String, Object> reqMap = null;
+        List<Map<String, Object>> itemList = null;
+        //Set<String> newSet = null;
+
+        Map<String, Object> itemCountByType = new HashMap();
+
+        reqMap = new HashMap();
+        //reqMap.put("mtype", "METASWHO");
+        itemList = testMapper.getSearchKeywordAndCount(reqMap);
+        //System.out.println("#orig itemList:"+itemList.toString());
+        //itemCountByType.put(type, itemList.size());
+
+        String resultStr = "MTYPE" + seperator + "KEYWORD" + seperator + "COUNT" + lineFeed;
+
+        if (itemList != null) {
+            //newSet = new TreeSet();
+            for (Map<String,Object> item : itemList) {
+                if(item != null) {
+                    String mtype = item.get("mtype").toString();
+                    String keyword = item.get("keyword").toString();
+                    String count = item.get("cnt").toString();
+                    resultStr += mtype + seperator + keyword + seperator + count + lineFeed;
+                }
+            }
+        }
+
+        String fileNameContent = "180726__KEYWORDS_AND_COUNT.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+        System.out.println("#ALL count by type:"+itemCountByType.toString());
+    }
+
 }

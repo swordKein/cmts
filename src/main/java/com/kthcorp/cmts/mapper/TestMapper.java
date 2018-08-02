@@ -92,4 +92,8 @@ public interface TestMapper {
 
 
     List<Map<String, Object>> getAllContentsByMcid();
+
+    List<Map<String, Object>> getMetaKeywordsByMtypeByLastTagidx(Map<String, Object> req);
+
+    List<Map<String, Object>> getSearchKeywordAndCount(Map<String, Object> req);
 }

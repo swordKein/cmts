@@ -48,7 +48,7 @@ public class ApiServiceTest {
 		//		, "2018-02-03", "2019-05-15", "모두 다 따를 것이다", "title");
 
 		JsonObject result = apiService.getItemsSearch(50, 1, "ALL", "ST"
-				, "", "", "낯선사람", "who");
+				, "", "", "곤지암", "title");
 
 		System.out.println("#result:"+result.toString());
 	}

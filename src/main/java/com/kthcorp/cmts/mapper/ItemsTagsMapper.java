@@ -45,4 +45,6 @@ public interface ItemsTagsMapper {
     ItemsTags getLastTagSuccessInfo(Integer itemid);
 
     int insItemsTagsMetas_0725(ItemsTags req);
+
+    int insTmpCountKeyword(ItemsTags req);
 }
