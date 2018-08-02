@@ -589,4 +589,30 @@
         inner join ccube_keys ck on ck.content_id = cc.content_id and length(ck.content_id) > 2
         inner join items it on it.idx = ck.itemidx
     </select>
+
+
+    <select id="getMetaKeywordsByMtypeByLastTagidx" parameterType="map" resultType="map">
+        /* getMetaKeywordsByMtypeByLastTagidx */
+
+        select a.*
+        , itm.meta
+        from (
+        select it.idx
+        , (select max(tagidx) from items_tags_keys where idx = it.idx and stat = 'S') as tagidx
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+        ) a
+        inner join items_tags_metas itm on itm.idx = a.idx and itm.tagidx = a.tagidx and itm.mtype = #{mtype}
+    </select>
+
+    <select id="getSearchKeywordAndCount" parameterType="map" resultType="map">
+        /* getSearchKeywordAndCount */
+        select sk.mtype, sk.keyword
+        , ck.cnt
+        from tmp_search_keyword sk
+        inner join tmp_count_keyword ck on ck.mtype = sk.mtype and ck.keyword = sk.keyword
+        <if test='mtype != null and mtype != ""'>
+            where sk.mtype = #{mtype}
+        </if>
+    </select>
 </mapper>

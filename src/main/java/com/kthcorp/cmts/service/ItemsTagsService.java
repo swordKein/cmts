@@ -2470,4 +2470,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         return resultArr;
     }
+
+
+    @Override
+    public int insTmpCountKeyword(ItemsTags req) {
+        return itemsTagsMapper.insTmpCountKeyword(req);
+    }
 }

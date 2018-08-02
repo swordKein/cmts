@@ -711,4 +711,14 @@ public class TestServiceTestImpl {
 	public void writeGenSubgenre_0725() throws Exception {
 		testService.writeGenSubgenre_0725("CcubeContents");
 	}
+
+	@Test
+	public void insMetaCountByKeyword() throws Exception {
+		testService.insMetaCountByKeyword();
+	}
+
+	@Test
+	public void writeKeywordsAndCount() throws Exception {
+		testService.writeKeywordsAndCount();
+	}
 }

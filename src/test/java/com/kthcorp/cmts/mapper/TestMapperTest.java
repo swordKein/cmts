@@ -113,4 +113,16 @@ public class TestMapperTest {
         }
         System.out.println("#Result.size:"+result.size());
     }
+
+    @Test
+    public void getSearchKeywordAndCount() {
+        Map<String, Object> req = new HashMap();
+        req.put("mtype","METASWHEN");
+        List<Map<String, Object>> result = testMapper.getSearchKeywordAndCount(req);
+        System.out.println("#RES.size:"+result.size());
+
+        for(int i=0; i<5 ;i++) {
+            System.out.println("#RES.item:"+result.get(i).toString());
+        }
+    }
 }

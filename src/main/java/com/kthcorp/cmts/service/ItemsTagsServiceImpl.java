@@ -106,4 +106,6 @@ public interface ItemsTagsServiceImpl {
     JsonArray getMetaSubgenre(Integer itemid, String reqJsonObjStr) throws Exception;
 
     JsonArray getMixedSubgenre2(Integer itemid) throws Exception;
+
+    int insTmpCountKeyword(ItemsTags req);
 }

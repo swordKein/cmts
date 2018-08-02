@@ -222,6 +222,8 @@ public interface TestServiceImpl {
 
     void writeMetaDicKeywordsByTypes() throws Exception;
 
+    void insMetaCountByKeyword() throws Exception;
+
     void checkJsonFileDup() throws Exception;
 
     void checkJsonFileToCsv() throws Exception;
@@ -231,4 +233,6 @@ public interface TestServiceImpl {
     void processGenSubgenre_0725(String type) throws Exception;
 
     void writeGenSubgenre_0725(String type) throws Exception;
+
+    void writeKeywordsAndCount() throws Exception;
 }
