@@ -2315,6 +2315,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     esWords = hits.get("words").toString();
                 }
 
+                // ES 검색 후 컷포인트 통과 한 결과는 1개만 취득
                 if (esReturnArr != null && esReturnArr.size() > 0) {
                     esReturnWord = esReturnArr.get(0);
                 }

@@ -235,4 +235,9 @@ public interface TestServiceImpl {
     void writeGenSubgenre_0725(String type) throws Exception;
 
     void writeKeywordsAndCount() throws Exception;
+
+
+    Map<String,Object> insNonMappedItems() throws Exception;
+
+    void writeNonMaqppedItems() throws Exception;
 }
