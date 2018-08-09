@@ -615,4 +615,17 @@
             where sk.mtype = #{mtype}
         </if>
     </select>
+
+    <insert id="insNonMappedItems" parameterType="map">
+        /* insNonMappedItems */
+        insert into tmp_non_items (mcid, cid, title, is_tagged) values (#{mcid}, #{cid}, #{title}, #{is_tagged})
+    </insert>
+
+    <select id="getNonMappedItems" resultType="map">
+        /* getNonMappedItems */
+        select mcid, cid, title, is_tagged, is_exist_orig_mcid, is_exist_orig_cid, is_exist_mcid, is_exist_cid
+        , exist_title, itemidx_by_cid, is_fail_tagging, tagged_itemidx_by_mcid, tagged_cid_by_mcid
+        , tagged_title1, kt_rating from tmp_non_items
+
+    </select>
 </mapper>

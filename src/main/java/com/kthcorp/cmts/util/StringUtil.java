@@ -558,6 +558,20 @@ public class StringUtil {
         filterSet.add("테스트 서브장르8");
         filterSet.add("테스트 서브장르9");
 
+        /* 18.08.09 added */
+        filterSet.add("과학/기술 영화");
+        filterSet.add("의학/메디컬 영화");
+        filterSet.add("괴물/돌연변이 영화");
+        filterSet.add("동물 친구들 영화");
+        filterSet.add("공룡 영화");
+        filterSet.add("로봇/사이보그 영화");
+        filterSet.add("사이코/살인마 영화");
+        filterSet.add("수퍼히어로 영화");
+        filterSet.add("유령 영화");
+        filterSet.add("악령 영화");
+        filterSet.add("스포츠 영화");
+        filterSet.add("음모 영화");
+        filterSet.add("탐정 영화");
 
         for (String fs : filterSet) {
             //System.out.println("#compare filterset fs:"+fs+"  vs  req:"+req);

@@ -721,4 +721,14 @@ public class TestServiceTestImpl {
 	public void writeKeywordsAndCount() throws Exception {
 		testService.writeKeywordsAndCount();
 	}
+
+	@Test
+	public void insNonMappedItems() throws Exception {
+		testService.insNonMappedItems();
+	}
+
+	@Test
+	public void writeNonMaqppedItems() throws Exception {
+		testService.writeNonMaqppedItems();
+	}
 }

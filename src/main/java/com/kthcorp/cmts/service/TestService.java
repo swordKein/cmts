@@ -7027,4 +7027,164 @@ public class TestService implements TestServiceImpl {
         System.out.println("#ALL count by type:"+itemCountByType.toString());
     }
 
+
+    @Override
+    public Map<String,Object> insNonMappedItems() throws Exception {
+        String fileName="C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\MCID_기준_CID미매핑\\0725__NON_ITEM_CONTENTS.txt";
+        return loadNonMappedItems(fileName);
+    }
+
+
+    private Map<String, Object> loadNonMappedItems(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+        int lineCnt = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<String> topGenreArr = new ArrayList();
+        Set<String> dupCheck = new HashSet();
+        Set<String> newKeys = new HashSet();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 100
+                    ){
+                if (lineCnt > -1) {
+                    if (!"".equals(line.trim())) {
+
+                        String lines[] = line.trim().split(seperator);
+
+                        for(int j=0; j < lines.length; j++) {
+                            System.out.print("#j:"+j+"::"+lines[j]+" | ");
+                        }
+                        System.out.println(" ");
+
+                        // 헤더는 생략
+                        if (lineCnt == 0) {
+                        }
+                        else {
+                            if (lines != null && lines.length > 2) {
+                                Map<String, Object> newItem = new HashMap();
+
+                                String mcid = lines[0];
+                                mcid = mcid.trim();
+
+                                String cid = lines[1];
+                                cid = cid.trim();
+
+                                String title = (lines.length > 2 && lines[2] != null ? lines[2] : "");
+                                title = title.trim();
+
+                                String is_tagged = (lines.length > 3 && lines [3] != null ? lines[3] : "");
+                                is_tagged = is_tagged.trim();
+
+                                if (!"".equals(mcid)) {
+                                    String newKey = mcid +"_"+cid;
+                                    newItem.put("mcid",mcid);
+                                    newItem.put("cid",cid);
+                                    newItem.put("title",title);
+                                    newItem.put("is_tagged",is_tagged);
+
+                                    //int rti = testMapper.insNonMappedItems(newItem);
+                                    if (result.get(newKey) != null) {
+                                        dupCheck.add(newKey);
+                                    }
+                                    result.put(newKey, newItem);
+                                    newKeys.add(newKey);
+
+                                }
+                            } else {
+                                System.out.println("#ELOG line size is too small::"+line);
+                            }
+                        }
+
+                        //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                        //result.add(newItem);
+                        itemCnt++;
+                    } else {
+                        System.out.println("#ELOG "+lineCnt+" 's line is empty::"+line);
+                    }
+
+                }
+                lineCnt++;
+            }
+
+            System.out.println("#lineCnt:"+lineCnt);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#itemsSize:"+result.size());
+            System.out.println("#errCnt:"+errCnt);
+            System.out.println("#dupCheck:"+dupCheck.toString());
+            System.out.println("#newKeys.size:"+newKeys.size());
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+
+    @Override
+    public void writeNonMaqppedItems() throws Exception {
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        Map<String, Object> reqMap = null;
+        List<Map<String, Object>> itemList = null;
+        //Set<String> newSet = null;
+
+        itemList = testMapper.getNonMappedItems();
+        //System.out.println("#orig itemList:"+itemList.toString());
+        //itemCountByType.put(type, itemList.size());
+
+        //String resultStr = "MTYPE" + seperator + "KEYWORD" + seperator + "COUNT" + lineFeed;
+
+        String resultStr = "mcid" + seperator + "cid" + seperator + "title" + seperator + "is_tagged" + seperator + "is_exist_orig_mcid"
+                    + seperator + "is_exist_orig_cid" + seperator + "is_exist_mcid" + seperator + "is_exist_cid"
+                    + seperator + "exist_title" + seperator + "itemidx_by_cid" + seperator + "is_fail_tagging"
+                    + seperator + "tagged_itemidx_by_mcid" + seperator + "tagged_cid_by_mcid"
+                    + seperator + "tagged_title1" + seperator + "kt_rating" + lineFeed;
+
+        if (itemList != null) {
+            //newSet = new TreeSet();
+            for (Map<String,Object> item : itemList) {
+                if(item != null) {
+                    String mcid = item.get("mcid").toString();
+                    String cid = item.get("cid").toString();
+                    String title = (item.get("title") != null ? item.get("title").toString() : "");
+                    String is_tagged = (item.get("is_tagged") != null ? item.get("is_tagged").toString() : "");
+                    String is_exist_orig_mcid = (item.get("is_exist_orig_mcid") != null ? item.get("is_exist_orig_mcid").toString() : "");
+                    String is_exist_orig_cid = (item.get("is_exist_orig_cid") != null ? item.get("is_exist_orig_cid").toString() : "");
+                    String is_exist_mcid = (item.get("is_exist_mcid") != null ? item.get("is_exist_mcid").toString() : "");
+                    String is_exist_cid = (item.get("is_exist_cid") != null ? item.get("is_exist_cid").toString() : "");
+                    String exist_title = (item.get("exist_title") != null ? item.get("exist_title").toString() : "");
+                    String itemidx_by_cid = (item.get("itemidx_by_cid") != null ? item.get("itemidx_by_cid").toString() : "");
+                    String is_fail_tagging = (item.get("is_fail_tagging") != null ? item.get("is_fail_tagging").toString() : "");
+                    String tagged_itemidx_by_mcid = (item.get("tagged_itemidx_by_mcid") != null ? item.get("tagged_itemidx_by_mcid").toString() : "");
+                    String tagged_cid_by_mcid = (item.get("tagged_cid_by_mcid") != null ? item.get("tagged_cid_by_mcid").toString() : "");
+                    String tagged_title1 = (item.get("tagged_title1") != null ? item.get("tagged_title1").toString() : "");
+                    String kt_rating = (item.get("kt_rating") != null ? item.get("kt_rating").toString() : "");
+
+                    resultStr += mcid + seperator + cid + seperator + title + seperator + is_tagged + seperator + is_exist_orig_mcid
+                            + seperator + is_exist_orig_cid + seperator + is_exist_mcid + seperator + is_exist_cid
+                            + seperator + exist_title + seperator + itemidx_by_cid + seperator + is_fail_tagging
+                            + seperator + tagged_itemidx_by_mcid + seperator + tagged_cid_by_mcid
+                            + seperator + tagged_title1 + seperator + kt_rating;
+
+                    resultStr +=lineFeed;
+                }
+            }
+        }
+
+        String fileNameContent = "180803__NON_MAPPED__CONTENTS.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+
+        System.out.println("#ALL count :"+itemList.size());
+    }
+
 }
