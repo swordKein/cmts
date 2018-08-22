@@ -853,6 +853,7 @@ public class ApiService implements ApiServiceImpl {
         String sns_stat_url_dest1 = sns_stat_url.replace("#SDATE", date1);
         sns_stat_url_dest1 = sns_stat_url_dest1.replace("#EDATE", date1);
         sns_stat_url_dest1 = sns_stat_url_dest1.replace("#TARGET", target1);
+
         Map<String, Object> resultMap1 = HttpClientUtil.reqGetHtml(sns_stat_url_dest1, null, null,null, "bypass");
 
         if (resultMap1 != null && resultMap1.get("resultStr") != null) {
