@@ -32,6 +32,8 @@ public class ApiService implements ApiServiceImpl {
     private String crawl_sns_topwords_url;
     @Value("${cmts.property.naver_kordic_url}")
     private String naver_kordic_url;
+    @Value("${cmts.property.coll_naver_kordic_url}")
+    private String coll_naver_kordic_url;
 
     @Autowired
     private AuthUserMapper authUserMapper;
@@ -1113,6 +1115,27 @@ public class ApiService implements ApiServiceImpl {
 
         try {
             String reqUrl = naver_kordic_url;
+            reqUrl = reqUrl.replace("#KEYWORD", URLEncoder.encode(keyword,"utf-8"));
+
+            Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null
+                    , Charset.forName("utf-8"),null, "bypass");
+
+            if (resultMap2 != null && resultMap2.get("resultStr") != null) {
+                result = resultMap2.get("resultStr").toString();
+            }
+        } catch (Exception e) {
+            logger.error("/naver/kordic ERROR:"+e.toString());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public String getCollNaverKordicResult(String keyword) throws Exception {
+        String result = "";
+
+        try {
+            String reqUrl = coll_naver_kordic_url;
             reqUrl = reqUrl.replace("#KEYWORD", URLEncoder.encode(keyword,"utf-8"));
 
             Map<String, Object> resultMap2 = HttpClientUtil.reqGetHtml(reqUrl, null

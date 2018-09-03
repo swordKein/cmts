@@ -10,7 +10,9 @@ cmts:
     ##crawl_sns_topwords_url: http://127.0.0.1:8080/sns/topwords
     sns_api_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetKeywordAssociation&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&categorySetName=SM&topN=10&keywordFilterList[]=+(%EC%98%81%ED%99%94)&keyword=#TITLE&categoryList[]=123/0/0
     sns_stat_url: http://kt-api.some.co.kr/TrendMap/JSON/ServiceHandler?command=GetTopKeywords&lang=ko&source=#TARGET&startDate=#SDATE&endDate=#EDATE&topN=10&categorySetName=SM&categoryList%5b%5d=7/1/160&patternExcList[]=%EC%98%A4%EB%8A%98&patternExcList[]=%ED%8C%94%EB%A1%9C%EC%9A%B0&patternExcList[]=flowers
-    naver_kordic_url: http://krdic.naver.com/search.nhn?query=#KEYWORD&kind=all
+    #naver_kordic_url: http://krdic.naver.com/search.nhn?query=#KEYWORD&kind=all
+    naver_kordic_url: http://125.209.218.19/search.nhn?query=#KEYWORD&kind=all
+    coll_naver_kordic_url: http://14.63.174.158:8080/bypass/naver/kordic?query=#KEYWORD&kind=all
     hdfs_url: hdfs://210.122.36.199:8020
     es_cut_point: 3.0
   admin:
