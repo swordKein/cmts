@@ -68,4 +68,6 @@ public interface ApiServiceImpl {
     JsonObject getSnsTopWordsAndGraph() throws Exception;
 
     String getNaverKordicResult(String keyword) throws Exception;
+
+    String getCollNaverKordicResult(String keyword) throws Exception;
 }

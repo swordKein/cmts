@@ -2,10 +2,7 @@ package com.kthcorp.cmts.controller;
 
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.*;
-import com.kthcorp.cmts.service.AdminService;
-import com.kthcorp.cmts.service.DicService;
-import com.kthcorp.cmts.service.ItemsService;
-import com.kthcorp.cmts.service.TestService;
+import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +44,8 @@ public class AdminController {
 	private DicService dicService;
 	@Autowired
 	private ItemsService itemsService;
+	@Autowired
+	private ApiService apiService;
 
 	@RequestMapping(value="/admin", method=RequestMethod.GET)
 	public ModelAndView home(Model model
@@ -664,5 +663,23 @@ public class AdminController {
 		mav.addObject("types", types);
 
 		return mav;
+	}
+
+	@RequestMapping(value="/admin/naver/kordic", method=RequestMethod.GET)
+	@ResponseBody
+	public String crawl_naverkordic_api(Model model
+			, @RequestParam(value="query", required=true) String query
+	) {
+		logger.debug("#/naver/kordic :: by query:" + query);
+		String result = null;
+		try {
+			result = apiService.getNaverKordicResult(query);
+		} catch (Exception e) {
+
+			logger.error("/naver/kordic ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 }
