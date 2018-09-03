@@ -691,7 +691,7 @@ public class AdminController {
 		logger.debug("#/naver/kordic :: by query:" + query);
 		String result = null;
 		try {
-			result = apiService.getNaverKordicResult(query);
+			result = apiService.getCollNaverKordicResult(query);
 		} catch (Exception e) {
 
 			logger.error("/naver/kordic ERROR:"+e.toString());
