@@ -665,9 +665,27 @@ public class AdminController {
 		return mav;
 	}
 
-	@RequestMapping(value="/admin/naver/kordic", method=RequestMethod.GET)
+	@RequestMapping(value="/bypass/naver/kordic", method=RequestMethod.GET)
 	@ResponseBody
 	public String crawl_naverkordic_api(Model model
+			, @RequestParam(value="query", required=true) String query
+	) {
+		logger.debug("#/naver/kordic :: by query:" + query);
+		String result = null;
+		try {
+			result = apiService.getNaverKordicResult(query);
+		} catch (Exception e) {
+
+			logger.error("/naver/kordic ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value="/coll/naver/kordic", method=RequestMethod.GET)
+	@ResponseBody
+	public String coll_naverkordic_api(Model model
 			, @RequestParam(value="query", required=true) String query
 	) {
 		logger.debug("#/naver/kordic :: by query:" + query);
