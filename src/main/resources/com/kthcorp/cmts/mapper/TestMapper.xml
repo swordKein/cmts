@@ -405,6 +405,31 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
+    <select id="getContentsOrigItemsDayByDate" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getContentsOrigItemsDay */
+        select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id, a.regdate
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            , iss.regdate
+            from ccube_contents_orig co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            and iss.regdate between concat(date_format(#{searchSdate}, '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(#{searchSdate}, '%Y-%m-%d'), ' 23:59:59')
+
+            ) a
+        order by a.itemidx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
     <select id="cntContentsOrigItemsDay" resultType="java.lang.Integer">
         /* cntContentsOrigItemsDay */
           select count(*) as cnt from (
@@ -429,6 +454,29 @@
 
     </select>
 
+    <select id="cntContentsOrigItemsDayByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+        /* cntContentsOrigItemsDayByDate */
+          select count(*) as cnt from (
+            select a.itemidx, a.content_id, a.content_title, a.year, a.director, a.kmrb_id, a.master_content_id
+            from (
+            select
+            co.content_id
+            , co.content_title
+            , co.year
+            , co.director
+            , co.kmrb_id
+            , co.master_content_id
+            , it.idx as itemidx
+            from ccube_contents_orig co
+            inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            and iss.regdate between concat(date_format(#{date1}, '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(#{date1}, '%Y-%m-%d'), ' 23:59:59')
+            ) a
+          ) b
+
+    </select>
 
 
 
@@ -494,6 +542,28 @@
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
+    <select id="getSeriesOrigItemsDayByDate" resultType="map" parameterType="com.kthcorp.cmts.model.Items">
+        /* getSeriesOrigItemsDay */
+        select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            and iss.regdate between concat(#{searchSdate}, '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(#{searchSdate}, '%Y-%m-%d'), ' 23:59:59')
+            ) a
+        order by a.itemidx asc
+        limit ${pageSize} offset ${offsetIdx}
+    </select>
+
+
     <select id="cntSeriesOrigItemsDay" resultType="java.lang.Integer">
         /* cntSeriesOrigItemsDay */
           select count(*) as cnt from (
@@ -511,6 +581,28 @@
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
             and iss.regdate between concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 00:00:00')
 				and concat(date_format(date_sub(now(), INTERVAL 1 DAY), '%Y-%m-%d'), ' 23:59:59')
+            ) a
+          ) b
+
+    </select>
+
+    <select id="cntSeriesOrigItemsDayByDate" resultType="java.lang.Integer">
+        /* cntSeriesOrigItemsDay */
+          select count(*) as cnt from (
+            select a.itemidx, a.series_id, a.series_nm, a.year, a.director
+            from (
+            select
+            co.series_id
+            , co.series_nm
+            , co.year
+            , co.director
+            , it.idx as itemidx
+            from ccube_series co
+            inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
+            inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
+            inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+            and iss.regdate between concat(date_format(#{date1}, '%Y-%m-%d'), ' 00:00:00')
+				and concat(date_format(#{date1}, '%Y-%m-%d'), ' 23:59:59')
             ) a
           ) b
 
@@ -627,5 +719,25 @@
         , exist_title, itemidx_by_cid, is_fail_tagging, tagged_itemidx_by_mcid, tagged_cid_by_mcid
         , tagged_title1, kt_rating from tmp_non_items
 
+    </select>
+
+    <insert id="insTestCidsForAsset" parameterType="map">
+        /* getNonMappedItems */
+        insert into test_asset_cids (cid, title, asset_id, quality)
+        values (#{cid}, #{title}, #{asset_id}, #{quality})
+    </insert>
+
+    <select id="getTestCidsForAsset" parameterType="map" resultType="map">
+        /* getTestCidsForAsset */
+        select * from test_asset_cids
+
+    </select>
+
+    <select id="getItemidxTaggedByCid" parameterType="map" resultType="map">
+        /* getItemidxTaggedByCid */
+        select iss.idx as itemidx from items_stat iss
+        inner join ccube_keys ck on ck.itemidx = iss.idx and ck.content_id = #{cid}
+        where iss.stat = 'ST'
+        limit 1
     </select>
 </mapper>

@@ -100,4 +100,16 @@ public interface TestMapper {
 
     int insNonMappedItems(Map<String, Object> req);
     List<Map<String, Object>> getNonMappedItems();
+
+    int insTestCidsForAsset(Map<String, Object> req);
+
+    List<Map<String, Object>> getTestCidsForAsset();
+    Map<String, Object> getItemidxTaggedByCid(Map<String, Object> reqMap);
+
+
+    int cntContentsOrigItemsDayByDate(String date1);
+    int cntSeriesOrigItemsDayByDate(String date1);
+    List<Map<String, Object>> getContentsOrigItemsDayByDate(Items req);
+    List<Map<String, Object>> getSeriesOrigItemsDayByDate(Items req);
+
 }

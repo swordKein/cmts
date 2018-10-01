@@ -731,4 +731,31 @@ public class TestServiceTestImpl {
 	public void writeNonMaqppedItems() throws Exception {
 		testService.writeNonMaqppedItems();
 	}
+
+
+	@Test
+	public void test_loadCIdsAssetContentFromFile() throws Exception {
+		String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\0910_CID___ASSET_ID_매핑데이터_산출\\cids_contents_orig.txt";
+		List<Map<String, Object>> result = testService.test_loadCIdsAssetContentFromFile(fileName);
+
+		//testService.processSearchTxtManualAppend(result);
+
+		int lineCnt = 1;
+		for(Map<String, Object> nmap : result) {
+			System.out.println("# "+lineCnt++ +" st map data: cid:"+nmap.get("cid") + " / title:"+nmap.get("title"));
+		}
+
+		//System.out.println("#RESULT_MAP::"+result.toString());
+		System.out.println("#RESULT_MAP.size::"+result.size());
+	}
+
+	@Test
+	public void writeItemsMetas_0910() throws Exception {
+		testService.writeItemsMetas_0910("CcubeContent");
+	}
+
+	@Test
+	public void writeCcubeOutputDayToJsonByTypeAndDate() throws Exception {
+		testService.writeCcubeOutputDayToJsonByTypeAndDate("CcubeContent", "2018-09-18");
+	}
 }

@@ -125,4 +125,10 @@ public class TestMapperTest {
             System.out.println("#RES.item:"+result.get(i).toString());
         }
     }
+
+    @Test
+    public void cntContentsOrigItemsDayByDate() {
+        int res = testMapper.cntContentsOrigItemsDayByDate("2018-08-30");
+        System.out.println("#res:"+res);
+    }
 }
