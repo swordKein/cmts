@@ -218,6 +218,8 @@ public interface TestServiceImpl {
 
     int writeCcubeOutputDayToJsonByType(String type);
 
+    int writeCcubeOutputDayToJsonByTypeAndDate(String type, String date1);
+
     void processItemsTagsMetasByResultTag() throws Exception;
 
     void writeMetaDicKeywordsByTypes() throws Exception;
@@ -240,4 +242,8 @@ public interface TestServiceImpl {
     Map<String,Object> insNonMappedItems() throws Exception;
 
     void writeNonMaqppedItems() throws Exception;
+
+    List<Map<String, Object>> test_loadCIdsAssetContentFromFile(String fileName) throws Exception;
+
+    void writeItemsMetas_0910(String type) throws Exception;
 }

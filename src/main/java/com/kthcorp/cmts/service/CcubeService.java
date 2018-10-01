@@ -266,13 +266,28 @@ public class CcubeService implements CcubeServiceImpl {
     }
 
     public static Map<String, Object> insertedCidList;
+    public static Map<String, Object> insertedSidList;
 
     private boolean isExistCid(String cid) {
         boolean isExist = false;
+        if (insertedCidList == null) insertedCidList = new HashMap<String, Object>();
+
         if (insertedCidList.get(cid) != null) {
             isExist = true;
         } else {
-            insertedCidList.put(cid, null);
+            insertedCidList.put(cid, 1);
+        }
+        return isExist;
+    }
+
+    private boolean isExistSid(String sid) {
+        boolean isExist = false;
+        if (insertedSidList == null) insertedSidList = new HashMap<String, Object>();
+
+        if (insertedSidList.get(sid) != null) {
+            isExist = true;
+        } else {
+            insertedSidList.put(sid, 1);
         }
         return isExist;
     }
@@ -280,7 +295,6 @@ public class CcubeService implements CcubeServiceImpl {
     @Override
     public JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
         if (contentsArr == null) contentsArr = new JsonArray();
-        if (insertedCidList == null) insertedCidList = new HashMap<String, Object>();
 
         if (reqMap != null) {
             int itemIdx = 0;
@@ -293,25 +307,43 @@ public class CcubeService implements CcubeServiceImpl {
             }
             if (reqMap.get("content_id") != null) {
                 contentId = reqMap.get("content_id").toString();
+            } else {
+                contentId = "";
             }
             if (reqMap.get("master_content_id") != null) {
                 masterId = reqMap.get("master_content_id").toString();
+            } else {
+                masterId = "";
             }
             if (reqMap.get("series_id") != null) {
                 seriesId = reqMap.get("series_id").toString();
+            } else {
+                seriesId = "";
             }
+            Items itemInfo = null;
             if (itemIdx > 0) {
-                Items itemInfo = itemsService.getItemInfoOne(itemIdx);
+                itemInfo = itemsService.getItemInfoOne(itemIdx);
                 //System.out.println("#MLOG: getContent::"+itemInfo.toString());
+                JsonObject newItem = null;
                 if (itemInfo != null) {
-                    JsonObject newItem = new JsonObject();
                     int limitSize = 199;
 
                     /* ##PAHSE #2 contentId or seriesId 기준으로 중복 제거 */
-                    System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isExistCid(seriesId));
+                    boolean isDupped = true;
+                    if (!"".equals(contentId)) {
+                        isDupped = isExistCid(contentId);
+                        System.out.println("#contentId :"+contentId+" / dupcheck:"+isDupped);
+                    }
+                    if (!"".equals(seriesId)) {
+                        isDupped = isExistSid(seriesId);
+                        System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isDupped);
+                    }
 
-                    if (!isExistCid(contentId) || !isExistCid(seriesId)) {
+                    if (!isDupped) {
+                    //    if (!isExistCid(contentId) || !isExistCid(seriesId)) {
+                        System.out.println("#contentId :"+contentId+" / dupcheck:"+isExistCid(contentId) +" .. passed.");
 
+                        newItem = new JsonObject();
                         if(type.contains("CcubeContent")) {
                             newItem.addProperty("CONTENT_ID", contentId);
                             String title = itemInfo.getTitle();
@@ -407,7 +439,155 @@ public class CcubeService implements CcubeServiceImpl {
 
             }
         }
+
         return contentsArr;
+    }
+
+    @Override
+    public JsonArray getJsonArrayForCcubeOutput_Orig(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception {
+        if (contentsArr == null) contentsArr = new JsonArray();
+        if (insertedCidList == null) insertedCidList = new HashMap<String, Object>();
+
+        if (reqMap != null) {
+            JsonObject newItem = this.getJsonObjectForCcubeOutput(type, reqMap);
+            if (newItem != null) contentsArr.add(newItem);
+        }
+        return contentsArr;
+    }
+
+    @Override
+    public JsonObject getJsonObjectForCcubeOutput(String type, Map<String, Object> reqMap) throws Exception {
+        if (insertedCidList == null) insertedCidList = new HashMap<String, Object>();
+        JsonObject newItem = null;
+
+        if (reqMap != null) {
+
+            int itemIdx = 0;
+            String contentId = "";
+            String masterId = "";
+            String seriesId = "";
+
+            if (reqMap.get("idx") != null) {
+                String sIdx = String.valueOf(reqMap.get("idx"));
+                itemIdx = Integer.parseInt(sIdx);
+            }
+            if (reqMap.get("content_id") != null) {
+                contentId = reqMap.get("content_id").toString();
+            }
+            if (reqMap.get("master_content_id") != null) {
+                masterId = reqMap.get("master_content_id").toString();
+            }
+            if (reqMap.get("series_id") != null) {
+                seriesId = reqMap.get("series_id").toString();
+            }
+            if (itemIdx > 0) {
+                Items itemInfo = itemsService.getItemInfoOne(itemIdx);
+                System.out.println("#MLOG: getContent::"+itemInfo.toString());
+                if (itemInfo != null) {
+                    newItem = new JsonObject();
+                    int limitSize = 199;
+
+                    /* ##PAHSE #2 contentId or seriesId 기준으로 중복 제거 */
+                    //System.out.println("#series_Id :"+seriesId+" / dupcheck:"+isExistCid(seriesId));
+
+                    //if (!isExistCid(contentId) || !isExistCid(seriesId)) {
+
+                        if(type.contains("CcubeContent")) {
+                            newItem.addProperty("CONTENT_ID", contentId);
+                            String title = itemInfo.getTitle();
+
+                            if (title.length() < limitSize) limitSize = title.length();
+                            title = title.substring(0,limitSize);
+
+                            newItem.addProperty("META_CONTENT_TITLE", title);
+                        } else if(type.contains("CcubeSeries")) {
+                            newItem.addProperty("SERIES_ID", seriesId);
+                            String title = itemInfo.getTitle();
+                            if (title.length() < limitSize) limitSize = title.length();
+                            title = title.substring(0,limitSize);
+
+                            newItem.addProperty("META_SERIES_TITLE", title);
+                        }
+
+                        //System.out.println("#ELOG insertedCidList :: "+insertedCidList.toString());
+
+                        // items_tags_metas를 읽어와서 Obj에 매핑
+                        //System.out.println("#ELOG newItem-first:"+newItem.toString());
+                        newItem = this.getTagsMetasObj(newItem, itemInfo.getTagsMetasList());
+                        System.out.println("#ELOG newItem-second:"+newItem.toString());
+                        //System.out.println("#ELOG getTagsMetasObj:"+newItem.toString());
+
+                        // items_metas에서 award를 가져와서 Obj에 매핑
+                        String awardStr = "";
+                            /*
+                            JsonObject awardObj = new JsonObject();
+                            awardObj = itemsTagsService.getAwardObject(itemIdx, awardObj);
+                            if (awardObj != null && awardObj.get("LIST_AWARD") != null) {
+                                JsonParser jsonParser = new JsonParser();
+                                JsonArray metas = (JsonArray) jsonParser.parse(it.getMeta());
+
+                                JsonArray awardArr = awardObj.get("LIST_AWARD").getAsJsonArray();
+                                System.out.println("#ELOG awardArr:" + awardArr.toString());
+
+                                awardStr = JsonUtil.convertJsonArrayToStringByDelimeter(awardArr, "|");
+                                System.out.println("#ELOG awardStr:" + awardStr);
+                            }
+                            */
+                        if (itemInfo.getMetaList() != null) {
+                            for (ItemsMetas im : itemInfo.getMetaList()) {
+                                if (im != null && im.getMtype() != null && im.getMeta() != null
+                                        && "award".equals(im.getMtype())) {
+                                    //awardStr = CommonUtil.removeLineFeed(im.getMeta().trim());
+                                    //awardStr = CommonUtil.removeTag(awardStr);
+                                    //awardStr = CommonUtil.removeAllSpec1(awardStr);
+                                    String tmpAwardStr = im.getMeta().trim();
+                                    if (!"".equals(tmpAwardStr)) {
+                                        System.out.println("#ELOG tmpAwardStr:" + tmpAwardStr);
+                                        JsonParser jsonParser = new JsonParser();
+                                        JsonArray awardArr = (JsonArray) jsonParser.parse(tmpAwardStr);
+                                        awardStr = JsonUtil.convertJsonArrayToStringByDelimeter(awardArr, "|");
+                                    }
+                                }
+                            }
+                        }
+
+                        limitSize = 3999;
+                        //limitSize = 699;
+                        if (awardStr.length() < limitSize) limitSize = awardStr.length();
+                        awardStr = awardStr.substring(0,limitSize);
+                        awardStr = awardStr.replace("FAIL","");
+
+                        newItem.addProperty("META_AWARD",awardStr);
+
+                        /* META_SUBGENRE */
+                        //newItem = itemsTagsService.getSubgenresString(itemIdx, newItem);
+
+                        // output 연동규격에 맞추어 값이 없는 경우 공백으로 채워줌 added 18.04.24
+                        List<String> origTypes = null;
+                        if(type.contains("CcubeContent")) {
+                            origTypes = this.getContentOutputMetaTypes();
+                        } else if(type.contains("CcubeSeries")) {
+                            origTypes = this.getSeriesOutputMetaTypes();
+                        }
+                        newItem = JsonUtil.setEmptyMetasAndReplaceComma(newItem, origTypes);
+
+
+                            /* 임시
+                            // 검색메타 삭제
+                            if (newItem.get("META_SEARCH") != null) {
+                                newItem.remove("META_SEARCH");
+                                newItem.addProperty("META_SEARCH","");
+                            }
+                            */
+
+                        //contentsArr.add(newItem);
+                        //System.out.println("#MLOG.contentsArr.add.newItem:"+newItem.toString());
+                    //}  /* 중복제거 if end */
+                }
+
+            }
+        }
+        return newItem;
     }
 
     private JsonArray getNewArrWithResultTags(JsonArray oldArr, String mtype) {

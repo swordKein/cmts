@@ -6339,6 +6339,155 @@ public class TestService implements TestServiceImpl {
         return rt;
     }
 
+
+
+    @Override
+    public int writeCcubeOutputDayToJsonByTypeAndDate(String type, String date1) {
+        int rt = 0;
+
+        JsonArray contents = null;
+        int pageSize = 20;
+        Items req = new Items();
+        req.setType(type);
+        req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        if ("CcubeSeries".equals(type)) {
+            countAll = testMapper.cntSeriesOrigItemsDayByDate(date1);
+        } else {
+            countAll = testMapper.cntContentsOrigItemsDayByDate(date1);
+        }
+
+//countAll = 4107;
+
+        JsonObject resultObj = new JsonObject();
+
+        logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
+        if(countAll > 0) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+
+            try {
+                for (int pno = 1; pno <= pageAll; pno++) {
+                    req.setPageNo(pno);
+                    req.setPageSize(pageSize);
+                    // 일자 지정 조회
+                    req.setSearchSdate(date1);
+
+                    reqItems = null;
+                    if ("CcubeSeries".equals(type)) {
+                        reqItems = testMapper.getSeriesOrigItemsDayByDate(req);
+                    } else {
+                        reqItems = testMapper.getContentsOrigItemsDayByDate(req);
+                    }
+
+                    if (reqItems != null) {
+                        logger.info("#writeCcubeOutputToJson.getAll: type:" + type + " / pno:" + pno + " / items-size:" + reqItems.size());
+                        int oldItemIdx = 0;
+                        int cnt = 0;
+                        for (Map<String, Object> ins : reqItems) {
+
+                            /*
+                            CcubeKeys reqCk = null;
+                            // 중복방지로직, cid , title, director, year 순으로 대조
+
+                            if ("CcubeContent".equals(type)) {
+                                reqCk = new CcubeKeys();
+                                reqCk.setContent_id(ins.get("content_id").toString());
+                                reqCk.setMaster_content_id(ins.get("master_content_id").toString());
+                                String title = ins.get("content_title").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
+                                reqCk.setKmrb_id(ins.get("kmrb_id") != null ? ins.get("kmrb_id").toString() : "");
+                            } else if ("CcubeSeries".equals(type)) {
+                                reqCk = new CcubeKeys();
+                                reqCk.setSeries_id(ins.get("series_id").toString());
+                                String title = ins.get("series_nm").toString();
+                                reqCk.setPurity_title(title);
+                                reqCk.setYear((ins.get("year") != null) ? ins.get("year").toString() : "");
+                                reqCk.setDirector(ins.get("director") != null ? ins.get("director").toString() : "");
+                            }
+
+                            oldItemIdx = ccubeService.getCcubeItemIdx(reqCk);
+                            */
+                            long longidx = (long) ins.get("itemidx");
+                            oldItemIdx = (int) longidx;
+
+                            if (oldItemIdx > 0) {
+                                // 중복방지 로직에 걸려서 ccube_keys에 등재되지 않은 content_id, series_id 재처리용
+                                /*
+                                int currItemIdx = ccubeMapper.getCcubeItemIdx(reqCk);
+                                if (currItemIdx == 0) {
+                                    reqCk.setItemidx(oldItemIdx);
+
+                                    if("CcubeSeries".equals(type)) {
+                                        reqCk.setMaster_content_id("0");
+                                        reqCk.setContent_id("0");
+                                    } else {
+                                        reqCk.setSeries_id("0");
+                                    }
+                                    int rti = ccubeMapper.insCcubeKeys(reqCk);
+                                }
+                                */
+                                ins.put("idx", oldItemIdx);
+                                contents = ccubeService.getJsonArrayForCcubeOutput(contents, type, ins);
+
+                                cnt++;
+                            }
+                            //logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
+                        }
+                    }
+
+                }
+
+                int contSize = 0;
+                if (contents != null) contSize = contents.size();
+                resultObj.addProperty("TOTAL_COUNT", contSize);
+                resultObj.add("CONTENTS", contents);
+
+                //String tmpStr = resultObj.toString();
+                //tmpStr = (tmpStr.length() > 200) ? tmpStr.substring(0, 200) : tmpStr.substring(0,tmpStr.length() -1);
+                logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+                String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
+                fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE processCcubeOutputToJson file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                if (rtFileC > 0) {
+                    int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+                }
+
+                rt = 1;
+            } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+                e.printStackTrace();
+            }
+        }
+
+
+        if (ccubeService.insertedCidList != null) {
+            logger.info("#MLOG insertedCidList.size::"+ccubeService.insertedCidList.size());
+            ccubeService.insertedCidList = null;
+        }
+        if (ccubeService.insertedSidList != null) {
+            logger.info("#MLOG insertedSidList.size::"+ccubeService.insertedSidList.size());
+            ccubeService.insertedSidList = null;
+        }
+        System.out.println("#Process CNT:"+contents.size());
+        return rt;
+    }
+
     @Override
     public void processItemsTagsMetasByResultTag() throws Exception {
         Map<String, Object> resultMap = new HashMap();
@@ -7187,4 +7336,192 @@ public class TestService implements TestServiceImpl {
         System.out.println("#ALL count :"+itemList.size());
     }
 
+
+
+    @Override
+    public List<Map<String, Object>> test_loadCIdsAssetContentFromFile(String fileName) throws Exception {
+        String seperator = "\\t";
+        Map<String, Object> result = new HashMap();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        List<Map<String,Object>> listMap = new ArrayList();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 100
+                    ){
+                if (cntAll > 0) {
+
+                    Map<String,Object> newItem = null;
+
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+
+                        //System.out.println("# listMap: size:"+listMap.size()+" / newItem::"+newItem.toString());
+                        //System.out.println("# line::"+line);
+                        //System.out.println("# lines.length:"+lines.length);
+
+                        if (lines != null && lines.length > 2) {
+                            newItem = new HashMap();
+
+                            if (lines[0] != null) newItem.put("cid", lines[0]);
+                            if (lines.length > 1 && lines[1] != null) { newItem.put("title", lines[1]); }
+                            if (lines.length > 2 && lines[2] != null) { newItem.put("asset_id", lines[2]); }
+                            if (lines.length > 3 && lines[3] != null) { newItem.put("quality", lines[3]); }
+
+                            if (newItem != null && newItem.get("cid") != null) {
+                                listMap.add(newItem);
+                                int rt1 = testMapper.insTestCidsForAsset(newItem);
+                            }
+                        }
+                        //System.out.println("");
+
+                    }
+
+                    //System.out.println("# size:" + lines.length + " line_All:" + newItem.toString());
+
+                    //result.add(newItem);
+                    itemCnt++;
+                }
+
+
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return listMap;
+    }
+
+
+    private String fillSeperatorAndNull(String req, String itemStr, String seperator, int cnt) {
+
+        String appendStr = "";
+        for(int i=0; i<cnt; i++) {
+            appendStr = appendStr + seperator + itemStr;
+        }
+
+        req = req + appendStr;
+
+        return req;
+    }
+
+
+    @Override
+    public void writeItemsMetas_0910(String type) throws Exception {
+
+        //Items req = new Items();
+        //req.setType("CcubeContent");
+        //req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        int itemCnt = 0;
+        int pageSize = 20;
+        JsonObject newItem = null;
+
+//countAll = 40;
+
+        if(countAll < 1) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            //System.out.println("#pageAll:" + pageAll);
+
+            String resultStr = "content_id" + seperator + "title" + seperator + "asset_id" + seperator + "quality"
+                    + seperator + "CONTENT_ID"
+                    + seperator + "META_CONTENT_TITLE"
+                    + seperator + "META_WHEN"
+                    + seperator + "META_WHERE"
+                    + seperator + "META_WHAT"
+                    + seperator + "META_WHO"
+                    + seperator + "META_EMOTION"
+                    + seperator + "META_SUBGENRE"
+                    + seperator + "META_SEARCH"
+                    + seperator + "META_CHARACTER"
+                    + seperator + "META_RECO_TARGET"
+                    + seperator + "META_RECO_SITUATION"
+                    + seperator + "META_AWARD"
+                    + lineFeed;
+            try {
+                reqItems = testMapper.getTestCidsForAsset();
+
+                if (reqItems != null) {
+                    int i = 0;
+                    for (Map<String, Object> item : reqItems) {
+
+                    //for (int i = 0; i < 50; i++) {
+                        boolean isExistMetas = false;
+                        //Map<String, Object> item = reqItems.get(i);
+                        i++;
+                        itemCnt = i + 1;
+                        System.out.println("# " + itemCnt + "'s item::" + item.toString());
+
+                        resultStr = resultStr + item.get("cid").toString()
+                                + seperator + item.get("title").toString()
+                                + seperator + item.get("asset_id").toString()
+                                + seperator + (item.get("quality") != null ? item.get("quality").toString() : " ");
+
+                        Map<String, Object> itemKeyMap = testMapper.getItemidxTaggedByCid(item);
+
+                        if (itemKeyMap != null && itemKeyMap.get("itemidx") != null) {
+                            System.out.println("# " + itemCnt + "'s itemKeyMap::" + itemKeyMap.toString());
+                            item.put("idx", itemKeyMap.get("itemidx"));
+                            item.put("content_id", item.get("cid"));
+                            item.put("series_id", "0");
+                            newItem = ccubeService.getJsonObjectForCcubeOutput("CcubeContent", item);
+
+                            if (newItem != null) {
+                                System.out.println("#item's jsonObject::" + newItem.toString());
+                                resultStr = resultStr + seperator + newItem.get("CONTENT_ID").getAsString()
+                                        + seperator + newItem.get("META_CONTENT_TITLE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHEN").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHERE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHAT").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHO").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_EMOTION").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_SUBGENRE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_SEARCH").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_CHARACTER").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_RECO_TARGET").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_RECO_SITUATION").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_AWARD").getAsString().replace("\\t", " ")
+                                        + lineFeed;
+
+                                isExistMetas = true;
+                            }
+                        }
+
+                        if(!isExistMetas) {
+                            resultStr = this.fillSeperatorAndNull(resultStr, " ", seperator, 13);
+                            resultStr = resultStr + lineFeed;
+                        }
+
+                    }
+                }
+
+                //System.out.println("#resultStr :: \n"+resultStr);
+
+                String fileNameContent = "180910__CONTENTS_METAS__BY_ASSET.tsv";
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
