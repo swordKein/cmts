@@ -756,6 +756,6 @@ public class TestServiceTestImpl {
 
 	@Test
 	public void writeCcubeOutputDayToJsonByTypeAndDate() throws Exception {
-		testService.writeCcubeOutputDayToJsonByTypeAndDate("CcubeContent", "2018-09-18");
+		testService.writeCcubeOutputDayToJsonByTypeAndDate("CcubeContent", "2018-09-30");
 	}
 }

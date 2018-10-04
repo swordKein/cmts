@@ -6214,6 +6214,7 @@ public class TestService implements TestServiceImpl {
     public int writeCcubeOutputDayToJsonByType(String type) {
         int rt = 0;
 
+        JsonArray contents = null;
         int pageSize = 20;
         Items req = new Items();
         req.setType(type);
@@ -6231,7 +6232,6 @@ public class TestService implements TestServiceImpl {
 //countAll = 4107;
 
         JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("TOTAL_COUNT", countAll);
 
         logger.info("#MLLOG:writeCcubeOutput:: type:"+type+" / countAll:"+countAll);
         if(countAll > 0) {
@@ -6243,7 +6243,6 @@ public class TestService implements TestServiceImpl {
             }
             System.out.println("#pageAll:" + pageAll);
 
-            JsonArray contents = null;
 
             try {
                 for (int pno = 1; pno <= pageAll; pno++) {
@@ -6317,6 +6316,9 @@ public class TestService implements TestServiceImpl {
 
                 }
 
+                int cnt = 0;
+                if (contents != null) cnt = contents.size();
+                resultObj.addProperty("TOTAL_COUNT", cnt);
                 resultObj.add("CONTENTS", contents);
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
 
@@ -6336,6 +6338,19 @@ public class TestService implements TestServiceImpl {
                 e.printStackTrace();
             }
         }
+
+
+        if (ccubeService.insertedCidList != null) {
+            logger.info("#MLOG insertedCidList.size::"+ccubeService.insertedCidList.size());
+            ccubeService.insertedCidList = null;
+        }
+        if (ccubeService.insertedSidList != null) {
+            logger.info("#MLOG insertedSidList.size::"+ccubeService.insertedSidList.size());
+            ccubeService.insertedSidList = null;
+        }
+        int cnt = 0;
+        if (contents != null) cnt = contents.size();
+        System.out.println("#Process CNT:"+ cnt);
         return rt;
     }
 
@@ -6484,7 +6499,10 @@ public class TestService implements TestServiceImpl {
             logger.info("#MLOG insertedSidList.size::"+ccubeService.insertedSidList.size());
             ccubeService.insertedSidList = null;
         }
-        System.out.println("#Process CNT:"+contents.size());
+        int cnt = 0;
+        if (contents != null) cnt = contents.size();
+        System.out.println("#Process CNT:"+ cnt);
+
         return rt;
     }
 
