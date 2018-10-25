@@ -18,6 +18,20 @@ public class StringUtil {
         return req;
     }
 
+    public static String addMetaTag(String req) {
+        req = req.toUpperCase();
+
+        req = req.replace("WHO","METASWHO");
+        req = req.replace("WHEN","METASWHEN");
+        req = req.replace("WHAT","METASWHAT");
+        req = req.replace("WHERE","METASWHERE");
+        req = req.replace("EMOTION","METASEMOTION");
+        req = req.replace("CHARACTER","METASCHARACTER");
+        req = req.replace("SUBGENRE","LIST_SUBGENRE");
+
+        return req;
+    }
+
     public void findCountAlphabets() {
         String txt = "http://cofs.tistory.com?param1=a123&param2=한글&param3=개발자&param4=cofs";
         char[] txtChar = txt.toCharArray();

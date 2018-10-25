@@ -164,7 +164,8 @@ public class JobRunner implements Job {
                     //testService.insDicSubgenreKeywords();
                     //testService.writeAllContentsByMcid();
                     //testService.processGenSubgenre_0725("CcubeContents");
-                    testService.writeGenSubgenre_0725("CcubeContents");
+                    //testService.writeGenSubgenre_0725("CcubeContents");
+                    testService.removeAllTagsFromMetasByCsv();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
             }

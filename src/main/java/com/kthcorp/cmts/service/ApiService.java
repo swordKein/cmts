@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1109,6 +1110,12 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
+    @SuppressWarnings("unused")
+    public String getNaverKordicResultNull(String keyword) {
+        return "";
+    }
+
+    @HystrixCommand(fallbackMethod = "getNaverKordicResultNull")
     @Override
     public String getNaverKordicResult(String keyword) throws Exception {
         String result = "";
@@ -1130,6 +1137,7 @@ public class ApiService implements ApiServiceImpl {
         return result;
     }
 
+    @HystrixCommand(fallbackMethod = "getNaverKordicResultNull")
     @Override
     public String getCollNaverKordicResult(String keyword) throws Exception {
         String result = "";

@@ -758,4 +758,10 @@ public class TestServiceTestImpl {
 	public void writeCcubeOutputDayToJsonByTypeAndDate() throws Exception {
 		testService.writeCcubeOutputDayToJsonByTypeAndDate("CcubeContent", "2018-09-30");
 	}
+
+
+	@Test
+	public void removeAllTagsFromMetasByCsv() throws Exception {
+		testService.removeAllTagsFromMetasByCsv();
+	}
 }

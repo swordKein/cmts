@@ -189,7 +189,7 @@
 
     <update id="uptItemsTagsByManual" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* uptItemsTagsByManual */
-        update items_tags_metas set meta_orig = meta , meta = #{meta}
+        update items_tags_metas set meta_orig = meta , meta = #{meta}, regdate = '2018-10-25 17:00:00'
         where idx = #{idx} and tagidx = #{tagidx} and mtype = #{mtype}
     </update>
 
@@ -197,6 +197,13 @@
         /* getItemsTagsMetasByManual  */
         select * from items_tags_metas
         where idx = #{idx} and mtype = #{mtype}
+    </select>
+
+    <select id="getItemsTagsMetasByMeta" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
+      /* getItemsTagsMetasByMeta */
+      select * from items_tags_metas
+      where mtype = #{mtype} and meta like concat('%"',#{meta},'"%');
+
     </select>
 
     <select id="getItemsTagsMetasByMtype" parameterType="com.kthcorp.cmts.model.ItemsTags" resultType="com.kthcorp.cmts.model.ItemsTags">
