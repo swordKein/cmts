@@ -7542,4 +7542,147 @@ public class TestService implements TestServiceImpl {
             }
         }
     }
+
+    @Override
+    public void processRemoveMetasByCsv(Set<Object> reqSet) {
+
+        Map<String, Object> resultMap = new HashMap();
+
+        if (reqSet != null && reqSet.size() > 0) {
+
+        }
+
+        //System.out.println("#RESULT_MAP:"+resultMap.toString());
+
+        Set entrySet = resultMap.entrySet();
+        Iterator it = entrySet.iterator();
+
+        while(it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            //System.out.println((me.getKey()+","+me.getValue()));
+            ItemsTags reqit = (ItemsTags) me.getValue();
+            int rti = itemsTagsMapper.insItemsTagsMetas_0503(reqit);
+        }
+
+        System.out.println("#RESULT_MAP.size():"+resultMap.size());
+    }
+
+
+    @Override
+    public Set<Object> loadDicMetasFromCsv(String fileName) throws Exception {
+        String seperator = "\t";
+        Set<Object> result = new HashSet();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        System.out.println("# size:" + lines.length + " line:0::" + lines[0]+"  line:2::"+ lines[1]);
+                        if (lines.length > 1) {
+                            result.add(lines[0]+"___"+lines[1]);
+                        }
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    @Override
+    public void removeAllTagsFromMetasByCsv() {
+        //String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\1024__미정의키워드_3천여건__일괄삭제\\del_3000.txt";
+        String fileName = "/home/ktipmedia/tmp/del_3000.txt";
+
+        Set<Object> reqSet = null;
+        try {
+            reqSet = this.loadDicMetasFromCsv(fileName);
+
+            if(reqSet != null && reqSet.size() > 0) {
+                int cnt = 1;
+                for (Object ro : reqSet) {
+                    String rs = (String) ro;
+                    if (!"".equals(rs) && rs.contains("___")) {
+                        String rss[] = rs.split("___");
+                        if (rss != null && rss.length > 1) {
+                            String del_mtype = rss[0].trim();
+
+                            //if ("SUBGENRE".equals(del_mtype)) {
+
+                                del_mtype = StringUtil.addMetaTag(del_mtype);
+                                String del_meta = rss[1].trim();
+                                System.out.println("\n\n# " + cnt + " 'th ITEM :: del_mtype:" + del_mtype + " / del_meta:" + del_meta);
+
+                                ItemsTags reqIt = new ItemsTags();
+                                reqIt.setMtype(del_mtype);
+                                reqIt.setMeta(del_meta);
+                                List<ItemsTags> listDelMetas = itemsTagsMapper.getItemsTagsMetasByMeta(reqIt);
+                                //System.out.println("#delMetas::"+listDelMetas.toString());
+
+                                int itemcnt = 1;
+                                for (ItemsTags item : listDelMetas) {
+                                    if (item.getMeta() != null && item.getMeta().length() > 2) {
+                                        JsonArray origArr = JsonUtil.getJsonArray(item.getMeta());
+                                        System.out.println("\n### " + cnt + " 'th TAG / " + itemcnt + " 'th ITEMs ORIG_METAS ::" + origArr + " DELETE for :" + del_meta);
+                                        if (origArr != null && origArr.size() > 0) {
+                                            JsonObject jObj = new JsonObject();
+                                            jObj.addProperty("meta", del_meta);
+
+                                            JsonArray destArr = itemsTagsService.changeTargetMetasArray("del", jObj, origArr);
+                                            System.out.println("### " + cnt + " 'th TAG / " + itemcnt + " 'th ITEMs CHANGE_METAS ::" + destArr);
+//                                            ItemsTags newItem = new ItemsTags();
+//                                            newItem.setIdx(item.getIdx());
+//                                            newItem.setTagidx(item.getTagidx());
+//                                            newItem.setMtype(item.getMtype());
+//
+                                            String destMeta = "";
+                                            if(destArr != null && destArr.size() > 0) {
+                                                destMeta = destArr.toString();
+                                            } else {
+                                                destMeta = "[]";
+                                            }
+                                            item.setMeta(destMeta);
+
+                                            int rt = itemsTagsMapper.uptItemsTagsByManual(item);
+                                        }
+                                    }
+                                    itemcnt++;
+                                }
+
+                            //}
+
+                        }
+                    }
+
+                    cnt++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println("#reqSet :: "+reqSet.toString());
+        System.out.println("#reqSet.size :: "+reqSet.size());
+    }
 }

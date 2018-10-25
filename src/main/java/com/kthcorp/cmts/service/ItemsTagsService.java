@@ -1671,7 +1671,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     case "del":
                         fromWord = jObj.get("meta").getAsString().trim();
-                        toWord = jObj.get("target_meta").getAsString().trim();
+                        //toWord = jObj.get("target_meta").getAsString().trim();
 
                         for (JsonElement je : origArray) {
                             JsonObject jo = (JsonObject) je;

@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface TestServiceImpl {
     void getTest1() throws Exception;
@@ -246,4 +247,10 @@ public interface TestServiceImpl {
     List<Map<String, Object>> test_loadCIdsAssetContentFromFile(String fileName) throws Exception;
 
     void writeItemsMetas_0910(String type) throws Exception;
+
+    void processRemoveMetasByCsv(Set<Object> reqMapList);
+
+    Set<Object> loadDicMetasFromCsv(String fileName) throws Exception;
+
+    void removeAllTagsFromMetasByCsv();
 }
