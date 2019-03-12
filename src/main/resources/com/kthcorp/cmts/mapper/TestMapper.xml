@@ -229,11 +229,11 @@
         , cc.eng_title
         , cc.director
         , cc.year
-        , csu.asset_id
+        #, csu.asset_id
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         inner join ccube_contents cc on cc.content_id = it.cid
-        inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
+        #inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
         order by iss.regdate desc
 
     </select>
@@ -351,6 +351,8 @@
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
 
+            */ inner join cids_non2 cn2 on cn2.cid = co.content_id */
+
             ) a
         order by a.itemidx asc
         limit ${pageSize} offset ${offsetIdx}
@@ -373,6 +375,10 @@
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
+
+
+            /*inner join cids_non2 cn2 on cn2.cid = co.content_id */
+
             ) a
           ) b
 
@@ -740,4 +746,22 @@
         where iss.stat = 'ST'
         limit 1
     </select>
+
+    <select id="getCountConfirmedItemsByMetas" parameterType="map" resultType="java.lang.Integer">
+        /* getCountConfirmedItemsByMetas */
+        select count(*) as cnt
+            from (
+            select itm.idx
+            from items_tags_metas itm
+            inner join items_stat iss on iss.idx = itm.idx
+            where itm.mtype = #{mtype} and itm.meta like concat('%\"',#{meta},'\"%')
+            group by itm.idx
+        ) a
+
+    </select>
+
+    <insert id="insCidsNon" parameterType="map">
+        /* insCidsNon */
+        insert into CIDS_NON (cid) values (#{cid})
+    </insert>
 </mapper>

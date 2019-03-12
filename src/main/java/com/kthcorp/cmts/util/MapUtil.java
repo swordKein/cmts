@@ -431,4 +431,23 @@ public class MapUtil {
         }
         return obj;
     }
+
+    public static Map<String, Object> removeMapByMap(Map<String, Object> reqMap, Map<String, Object> keyMap) {
+        try {
+            if (reqMap != null && keyMap != null) {
+                Set entrySet = keyMap.entrySet();
+                Iterator it = entrySet.iterator();
+
+                while(it.hasNext()) {
+                    Map.Entry me = (Map.Entry) it.next();
+                    String key = (String) me.getKey();
+                    reqMap.remove(key);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        return reqMap;
+    }
 }

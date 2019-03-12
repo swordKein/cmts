@@ -750,7 +750,7 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
-	public void writeItemsMetas_0910() throws Exception {
+	public void writeItemsMetas_1030() throws Exception {
 		testService.writeItemsMetas_0910("CcubeContent");
 	}
 
@@ -764,4 +764,22 @@ public class TestServiceTestImpl {
 	public void removeAllTagsFromMetasByCsv() throws Exception {
 		testService.removeAllTagsFromMetasByCsv();
 	}
+
+
+	@Test
+	public void getCountConfrimedItemsByCsv() throws Exception {
+		testService.getCountConfrimedItemsByCsv();
+	}
+
+	@Test
+	public void intContentIdsByCsv() throws Exception {
+		testService.intContentIdsByCsv();
+	}
+
+	@Test
+	public void getMetasWithoutDicWordsByCsv() throws Exception {
+		testService.getMetasWithoutDicWordsByCsv();
+	}
+
+
 }

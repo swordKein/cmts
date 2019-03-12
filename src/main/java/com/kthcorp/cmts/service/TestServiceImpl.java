@@ -253,4 +253,20 @@ public interface TestServiceImpl {
     Set<Object> loadDicMetasFromCsv(String fileName) throws Exception;
 
     void removeAllTagsFromMetasByCsv();
+
+    List<Map<String, Object>> loadMtypeMetaByCsv(String fileName) throws Exception;
+
+    void getCountConfrimedItemsByCsv();
+
+    List<Map<String, Object>> loadCidByCsv(String fileName) throws Exception;
+
+    Map<String, Object> loadMetasByCsv(String fileName) throws Exception;
+
+    void intContentIdsByCsv();
+
+    Map<String, Object> loadDicwordsByCsv(String fileName) throws Exception;
+
+    void getMetasWithoutDicWordsByCsv();
+
+    void writeFileFromMap(Map<String, Object> reqMap, List<String> types) throws Exception;
 }
