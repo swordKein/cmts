@@ -5358,12 +5358,14 @@ public class TestService implements TestServiceImpl {
         List<Map<String, Object>> itemList  = testMapper.getCcubeContentsAll();
         List<Map<String, Object>> resultList = new ArrayList();
 
+
+        BufferedWriter output = null;
         JsonArray contents = null;
         for (Map<String, Object> item : itemList) {
             long longIdx = (long) item.get("idx");
             int idx = (int) longIdx;
             String type = (String) item.get("type");
-            String asset_id = (String) item.get("asset_id");
+            //String asset_id = (String) item.get("asset_id");
             String cid = (String) item.get("cid");
             String mcid = (String) item.get("mcid");
             String content_title = (String) item.get("content_title");
@@ -5388,7 +5390,47 @@ public class TestService implements TestServiceImpl {
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
+
+            System.out.println("#contents::"+contents.toString());
+
+
+
+            String fileNameContent = "METAS_BY_CONTENTS_WITH_ASSET_181030.tsv";
+            File targetFile = new File(UPLOAD_DIR + fileNameContent);
+            targetFile.createNewFile();
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "utf-8"));
+
+            String lineFeed = System.getProperty("line.separator");
+
+
+            String seperator = "\t";
+
+            String resultStr = "";
+            resultStr = "content_id" + seperator + "master_content_id"
+                    //+ seperator + "asset_id"
+                    + seperator + "content_title" + seperator + "eng_title"
+                    + seperator + "director"
+                    + seperator + "year"
+                    //+ seperator + "asset_id"
+                    + seperator + "meta_when"
+                    + seperator + "meta_where"
+                    + seperator + "meta_what"
+                    + seperator + "meta_who"
+                    + seperator + "meta_emotion"
+                    + seperator + "meta_subgenre"
+                    + seperator + "meta_search"
+                    + seperator + "meta_charactor"
+                    + seperator + "meta_reco_target"
+                    + seperator + "meta_reco_situation"
+                    + seperator + "meta_award"
+                    + lineFeed;
+            output.write(resultStr);
+
+            String itemStr = "";
+            int cnt = 1;
+
             if (contents != null && contents.size() > 0) {
+
                 JsonObject jo = (JsonObject) contents.get(0);
                 if (jo != null) {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
@@ -5401,9 +5443,9 @@ public class TestService implements TestServiceImpl {
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
-                    meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
+                    meta_subgenre = (jo.get("LIST_SUBGENRE") != null ? jo.get("LIST_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
-                    meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
+                    meta_search = (jo.get("LIST_SEARCH") != null ? jo.get("LIST_SEARCH").getAsString() : "");
                     item.put("meta_search", meta_search);
                     meta_charactor = (jo.get("META_CHARACTER") != null ? jo.get("META_CHARACTER").getAsString() : "");
                     item.put("meta_charactor", meta_charactor);
@@ -5414,37 +5456,42 @@ public class TestService implements TestServiceImpl {
                     meta_award = (jo.get("META_AWARD") != null ? jo.get("META_AWARD").getAsString() : "");
                     meta_award = meta_award.replace("현재페이지   1", "").trim(); item.put("meta_award", meta_award);
                     System.out.println("#meta_when:"+meta_when + " / meta_where:"+meta_where + " / meta_award:"+meta_award);
-                    resultList.add(item);
+                    //resultList.add(item);
+
+                    itemStr = "";
+                    //itemStr = item.get("idx").toString();
+                    itemStr = item.get("cid").toString();
+                    itemStr = itemStr + seperator + item.get("mcid").toString();
+                    //itemStr = itemStr + seperator + item.get("asset_id").toString();
+                    itemStr = itemStr + seperator + item.get("content_title").toString();
+                    itemStr = itemStr + seperator + item.get("eng_title").toString();
+                    itemStr = itemStr + seperator + item.get("director").toString();
+                    itemStr = itemStr + seperator + item.get("year").toString();
+                    //itemStr = itemStr + seperator + item.get("asset_id").toString();
+
+                    itemStr = itemStr + seperator + item.get("meta_when").toString();
+                    itemStr = itemStr + seperator + item.get("meta_where").toString();
+                    itemStr = itemStr + seperator + item.get("meta_what").toString();
+                    itemStr = itemStr + seperator + item.get("meta_who").toString();
+                    itemStr = itemStr + seperator + item.get("meta_emotion").toString();
+                    itemStr = itemStr + seperator + item.get("meta_subgenre").toString();
+                    itemStr = itemStr + seperator + item.get("meta_search").toString();
+                    itemStr = itemStr + seperator + item.get("meta_charactor").toString();
+                    itemStr = itemStr + seperator + item.get("meta_reco_target").toString();
+                    itemStr = itemStr + seperator + item.get("meta_reco_situation").toString();
+                    itemStr = itemStr + seperator + item.get("meta_award").toString();
+
+                    //resultStr += itemStr + lineFeed;
+                    output.write(itemStr);
+                    System.out.println("#write "+cnt+"'s item::"+itemStr);
                 }
+                cnt++;
             }
 
 
         }
 
-        String seperator = "\t";
-        String lineFeed = System.getProperty("line.separator");
-
-        String resultStr = "";
-        resultStr = "content_id" + seperator + "master_content_id" + seperator + "asset_id"
-                + seperator + "content_title" + seperator + "eng_title"
-                + seperator + "director"
-                + seperator + "year"
-                //+ seperator + "asset_id"
-                + seperator + "meta_when"
-                + seperator + "meta_where"
-                + seperator + "meta_what"
-                + seperator + "meta_who"
-                + seperator + "meta_emotion"
-                + seperator + "meta_subgenre"
-                + seperator + "meta_search"
-                + seperator + "meta_charactor"
-                + seperator + "meta_reco_target"
-                + seperator + "meta_reco_situation"
-                + seperator + "meta_award"
-                + lineFeed;
-
-        String itemStr = "";
-        int cnt = 1;
+        /*
         for (Map<String, Object> item : resultList) {
             //itemStr = item.get("idx").toString();
             itemStr = item.get("cid").toString();
@@ -5472,10 +5519,10 @@ public class TestService implements TestServiceImpl {
             System.out.println("#write "+cnt+"'s item::"+itemStr);
             cnt++;
         }
+        */
 
-        String fileNameContent = "METAS_BY_CONTENTS_WITH_ASSET_180611.tsv";
-        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-
+        //int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+        output.close();
     }
 
 
@@ -6099,6 +6146,17 @@ public class TestService implements TestServiceImpl {
                 resultObj.add("CONTENTS", contents);
 
                 logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to jsonObj:" + resultObj.toString());
+
+
+                Set<String> cidsSet = new HashSet<String>();
+                for(JsonElement je : contents) {
+                    JsonObject jo = (JsonObject) je;
+                    System.out.println(jo.get("CONTENT_ID"));
+
+                    cidsSet.add(jo.get("CONTENT_ID").getAsString());
+                }
+
+                System.out.println("#SETs.size:"+cidsSet.size());
 
                 String fileNameContent = (type.startsWith("CcubeSeries") ? "METAS_SERIES_" : "METAS_MOVIE_");
                 fileNameContent += DateUtils.getLocalDate("yyyyMMddHH") + ".json";
@@ -7461,7 +7519,8 @@ public class TestService implements TestServiceImpl {
             }
             //System.out.println("#pageAll:" + pageAll);
 
-            String resultStr = "content_id" + seperator + "title" + seperator + "asset_id" + seperator + "quality"
+            String resultStr = "content_id" + seperator + "title"
+                    //+ seperator + "asset_id" + seperator + "quality"
                     + seperator + "CONTENT_ID"
                     + seperator + "META_CONTENT_TITLE"
                     + seperator + "META_WHEN"
@@ -7477,7 +7536,8 @@ public class TestService implements TestServiceImpl {
                     + seperator + "META_AWARD"
                     + lineFeed;
             try {
-                reqItems = testMapper.getTestCidsForAsset();
+                //reqItems = testMapper.getTestCidsForAsset();
+                reqItems = testMapper.getCcubeContentsAll();
 
                 if (reqItems != null) {
                     int i = 0;
@@ -7491,9 +7551,9 @@ public class TestService implements TestServiceImpl {
                         System.out.println("# " + itemCnt + "'s item::" + item.toString());
 
                         resultStr = resultStr + item.get("cid").toString()
-                                + seperator + item.get("title").toString()
-                                + seperator + item.get("asset_id").toString()
-                                + seperator + (item.get("quality") != null ? item.get("quality").toString() : " ");
+                                + seperator + item.get("content_title").toString();
+                                //+ seperator + item.get("asset_id").toString()
+                                //+ seperator + (item.get("quality") != null ? item.get("quality").toString() : " ");
 
                         Map<String, Object> itemKeyMap = testMapper.getItemidxTaggedByCid(item);
 
@@ -7535,7 +7595,7 @@ public class TestService implements TestServiceImpl {
 
                 //System.out.println("#resultStr :: \n"+resultStr);
 
-                String fileNameContent = "180910__CONTENTS_METAS__BY_ASSET.tsv";
+                String fileNameContent = "181030__CONTENTS_METAS.tsv";
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -7684,5 +7744,544 @@ public class TestService implements TestServiceImpl {
 
         //System.out.println("#reqSet :: "+reqSet.toString());
         System.out.println("#reqSet.size :: "+reqSet.size());
+    }
+
+
+
+    @Override
+    public List<Map<String, Object>> loadMtypeMetaByCsv(String fileName) throws Exception {
+        String seperator = "\t";
+        List<Map<String, Object>> result = new ArrayList();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        System.out.println("# size:" + lines.length + " line:0::" + lines[0]+"  line:2::"+ lines[1]);
+                        if (lines.length > 1) {
+                            Map<String, Object> newMap = new HashMap();
+                            String mtype = lines[0];
+                            mtype = StringUtil.addMetaTag(mtype);
+
+                            newMap.put("mtype", mtype);
+                            newMap.put("meta", lines[1]);
+
+                            result.add(newMap);
+                        }
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void getCountConfrimedItemsByCsv() {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\1030__키워드별_컨텐츠수_집계\\words_dic.txt";
+        //String fileName = "/home/ktipmedia/tmp/del_3000.txt";
+
+        List<Map<String, Object>> reqMapArr = null;
+
+        try {
+            reqMapArr = this.loadMtypeMetaByCsv(fileName);
+
+            if(reqMapArr != null && reqMapArr.size() > 0) {
+                int cnt = 1;
+                for (Object ro : reqMapArr) {
+                    Map<String,Object> nmap = (Map<String, Object>) ro;
+
+                    int cntitems = testMapper.getCountConfirmedItemsByMetas(nmap);
+                    nmap.put("cnt", cntitems);
+
+                    //System.out.println(nmap.get("mtype")+ ","+nmap.get("meta")+","+nmap.get("cnt"));
+                    cnt++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println("#reqMapArr :: "+reqMapArr.toString());
+        for (Object ro : reqMapArr) {
+            Map<String, Object> nmap = (Map<String, Object>) ro;
+            System.out.println(nmap.get("mtype")+ ","+nmap.get("meta")+","+nmap.get("cnt"));
+        }
+        System.out.println("#reqMapArr.size :: "+reqMapArr.size());
+    }
+
+
+
+    @Override
+    public List<Map<String, Object>> loadCidByCsv(String fileName) throws Exception {
+        String seperator = "\t";
+        List<Map<String, Object>> result = new ArrayList();
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        System.out.println("# size:" + lines.length + " line:0::" + lines[0]);
+                        if (lines.length > 0) {
+                            Map<String, Object> newMap = new HashMap();
+                            String cid = "";
+                            cid = lines[0];
+                            cid = cid.trim();
+
+                            newMap.put("cid", cid);
+
+                            result.add(newMap);
+                        }
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void intContentIdsByCsv() {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\1031__CCUBE_연동테스트_미매핑_히어로100\\cid_list.txt";
+        //String fileName = "/home/ktipmedia/tmp/del_3000.txt";
+
+        List<Map<String, Object>> reqMapArr = null;
+
+        try {
+            reqMapArr = this.loadCidByCsv(fileName);
+            System.out.println("#reqMapArr.size :: "+reqMapArr.size());
+
+            if(reqMapArr != null && reqMapArr.size() > 0) {
+                int cnt = 1;
+                for (Object ro : reqMapArr) {
+                    Map<String,Object> nmap = (Map<String, Object>) ro;
+
+                    int rt = testMapper.insCidsNon(nmap);
+
+                    //System.out.println(nmap.get("mtype")+ ","+nmap.get("meta")+","+nmap.get("cnt"));
+                    cnt++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("#reqMapArr :: "+reqMapArr.toString());
+        System.out.println("#reqMapArr.size :: "+reqMapArr.size());
+    }
+
+
+
+
+    @Override
+    public Map<String, Object> loadMetasByCsv(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+
+        Map<String, Object> map1 = new HashMap();
+        Map<String, Object> map2 = new HashMap();
+        Map<String, Object> map3 = new HashMap();
+        Map<String, Object> map4 = new HashMap();
+        Map<String, Object> map5 = new HashMap();
+        Map<String, Object> map6 = new HashMap();
+
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        String cid = "";
+                        String meta_when = "";
+                        String meta_where = "";
+                        String meta_what = "";
+                        String meta_who = "";
+                        String meta_emotion = "";
+                        String meta_character = "";
+
+                        String[] tmps = null;
+
+                        //System.out.println("# size:" + lines.length + " line:0::" + lines[0]);
+                        if (lines.length > 0) {
+                            cid = "";
+                            meta_when = "";
+                            meta_where = "";
+                            meta_what = "";
+                            meta_who = "";
+                            meta_emotion = "";
+                            meta_character = "";
+
+                            cid = lines[0];
+                            cid = cid.trim();
+
+                            if (lines.length > 2) {
+                                meta_when = lines[2];
+                                meta_when = meta_when.trim();
+                                if (!"".equals(meta_when)) {
+                                    tmps = meta_when.split("\\|");
+                                    //System.out.println("#meta_whens split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map1.put(s1,null);
+                                        }
+                                    } else {
+                                        map1.put(meta_when, null);
+                                    }
+                                }
+                            }
+
+                            if (lines.length > 3) {
+                                meta_where = lines[3];
+                                meta_where = meta_where.trim();
+                                if (!"".equals(meta_where)) {
+                                    tmps = meta_where.split("\\|");
+                                    //System.out.println("#meta_where split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map2.put(s1,null);
+                                        }
+                                    } else {
+                                        map2.put(meta_where, null);
+                                    }
+                                }
+                            }
+
+                            if (lines.length > 4) {
+                                meta_what = lines[4];
+                                meta_what = meta_what.trim();
+                                if (!"".equals(meta_what)) {
+                                    tmps = meta_what.split("\\|");
+                                    //System.out.println("#meta_what split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map3.put(s1,null);
+                                        }
+                                    } else {
+                                        map3.put(meta_what, null);
+                                    }
+                                }
+                            }
+
+                            if (lines.length > 5) {
+                                meta_who = lines[5];
+                                meta_who = meta_who.trim();
+                                if (!"".equals(meta_who)) {
+                                    tmps = meta_who.split("\\|");
+                                    //System.out.println("#meta_who split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map4.put(s1,null);
+                                        }
+                                    } else {
+                                        map4.put(meta_who, null);
+                                    }
+                                }
+                            }
+
+                            if (lines.length > 6) {
+                                meta_emotion = lines[6];
+                                meta_emotion = meta_emotion.trim();
+                                if (!"".equals(meta_emotion)) {
+                                    tmps = meta_emotion.split("\\|");
+                                    //System.out.println("#meta_who split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map5.put(s1,null);
+                                        }
+                                    } else {
+                                        map5.put(meta_emotion, null);
+                                    }
+                                }
+                            }
+
+                            if (lines.length > 9) {
+                                meta_character = lines[9];
+                                meta_character = meta_character.trim();
+                                if (!"".equals(meta_character)) {
+                                    tmps = meta_character.split("\\|");
+                                    //System.out.println("#meta_who split.:" + tmps[0].toString());
+
+                                    if (tmps.length > 0) {
+                                        for (String s1 : tmps) {
+                                            map6.put(s1,null);
+                                        }
+                                    } else {
+                                        map6.put(meta_character, null);
+                                    }
+                                }
+                            }
+
+                        }
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+
+            result.put("WHEN", map1);
+            System.out.println("#WHEN.map:"+map1.size());
+            result.put("WHERE", map2);
+            System.out.println("#WHERE.map:"+map2.size());
+            result.put("WHAT", map3);
+            System.out.println("#WHAT.map:"+map3.size());
+            result.put("WHO", map4);
+            System.out.println("#WHO.map:"+map4.size());
+            result.put("EMOTION", map5);
+            System.out.println("#EMOTION.map:"+map5.size());
+            result.put("CHARACTER", map6);
+            System.out.println("#CHARACTER.map:"+map6.size());
+
+            System.out.println("#allCount:"+cntAll);
+            System.out.println("#itemCnt:"+itemCnt);
+            System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+
+    @Override
+    public Map<String, Object> loadDicwordsByCsv(String fileName) throws Exception {
+        String seperator = "\t";
+        Map<String, Object> result = new HashMap();
+
+        Map<String, Object> map1 = new HashMap();
+        Map<String, Object> map2 = new HashMap();
+        Map<String, Object> map3 = new HashMap();
+        Map<String, Object> map4 = new HashMap();
+        Map<String, Object> map5 = new HashMap();
+        Map<String, Object> map6 = new HashMap();
+
+        int cntAll = 0;
+        int itemCnt = 0;
+        int errCnt = 0;
+        String line = "";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName), "ms949"))) {
+            while ((line = reader.readLine()) != null
+                //&& cntAll < 10000
+                    ){
+                if (cntAll > -1) {
+                    if (!"".equals(line.trim())) {
+                        String lines[] = line.trim().split(seperator);
+
+                        String type = "";
+                        String word = "";
+
+                        //System.out.println("# size:" + lines.length + " line:0::" + lines[0]);
+                        if (lines.length > 0) {
+                            type = "";
+                            word = "";
+
+                            type = lines[0];
+                            type = type.trim();
+
+                            if (lines.length > 1) {
+                                word = lines[1];
+                                word = word.trim();
+                            }
+
+                            if ("WHEN".equals(type.toUpperCase())) {
+                                map1.put(word, null);
+                            }
+                            if ("WHERE".equals(type.toUpperCase())) {
+                                map2.put(word, null);
+                            }
+                            if ("WHAT".equals(type.toUpperCase())) {
+                                map3.put(word, null);
+                            }
+                            if ("WHO".equals(type.toUpperCase())) {
+                                map4.put(word, null);
+                            }
+                            if ("EMOTION".equals(type.toUpperCase())) {
+                                map5.put(word, null);
+                            }
+                            if ("CHARACTER".equals(type.toUpperCase())) {
+                                map6.put(word, null);
+                            }
+
+
+                        }
+                        //result.add(newItem);
+                        itemCnt++;
+                    }
+
+                }
+                cntAll++;
+            }
+
+
+            result.put("WHEN", map1);
+            System.out.println("#dic WHEN.map:"+map1.size());
+            result.put("WHERE", map2);
+            System.out.println("#dic WHERE.map:"+map2.size());
+            result.put("WHAT", map3);
+            System.out.println("#dic WHAT.map:"+map3.size());
+            result.put("WHO", map4);
+            System.out.println("#dic WHO.map:"+map4.size());
+            result.put("EMOTION", map5);
+            System.out.println("#dic EMOTION.map:"+map5.size());
+            result.put("CHARACTER", map6);
+            System.out.println("#dic CHARACTER.map:"+map6.size());
+
+            //System.out.println("#allCount:"+cntAll);
+            //System.out.println("#itemCnt:"+itemCnt);
+            //System.out.println("#errCnt:"+errCnt);
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void getMetasWithoutDicWordsByCsv() {
+        String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\1206_키워드_사전제외_정리집계\\사전키워드제거\\181030_metas.txt";
+        String fileName2 = "C:\\Users\\wodus77\\Documents\\KTH_META\\07_2 추가작업\\1206_키워드_사전제외_정리집계\\사전키워드제거\\dic_words.txt";
+        //String fileName = "/home/ktipmedia/tmp/del_3000.txt";
+
+        Map<String, Object> reqMapArr = null;
+        Map<String, Object> dicMapArr = null;
+        Map<String, Object> resMapArr = new HashMap();
+        List<String> types = new ArrayList();
+        types.add("WHEN");
+        types.add("WHERE");
+        types.add("WHAT");
+        types.add("WHO");
+        types.add("EMOTION");
+        types.add("CHARACTER");
+
+        try {
+            reqMapArr = this.loadMetasByCsv(fileName);
+            System.out.println("#reqMapArr.size :: "+reqMapArr.size());
+            dicMapArr = this.loadDicwordsByCsv(fileName2);
+            System.out.println("#dicMapArr.size :: "+dicMapArr.size());
+
+            Map<String, Object> map1 = null;
+            Map<String, Object> dicMap1 = null;
+            Map<String, Object> resMap1 = null;
+            if(reqMapArr != null) {
+                map1 = null;
+                dicMap1 = null;
+                resMap1 = null;
+
+                for (String type : types) {
+                    map1 = (Map<String, Object>) reqMapArr.get(type);
+                    dicMap1 = (Map<String, Object>) dicMapArr.get(type);
+                    System.out.println("#reqMap.map "+type+" :: " + map1.size());
+                    System.out.println("#dicMap.map "+type+" :: " + dicMap1.size());
+
+                    resMap1 = MapUtil.removeMapByMap(map1, dicMap1);
+                    System.out.println("#resultMap.map "+type+" :: " + resMap1.size());
+
+                    resMapArr.put(type, resMap1);
+
+                }
+
+            }
+
+            this.writeFileFromMap(resMapArr, types);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println("#reqMapArr :: "+reqMapArr.toString());
+        //System.out.println("#reqMapArr.size :: "+reqMapArr.size());
+    }
+
+    @Override
+    public void writeFileFromMap(Map<String, Object> reqMapArr, List<String> types) throws Exception {
+
+        File targetFile = new File(UPLOAD_DIR + "181206_result_contents_metas.txt");
+        targetFile.createNewFile();
+        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "euc_kr"));
+
+        String lineFeed = System.getProperty("line.separator");
+        String tab = "\t";
+
+        String outLine = "TYPE"+tab+"WORD"+lineFeed;
+        output.write(outLine);
+
+        Map<String, Object> map1 = null;
+        for(String type : types) {
+            map1 = (Map<String, Object>) reqMapArr.get(type);
+            System.out.println("#write type:"+type+" map.size:"+map1.size());
+
+            Set entrySet = map1.entrySet();
+            Iterator it = entrySet.iterator();
+
+            while(it.hasNext()) {
+                Map.Entry me = (Map.Entry) it.next();
+                String key = (String) me.getKey();
+                outLine = "";
+                outLine = type + tab + key + lineFeed;
+                output.write(outLine);
+            }
+        }
+
+        output.close();
+        //return result;
     }
 }

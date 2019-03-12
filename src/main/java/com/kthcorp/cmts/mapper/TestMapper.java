@@ -112,4 +112,7 @@ public interface TestMapper {
     List<Map<String, Object>> getContentsOrigItemsDayByDate(Items req);
     List<Map<String, Object>> getSeriesOrigItemsDayByDate(Items req);
 
+    int getCountConfirmedItemsByMetas(Map<String, Object> req);
+
+    int insCidsNon(Map<String, Object> req);
 }
