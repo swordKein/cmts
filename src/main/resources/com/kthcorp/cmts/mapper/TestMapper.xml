@@ -235,6 +235,7 @@
         inner join ccube_contents cc on cc.content_id = it.cid
         #inner join ccube_contents_asset_uniq csu on csu.cid = it.cid
         order by iss.regdate desc
+        #limit 20
 
     </select>
 
@@ -675,8 +676,21 @@
 
     <select id="getMetaKeywordsByMtype" parameterType="map" resultType="map">
         /* getMetaKeywordsByMtype */
-        select * from items_tags_metas where mtype = #{mtype}
-        and length(meta) > 2 order by regdate asc
+        select itm.* from items_tags_metas itm
+        inner join items_stat iss on iss.idx = itm.idx and iss.stat = 'ST'
+        where itm.mtype = #{mtype}
+        and length(itm.meta) > 2
+        /* order by regdate asc */
+        /* limit 10 */
+    </select>
+
+    <select id="getMetasByMtype" parameterType="map" resultType="map">
+        /* getMetasByMtype */
+        select im.* from items_metas im
+        inner join items_stat iss on iss.idx = im.idx and iss.stat = 'ST'
+        where im.mtype = #{mtype}
+        and length(im.meta) > 2
+        /* order by regdate asc */
         /* limit 10 */
     </select>
 

@@ -225,6 +225,8 @@ public interface TestServiceImpl {
 
     void writeMetaDicKeywordsByTypes() throws Exception;
 
+    void writeMetasByTypes() throws Exception;
+
     void insMetaCountByKeyword() throws Exception;
 
     void checkJsonFileDup() throws Exception;
@@ -269,4 +271,6 @@ public interface TestServiceImpl {
     void getMetasWithoutDicWordsByCsv();
 
     void writeFileFromMap(Map<String, Object> reqMap, List<String> types) throws Exception;
+
+    void writeItemsMetas_0315(String type) throws Exception;
 }

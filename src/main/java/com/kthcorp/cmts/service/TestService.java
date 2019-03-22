@@ -6667,6 +6667,13 @@ public class TestService implements TestServiceImpl {
         types.add("METASWHERE");
         types.add("METASWHO");
 
+        types.add("METASCHARACTER");
+        types.add("LIST_RECO_SITUATION");
+        types.add("LIST_RECO_TARGET");
+        //types.add("LIST_SEARCHKEYWORDS");
+        types.add("LIST_SUBGENRE");
+
+
         String seperator = "\t";
         String lineFeed = System.getProperty("line.separator");
 
@@ -6694,17 +6701,21 @@ public class TestService implements TestServiceImpl {
 
                             if (metaArr != null && metaArr.size() > 0) {
 
-                                for (JsonElement je : metaArr) {
-                                    JsonObject jo = (JsonObject) je;
-                                    if (jo != null && jo.get("word") != null) {
+                                if (!type.equals("LIST_SEARCHKEYWORDS")) {
+                                    for (JsonElement je : metaArr) {
+                                        JsonObject jo = (JsonObject) je;
+                                        if (jo != null && jo.get("word") != null) {
 
-                                        String word = jo.get("word").getAsString();
+                                            String word = jo.get("word").getAsString();
 
-                                        if (!"".equals(word)) {
-                                            newSet.add(word);
+                                            if (!"".equals(word)) {
+                                                newSet.add(word);
+                                            }
                                         }
-                                    }
 
+                                    }
+                                } else {
+                                    System.out.println("# item::"+metaArr.toString());
                                 }
                             }
                         }
@@ -6743,7 +6754,88 @@ public class TestService implements TestServiceImpl {
                 cnt++;
             }
 
-            String fileNameContent = "META_DIC_TYPE_"+type+"_180705.tsv";
+            String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
+            int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+        }
+        System.out.println("#ALL count by type:"+itemCountByType.toString());
+    }
+
+
+    @Override
+    public void writeMetasByTypes() throws Exception {
+        List<String> types = new ArrayList();
+        types.add("AWARD");
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        Map<String, Object> reqMap = null;
+        List<Map<String, Object>> itemList = null;
+        Set<String> newSet = null;
+
+        Map<String, Object> itemCountByType = new HashMap();
+
+        for(String type : types) {
+            reqMap = new HashMap();
+            reqMap.put("mtype", type);
+            itemList = testMapper.getMetasByMtype(reqMap);
+            //System.out.println("#orig itemList:"+itemList.toString());
+            itemCountByType.put(type, itemList.size());
+
+            if (itemList != null) {
+                newSet = new TreeSet();
+                for (Map<String,Object> item : itemList) {
+                    if(item != null && item.get("meta") != null) {
+                        String metaStr = item.get("meta").toString();
+
+                    if (!"".equals(metaStr) && metaStr.contains("[")) {
+                        JsonArray metaArr = JsonUtil.getJsonArray(metaStr);
+
+                        if (metaArr != null && metaArr.size() > 0) {
+
+                            if (!type.equals("LIST_SEARCHKEYWORDS")) {
+                                for (JsonElement je : metaArr) {
+                                    System.out.println("#JE:"+je.toString());
+                                    String word = "";
+
+                                    if (!type.equals("AWARD")) {
+                                        JsonObject jo = (JsonObject) je;
+                                        if (jo != null && jo.get("word") != null) {
+
+                                            word = jo.get("word").getAsString();
+                                        }
+                                    } else {
+                                        word = je.getAsString();
+                                    }
+                                    if (!"".equals(word)) {
+                                        newSet.add(word);
+                                    }
+
+                                }
+                            } else {
+                                System.out.println("# item::"+metaArr.toString());
+                            }
+                        }
+                    }
+
+
+                }
+                }
+            }
+
+            String resultStr = "";
+            int cnt = 1;
+
+            resultStr = "keyword"
+                    + lineFeed;
+
+            for (String word : newSet) {
+                resultStr += word + lineFeed;
+                System.out.println("#write " + cnt + "'s item::" + word);
+                cnt++;
+            }
+
+            String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
         System.out.println("#ALL count by type:"+itemCountByType.toString());
@@ -7246,7 +7338,7 @@ public class TestService implements TestServiceImpl {
             }
         }
 
-        String fileNameContent = "180726__KEYWORDS_AND_COUNT.tsv";
+        String fileNameContent = "190315__KEYWORDS_AND_COUNT.tsv";
         int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
 
         System.out.println("#ALL count by type:"+itemCountByType.toString());
@@ -8283,5 +8375,129 @@ public class TestService implements TestServiceImpl {
 
         output.close();
         //return result;
+    }
+
+
+
+
+    @Override
+    public void writeItemsMetas_0315(String type) throws Exception {
+
+        //Items req = new Items();
+        //req.setType("CcubeContent");
+        //req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        int itemCnt = 0;
+        int pageSize = 20;
+        JsonObject newItem = null;
+
+//countAll = 40;
+
+        if(countAll < 1) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            String resultStr = "content_id" + seperator + "title"
+                    //+ seperator + "asset_id" + seperator + "quality"
+                    + seperator + "CONTENT_ID"
+                    + seperator + "META_CONTENT_TITLE"
+                    + seperator + "META_WHEN"
+                    + seperator + "META_WHERE"
+                    + seperator + "META_WHAT"
+                    + seperator + "META_WHO"
+                    + seperator + "META_EMOTION"
+                    + seperator + "META_SUBGENRE"
+                    + seperator + "META_SEARCH"
+                    + seperator + "META_CHARACTER"
+                    + seperator + "META_RECO_TARGET"
+                    + seperator + "META_RECO_SITUATION"
+                    + seperator + "META_AWARD"
+                    + lineFeed;
+            try {
+                //reqItems = testMapper.getTestCidsForAsset();
+                if(type.equals("CcubeContent")) {
+                    reqItems = testMapper.getCcubeContentsAll();
+                } else {
+                    reqItems = testMapper.getCcubeSeriesAll();
+                }
+
+                System.out.println("## items countAll:"+reqItems.size());
+
+                if (reqItems != null) {
+                    int i = 0;
+                    for (Map<String, Object> item : reqItems) {
+
+                        //for (int i = 0; i < 50; i++) {
+                        boolean isExistMetas = false;
+                        //Map<String, Object> item = reqItems.get(i);
+                        i++;
+                        itemCnt = i + 1;
+                        System.out.println("# " + itemCnt + "'s item::" + item.toString());
+
+                        resultStr = resultStr + item.get("cid").toString()
+                                + seperator + item.get("content_title").toString();
+                        //+ seperator + item.get("asset_id").toString()
+                        //+ seperator + (item.get("quality") != null ? item.get("quality").toString() : " ");
+
+                        Map<String, Object> itemKeyMap = testMapper.getItemidxTaggedByCid(item);
+
+                        if (itemKeyMap != null && itemKeyMap.get("itemidx") != null) {
+                            System.out.println("# " + itemCnt + "'s itemKeyMap::" + itemKeyMap.toString());
+                            item.put("idx", itemKeyMap.get("itemidx"));
+                            item.put("content_id", item.get("cid"));
+                            item.put("series_id", "0");
+                            newItem = ccubeService.getJsonObjectForCcubeOutput("CcubeContent", item);
+
+                            if (newItem != null) {
+                                System.out.println("#item's jsonObject::" + newItem.toString());
+                                resultStr = resultStr + seperator + newItem.get("CONTENT_ID").getAsString()
+                                        + seperator + newItem.get("META_CONTENT_TITLE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHEN").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHERE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHAT").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_WHO").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_EMOTION").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_SUBGENRE").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_SEARCH").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_CHARACTER").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_RECO_TARGET").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_RECO_SITUATION").getAsString().replace("\\t", " ")
+                                        + seperator + newItem.get("META_AWARD").getAsString().replace("\\t", " ")
+                                        + lineFeed;
+
+                                isExistMetas = true;
+                            }
+                        }
+
+                        if(!isExistMetas) {
+                            resultStr = this.fillSeperatorAndNull(resultStr, " ", seperator, 13);
+                            resultStr = resultStr + lineFeed;
+                        }
+
+                    }
+                }
+
+                System.out.println("#resultStr :: \n"+resultStr);
+
+                String fileNameContent = "";
+                if (type.equals("CcubeContent")) {
+                    fileNameContent = "190315__CONTENTS_METAS.tsv";
+                } else {
+                    fileNameContent = "190315__SERIES_METAS.tsv";
+                }
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
