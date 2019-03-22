@@ -669,6 +669,10 @@ public class TestServiceTestImpl {
 	public void test_writeMetaDicKeywordsByTypes() throws Exception {
 		testService.writeMetaDicKeywordsByTypes();
 	}
+	@Test
+	public void test_writeMetassByTypes() throws Exception {
+		testService.writeMetasByTypes();
+	}
 
 	@Test
 	public void test_writeCcubeOutputToJsonDevide() throws Exception {
@@ -782,4 +786,10 @@ public class TestServiceTestImpl {
 	}
 
 
+	@Test
+	public void writeItemsMetas_0315() throws Exception {
+		testService.writeItemsMetas_0315("CcubeContent");
+		//testService.writeItemsMetas_0315("CcubeSeries");
+		System.out.println("#END#");
+	}
 }
