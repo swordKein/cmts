@@ -8689,6 +8689,13 @@ public class TestService implements TestServiceImpl {
                                         //}
                                     }
                                 }
+                            } else {
+                                ItemsMetas reqM = new ItemsMetas();
+                                reqM.setIdx(itemid);
+                                reqM.setMtype("award");
+                                reqM.setMeta("\"\"");
+                                reqM.setRegid("manual");
+                                int rt = itemsMetasMapper.insItemsMetas(reqM);
                             }
 
                         } else {
