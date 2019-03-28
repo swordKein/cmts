@@ -273,4 +273,6 @@ public interface TestServiceImpl {
     void writeFileFromMap(Map<String, Object> reqMap, List<String> types) throws Exception;
 
     void writeItemsMetas_0315(String type) throws Exception;
+
+    void prcAwardsAll(String type) throws Exception;
 }

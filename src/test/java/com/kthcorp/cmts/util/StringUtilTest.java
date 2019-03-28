@@ -12,10 +12,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -834,5 +831,12 @@ public class StringUtilTest {
         String req = "미국 영화";
         req = StringUtil.filterLastGenre(req);
         System.out.println("#RES:"+req);
+    }
+
+    @Test
+    public void test_prcAwardsStr() {
+        Set<String> res = StringUtil.prcAwardsStr(null, "91회 아카데미시상식, 2019");
+        res = StringUtil.prcAwardsStr(res, "91회 ㅋㅋㅋㅋㅋ, 2019");
+        System.out.println("#RES:"+res.toString());
     }
 }

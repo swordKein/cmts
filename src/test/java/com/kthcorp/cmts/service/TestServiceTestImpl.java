@@ -792,4 +792,12 @@ public class TestServiceTestImpl {
 		//testService.writeItemsMetas_0315("CcubeSeries");
 		System.out.println("#END#");
 	}
+
+
+	@Test
+	public void prcAwardsAll() throws Exception {
+		testService.prcAwardsAll("CcubeContent");
+		//testService.writeItemsMetas_0315("CcubeSeries");
+		System.out.println("#END#");
+	}
 }
