@@ -116,4 +116,6 @@ public interface TestMapper {
     int getCountConfirmedItemsByMetas(Map<String, Object> req);
 
     int insCidsNon(Map<String, Object> req);
+
+    int cntAwardIdx(Map<String, Object> req);
 }

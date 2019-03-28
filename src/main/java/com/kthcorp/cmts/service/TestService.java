@@ -8544,36 +8544,41 @@ public class TestService implements TestServiceImpl {
                     for (Map<String, Object> item : reqItems) {
 
                         int itemid = Integer.parseInt(String.valueOf(item.get("idx")));
-                        ConfTarget reqInfo = new ConfTarget();
-                        List<ConfPreset> psList = new ArrayList<ConfPreset>();
 
-                        ConfPreset ps1 = new ConfPreset();
+                        item.put("mtype", "award");
+                        int cntAwardIdx = testMapper.cntAwardIdx(item);
 
-                        ps1 = new ConfPreset();
-                        ps1.setPs_type("meta");
-                        ps1.setPs_tag(".main_detail");
-                        ps1.setDest_field("award");
-                        ps1.setDescriptp("daummovie_award");
-                        psList.add(ps1);
+                        if (cntAwardIdx < 1) {
+                            ConfTarget reqInfo = new ConfTarget();
+                            List<ConfPreset> psList = new ArrayList<ConfPreset>();
 
-                        reqInfo.setPresetList(psList);
+                            ConfPreset ps1 = new ConfPreset();
 
-                        reqInfo.setTg_url("DAUM_MOVIE");
-                        reqInfo.setParam1(item.get("content_title").toString());
-                        reqInfo.setMovietitle(item.get("content_title").toString());
-                        reqInfo.setMovieyear(item.get("year").toString());
+                            ps1 = new ConfPreset();
+                            ps1.setPs_type("meta");
+                            ps1.setPs_tag(".main_detail");
+                            ps1.setDest_field("award");
+                            ps1.setDescriptp("daummovie_award");
+                            psList.add(ps1);
 
-                        JsonObject result = daumMovieService.getContents("DAUM_MOVIE", reqInfo);
-                        System.out.println("#RES AWARD:"+result.toString());
+                            reqInfo.setPresetList(psList);
 
-                        if(result != null) {
-                            if (result.get("metas") != null) {
-                                JsonObject metas = (JsonObject) result.get("metas");
-                                if (metas != null && metas.get("award") != null) {
-                                    String destMeta = metas.get("award").toString();
+                            reqInfo.setTg_url("DAUM_MOVIE");
+                            reqInfo.setParam1(item.get("content_title").toString());
+                            reqInfo.setMovietitle(item.get("content_title").toString());
+                            reqInfo.setMovieyear(item.get("year").toString());
 
-                                    destMeta = destMeta.trim();
-                                    //if (!"".equals(destMeta) && destMeta.length() > 2) {
+                            JsonObject result = daumMovieService.getContents("DAUM_MOVIE", reqInfo);
+                            System.out.println("#RES AWARD:" + result.toString());
+
+                            if (result != null) {
+                                if (result.get("metas") != null) {
+                                    JsonObject metas = (JsonObject) result.get("metas");
+                                    if (metas != null && metas.get("award") != null) {
+                                        String destMeta = metas.get("award").toString();
+
+                                        destMeta = destMeta.trim();
+                                        //if (!"".equals(destMeta) && destMeta.length() > 2) {
                                         ItemsMetas reqM = new ItemsMetas();
                                         reqM.setIdx(itemid);
                                         reqM.setMtype("award");
@@ -8589,11 +8594,14 @@ public class TestService implements TestServiceImpl {
                                         reqM.setMeta(String.valueOf(result.get("pageUri")));
                                         int rt3 = itemsMetasMapper.insItemsMetas(reqM);
 
-                                    //}
+                                        //}
+                                    }
                                 }
                             }
-                        }
 
+                        } else {
+                            System.out.println("#getDaumMovie skip!! itemidx:"+itemid+" || isCntAward:"+cntAwardIdx);
+                        }
                     }
                 }
 
