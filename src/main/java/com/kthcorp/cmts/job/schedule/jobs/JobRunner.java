@@ -145,6 +145,10 @@ public class JobRunner implements Job {
                     WordCountJob.main(null);
                     logger.info("#MLOG schedule.hadoopWordCount");
                     break;
+                case "manualJob2":
+                    testService.writeAllAwards_0315("CcubeContent");
+                    logger.info("#MLOG schedule.writeAllAwards_0315");
+                    break;
                 case "manualJobs":
                     //testService.processSearchTxtManualAppendFile();
                     //testService.processItemsTagsMetasByResultTag();

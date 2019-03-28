@@ -800,4 +800,11 @@ public class TestServiceTestImpl {
 		//testService.writeItemsMetas_0315("CcubeSeries");
 		System.out.println("#END#");
 	}
+
+	@Test
+	public void writeAllAwards_0315() throws Exception {
+		testService.writeAllAwards_0315("CcubeContent");
+		//testService.writeItemsMetas_0315("CcubeSeries");
+		System.out.println("#END#");
+	}
 }

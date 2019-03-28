@@ -118,4 +118,5 @@ public interface TestMapper {
     int insCidsNon(Map<String, Object> req);
 
     int cntAwardIdx(Map<String, Object> req);
+    List<Map<String,Object>> getAllAwards();
 }

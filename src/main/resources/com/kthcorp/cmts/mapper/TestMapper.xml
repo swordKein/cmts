@@ -244,6 +244,22 @@
         select count(*) as cnt from items_metas where idx=#{idx} and mtype = #{mtype}
     </select>
 
+    <select id="getAllAwards" resultType="map">
+        /* getAllAwards */
+
+        select
+        im.idx
+        , ( select title from items where idx = im.idx limit 1 ) as title
+        , ( select meta from items_metas where idx = im.idx and mtype = 'movie_title' limit 1 ) as daum_title
+        , ( select meta from items_metas where idx = im.idx and mtype = 'movie_url' limit 1 ) as daum_url
+        , im.meta as award
+        , ( select meta from items_metas where idx = im.idx and mtype = 'award_bak' limit 1 ) as award_bak
+        from items_metas im
+        where im.mtype = 'award'
+        and length(im.meta) > 3
+        ;
+    </select>
+
     <select id="getCcubeSeriesAll" resultType="map">
         /* getCcubeSeriesAll */
         select

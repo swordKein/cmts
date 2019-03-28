@@ -274,5 +274,7 @@ public interface TestServiceImpl {
 
     void writeItemsMetas_0315(String type) throws Exception;
 
+    void writeAllAwards_0315(String type) throws Exception;
+
     void prcAwardsAll(String type) throws Exception;
 }
