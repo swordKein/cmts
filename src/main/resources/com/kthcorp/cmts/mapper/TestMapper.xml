@@ -239,6 +239,11 @@
 
     </select>
 
+    <select id="cntAwardIdx" parameterType="map" resultType="java.lang.Integer">
+        /* cntAwardIdx */
+        select count(*) as cnt from items_metas where idx=#{idx} and mtype = #{mtype}
+    </select>
+
     <select id="getCcubeSeriesAll" resultType="map">
         /* getCcubeSeriesAll */
         select
