@@ -129,7 +129,7 @@ public class CrawlController {
 					result = daumblogService.getSearchBlog(reqInfo);
 					break;
 				case "NAVER_MOVIE":
-					result = naverMovieService.getContents(prefix, reqInfo);
+					result = daumMovieService.getContents(prefix, reqInfo);
 					break;
 				case "DAUM_MOVIE":
 					result = daumMovieService.getContents(prefix, reqInfo);
