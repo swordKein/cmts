@@ -25,7 +25,8 @@ cmts:
       reply_limit_count: 100
     daummovie:
       #search_url: http://movie.daum.net/search/main?returnUrl=http%3A%2F%2Fmovie.daum.net%2Fmain%2Fnew&searchText=#movietitle#searchType=movie&page=1&sortType=acc
-      search_url: http://movie.daum.net/data/movie/search/v2/movie.json?size=10&start=1&searchText=#searchTxt
+      #search_url: http://movie.daum.net/data/movie/search/v2/movie.json?size=10&start=1&searchText=#searchTxt
+      search_url: http://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=#searchTxt
       award_url: http://movie.daum.net/moviedb/award
       magazine_url: http://movie.daum.net/data/movie/search/v2/magazine.json?size=20&start=1
       magazine_limit_count: 100
@@ -113,8 +114,8 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -221,6 +222,7 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://211.113.71.73:3306/cmtsdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false

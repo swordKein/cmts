@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
+import com.kthcorp.cmts.service.crawl.DaumMovieService;
 import com.kthcorp.cmts.service.crawl.NaverMovieService;
 import com.kthcorp.cmts.util.*;
 import org.apache.http.HttpEntity;
@@ -68,6 +69,10 @@ public class TestService implements TestServiceImpl {
     private CcubeService ccubeService;
     @Autowired
     private SftpService sftpService;
+    @Autowired
+    private DaumMovieService daumMovieService;
+
+
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -8495,6 +8500,146 @@ public class TestService implements TestServiceImpl {
                 }
 
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+    @Override
+    public void prcAwardsAll(String type) throws Exception {
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        int itemCnt = 0;
+        int pageSize = 20;
+        JsonObject newItem = null;
+
+//countAll = 40;
+
+        if(countAll < 1) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+
+            try {
+                //reqItems = testMapper.getTestCidsForAsset();
+                if(type.equals("CcubeContent")) {
+                    reqItems = testMapper.getCcubeContentsAll();
+                } else {
+                    reqItems = testMapper.getCcubeSeriesAll();
+                }
+
+                System.out.println("## items countAll:"+reqItems.size());
+
+                if (reqItems != null) {
+                    int i = 0;
+                    for (Map<String, Object> item : reqItems) {
+
+                        int itemid = Integer.parseInt(String.valueOf(item.get("idx")));
+                        ConfTarget reqInfo = new ConfTarget();
+                        List<ConfPreset> psList = new ArrayList<ConfPreset>();
+
+                        ConfPreset ps1 = new ConfPreset();
+
+                        ps1 = new ConfPreset();
+                        ps1.setPs_type("meta");
+                        ps1.setPs_tag(".main_detail");
+                        ps1.setDest_field("award");
+                        ps1.setDescriptp("daummovie_award");
+                        psList.add(ps1);
+
+                        reqInfo.setPresetList(psList);
+
+                        reqInfo.setTg_url("DAUM_MOVIE");
+                        reqInfo.setParam1(item.get("content_title").toString());
+                        reqInfo.setMovietitle(item.get("content_title").toString());
+                        reqInfo.setMovieyear(item.get("year").toString());
+
+                        JsonObject result = daumMovieService.getContents("DAUM_MOVIE", reqInfo);
+                        System.out.println("#RES AWARD:"+result.toString());
+
+                        if(result != null) {
+                            if (result.get("metas") != null) {
+                                JsonObject metas = (JsonObject) result.get("metas");
+                                if (metas != null && metas.get("award") != null) {
+                                    String destMeta = metas.get("award").toString();
+
+                                    destMeta = destMeta.trim();
+                                    //if (!"".equals(destMeta) && destMeta.length() > 2) {
+                                        ItemsMetas reqM = new ItemsMetas();
+                                        reqM.setIdx(itemid);
+                                        reqM.setMtype("award");
+                                        reqM.setMeta(destMeta);
+                                        reqM.setRegid("manual");
+                                        int rt = itemsMetasMapper.insItemsMetas(reqM);
+
+                                        reqM.setMtype("movie_title");
+                                        reqM.setMeta(String.valueOf(result.get("title_movie")));
+                                        int rt2 = itemsMetasMapper.insItemsMetas(reqM);
+
+                                        reqM.setMtype("movie_url");
+                                        reqM.setMeta(String.valueOf(result.get("pageUri")));
+                                        int rt3 = itemsMetasMapper.insItemsMetas(reqM);
+
+                                    //}
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void prcAwardsAll_bak(String type) throws Exception {
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        int itemCnt = 0;
+        int pageSize = 20;
+        JsonObject newItem = null;
+
+//countAll = 40;
+
+        if(countAll < 1) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+
+            try {
+                //reqItems = testMapper.getTestCidsForAsset();
+                if(type.equals("CcubeContent")) {
+                    reqItems = testMapper.getCcubeContentsAll();
+                } else {
+                    reqItems = testMapper.getCcubeSeriesAll();
+                }
+
+                System.out.println("## items countAll:"+reqItems.size());
+
+                if (reqItems != null) {
+                    int i = 0;
+                    for (Map<String, Object> item : reqItems) {
+
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

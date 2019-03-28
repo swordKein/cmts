@@ -47,6 +47,8 @@ public class CrawlController {
 	@Autowired
 	private NaverMovieService naverMovieService;
 	@Autowired
+	private DaumMovieService daumMovieService;
+	@Autowired
 	private CollectService collectService;
 	@Autowired
 	private NavernewsService navernewsService;
@@ -91,6 +93,8 @@ public class CrawlController {
 		if(!"DAUM_MOVIE".equals(prefix)) {
 			if (param1.contains("#movieyear") && !"".equals(movieyear)) {
 				param1 = param1.replace("#movieyear", movieyear);
+
+
 			} else {
 				param1 = param1.replace("#movieyear", "");
 			}
@@ -104,11 +108,12 @@ public class CrawlController {
 			}
 		}
 
-		if (param1.contains("moviedirector") && !"".equals(moviedirector.trim())) {
-			param1 = param1.replace("#moviedirector", moviedirector);
-		} else {
+		/* 19.03.27 다음 영화 수집 기준 변경 , 영화명 연도 */
+		//if (param1.contains("moviedirector") && !"".equals(moviedirector.trim())) {
+		//	param1 = param1.replace("#moviedirector", moviedirector);
+		//} else {
 			param1 = param1.replace("#moviedirector", "");
-		}
+		//}
 
 		reqInfo.setParam1(param1);
 
@@ -127,7 +132,7 @@ public class CrawlController {
 					result = naverMovieService.getContents(prefix, reqInfo);
 					break;
 				case "DAUM_MOVIE":
-					result = naverMovieService.getContents(prefix, reqInfo);
+					result = daumMovieService.getContents(prefix, reqInfo);
 					break;
 				case "NAVER_NEWS":
 					result = navernewsService.getSearchNews(reqInfo);
