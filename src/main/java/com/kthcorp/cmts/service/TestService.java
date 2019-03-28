@@ -8508,6 +8508,98 @@ public class TestService implements TestServiceImpl {
 
 
 
+    @Override
+    public void writeAllAwards_0315(String type) throws Exception {
+
+        //Items req = new Items();
+        //req.setType("CcubeContent");
+        //req.setPageSize(pageSize);
+
+        /* get ccube_outupt list , tagcnt < 4 , stat = Y */
+        List<Map<String, Object>> reqItems = null;
+        int countAll = 0;
+        int itemCnt = 0;
+        int pageSize = 20;
+        //JsonObject newItem = null;
+
+//countAll = 40;
+
+        if(countAll < 1) {
+            int pageAll = 0;
+            if (countAll == 0) {
+                pageAll = 1;
+            } else {
+                pageAll = countAll / pageSize + 1;
+            }
+            System.out.println("#pageAll:" + pageAll);
+
+            String resultStr = "ITEM_ID" + seperator + "TITLE"
+                    //+ seperator + "asset_id" + seperator + "quality"
+                    + seperator + "DAUM_TITLE"
+                    + seperator + "DAUM_URL"
+                    + seperator + "AWARD"
+                    + seperator + "AWARD_BAK"
+                    + lineFeed;
+            try {
+                //reqItems = testMapper.getTestCidsForAsset();
+                if(type.equals("CcubeContent")) {
+                    reqItems = testMapper.getAllAwards();
+                } else {
+                    //reqItems = testMapper.getCcubeSeriesAll();
+                }
+
+                System.out.println("## items countAll:"+reqItems.size());
+
+                if (reqItems != null) {
+                    int i = 0;
+                    for (Map<String, Object> item : reqItems) {
+
+                        //for (int i = 0; i < 50; i++) {
+                        boolean isExistMetas = false;
+                        //Map<String, Object> item = reqItems.get(i);
+                        i++;
+                        itemCnt = i + 1;
+                        System.out.println("# " + itemCnt + "'s item::" + item.toString());
+
+                            if (item != null) {
+                                System.out.println("#item's jsonObject::" + item.toString());
+                                resultStr = resultStr + item.get("idx").toString()
+                                        + seperator + item.get("title").toString().replace("\\t", " ")
+                                        + seperator + item.get("daum_title").toString().replace("\\t", " ")
+                                        + seperator + item.get("daum_url").toString().replace("\\t", " ")
+                                        + seperator + item.get("award").toString().replace("\\t", " ")
+                                        + seperator + item.get("award_bak").toString().replace("\\t", " ")
+                                        + lineFeed;
+
+                                isExistMetas = true;
+                            }
+                        //}
+
+                        if(!isExistMetas) {
+                            resultStr = this.fillSeperatorAndNull(resultStr, " ", seperator, 6);
+                            resultStr = resultStr + lineFeed;
+                        }
+
+                    }
+                }
+
+                System.out.println("#resultStr :: \n"+resultStr);
+
+                String fileNameContent = "";
+                if (type.equals("CcubeContent")) {
+                    fileNameContent = "190315__AWARDS_METAS.tsv";
+                } else {
+                    fileNameContent = "190315__AWARDS_METAS.tsv";
+                }
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
     @Override
     public void prcAwardsAll(String type) throws Exception {
