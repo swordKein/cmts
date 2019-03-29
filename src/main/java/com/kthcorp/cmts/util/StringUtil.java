@@ -614,7 +614,7 @@ public class StringUtil {
             if (reqAward.contains("회 ")) {
                 String m1[] = reqAward.split("회 ");
                 if (m1.length > 1) {
-                    if (reqAward.contains(", ")) {
+                    if (reqAward.contains(". ")) {
                         String awardNum = m1[0];
 
                         String awardName = "";
@@ -623,7 +623,7 @@ public class StringUtil {
                         String tmp = "";
                         String tmp2 = "";
 
-                        String m2[] = m1[1].split(", ");
+                        String m2[] = m1[1].split(". ");
                         if (m2.length > 1) {
                             awardName = m2[0].trim();
                             awardYear = m2[1].trim();

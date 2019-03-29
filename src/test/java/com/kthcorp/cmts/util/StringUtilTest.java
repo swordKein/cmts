@@ -835,8 +835,18 @@ public class StringUtilTest {
 
     @Test
     public void test_prcAwardsStr() {
-        Set<String> res = StringUtil.prcAwardsStr(null, "91회 아카데미시상식, 2019");
-        res = StringUtil.prcAwardsStr(res, "91회 ㅋㅋㅋㅋㅋ, 2019");
+        Set<String> res = StringUtil.prcAwardsStr(null, "35회 상파울로국제영화제. 2011");
+        //res = StringUtil.prcAwardsStr(res, "91회 ㅋㅋㅋㅋㅋ, 2019");
         System.out.println("#RES:"+res.toString());
+    }
+
+    @Test
+    public void test_trans_json() {
+        String req = "a, b, c";
+        JsonArray jarr1 = JsonUtil.convertStringToJsonArrayWithDelemeter(req, ",");
+        JsonObject res = new JsonObject();
+        res.addProperty("reqstr", req);
+        res.add("jarr1", jarr1);
+        System.out.println("#res:"+res.toString());
     }
 }
