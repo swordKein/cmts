@@ -97,8 +97,11 @@ public class OneCrawlService implements OneCrawlServiceImpl {
 
                         //System.out.println("#award compare :: " + tit_awards.get(i) + " :: " + act);
 
+                        String tit_aw = tit_awards.get(i).text().toString().trim();
+                        tit_aw = tit_aw.replace(",", ".");
+
                         if ("수상".equals(act)) {
-                            awardList.add(tit_awards.get(i).text().toString().trim());
+                            awardList.add(tit_aw);
                         }
 
                         //System.out.println("#awardList:" + awardList.toString());
@@ -186,6 +189,7 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                         // 다음 영화 수상정보는 html 그대로 저장
                         // 다음 영화 수상정보는 페이징, 수상인 경우만 취득
                         List<String> awardList = new ArrayList();
+                        JsonArray awardArr = new JsonArray(0);
 
                         if(ps.getDescriptp().contains("award")) {
                             String contentHtml = JsoupUtil.getTaggedValueAllHtml(pageContent, ps.getPs_tag());
@@ -207,28 +211,30 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                                 }
                             }
 
-                            System.out.println("#awardList END::"+awardList.toString());
+                            System.out.println("#awardList END::"+awardList.toString()+" : awardList.size::"+awardList.size());
                             Set<String> awardSet = null;
-                            for(String as : awardList) {
-                                awardSet = StringUtil.prcAwardsStr(awardSet, as);
+                            if (awardList != null && awardList.size() > 0) {
+                                for(int i=0; i<awardList.size(); i++) {
+                                    awardSet = StringUtil.prcAwardsStr(awardSet, awardList.get(i));
+                                    System.out.println("#awardSet:"+awardSet.toString());
+                                }
+                            } else {
+                                awardSet = StringUtil.prcAwardsStr(awardSet, "");
                             }
                             //List<String> awardSetList = new ArrayList(awardSet);
                             //JsonArray awardSetJsonArr = new JsonArray(awardSetList);
                             if (awardSet != null) {
-                                String awardsAll = awardSet.toString();
-                                JsonArray awardsArr = JsonUtil.convertStringToJsonArrayWithDelemeter(awardsAll, ",");
-
-                                if (awardsArr != null) contentStr = awardsArr.toString();
+                                contentStr = awardSet.toString();
                             } else {
                                 contentStr = "";
                             }
 
-                            //String pageUriAdd = "&page=";
-                            //for (int)
-
+                            System.out.println("#AWARD CONTENT:"+contentStr);
 
                             if (resultObj.get(ps.getDest_field()) != null) resultObj.remove(ps.getDest_field());
                             //resultObj.addProperty(ps.getDest_field(), contentHtml);
+
+                            //awardArr = JsonUtil.convertStringToJsonArrayWithDelemeter(contentStr, ",");
                             resultObj.addProperty(ps.getDest_field(), contentStr);
                         } else {
                             if (resultObj.get(ps.getDest_field()) != null) resultObj.remove(ps.getDest_field());

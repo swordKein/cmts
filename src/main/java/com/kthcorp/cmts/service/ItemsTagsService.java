@@ -474,20 +474,27 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonObject metaAwardObj = apiService.getAwardArrInfoByIdx(itemIdx);
         JsonArray awardArr = null;
-        if (metaAwardObj != null && metaAwardObj.get("AWARD") != null) {
-            System.out.println("#AWARD obj :"+ metaAwardObj.get("AWARD"));
+        if (metaAwardObj != null && metaAwardObj.get("award") != null) {
+            System.out.println("#award obj :"+ metaAwardObj.get("award"));
             JsonElement awardArrElm = metaAwardObj.get("AWARD");
-            String awardArrStr = String.valueOf(awardArrElm);
+            if (awardArrElm != null){
+                String awardArrStr = String.valueOf(awardArrElm);
 
-            System.out.println("#AWARD str :"+ awardArrStr);
+                System.out.println("#AWARD str :" + awardArrStr);
 
-            if (!"".equals(awardArrStr) && !"\"\"".equals(awardArrStr)) {
-                awardArr = (JsonArray) awardArrElm;
+                if (!"".equals(awardArrStr) && !"\"\"".equals(awardArrStr) && !"null".equals(awardArrStr)) {
+                    awardArr = (JsonArray) awardArrElm;
+                } else {
+                    awardArr = new JsonArray();
+                }
             } else {
                 awardArr = new JsonArray();
             }
-            resultObj2.add("LIST_AWARD", awardArr);
+        } else {
+            awardArr = new JsonArray();
         }
+
+        resultObj2.add("LIST_AWARD", awardArr);
         return resultObj2;
     }
 

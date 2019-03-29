@@ -440,11 +440,18 @@ public class DaumMovieService implements DaumMovieServiceImpl {
                     if (newAwardItem != null && newAwardItem.get("dest_fields") != null) {
                         JsonArray newMetasDestArr = (newAwardItem.get("dest_fields") != null) ? (JsonArray) newAwardItem.get("dest_fields") : new JsonArray();
 
+                        //System.out.println("#newAwardItem::"+newAwardItem.toString());
+
                         for (JsonElement je : newMetasDestArr) {
                             String dest = je.getAsString();
-                            String destStr = (newAwardItem.get(dest) != null ? newAwardItem.get(dest).getAsString() : "");
-                            //destStr = CommonUtil.removeTex(destStr);
-                            metasObj.addProperty(dest, destStr);
+                            if(!"awardxxx".equals(dest)) {
+                                String destStr = (newAwardItem.get(dest) != null ? newAwardItem.get(dest).getAsString() : "");
+                                //destStr = CommonUtil.removeTex(destStr);
+                                metasObj.addProperty(dest, destStr);
+                            } else {
+                                JsonArray destStr = (newAwardItem.get(dest) != null) ? (JsonArray) newAwardItem.get(dest) : null;
+                                metasObj.add(dest, destStr);
+                            }
                             metasDestArr.add(dest);
                         }
                     }

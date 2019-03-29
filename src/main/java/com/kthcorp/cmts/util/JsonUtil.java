@@ -288,10 +288,14 @@ public class JsonUtil {
 
 	public static JsonArray getJsonArray(String data) throws Exception {
 		JsonArray result = null;
-		Gson gson = new Gson();
-		result = gson.fromJson(data, JsonArray.class);
+		if (!"".equals(data.trim()) && !"\"\"".equals(data.trim())) {
+			Gson gson = new Gson();
 
-		//System.out.println("#getJsonArray:result::"+result.toString());
+			System.out.println("#getJsonArray:req::" + data);
+			result = gson.fromJson(data, JsonArray.class);
+
+			//System.out.println("#getJsonArray:result::"+result.toString());
+		}
 		return result;
 	}
 
