@@ -115,8 +115,11 @@ public class MapUtil {
 
 
     public static List<String> getConvertSetToStringArray(Set<String> reqSet) {
-        List<String> resultArr = new ArrayList();
-        resultArr.addAll(reqSet);
+        List<String> resultArr = null;
+        if (reqSet != null && reqSet.size() > 0) {
+            resultArr = new ArrayList();
+            resultArr.addAll(reqSet);
+        }
 
         return resultArr;
     }
