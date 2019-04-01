@@ -473,17 +473,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public JsonObject getAwardObject(int itemIdx, JsonObject resultObj2) throws Exception {
 
         JsonObject metaAwardObj = apiService.getAwardArrInfoByIdx(itemIdx);
+        System.out.println("#itemsTagsService.getAwardObject :: "+metaAwardObj.toString());
+
         JsonArray awardArr = null;
-        if (metaAwardObj != null && metaAwardObj.get("award") != null) {
+        if (metaAwardObj != null && metaAwardObj.get("AWARD") != null) {
             System.out.println("#award obj :"+ metaAwardObj.get("award"));
             JsonElement awardArrElm = metaAwardObj.get("AWARD");
             if (awardArrElm != null){
                 String awardArrStr = String.valueOf(awardArrElm);
 
                 System.out.println("#AWARD str :" + awardArrStr);
-
                 if (!"".equals(awardArrStr) && !"\"\"".equals(awardArrStr) && !"null".equals(awardArrStr)) {
                     awardArr = (JsonArray) awardArrElm;
+
+                    System.out.println("#awardArrElm obj :"+ awardArrElm.toString() + " => awardArr:"+awardArr.toString());
                 } else {
                     awardArr = new JsonArray();
                 }
@@ -495,6 +498,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         }
 
         resultObj2.add("LIST_AWARD", awardArr);
+        System.out.println("#itemsTagsService.getAwardObject:: resultObj2.awardArr:"+awardArr.toString());
+        System.out.println("#itemsTagsService.getAwardObject:: resultObj2:"+resultObj2.toString());
         return resultObj2;
     }
 
