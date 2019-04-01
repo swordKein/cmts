@@ -114,6 +114,14 @@ public class MapUtil {
     }
 
 
+    public static List<String> getConvertSetToStringArray(Set<String> reqSet) {
+        List<String> resultArr = new ArrayList();
+        resultArr.addAll(reqSet);
+
+        return resultArr;
+    }
+
+
     public static JsonArray getListNotMapKeywords(Map<String, Double> reqMap) {
         JsonArray resultArr = new JsonArray();
 

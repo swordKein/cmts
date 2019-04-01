@@ -444,7 +444,7 @@ public class DaumMovieService implements DaumMovieServiceImpl {
 
                         for (JsonElement je : newMetasDestArr) {
                             String dest = je.getAsString();
-                            if(!"awardxxx".equals(dest)) {
+                            if(!"award".equals(dest)) {
                                 String destStr = (newAwardItem.get(dest) != null ? newAwardItem.get(dest).getAsString() : "");
                                 //destStr = CommonUtil.removeTex(destStr);
                                 metasObj.addProperty(dest, destStr);

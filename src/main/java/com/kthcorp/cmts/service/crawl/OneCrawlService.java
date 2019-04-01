@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.ConfPreset;
 import com.kthcorp.cmts.model.ConfTarget;
 import com.kthcorp.cmts.service.GoogleTransService;
-import com.kthcorp.cmts.util.HttpClientUtil;
-import com.kthcorp.cmts.util.JsonUtil;
-import com.kthcorp.cmts.util.JsoupUtil;
-import com.kthcorp.cmts.util.StringUtil;
+import com.kthcorp.cmts.util.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -216,7 +213,7 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                             if (awardList != null && awardList.size() > 0) {
                                 for(int i=0; i<awardList.size(); i++) {
                                     awardSet = StringUtil.prcAwardsStr(awardSet, awardList.get(i));
-                                    System.out.println("#awardSet:"+awardSet.toString());
+                                    //System.out.println("#awardSet processing:"+awardSet.toString());
                                 }
                             } else {
                                 awardSet = StringUtil.prcAwardsStr(awardSet, "");
@@ -235,7 +232,12 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                             //resultObj.addProperty(ps.getDest_field(), contentHtml);
 
                             //awardArr = JsonUtil.convertStringToJsonArrayWithDelemeter(contentStr, ",");
-                            resultObj.addProperty(ps.getDest_field(), contentStr);
+                            //resultObj.addProperty(ps.getDest_field(), contentStr);
+
+                            List<String> awardlist = MapUtil.getConvertSetToStringArray(awardSet);
+                            awardArr = JsonUtil.convertListToJsonArray(awardlist);
+                            //resultObj.addProperty(ps.getDest_field(), awardArr.getAsString());
+                            resultObj.add(ps.getDest_field(), awardArr);
                         } else {
                             if (resultObj.get(ps.getDest_field()) != null) resultObj.remove(ps.getDest_field());
                             resultObj.addProperty(ps.getDest_field(), contentStr);
