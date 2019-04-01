@@ -8666,8 +8666,12 @@ public class TestService implements TestServiceImpl {
                             if (result != null) {
                                 if (result.get("metas") != null) {
                                     JsonObject metas = (JsonObject) result.get("metas");
+                                    System.out.println("##metas.get(award) : "+metas.get("award"));
+
                                     if (metas != null && metas.get("award") != null) {
-                                        String destMeta = metas.get("award").getAsString();
+                                        JsonArray destMetaArr = (JsonArray) metas.get("award");
+                                        String destMeta = "";
+                                        if (destMetaArr != null && destMetaArr.size() > 0) destMeta = destMetaArr.toString();
 
                                         destMeta = destMeta.trim();
                                         if("".equals(destMeta)) destMeta = "\"\"";

@@ -131,9 +131,15 @@ public class JsonUtil {
 
 	/* List<String> 을 JsonArray로 convert */
 	public static JsonArray convertListToJsonArray(List<String> reqList) {
-		return (JsonArray) new Gson().toJsonTree(reqList,
-				new TypeToken<List<String>>() {
-				}.getType());
+		JsonArray result = null;
+		if (reqList != null && reqList.size() > 0) {
+			result = (JsonArray) new Gson().toJsonTree(reqList,
+					new TypeToken<List<String>>() {
+					}.getType());
+		} else {
+			result = new JsonArray();
+		}
+		return result;
 	}
 
 	/* List<Integer> 을 JsonArray로 convert */
