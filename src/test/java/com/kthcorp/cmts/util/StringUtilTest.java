@@ -835,9 +835,10 @@ public class StringUtilTest {
 
     @Test
     public void test_prcAwardsStr() {
-        Set<String> res = StringUtil.prcAwardsStr(null, "35회 상파울로국제영화제. 2011");
-        //res = StringUtil.prcAwardsStr(res, "91회 ㅋㅋㅋㅋㅋ, 2019");
-        System.out.println("#RES:"+res.toString());
+        Set<String> res = StringUtil.prcAwardsStr(null, "35회 상파울로 국제영화제. 2011");
+        System.out.println("#RES1:"+res.toString());
+        res = StringUtil.prcAwardsStr(res, "91회 아카데미 시상식. 2019");
+        System.out.println("#RES2:"+res.toString());
     }
 
     @Test

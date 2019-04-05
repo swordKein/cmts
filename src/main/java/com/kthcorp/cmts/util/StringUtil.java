@@ -607,52 +607,61 @@ public class StringUtil {
     }
 
     public static Set<String> prcAwardsStr(Set<String> awardList, String reqAward) {
+
         if (!"".equals(reqAward)) {
             if(awardList == null) awardList = new HashSet();
 
-            reqAward = reqAward.trim();
-            if (reqAward.contains("회 ")) {
-                String m1[] = reqAward.split("회 ");
-                if (m1.length > 1) {
-                    if (reqAward.contains(". ")) {
-                        String awardNum = m1[0];
+            try {
+                reqAward = reqAward.trim();
+                if (reqAward.contains("회 ")) {
+                    String m1[] = reqAward.split("회 ");
+                    if (m1.length > 1) {
+                        if (reqAward.contains(".")) {
+                            String awardNum = m1[0];
+                            String awardNames = m1[1];
+                            awardNames = awardNames.replace(" ", "");
 
-                        String awardName = "";
-                        String awardYear = "";
+                            System.out.println("#award prc: awards:"+awardNames);
 
-                        String tmp = "";
-                        String tmp2 = "";
+                            String awardName = "";
+                            String awardYear = "";
 
-                        String m2[] = m1[1].split(". ");
-                        if (m2.length > 1) {
-                            awardName = m2[0].trim();
-                            awardYear = m2[1].trim();
-                            tmp2 = awardYear + " " + awardName;
-                        } else {
-                            awardName = m1[1];
+                            String tmp = "";
+                            String tmp2 = "";
+
+                            String m2[] = awardNames.split("\\.");
+                            //System.out.println("#award prc m2.size:"+m2.length);
+                            if (m2.length > 1) {
+                                awardName = m2[0].trim();
+                                awardYear = m2[1].trim();
+                                tmp2 = awardYear + " " + awardName;
+                                //System.out.println("#award prc: year:"+awardYear+" / awardName:"+awardName);
+                            } else {
+                                awardName = m1[1];
+                            }
+
+                            tmp = awardNum + "회 " + awardName;
+                            awardList.add(awardName);
+                            if (!"".equals(tmp2)) awardList.add(tmp2);
+                            awardList.add(tmp);
+
+                            String revTmp = addAwardStatic(tmp);
+                            if (!"".equals(revTmp)) {
+                                awardList.add(revTmp);
+                            }
+                            String revAwardName = addAwardStatic(awardName);
+                            if (!"".equals(revAwardName)) {
+                                awardList.add(revAwardName);
+                            }
+                            String revTmp2 = addAwardStatic(tmp2);
+                            if (!"".equals(revTmp2)) {
+                                awardList.add(revTmp2);
+                            }
                         }
 
-                        tmp = awardNum + "회 " + awardName;
-                        awardList.add(awardName);
-                        if(!"".equals(tmp2)) awardList.add(tmp2);
-                        awardList.add(tmp);
-
-                        String revTmp = addAwardStatic(tmp);
-                        if(!"".equals(revTmp)) {
-                            awardList.add(revTmp);
-                        }
-                        String revAwardName = addAwardStatic(awardName);
-                        if(!"".equals(revAwardName)) {
-                            awardList.add(revAwardName);
-                        }
-                        String revTmp2 = addAwardStatic(tmp2);
-                        if(!"".equals(revTmp2)) {
-                            awardList.add(revTmp2);
-                        }
                     }
-
                 }
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
         return awardList;
     }
