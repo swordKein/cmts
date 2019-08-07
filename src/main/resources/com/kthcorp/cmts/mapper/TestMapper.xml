@@ -374,7 +374,7 @@
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
 
-            */ inner join cids_non2 cn2 on cn2.cid = co.content_id */
+            /* inner join cids_non2 cn2 on cn2.cid = co.content_id */
 
             ) a
         order by a.itemidx asc
