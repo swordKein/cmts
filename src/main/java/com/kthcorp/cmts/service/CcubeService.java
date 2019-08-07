@@ -393,7 +393,7 @@ public class CcubeService implements CcubeServiceImpl {
                                     //awardStr = CommonUtil.removeTag(awardStr);
                                     //awardStr = CommonUtil.removeAllSpec1(awardStr);
                                     String tmpAwardStr = im.getMeta().trim();
-                                    if (!"".equals(tmpAwardStr)) {
+                                    if (!"".equals(tmpAwardStr.replace("\"",""))) {
                                         System.out.println("#ELOG tmpAwardStr:" + tmpAwardStr);
                                         JsonParser jsonParser = new JsonParser();
                                         JsonArray awardArr = (JsonArray) jsonParser.parse(tmpAwardStr);
