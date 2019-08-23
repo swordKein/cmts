@@ -807,4 +807,23 @@ public class TestServiceTestImpl {
 		//testService.writeItemsMetas_0315("CcubeSeries");
 		System.out.println("#END#");
 	}
+	
+	//권재일 작업 2019.08.23 유형별 메타태그 총량통계 (되면 총량통계 → 데이터정리 → 총량통계)
+	@Test
+	public void removeTagsFromMetasByCSV_20190823() throws Exception {
+		System.out.println("#removeTagsFromMetasByCSV_20190823 START#");
+		
+		//작업 전 통계
+		testService.getTagsCountByType("beforeProcess");
+		
+		//작업(from removeAllTagsFromMetasByCsv)
+		testService.removeAllTagsFromMetasByCsv();
+		
+		//작업 후 통계
+		testService.getTagsCountByType("afterProcess");
+		
+		System.out.println("#removeTagsFromMetasByCSV_20190823 END#");
+	}
+	
+	
 }

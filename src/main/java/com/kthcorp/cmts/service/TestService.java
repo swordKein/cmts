@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -7735,7 +7736,7 @@ public class TestService implements TestServiceImpl {
         String line = "";
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(fileName), "ms949"))) {
+                new FileInputStream(fileName), "UTF-8"))) {	//권재일 수정 2019.08.20  ms949 to UTF-8
             while ((line = reader.readLine()) != null
                 //&& cntAll < 10000
                     ){
@@ -8767,4 +8768,47 @@ public class TestService implements TestServiceImpl {
             }
         }
     }
+    
+	//권재일 작업 2019.08.23 유형별 메타태그 총량통계
+	public void getTagsCountByType(String str) {
+		//from getMetaChara_0724 ...?
+		/* get ccube_outupt list , tagcnt < 4 , stat = Y */
+		List<Map<String, Object>> reqItems = null;
+		int countAll = 0;
+		int itemCnt = 0;
+		int pageSize = 20;
+		JsonObject newItem = null;
+
+		//countAll = 40;//for test
+
+		if(countAll < 1) {
+			
+			//리턴문서 헤더
+			String resultStr = "mtype" + seperator + "count" + lineFeed;
+			try {
+				//reqItems = testMapper.getTestCidsForAsset();
+				reqItems = testMapper.getTagsCountByType();
+				
+				for (Map<String, Object> item : reqItems) {
+					resultStr = resultStr + item.get("mtype").toString()
+							+ seperator + item.get("wordscnt").toString()
+							+ lineFeed;;
+				}
+				
+				SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
+				Calendar time = Calendar.getInstance();
+				String strToday = format1.format(time.getTime());
+
+				
+				
+				
+				String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
+				//파일표출
+				int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

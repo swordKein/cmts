@@ -277,4 +277,6 @@ public interface TestServiceImpl {
     void writeAllAwards_0315(String type) throws Exception;
 
     void prcAwardsAll(String type) throws Exception;
+    
+    void getTagsCountByType(String str);
 }

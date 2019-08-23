@@ -119,4 +119,6 @@ public interface TestMapper {
 
     int cntAwardIdx(Map<String, Object> req);
     List<Map<String,Object>> getAllAwards();
+
+	List<Map<String, Object>> getTagsCountByType();
 }
