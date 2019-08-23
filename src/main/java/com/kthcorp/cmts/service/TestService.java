@@ -8769,8 +8769,8 @@ public class TestService implements TestServiceImpl {
         }
     }
     
-	//권재일 작업 2019.08.23 유형별 메타태그 총량통계
-	public void getTagsCountByType(String str) {
+	//권재일 작업 2019.08.23 유형별 메타태그 총량통계 + CSV에 있는 항목 매타태그에서 삭제작업
+	public void removeTagsFromMetasByCSV_GetTagsCountByType() {
 		//from getMetaChara_0724 ...?
 		/* get ccube_outupt list , tagcnt < 4 , stat = Y */
 		List<Map<String, Object>> reqItems = null;
@@ -8780,34 +8780,65 @@ public class TestService implements TestServiceImpl {
 		JsonObject newItem = null;
 
 		//countAll = 40;//for test
-
-		if(countAll < 1) {
+		
+		String str;
+		String resultStr;
+		
+		//작업 전
+		str = "beforeProcess";
+		resultStr = "mtype" + seperator + "count" + lineFeed;
+		try {
+			//reqItems = testMapper.getTestCidsForAsset();
+			reqItems = testMapper.getTagsCountByType();
 			
-			//리턴문서 헤더
-			String resultStr = "mtype" + seperator + "count" + lineFeed;
-			try {
-				//reqItems = testMapper.getTestCidsForAsset();
-				reqItems = testMapper.getTagsCountByType();
-				
-				for (Map<String, Object> item : reqItems) {
-					resultStr = resultStr + item.get("mtype").toString()
-							+ seperator + item.get("wordscnt").toString()
-							+ lineFeed;;
-				}
-				
-				SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
-				Calendar time = Calendar.getInstance();
-				String strToday = format1.format(time.getTime());
-
-				
-				
-				
-				String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
-				//파일표출
-				int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
-			}catch (Exception e) {
-				e.printStackTrace();
+			for (Map<String, Object> item : reqItems) {
+				resultStr = resultStr + item.get("mtype").toString()
+						+ seperator + item.get("wordscnt").toString()
+						+ lineFeed;;
 			}
+			
+			SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
+			Calendar time = Calendar.getInstance();
+			String strToday = format1.format(time.getTime());
+
+			
+			
+			
+			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
+			//파일표출
+			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//메타태그 삭제 작업(기존 로직)
+		this.removeAllTagsFromMetasByCsv();
+		
+		//작업 후
+		str = "afterProcess";
+		resultStr = "mtype" + seperator + "count" + lineFeed;
+		try {
+			//reqItems = testMapper.getTestCidsForAsset();
+			reqItems = testMapper.getTagsCountByType();
+			
+			for (Map<String, Object> item : reqItems) {
+				resultStr = resultStr + item.get("mtype").toString()
+						+ seperator + item.get("wordscnt").toString()
+						+ lineFeed;;
+			}
+			
+			SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
+			Calendar time = Calendar.getInstance();
+			String strToday = format1.format(time.getTime());
+
+			
+			
+			
+			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
+			//파일표출
+			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

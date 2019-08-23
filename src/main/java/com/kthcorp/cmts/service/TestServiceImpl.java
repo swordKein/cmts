@@ -278,5 +278,5 @@ public interface TestServiceImpl {
 
     void prcAwardsAll(String type) throws Exception;
     
-    void getTagsCountByType(String str);
+    void removeTagsFromMetasByCSV_GetTagsCountByType();
 }

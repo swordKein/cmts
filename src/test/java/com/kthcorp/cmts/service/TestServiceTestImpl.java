@@ -813,14 +813,15 @@ public class TestServiceTestImpl {
 	public void removeTagsFromMetasByCSV_20190823() throws Exception {
 		System.out.println("#removeTagsFromMetasByCSV_20190823 START#");
 		
-		//작업 전 통계
-		testService.getTagsCountByType("beforeProcess");
-		
-		//작업(from removeAllTagsFromMetasByCsv)
-		testService.removeAllTagsFromMetasByCsv();
-		
-		//작업 후 통계
-		testService.getTagsCountByType("afterProcess");
+//		//작업 전 통계
+//		testService.getTagsCountByType("beforeProcess");
+//		
+//		//작업(from removeAllTagsFromMetasByCsv)
+//		testService.removeAllTagsFromMetasByCsv();
+//		
+//		//작업 후 통계
+//		testService.getTagsCountByType("afterProcess");
+		testService.removeTagsFromMetasByCSV_GetTagsCountByType();
 		
 		System.out.println("#removeTagsFromMetasByCSV_20190823 END#");
 	}
