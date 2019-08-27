@@ -6689,6 +6689,12 @@ public class TestService implements TestServiceImpl {
 
         Map<String, Object> itemCountByType = new HashMap();
 
+        //파일명에 오늘 날짜와 현재 시각 표시
+        //String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		Calendar time = Calendar.getInstance();
+		String strNow = format1.format(time.getTime());
+		
         for(String type : types) {
             reqMap = new HashMap();
             reqMap.put("mtype", type);
@@ -6760,7 +6766,9 @@ public class TestService implements TestServiceImpl {
                 cnt++;
             }
 
-            String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
+            //파일명에 오늘 날짜와 현재 시각 표시
+            //String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
+            String fileNameContent = "META_DIC_TYPE_"+type+"_"+strNow+".csv";
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
         System.out.println("#ALL count by type:"+itemCountByType.toString());
@@ -8784,7 +8792,7 @@ public class TestService implements TestServiceImpl {
 		String str;
 		String resultStr;
 		
-		//작업 전
+		//작업 전 태그 수량 세기
 		str = "beforeProcess";
 		resultStr = "mtype" + seperator + "count" + lineFeed;
 		try {
@@ -8806,15 +8814,26 @@ public class TestService implements TestServiceImpl {
 			
 			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
 			//파일표출
-			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
+			int rtFileC1 = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		//메타태그 삭제 작업(기존 로직)
-		this.removeAllTagsFromMetasByCsv();
+		try {
+			//작업 전 CSV 생성
+			this.writeMetaDicKeywordsByTypes();
+			
+			//메타태그 삭제 작업(기존 로직)
+			this.removeAllTagsFromMetasByCsv();
+			
+			//작업 후 CSV 생성
+			this.writeMetaDicKeywordsByTypes();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		//작업 후
+		//작업 후 태그 수량 세기
 		str = "afterProcess";
 		resultStr = "mtype" + seperator + "count" + lineFeed;
 		try {
@@ -8836,7 +8855,7 @@ public class TestService implements TestServiceImpl {
 			
 			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
 			//파일표출
-			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
+			int rtFileC2 = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
