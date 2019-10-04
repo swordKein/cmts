@@ -3,9 +3,11 @@ package com.kthcorp.cmts.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
+import com.kthcorp.cmts.model.DicKeywords;
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.model.ItemsTags;
 import com.kthcorp.cmts.model.ManualChange;
+import com.kthcorp.cmts.model.RelKnowledge;
 import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
@@ -51,6 +53,8 @@ public class ApiController {
 	private ItemsTagsService itemsTagsService;
 	@Autowired
 	private UtilService utilService;
+	@Autowired
+	private RelKnowledgeService relKnowledgeService;
 
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
@@ -899,8 +903,9 @@ public class ApiController {
 			, @RequestParam(value = "pagesize", required = false, defaultValue = "200") String spagesize
 			, @RequestParam(value = "KEYWORD", required = false, defaultValue = "") String keyword
 			, @RequestParam(value = "pageno") String spageno
+			, @RequestParam(value = "orderby", required = false, defaultValue = "new") String orderby
 	) {
-		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/pageSize:"+spagesize+"/pageno:"+spageno);
+		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/orderby:"+orderby+"/pageSize:"+spagesize+"/pageno:"+spageno);	
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -920,7 +925,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				result1 = apiService.getDicKeywordsByType(type, keyword, pageSize, pageNo);
+				result1 = apiService.getDicKeywordsByType(type, keyword, orderby, pageSize, pageNo);	//권재일 추가 07.31 5-1
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {
@@ -1396,4 +1401,209 @@ public class ApiController {
 
 		return result;
 	}
+	
+	
+	//권재일 추가 08.06 03_12 mcid로 동일 컨텐츠 검색 test
+	//참고사항 : post__item_list - getItemsSearch
+	@RequestMapping(value="/pop/meta/mcidlist", method=RequestMethod.GET)
+	@ResponseBody
+	public String getItemListSameMcid(Model model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "itemid") int itemid
+	) {
+		logger.debug("/pop/meta/mcidlist 현 아이템과 동일한 mcid의 컨텐츠 리스트 검색 팝업 표출 - item id = " + itemid);
+		String result = null;
+		
+/*		JsonObject result1 = null;
+		
+		try {
+			result1 = apiService.getItemListSameMcid(itemid);
+		} catch (Exception e) {
+
+			logger.error("/pop/meta/mcidlist ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+
+		return result;
+*/
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				result1 = apiService.getItemListSameMcid(itemid);
+				if(result1 != null) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Items's search-result is null!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
+
+
+		return result_all.toString();
+	}
+	
+	//권재일 추가 해당 카테고리 키워드사전 통쨰로 삭제 (+ 추가)
+	@RequestMapping(value = "/dic/del/type", method = RequestMethod.POST)
+	@ResponseBody
+	public String delDicKeywordsAllByType(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "type") String type
+			, @RequestParam(value = "items") String items
+	) {
+		logger.info("#CLOG:API/dic/del/type input type:" + type);
+		int rtcode = -1;
+		String rtmsg = "";
+		
+		DicKeywords dicKeywords = new DicKeywords();
+		dicKeywords.setType(type);
+		/*
+		int rtcode = -1;
+		String rtmsg = "";
+		//JsonArray result1 = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+
+				int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				if (rtins > 0) {
+					rtmsg = "SUCCESS";
+
+				} else {
+					rtcode = -1;
+					rtmsg = "Update dic Array update fail!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+		*/
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+
+//				int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				int rtins1 = dicService.delDicKeywordsAllByType(dicKeywords);
+				/*
+				if (rtins > 0) {
+					//rtmsg = "SUCCESS";
+
+				} else {
+					rtcode = -1;
+					rtmsg = "Update dic from CSV fail!";
+				}
+				*/
+				
+				System.out.println("rtins1 = " + rtins1);
+				
+				//바로 dic 저장 /dic/upt/array
+				int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				if (rtins > 0) {
+					rtmsg = "SUCCESS";
+
+				} else {
+					rtcode = -1;
+					rtmsg = "Update dic Array update fail!";
+				}
+				
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+		
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+
+		return result_all.toString();
+	}
+	
+	//권재일 추가 연관지식 통쨰로 삭제 후 추가
+	@RequestMapping(value = "/relknowledge/upload/type", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadRelKnowledgesAllByType(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "type") String type
+			, @RequestParam(value = "items") String items
+	) {
+		logger.info("#CLOG:API/relknowledge/upload/type input type:" + type);
+		int rtcode = -1;
+		String rtmsg = "";
+		
+		/*
+		DicKeywords dicKeywords = new DicKeywords();
+		dicKeywords.setType(type);
+		*/
+		RelKnowledge relKnowledge = new RelKnowledge();
+		relKnowledge.setRelKnowledgeType(type);	//type라는 이름의 컬럼이 있으므로
+		
+		
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+
+//				int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				//int rtins1 = dicService.delDicKeywordsAllByType(dicKeywords);	//사전
+				int rtins1 = relKnowledgeService.delRelKnowledgesByType(relKnowledge);
+				
+				System.out.println("rtins1 = " + rtins1);
+				
+				//바로 dic 저장 /dic/upt/array
+				//int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				int rtins = relKnowledgeService.addRelKnowledgesByType(items);
+				if (rtins > 0) {
+					rtmsg = "SUCCESS";
+
+				} else {
+					rtcode = -1;
+					rtmsg = "Update dic Array update fail!";
+				}
+				
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+		
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+
+		return result_all.toString();
+	}
+	
+	
 }

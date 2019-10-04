@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kthcorp.cmts.mapper.RelKnowledgeMapper">
+<!--
+	int delRelKnowledgesCook(RelKnowledge relKnowledge);
+	int delRelKnowledgesCurr(RelKnowledge relKnowledge);
+	int delRelKnowledgesDocu(RelKnowledge relKnowledge);
+	int delRelKnowledgesHeal(RelKnowledge relKnowledge);
+	int delRelKnowledgesHist(RelKnowledge relKnowledge);
+	int delRelKnowledgesTour(RelKnowledge relKnowledge); 
+ -->
+	<delete id="delRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	<delete id="delRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	<delete id="delRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	<delete id="delRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	<delete id="delRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	<delete id="delRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		DELETE FROM vod_rt_cook
+	</delete>
+	
+</mapper>

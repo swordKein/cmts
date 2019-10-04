@@ -10,6 +10,17 @@
           idx, type, keyword, ratio, regdate, regid
         from dic_keywords
         where type = #{type}
+        <if test="orderby!=null">
+	        <if test="orderby.equals('new')">
+	            order by regdate DESC, idx DESC
+	        </if>
+	        <if test="orderby.equals('old')">
+	            order by regdate ASC, idx DESC
+	        </if>
+	        <if test="orderby.equals('abc')">
+	            order by keyword ASC, idx DESC
+	        </if>
+        </if>
     </select>
 
     <select id="getDicKeywordsPaging" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
@@ -21,7 +32,12 @@
         <if test='keyword != null and keyword != ""'>
             and keyword like concat('%',#{keyword},'%')
         </if>
-        order by regdate DESC, idx DESC
+        <if test="orderby.equals('new')">
+            order by regdate DESC, idx DESC
+        </if>
+        <if test="orderby.equals('abc')">
+            order by keyword ASC, idx DESC
+        </if>
         limit ${pageSize} offset ${offsetIdx}
     </select>
 
@@ -226,5 +242,23 @@
         select concat(mtype, '_', word) as key1, word, wordto, wordadd, worddel from dic_result_tag_keywords
         order by mtype asc, regdate desc
 
+    </select>
+    
+    <!-- 해당 카테고리 키워드사전 통쨰로 삭제(추가하기전) -->
+    <delete id="delDicKeywordsAllByType" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* delDicKeywordsAllByType  */
+        delete from dic_keywords
+        where type = #{type}
+    </delete>
+    
+    <!-- 서브장르 사전 메타 모두 (getDicSubgenreGenres 활용) -->
+    <select id="getAllDicSubgenreGenres" resultType="com.kthcorp.cmts.model.DicSubgenre" parameterType="java.lang.String">
+        /* getAllDicSubgenreGenres */
+        select distinct
+        	meta
+        from
+        	dic_subgenre_genres
+        order by
+        	meta
     </select>
 </mapper>

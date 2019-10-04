@@ -672,8 +672,9 @@ public class DicService implements DicServiceImpl {
     }
 
     @Override
-    public JsonArray getDicKeywordsByType(String type, String keyword, int pageSize, int pageno) {
-        if (pageSize < 1 && pageSize > 200) pageSize = 200;
+    public JsonArray getDicKeywordsByType(String type, String keyword, String orderby, int pageSize, int pageno) {
+        //if (pageSize < 1 && pageSize > 200) pageSize = 200;
+    	if(pageSize < 1) pageSize = 200;
 
         JsonArray result = new JsonArray();
 
@@ -683,6 +684,7 @@ public class DicService implements DicServiceImpl {
                 reqnotuse.setPageSize(pageSize);
                 reqnotuse.setPageNo(pageno);
                 reqnotuse.setWord(keyword);
+                reqnotuse.setOrderby(orderby);
                 List<DicNotuseWords> resnotuse = dicNotuseWordsMapper.getDicNotuseWordsPaging(reqnotuse);
                 if (resnotuse != null) {
                     for (DicNotuseWords dic : resnotuse) {
@@ -696,6 +698,7 @@ public class DicService implements DicServiceImpl {
                 reqchange.setPageSize(pageSize);
                 reqchange.setPageNo(pageno);
                 reqchange.setWord(keyword);
+                reqchange.setOrderby(orderby);
                 List<DicChangeWords> reschange = dicChangeWordsMapper.getDicChangeWordsPaging(reqchange);
                 if (reschange != null) {
                     for (DicChangeWords dic : reschange) {
@@ -736,6 +739,7 @@ public class DicService implements DicServiceImpl {
                 reqkey.setPageNo(pageno);
                 reqkey.setType(type);
                 reqkey.setKeyword(keyword);
+                reqkey.setOrderby(orderby);
 
                 List<DicKeywords> resKeywords = dicKeywordsMapper.getDicKeywordsPaging(reqkey);
                 if (resKeywords != null) {
@@ -1295,4 +1299,11 @@ public class DicService implements DicServiceImpl {
 
         return result;
     }
+
+    //해당 카테고리 키워드사전 통쨰로 삭제(추가하기전)
+	public int delDicKeywordsAllByType(DicKeywords dicKeywords) {
+		int intResult = dicKeywordsMapper.delDicKeywordsAllByType(dicKeywords);
+		
+		return intResult;
+	}
 }

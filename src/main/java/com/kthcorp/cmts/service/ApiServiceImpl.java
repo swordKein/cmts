@@ -39,7 +39,7 @@ public interface ApiServiceImpl {
 
     //JsonObject getDicKeywordsByType(String type, int pageSize, int pageno);
 
-    JsonObject getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
+    JsonObject getDicKeywordsByType(String type, String keyword, String orderby, int pageSize, int pageno);	
 
     String getChangedMtypes(String searchParts);
 
@@ -70,4 +70,7 @@ public interface ApiServiceImpl {
     String getNaverKordicResult(String keyword) throws Exception;
 
     String getCollNaverKordicResult(String keyword) throws Exception;
+    
+    //mcid로 동일 컨텐츠 검색
+    public JsonObject getItemListSameMcid(Integer itemid);
 }

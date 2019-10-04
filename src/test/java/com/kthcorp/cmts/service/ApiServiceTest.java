@@ -32,7 +32,9 @@ public class ApiServiceTest {
 		//JsonObject result = apiService.getDicKeywordsByType("CHANGE", "재밌", 100, 1);
 		//JsonObject result = apiService.getDicKeywordsByType("NOTUSE", "있",10, 2);
 		//JsonObject result = apiService.getDicKeywordsByType("ADD", "인",10, 1);
-		JsonObject result = apiService.getDicKeywordsByType("WHO", "",10, 11);
+		
+		JsonObject result = apiService.getDicKeywordsByType("WHO", "", "new", 10, 11);
+		//JsonObject result = apiService.getDicKeywordsByType("WHO", "", "abc", 10, 11);
 		System.out.println("#Result:" + result.toString());
 	}
 

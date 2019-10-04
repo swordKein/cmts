@@ -440,14 +440,15 @@ public class ApiService implements ApiServiceImpl {
     }
 
     @Override
-    public JsonObject getDicKeywordsByType(String type, String keyword, int pageSize, int pageno) {
-        if(pageSize < 1 || pageSize > 200) pageSize = 200;
+    public JsonObject getDicKeywordsByType(String type, String keyword, String orderby, int pageSize, int pageno) {
+        //if(pageSize < 1 || pageSize > 200) pageSize = 200;
+    	if(pageSize < 1) pageSize = 200;	//검색어 자동완성에서도 쓰고 있어서 200 이상으로도 되어야 함
 
         JsonObject result = new JsonObject();
         int countItems = dicService.countItems(type, keyword);
         System.out.println("#COUNT_BY_TYPE:: type:"+type+ " / count:"+countItems);
 
-        JsonArray list_words = dicService.getDicKeywordsByType(type, keyword, pageSize, pageno);
+        JsonArray list_words = dicService.getDicKeywordsByType(type, keyword, orderby, pageSize, pageno);	//권재일 추가 07.31 5-1
         System.out.println("#LIST_WORDS:"+list_words.toString());
 
         int maxPage = countItems / pageSize + 1;
@@ -562,11 +563,12 @@ public class ApiService implements ApiServiceImpl {
 
         String newSdate = "";
         String newEdate = "";
+        //시간은 쿼리식에서 붙어서 여기서는 빼버림
         if ("".equals(searchSdate) || "".equals(searchEdate)) {
-            newSdate = "2017-01-01 00:00:00"; newEdate = "2025-12-31 23:59:59";
+        	newSdate = "2017-01-01"; newEdate = "2025-12-31";
         } else {
-            newSdate = searchSdate + " 00:00:00";
-            newEdate = searchEdate + " 23:59:59";
+            newSdate = searchSdate;
+            newEdate = searchEdate;
         }
         reqIt.setSearchSdate(newSdate);
         reqIt.setSearchEdate(newEdate);
@@ -658,6 +660,7 @@ public class ApiService implements ApiServiceImpl {
                 newItem.addProperty("STAT", (tm.getStat() != null ? tm.getStat() : ""));
 
                 newItem.addProperty("ITEMID", tm.getIdx());
+                newItem.addProperty("REGID", tm.getRegid());
 
                 result.add(newItem);
             }
@@ -1158,5 +1161,44 @@ public class ApiService implements ApiServiceImpl {
         }
         return result;
     }
+
+    //mcid로 동일 컨텐츠 검색
+	public JsonObject getItemListSameMcid(Integer itemid) {
+		// TODO Auto-generated method stub
+		
+		JsonObject result = new JsonObject();		
+		Items reqIt = new Items();
+		
+		reqIt.setIdx(itemid);
+		
+		/*
+		//from getItemsSearch
+        List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
+        List<Items> list_items2 = new ArrayList();
+        for(Items one : list_items) {
+            if (one != null && one.getSeries_id() != null && !"0".equals(one.getSeries_id())) {
+                one.setContent_id(one.getSeries_id());
+                one.setCid(one.getSeries_id());
+            }
+            list_items2.add(one);
+        }
+        JsonArray listItems = getListItemsFromArray(list_items2);
+		*/
+		
+		List<Items> list_items = itemsMapper.getItemListSameMcid(reqIt);
+        List<Items> list_items2 = new ArrayList();
+        for(Items one : list_items) {
+            if (one != null && one.getSeries_id() != null && !"0".equals(one.getSeries_id())) {
+                one.setContent_id(one.getSeries_id());
+                one.setCid(one.getSeries_id());
+            }
+            list_items2.add(one);
+        }
+		JsonArray listItems = getListItemsFromArray(list_items2);
+		
+		result.add("LIST_ITEMS", listItems);
+		
+		return result;
+	}
 
 }
