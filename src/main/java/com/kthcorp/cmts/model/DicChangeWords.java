@@ -21,6 +21,8 @@ public class DicChangeWords extends Paging {
     private String regid;
 
     private String oldword;
+    
+    private String orderby;	//권재일 추가 07.31 5-1
 
     public String getOldword() {
         return oldword;
@@ -77,4 +79,12 @@ public class DicChangeWords extends Paging {
     public void setRegid(String regid) {
         this.regid = regid;
     }
+    
+    public String getOrderby() {
+		return orderby;
+	}
+    
+    public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
 }

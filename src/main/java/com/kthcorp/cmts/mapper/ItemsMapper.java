@@ -59,4 +59,7 @@ public interface ItemsMapper {
     String getItemsStatByIdx(int idx);
 
     List<Map<String,Object>> getItemsInfoForPrism(Map<String,Object> req);
+
+    //mcid로 동일 컨텐츠 검색
+    List<Items> getItemListSameMcid(Items reqIt);
 }

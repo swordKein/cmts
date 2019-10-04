@@ -19,6 +19,7 @@ public class DicNotuseWords extends Paging {
     private Double freq;
     private Timestamp regdate;
     private String regid;
+    private String orderby;	//권재일 추가 07.31 5-1
 
     public String getOldword() {
         return oldword;
@@ -67,4 +68,12 @@ public class DicNotuseWords extends Paging {
     public void setRegid(String regid) {
         this.regid = regid;
     }
+    
+    public String getOrderby() {
+		return orderby;
+	}
+    
+    public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
 }

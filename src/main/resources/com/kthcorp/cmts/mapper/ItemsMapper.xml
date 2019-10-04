@@ -748,4 +748,23 @@
         order by regdate1 desc
         limit 50
     </select>
+
+    <!-- mcid로 동일 컨텐츠 검색 -->
+    <select id="getItemListSameMcid" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
+        /* getItemListSameMcid */
+
+		select a.*, a.cid as content_id
+		from items a
+		where a.cid in (
+			select b.content_id
+			from ccube_contents b
+			where b.master_content_id = (
+				select c.master_content_id
+				from ccube_contents c
+				where 1=1
+				and c.content_id=(select d.cid from items d where d.idx=#{idx})
+			)
+		)
+    </select>
+
 </mapper>
