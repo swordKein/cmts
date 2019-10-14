@@ -15,5 +15,7 @@ public interface RelKnowledgeServiceImpl {
 
     int delRelKnowledgesByType(RelKnowledge relKnowledge);
 
-    int addRelKnowledgesByType(String items);
+    int addRelKnowledgesByType(RelKnowledge relKnowledge);
+    
+    public String getRelKnowledgeListDownload(String type);
 }

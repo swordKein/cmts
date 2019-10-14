@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +26,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 //@RequestMapping(value = {"", "/dummy"})
@@ -56,6 +66,10 @@ public class ApiController {
 	@Autowired
 	private RelKnowledgeService relKnowledgeService;
 
+	//권재일 추가 파일다운로드
+	@Autowired
+	ResourceLoader resourceLoader;
+	
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
 	@ResponseBody
@@ -1547,15 +1561,15 @@ public class ApiController {
 	}
 	
 	//권재일 추가 연관지식 통쨰로 삭제 후 추가
-	@RequestMapping(value = "/relknowledge/upload/type", method = RequestMethod.POST)
+	@RequestMapping(value = "/relknowledge/delete/type", method = RequestMethod.POST)
 	@ResponseBody
-	public String uploadRelKnowledgesAllByType(Map<String, Object> model
+	public String deleteRelKnowledgesByType(Map<String, Object> model
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "type") String type
-			, @RequestParam(value = "items") String items
+//			, @RequestParam(value = "items") String items
 	) {
-		logger.info("#CLOG:API/relknowledge/upload/type input type:" + type);
+		logger.info("#CLOG:API/relknowledge/delete/type input type:" + type);
 		int rtcode = -1;
 		String rtmsg = "";
 		
@@ -1576,10 +1590,72 @@ public class ApiController {
 				int rtins1 = relKnowledgeService.delRelKnowledgesByType(relKnowledge);
 				
 				System.out.println("rtins1 = " + rtins1);
+//				
+//				//바로 dic 저장 /dic/upt/array
+//				//int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+//				relKnowledge.setItems(items);
+//				int rtins = relKnowledgeService.addRelKnowledgesByType(relKnowledge);
+//				if (rtins > 0) {
+//					rtmsg = "SUCCESS";
+//
+//				} else {
+//					rtcode = -1;
+//					rtmsg = "Update dic Array update fail!";
+//				}
+				
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+		
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+
+		return result_all.toString();
+	}
+	
+	//권재일 추가 연관지식 통쨰로 삭제 후 추가
+	@RequestMapping(value = "/relknowledge/upload/type", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadRelKnowledgesByType(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "type") String type
+			, @RequestParam(value = "items") String items
+	) {
+		logger.info("#CLOG:API/relknowledge/upload/type input type:" + type);
+		System.out.println(" items = " + items);
+		int rtcode = -1;
+		String rtmsg = "";
+		
+		/*
+		DicKeywords dicKeywords = new DicKeywords();
+		dicKeywords.setType(type);
+		*/
+		RelKnowledge relKnowledge = new RelKnowledge();
+		relKnowledge.setRelKnowledgeType(type);	//type라는 이름의 컬럼이 있으므로
+		
+		
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+
+//				int rtins = dicService.modifyDicsByTypesFromArrayList(items);
+				//int rtins1 = dicService.delDicKeywordsAllByType(dicKeywords);	//사전
+//				int rtins1 = relKnowledgeService.delRelKnowledgesByType(relKnowledge);
+//				
+//				System.out.println("rtins1 = " + rtins1);
 				
 				//바로 dic 저장 /dic/upt/array
 				//int rtins = dicService.modifyDicsByTypesFromArrayList(items);
-				int rtins = relKnowledgeService.addRelKnowledgesByType(items);
+				relKnowledge.setItems(items);
+				int rtins = relKnowledgeService.addRelKnowledgesByType(relKnowledge);
 				if (rtins > 0) {
 					rtmsg = "SUCCESS";
 
@@ -1605,5 +1681,80 @@ public class ApiController {
 		return result_all.toString();
 	}
 	
+	//연관지식 다운로드 권재일 추가
+	@RequestMapping(value="/relknowledge/download/type")//, method=RequestMethod.POST
+	public String downloadRelKnowledgesByType(Map<String, Object> model
+			, @RequestParam(value="type", required=false, defaultValue = "") String type
+			, HttpServletRequest request
+			, HttpServletResponse response
+			) {
+		JsonObject result = new JsonObject();
+		
+		System.out.println("#/relknowledge/download/type");	//from /admin/dic/keywords/download
+		
+		String rtmsg = "";
+		String strFilePath = "";
+		try {
+			//strFilePath = adminService.getDicKeywordsListDownload(type);
+			strFilePath = relKnowledgeService.getRelKnowledgeListDownload(type);
+			if (strFilePath.length() > 0) {
+				rtmsg = "SUCCESS";
+			}
+		
+		} catch(Exception e) {
+			//rtcode = -999;
+			rtmsg = "System fail.";
+			e.printStackTrace();
+		}
+		result.addProperty("rtfile", strFilePath);
+		result.addProperty("rtmsg", rtmsg);
+		
+		Resource resClasspath;
+		String strResClasspath = "";
+		resClasspath = resourceLoader.getResource("classpath:static/");
+		
+		System.out.println(resClasspath.exists());
+		System.out.println(resClasspath.getDescription());
+		
+		FileInputStream fis;
+		FileOutputStream fos;
+		OutputStream os;
+		
+		try {
+			strResClasspath = resClasspath.getURI().getPath();
+			System.out.println("strResClasspath =" + strResClasspath);
+			
+			//파일 복사 from strFileName to strResClasspath
+			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
+			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
+			
+			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
+			fis = new FileInputStream(strFilePath);
+			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
+			os = response.getOutputStream();
+			
+			int data = 0;
+			while((data=fis.read())!=-1) {
+				fos.write(data);
+			}
+			
+			fis.close();
+			fos.close();
+			
+			//String strFilePath
+			//다운로드 파일 링크
+			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			os.write((strUrl+"/"+strFileName).getBytes());
+			os.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return result.toString();
+	}
 	
 }

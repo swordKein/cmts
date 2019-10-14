@@ -13,7 +13,7 @@ public class RelKnowledge extends Paging {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
-
+    private String items;
 
 	private Integer idx;
 	private String regweek;
@@ -46,11 +46,11 @@ public class RelKnowledge extends Paging {
 	private String cook_place_oth_area_a;
 	private String cook_place_oth_area_b;
 	private String cook_good_season;
-	private String gook_good_day;
+	private String cook_good_day;
 	private String cook_purpose;
 	private String cook_flavor;
 	private String cook_cooker;
-	private String cook_shot_place;
+	private String cook_shoot_place;
 	private String cook_level_a;
 	private String cook_level_b;
 	private String cook_level_c;
@@ -68,7 +68,7 @@ public class RelKnowledge extends Paging {
 	private String curr_type;
 	private String curr_mc;
 	private String curr_actor;
-	private String cur_keyword;
+	private String curr_keyword;
 	private String cur_etc;
 
 	private String docu_subject;
@@ -154,6 +154,12 @@ public class RelKnowledge extends Paging {
 	
 	
 	
+	public String getItems() {
+		return items;
+	}
+	public void setItems(String items) {
+		this.items = items;
+	}
 	public Integer getIdx() {
 		return idx;
 	}
@@ -322,11 +328,11 @@ public class RelKnowledge extends Paging {
 	public void setCook_good_season(String cook_good_season) {
 		this.cook_good_season = cook_good_season;
 	}
-	public String getGook_good_day() {
-		return gook_good_day;
+	public String getCook_good_day() {
+		return cook_good_day;
 	}
-	public void setGook_good_day(String gook_good_day) {
-		this.gook_good_day = gook_good_day;
+	public void setCook_good_day(String cook_good_day) {
+		this.cook_good_day = cook_good_day;
 	}
 	public String getCook_purpose() {
 		return cook_purpose;
@@ -346,11 +352,11 @@ public class RelKnowledge extends Paging {
 	public void setCook_cooker(String cook_cooker) {
 		this.cook_cooker = cook_cooker;
 	}
-	public String getCook_shot_place() {
-		return cook_shot_place;
+	public String getCook_shoot_place() {
+		return cook_shoot_place;
 	}
-	public void setCook_shot_place(String cook_shot_place) {
-		this.cook_shot_place = cook_shot_place;
+	public void setCook_shoot_place(String cook_shoot_place) {
+		this.cook_shoot_place = cook_shoot_place;
 	}
 	public String getCook_level_a() {
 		return cook_level_a;
@@ -448,11 +454,11 @@ public class RelKnowledge extends Paging {
 	public void setCurr_actor(String curr_actor) {
 		this.curr_actor = curr_actor;
 	}
-	public String getCur_keyword() {
-		return cur_keyword;
+	public String getCurr_keyword() {
+		return curr_keyword;
 	}
-	public void setCur_keyword(String cur_keyword) {
-		this.cur_keyword = cur_keyword;
+	public void setCurr_keyword(String curr_keyword) {
+		this.curr_keyword = curr_keyword;
 	}
 	public String getCur_etc() {
 		return cur_etc;

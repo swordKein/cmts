@@ -855,7 +855,8 @@ public class AdminController {
 			
 			//String strFilePath
 			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();	// + "/" + "file";
-			os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			os.write((strUrl+"/"+strFileName).getBytes());
 			os.close();
 			
 		} catch (IOException e) {
