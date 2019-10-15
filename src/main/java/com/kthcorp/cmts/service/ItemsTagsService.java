@@ -215,9 +215,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     public int getCurrTagsIdxForInsert(int itemIdx) {
         /*
-        1. Ã³À½ µî·ÏÇÒ °æ¿ì = 0
-        2. ½ÂÀÎµÈ °ÇÀÌ ÀÖ°í ¼öÁ¤ÇÒ °æ¿ì = last tagIdx
-        3. ½ÂÀÎµÈ °ÇÀÌ ¾ø°í ¼öÁ¤ÇÒ °æ¿ì = last tagIdx
+        1. ì²˜ìŒ ë“±ë¡í•  ê²½ìš° = 0
+        2. ìŠ¹ì¸ëœ ê±´ì´ ìˆê³  ìˆ˜ì •í•  ê²½ìš° = last tagIdx
+        3. ìŠ¹ì¸ëœ ê±´ì´ ì—†ê³  ìˆ˜ì •í•  ê²½ìš° = last tagIdx
          */
         ItemsTags req = new ItemsTags();
         req.setIdx(itemIdx);
@@ -225,22 +225,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         int tagidx = this.getMaxTagsIdxByItemIdx(req);
 
         if (tagidx == 0) {
-            // ½ÂÀÎ¿Ï·áµÈ tagidx°¡ ÀÖ´ÂÁö È®ÀÎ
+            // ìŠ¹ì¸ì™„ë£Œëœ tagidxê°€ ìˆëŠ”ì§€ í™•ì¸
             ItemsTags req2 = new ItemsTags();
             req2.setIdx(itemIdx);
             req2.setStat("S");
             int tagidx2 = this.getMaxTagsIdxByItemIdx(req2);
             //System.out.println("#confirmed tagidx2:"+tagidx2);
 
-            // ½ÂÀÎ¿Ï·áµÈ tagidx2°¡ ¾øÀ¸¸é ½ÂÀÎ¹Ì¿Ï·áÀÎ tagidx¸¦ ¸®ÅÏ
+            // ìŠ¹ì¸ì™„ë£Œëœ tagidx2ê°€ ì—†ìœ¼ë©´ ìŠ¹ì¸ë¯¸ì™„ë£Œì¸ tagidxë¥¼ ë¦¬í„´
             if (tagidx2 == 0) {
-                // ½ÂÀÎ¿Ï·áµÈ tagidx °³¼ö°¡ > 0 ÀÌ¸é 1 Áõ°¡
+                // ìŠ¹ì¸ì™„ë£Œëœ tagidx ê°œìˆ˜ê°€ > 0 ì´ë©´ 1 ì¦ê°€
                 int confirmedTagCnt = this.cntConfirmedTags(req2);
                 System.out.println("#confirmedTagCnt :"+confirmedTagCnt);
                 if (confirmedTagCnt > 0) {
                     tagidx = 1;
                 }
-            // ½ÂÀÎ¿Ï·áµÈ tagidx°¡ ÀÖÀ¸¸é 1 Áõ°¡ÇÏ¿© ½Å±Ô°ÇÀ¸·Î ÀúÀå
+            // ìŠ¹ì¸ì™„ë£Œëœ tagidxê°€ ìˆìœ¼ë©´ 1 ì¦ê°€í•˜ì—¬ ì‹ ê·œê±´ìœ¼ë¡œ ì €ì¥
             } else if (tagidx2 > 0) {
                 tagidx = tagidx2 + 1;
             }
@@ -347,7 +347,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             JsonArray metas2 = new JsonArray();
                             if (metas != null && metas.size() > 0) {
                                 if (it.getMtype().toUpperCase().contains("SUBGENRE")) {
-                                    // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+                                    // ë§ˆì§€ë§‰ ì œì™¸ ëŒ€ìƒ í•„í„° ì ìš©
                                     for (JsonElement je : metas) {
                                         JsonObject jo1 = (JsonObject) je;
                                         boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -445,7 +445,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
         System.out.println("#ELOG.getItemsMetasByItemIdx:: dupCheck.datas::"+resultObj2.toString());
 
-        /* WORDS_ASSOC °¨¼ºÀ¯ÀÇ¾î - ³×ÀÌ¹ö»çÀü */
+        /* WORDS_ASSOC ê°ì„±ìœ ì˜ì–´ - ë„¤ì´ë²„ì‚¬ì „ */
         resultObj2 = getWordsAssoc(itemIdx, resultObj2);
 
         System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsAssoc.datas::"+resultObj2.toString());
@@ -844,7 +844,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     private JsonObject setEmptyMetas(JsonObject reqObj, List<String> origTypes) {
-        // ºüÁø typeÀº °ø¹éÀÌ¶óµµ Ã¤¿öÁØ´Ù
+        // ë¹ ì§„ typeì€ ê³µë°±ì´ë¼ë„ ì±„ì›Œì¤€ë‹¤
         if(reqObj != null) {
             for(String type : origTypes) {
                 if(reqObj.get(type) == null) {
@@ -907,7 +907,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if("LIST_SUBGENRE".equals(type)) {
                 JsonArray listSubgenre2 = new JsonArray();
                 if (typeResultArr != null && typeResultArr.size() > 0) {
-                    // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+                    // ë§ˆì§€ë§‰ ì œì™¸ ëŒ€ìƒ í•„í„° ì ìš©
                     for (JsonElement je : typeResultArr) {
                         JsonObject jo1 = (JsonObject) je;
                         boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -951,7 +951,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         JsonObject njo = (JsonObject) nje;
                         String newWord = njo.get("word").getAsString();
                         if (oldWord.equals(newWord)) {
-                            // OLD:NEW °°Àº °ÍÀÌ ÀÖÀ¸¸é type=dup ·Î ÀúÀå
+                            // OLD:NEW ê°™ì€ ê²ƒì´ ìˆìœ¼ë©´ type=dup ë¡œ ì €ì¥
                             //System.out.println("#njo:"+njo.toString());
 
                             JsonObject newItem = new JsonObject();
@@ -971,7 +971,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
                     if (!isMatch) {
-                        // OLD:NEW °°Àº °ÍÀÌ ¾øÀ¸¸é type=ext ·Î ÀúÀå
+                        // OLD:NEW ê°™ì€ ê²ƒì´ ì—†ìœ¼ë©´ type=ext ë¡œ ì €ì¥
                         JsonObject newItem = new JsonObject();
                         newItem.addProperty("word", oldWord);
                         //if ("get".equals(when)) {
@@ -1007,7 +1007,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
                     if (!isExist) {
-                        // NEW:RESLT °°Àº °ÍÀÌ ¾øÀ¸¸é type=new ·Î ÀúÀå
+                        // NEW:RESLT ê°™ì€ ê²ƒì´ ì—†ìœ¼ë©´ type=new ë¡œ ì €ì¥
                         //System.out.println("#njjo:"+njjo.toString());
 
                         JsonObject newItem = new JsonObject();
@@ -1027,7 +1027,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
             }
         } else {
-            /* °Ë»ö¾î´Â ´Ü¼ø JsonArray */
+            /* ê²€ìƒ‰ì–´ëŠ” ë‹¨ìˆœ JsonArray */
             //System.out.println("#TLOG:LIST_SEARCHKEYWORDS :: oldArr:"+oldArr.toString() + "/newArr:"+newArr.toString());
             for (JsonElement je : oldArr) {
                 String os = je.getAsString();
@@ -1073,7 +1073,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
 
             // Y -> D
-            // curTagIdx´Â C·Î ½ÂÀÎÃë¼Ò Ã³¸®
+            // curTagIdxëŠ” Cë¡œ ìŠ¹ì¸ì·¨ì†Œ ì²˜ë¦¬
             if (curTagIdx > 0) {
                 ItemsTags reqCC = new ItemsTags();
                 reqCC.setIdx(itemIdx);
@@ -1084,13 +1084,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
             */
 
-            // ÃÖÃÊ ½ÂÀÎ Â÷¼ö
+            // ìµœì´ˆ ìŠ¹ì¸ ì°¨ìˆ˜
             ItemsTags reqO = new ItemsTags();
             reqO.setIdx(itemIdx);
             reqO.setStat("S");
             int firstTaggedIdx = itemsTagsMapper.getMinTagsIdxByItemIdx(reqO);
 
-            // ÃÖÃÊ ½ÂÀÎ Â÷¼ö¿Í ¸¶Áö¸· Â÷¼ö (½ÂÀÎ ¿©ºÎ ¹«°ü) °¡ ´Ù¸¥ °æ¿ì¸¸  ¸¶Áö¸· Â÷¼ö »èÁ¦
+            // ìµœì´ˆ ìŠ¹ì¸ ì°¨ìˆ˜ì™€ ë§ˆì§€ë§‰ ì°¨ìˆ˜ (ìŠ¹ì¸ ì—¬ë¶€ ë¬´ê´€) ê°€ ë‹¤ë¥¸ ê²½ìš°ë§Œ  ë§ˆì§€ë§‰ ì°¨ìˆ˜ ì‚­ì œ
             ItemsTags req1 = new ItemsTags();
             req1.setIdx(itemIdx);
             int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(req1);
@@ -1106,13 +1106,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 reqIt.setIdx(itemIdx);
                 //int rtx = itemsMapper.uptItemsTagcntMinus(reqIt);
 
-                //items_hist¿¡ µî·Ï for Åë°è
+                //items_histì— ë“±ë¡ for í†µê³„
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
                 int rthist = itemsService.insItemsHist(itemIdx, "meta", "RECV", movietitle, "RESTORE_META", curTagIdx);
 
-                // items ÀÇ tagcnt¸¦ ¸¶Áö¸· tagidx ·Î ¼öÁ¤
+                // items ì˜ tagcntë¥¼ ë§ˆì§€ë§‰ tagidx ë¡œ ìˆ˜ì •
                 //int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
                 reqIt.setTagcnt(curTagIdx);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
@@ -1153,7 +1153,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         if(metasTypes.contains(tmpMapArrayName)) {
                             tmpMapArrayName = "METAS" + tmpMapArrayName;
                         }
-                        // ui¿¡¼­´Â listsearchkeywords ÇüÅÂ·Î °ø¹é¾øÀÌ Àü¼ÛµÊ
+                        // uiì—ì„œëŠ” listsearchkeywords í˜•íƒœë¡œ ê³µë°±ì—†ì´ ì „ì†¡ë¨
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
                         }
@@ -1200,14 +1200,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
             , int itemid, int curTagIdx) {
         int rt = 0;
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ½ÃÀÛ");
-        System.out.println(" - origMetasArraysByType = " + origMetasArraysByType.toString());
-        System.out.println(" - actionItemsArraysByType = " + actionItemsArraysByType.toString());
-        System.out.println(" - typesArr = " + typesArr.toString());
-        System.out.println(" - itemid = " + itemid);
-        System.out.println(" - curTagIdx = " + curTagIdx);
-        
-        /* Å¸ÀÔ º° ¾×¼Ç ¾ÆÀÌÅÛ Áß add,mod´Â »çÀü¿¡ Ãß°¡ */
+
+        /* íƒ€ì… ë³„ ì•¡ì…˜ ì•„ì´í…œ ì¤‘ add,modëŠ” ì‚¬ì „ì— ì¶”ê°€ */
         ArrayList<String> dicTypes = new ArrayList<String>();
         dicTypes.add("METASWHEN");
         dicTypes.add("METASWHERE");
@@ -1216,7 +1210,6 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASEMOTION");
         dicTypes.add("METASCHARACTER");
 
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸»çÀü ½ÃÀÛ");
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
             if (actionItemsArraysByType.get(dicType) != null) {
@@ -1252,20 +1245,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
             }
         }
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸»çÀü ³¡");
-        
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® ½ÃÀÛ");
+
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
             System.out.println("#ELOG.origMetasArraysByType:"+origMetasArraysByType.toString());
 
             //for (JsonElement atype1 : typesArr) {
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes setEmptyMetas ½ÃÀÛ");
             JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, this.getOrigTypes());
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes setEmptyMetas ³¡");
-            
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® ½ÃÀÛ");
+
             for (String atype : this.getOrigTypes()) {
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " ½ÃÀÛ");
                 //String atype = atype1.getAsString();
                 atype = atype.replace("\"", "");
                 atype = atype.toUpperCase();
@@ -1286,8 +1273,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
 
                 if (changeMetaArr != null) {
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " - changeMetaArr ³Î ¾Æ´Ô");
-                	/* get meta data for saving */
+                    /* get meta data for saving */
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype) && !"LIST_AWARD".equals(atype)) {
@@ -1305,7 +1291,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                         System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destMeta.toString());
 
-                        /* ±âÁ¸ ¸ŞÅ¸¿Í Ãß°¡ ¾×¼Ç¾ÆÀÌÅÛµéÀÌ ¹İ¿µµÈ TYPE(ex> METASWHEN) º° ¸ŞÅ¸JsonArray°¡ ÁØºñµÇ¸é ÇöÀç tagIdx¸¦ ±âÁØÀ¸·Î ¾÷µ¥ÀÌÆ® */
+                        /* ê¸°ì¡´ ë©”íƒ€ì™€ ì¶”ê°€ ì•¡ì…˜ì•„ì´í…œë“¤ì´ ë°˜ì˜ëœ TYPE(ex> METASWHEN) ë³„ ë©”íƒ€JsonArrayê°€ ì¤€ë¹„ë˜ë©´ í˜„ì¬ tagIdxë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì—…ë°ì´íŠ¸ */
                         if (!atype.toUpperCase().contains("AWARD")) {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
@@ -1314,68 +1300,49 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setMeta(destMeta);
 
                             //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqMeta = " + reqMeta);
-                            rt = this.insItemsTagsMetas(reqMeta);//ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ® ÁÖ¼®´ŞÀ½!!!!
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
+                            rt = this.insItemsTagsMetas(reqMeta);
                         } else {
-                            // AWARDÀÇ °æ¿ì items_metas¿¡ ±âÁ¸¸ŞÅ¸¸¦ À¯ÁöÇÑ´Ù 18.05.15
+                            // AWARDì˜ ê²½ìš° items_metasì— ê¸°ì¡´ë©”íƒ€ë¥¼ ìœ ì§€í•œë‹¤ 18.05.15
                             ItemsMetas reqM = new ItemsMetas();
                             reqM.setIdx(itemid);
                             reqM.setMtype("award");
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
 
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
-                            
                             System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
                         }
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);
                     }
                 } else {
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " - changeMetaArr ³Î ¸ÂÀ½");
                     if (origMetaArr != null) {
                         destMeta = origMetaArr.toString();
-                        /* ±âÁ¸ ¸ŞÅ¸¿¡¼­ Ãß°¡ ¾×¼Ç ¾ÆÀÌÅÛµéÀÌ ¾ø´Â °æ¿ì ±âÁ¸ ¸ŞÅ¸ ±×´ë·Î ÇöÀç tagIdx¿¡ ¾÷µ¥ÀÌÆ® */
+                        /* ê¸°ì¡´ ë©”íƒ€ì—ì„œ ì¶”ê°€ ì•¡ì…˜ ì•„ì´í…œë“¤ì´ ì—†ëŠ” ê²½ìš° ê¸°ì¡´ ë©”íƒ€ ê·¸ëŒ€ë¡œ í˜„ì¬ tagIdxì— ì—…ë°ì´íŠ¸ */
                         if (!atype.toUpperCase().contains("AWARD")) {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
                             reqMeta.setTagidx(curTagIdx);
-                            reqMeta.setMtype(atype);	//MTYPE
-                            reqMeta.setMeta(destMeta);	//ÅëÂ°·Î META ÄÃ·³¿¡ ÀúÀå
+                            reqMeta.setMtype(atype);
+                            reqMeta.setMeta(destMeta);
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
-                            
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
                         } else {
-                            // AWARDÀÇ °æ¿ì items_metas¿¡ ±âÁ¸¸ŞÅ¸¸¦ À¯ÁöÇÑ´Ù 18.05.15
+                            // AWARDì˜ ê²½ìš° items_metasì— ê¸°ì¡´ë©”íƒ€ë¥¼ ìœ ì§€í•œë‹¤ 18.05.15
                             ItemsMetas reqM = new ItemsMetas();
                             reqM.setIdx(itemid);
                             reqM.setMtype("award");
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
-                            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
 
                             System.out.println("#insItemsMetas for AWARD2:"+reqM.toString());
                         }
                     }
                 }
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® : atype = " + atype + " ³¡");
             }
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® ³¡");
         }
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ŞÅ¸ ¹İº¹¹® ³¡");
-        System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸®ÅÏ : rt = " + rt);
         return rt;
     }
 
@@ -1398,7 +1365,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         origTypes.add("LIST_AWARD");
 
-        /* Å¸ÀÔ º° ¾×¼Ç ¾ÆÀÌÅÛ Áß add,mod´Â »çÀü¿¡ Ãß°¡
+        /* íƒ€ì… ë³„ ì•¡ì…˜ ì•„ì´í…œ ì¤‘ add,modëŠ” ì‚¬ì „ì— ì¶”ê°€
         ArrayList<String> dicTypes = new ArrayList<String>();
         dicTypes.add("METASWHEN");
         dicTypes.add("METASWHERE");
@@ -1411,12 +1378,6 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Override
     public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow) {
-		System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems ½ÃÀÛ");
-		System.out.println(" - itemid = " + itemid);
-		System.out.println(" - items = " + items);
-		System.out.println(" - duration = " + duration);
-		System.out.println(" - sendnow = " + sendnow);
-		
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
@@ -1441,9 +1402,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             Items reqIt = null;
 
             /* get action TYPE to Arrays */
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - input asfasfd = " + items);
             JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - output asfasfd = " + actionItemsArraysByType.toString());
             System.out.println("#actionItemsArraysByType:"+actionItemsArraysByType.toString());
             JsonArray typesArr = null;
             if (actionItemsArraysByType.get("typesArr") != null)
@@ -1452,111 +1411,80 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             int tagcnt = 0;
 
-            /* ±â½ÂÀÎµÈ ¸ŞÅ¸°¡ ¾øÀ» °æ¿ì (ÃÖ±Ù tagIdx°¡ ¹Ì½ÂÀÎÀÎ °æ¿ì) ¸ŞÅ¸¼öÁ¤ ÈÄ »óÅÂº¯°æ, ½ÂÀÎ Ã³¸®ÇÑ´Ù */
+            /* ê¸°ìŠ¹ì¸ëœ ë©”íƒ€ê°€ ì—†ì„ ê²½ìš° (ìµœê·¼ tagIdxê°€ ë¯¸ìŠ¹ì¸ì¸ ê²½ìš°) ë©”íƒ€ìˆ˜ì • í›„ ìƒíƒœë³€ê²½, ìŠ¹ì¸ ì²˜ë¦¬í•œë‹¤ */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ±â½ÂÀÎµÈ ¸ŞÅ¸°¡ ¾øÀ» °æ¿ì");
-            	
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx ½ÇÇà Àü");
-            	JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx µ¿ÀÛ ÈÄ : origMetasArraysByType = " + origMetasArraysByType.toString());
+                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
 
-                // AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀĞ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject µ¿ÀÛ Àü(È£Ãâ) : AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀĞ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡");
+                // AWARD ì²˜ë¦¬ë¥¼ ìœ„í•´ ITEMS_METASì—ì„œ ì½ì–´ì„œ êµ¬ì¡°ì²´ì— ì¶”ê°€
                 origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject µ¿ÀÛ ÈÄ : origMetasArraysByType = " + origMetasArraysByType.toString());
 
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
-                /* action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤ */
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ Àü(È£Ãâ) action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤");
+                /* action_itemì´ ìˆëŠ” ê²½ìš° íƒ€ì…ë³„ meta ìˆ˜ì • */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ ÈÄ : rtm = " + rtm);
-            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
-            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
-            	System.out.println(" - typesArr " + typesArr);
-            	System.out.println(" - itemid " + itemid);
-            	System.out.println(" - curTagIdx " + curTagIdx);
-            	
-                /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+
+                /* í•´ë‹¹ items_tags_keys ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤ */
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat µ¿ÀÛ Àü");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat µ¿ÀÛ ÈÄ : rts = " + rts);
 
-                /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+                /* í•´ë‹¹ items_stat ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤ */
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
                 reqIt.setStat("ST");
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                 int rti = itemsMapper.insItemsStat(reqIt);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
 
                 rt = 1;
 
                 tagcnt = curTagIdx + 1;
             } else {
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀÌÀü »óÅÂ ÄÚµå È®ÀÎÇÏ¿© ½ÂÀÎ¿Ï·á(ST)°¡ ¾Æ´Ñ °æ¿ì ½ÂÀÎ¿Ï·á·Î Ã³¸®  added 2018.04.11");
-                /* ÀÌÀü »óÅÂ ÄÚµå È®ÀÎÇÏ¿© ½ÂÀÎ¿Ï·á(ST)°¡ ¾Æ´Ñ °æ¿ì ½ÂÀÎ¿Ï·á·Î Ã³¸®  added 2018.04.11 */
+                /* ì´ì „ ìƒíƒœ ì½”ë“œ í™•ì¸í•˜ì—¬ ìŠ¹ì¸ì™„ë£Œ(ST)ê°€ ì•„ë‹Œ ê²½ìš° ìŠ¹ì¸ì™„ë£Œë¡œ ì²˜ë¦¬  added 2018.04.11 */
                 String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - oldItemsStat " + oldItemsStat);
                 if (!"ST".equals(oldItemsStat)) {
-                    /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù
+                    /* í•´ë‹¹ items_tags_keys ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤
                     ItemsTags reqConfirm = new ItemsTags();
                     reqConfirm.setIdx(itemid);
                     reqConfirm.setTagidx(curTagIdx);
                     reqConfirm.setStat("S");
                     int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
 
-                    /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+                    /* í•´ë‹¹ items_stat ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤ */
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                     int rti = itemsMapper.insItemsStat(reqIt);
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
                 } else {
-                    /* ±â½ÂÀÎµÈ ¸ŞÅ¸°¡ ÀÖÀ» °æ¿ì tagidx¸¦ ½Å±Ô »ı¼ºÇÑ´Ù..  18.05.16 */
+                    /* ê¸°ìŠ¹ì¸ëœ ë©”íƒ€ê°€ ìˆì„ ê²½ìš° tagidxë¥¼ ì‹ ê·œ ìƒì„±í•œë‹¤..  18.05.16 */
                     curTagIdx =  this.getCurrTagsIdxForInsert(itemid);
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - curTagIdx " + curTagIdx);
 
-                    /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù
+                    /* í•´ë‹¹ items_tags_keys ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤
                     ItemsTags reqConfirm = new ItemsTags();
                     reqConfirm.setIdx(itemid);
                     reqConfirm.setTagidx(curTagIdx);
                     reqConfirm.setStat("S");
                     int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
 
-                    /* ÇØ´ç itemsÀÇ tagcnt¸¦ ÃÖÁ¾ tagidx·Î ¼öÁ¤ÇÑ´Ù */
-                    // ¾Æ·¡ ¸¶Áö¸· ¶óÀÎ ÂüÁ¶
-                    /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+                    /* í•´ë‹¹ itemsì˜ tagcntë¥¼ ìµœì¢… tagidxë¡œ ìˆ˜ì •í•œë‹¤ */
+                    // ì•„ë˜ ë§ˆì§€ë§‰ ë¼ì¸ ì°¸ì¡°
+                    /* í•´ë‹¹ items_stat ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤ */
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                     int rti = itemsMapper.insItemsStat(reqIt);
-                	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
                 }
 
-                /* ±â½ÂÀÎµÈ ¸ŞÅ¸°¡ ÀÖÀ» °æ¿ì, items_tags_metas ¸¸ ¼öÁ¤ÇÑ´Ù */
+                /* ê¸°ìŠ¹ì¸ëœ ë©”íƒ€ê°€ ìˆì„ ê²½ìš°, items_tags_metas ë§Œ ìˆ˜ì •í•œë‹¤ */
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid, this.getOrigTypes());
 
-                // AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀĞ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡
+                // AWARD ì²˜ë¦¬ë¥¼ ìœ„í•´ ITEMS_METASì—ì„œ ì½ì–´ì„œ êµ¬ì¡°ì²´ì— ì¶”ê°€
                 origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
 
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
-                /* action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤ */
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ Àü");
+                /* action_itemì´ ìˆëŠ” ê²½ìš° íƒ€ì…ë³„ meta ìˆ˜ì • */
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
-            	System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ ÈÄ : rtm = " + rtm);
-            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
-            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
-            	System.out.println(" - typesArr " + typesArr);
-            	System.out.println(" - itemid " + itemid);
-            	System.out.println(" - curTagIdx " + curTagIdx);
 
                 rt = 1;
 
@@ -1565,73 +1493,48 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
 
-            System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç Á÷Àü");
             if (rt > 0) {
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0");
-                /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù  */
+                /* í•´ë‹¹ items_tags_keys ë¥¼ ìŠ¹ì¸ìœ¼ë¡œ ì—…ë°ì´íŠ¸ í•œë‹¤  */
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagsKeysStat ½ÇÇà Àü");
-                System.out.println(" - itemid = " + itemid);
-                System.out.println(" - curTagIdx = " + curTagIdx);
-                System.out.println(" - stat = S");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagsKeysStat ½ÇÇà ÈÄ : rts = " + rts);
-                System.out.println(" - itemid = " + itemid);
-                System.out.println(" - curTagIdx = " + curTagIdx);
-                System.out.println(" - stat = S");
 
-                //items_hist¿¡ µî·Ï for Åë°è
+                //items_histì— ë“±ë¡ for í†µê³„
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - getItemsByIdx ½ÇÇà Àü");
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - getItemsByIdx ½ÇÇà ÈÄ : itemInfo = " + itemInfo.toString());
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insItemsHist ½ÇÇà Àü");
                 int rthist = itemsService.insItemsHist(itemid, "meta", "S", movietitle, "CONFIRM_META", itemid);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insItemsHist ½ÇÇà ÈÄ : rthist = " + rthist);
 
-                // TagCnt 1 Áõ°¡ // ÀÏ´Ü ¾÷µ¥ÀÌÆ® ±¸¹®À¸·Î ÇØ°á
+                // TagCnt 1 ì¦ê°€ // ì¼ë‹¨ ì—…ë°ì´íŠ¸ êµ¬ë¬¸ìœ¼ë¡œ í•´ê²°
                 //int oldTagCnt = itemInfo.getTagcnt();
                 //int newTagCnt = oldTagCnt + 1;
                 //reqIt.setTagcnt(newTagCnt);
 
-                /* ÇØ´ç items Á¤º¸¸¦ º¯°æÇÑ´Ù.  tagcnt++,  duration */
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - ÇØ´ç items Á¤º¸¸¦ º¯°æÇÑ´Ù");
+                /* í•´ë‹¹ items ì •ë³´ë¥¼ ë³€ê²½í•œë‹¤.  tagcnt++,  duration */
                 if (!"".equals(duration)) reqIt.setDuration(duration);
                 reqIt.setTagcnt(tagcnt);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagcnt ½ÇÇà Àü");
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagcnt ½ÇÇà ÈÄ : rtu = " + rtu);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
 
-                /* ÇØ´ç itemsÀÇ sched_target_content ¿ø¹®À» ¸ğµÎ »èÁ¦ÇÑ´Ù  18.05.16 */
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - deleteSchedTargetContentOrigin ½ÇÇà Àü");
+                /* í•´ë‹¹ itemsì˜ sched_target_content ì›ë¬¸ì„ ëª¨ë‘ ì‚­ì œí•œë‹¤  18.05.16 */
                 int rtd = schedTriggerService.deleteSchedTargetContentOrigin(itemid);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - deleteSchedTargetContentOrigin ½ÇÇà ÈÄ : rtd = " + rtd);
             }
 
             if ("Y".equals(sendnow.toUpperCase())) {
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç sendnow=Y");
                 Map<String,Object> reqCcube = new HashMap();
                 reqCcube.put("idx", itemid);
                 reqCcube.put("regid", serverid);
-                System.out.println(" - itemid = " + itemid);
-                System.out.println(" - serverid = " + serverid);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insCcubeOutput ½ÇÇà Àü");
                 int rtc = ccubeService.insCcubeOutput(reqCcube);
-                System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insCcubeOutput ½ÇÇà ÈÄ : rtc = " + rtc);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-		System.out.println("[ÀúÀå½Ã ¸ŞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems ³¡ : rt = " + rt);
         return rt;
     }
 
@@ -1664,7 +1567,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     String word1 = jo.get("word").getAsString();
                     word1 = word1.trim();
 
-                    // MapÀÇ key¿¡ word¸¦ µî·ÏÇÏ¿© Áßº¹ Á¦°Å
+                    // Mapì˜ keyì— wordë¥¼ ë“±ë¡í•˜ì—¬ ì¤‘ë³µ ì œê±°
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
                         resultArr.add(jo);
                         wordSet.put(word1, "exist");
@@ -1711,7 +1614,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 for (String word1 : origStrArr) {
                     word1 = word1.trim();
 
-                    // MapÀÇ key¿¡ word¸¦ µî·ÏÇÏ¿© Áßº¹ Á¦°Å
+                    // Mapì˜ keyì— wordë¥¼ ë“±ë¡í•˜ì—¬ ì¤‘ë³µ ì œê±°
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
                         resultArr.add(word1);
                         wordSet.put(word1, "exist");
@@ -1900,7 +1803,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if(jobRuuningStat == false) {
                 jobRuuningStat = true;
                 try {
-                    // running job Áßº¹¹æÁö¸¦ À§ÇØ ÀÌ·Â ÀúÀå
+                    // running job ì¤‘ë³µë°©ì§€ë¥¼ ìœ„í•´ ì´ë ¥ ì €ì¥
                     ManualChange reqm = new ManualChange();
                     reqm.setTarget_mtype(target_mtype);
                     reqm.setFrom_keyword(from_keyword);
@@ -1913,26 +1816,26 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     switch (action) {
                         case "add":
-                            // Á¶È¸´Â ÀüÃ¼ ÅÂ±×¸ŞÅ¸
-                            // ÀĞ¾î¿Â ¸ŞÅ¸ ±¸Á¶Ã¼¿¡ ½Å±Ô Å°¿öµå Ãß°¡
-                            // from_keyword °¡ ÀÖÀ» °æ¿ì ÇØ´ç Å°¿öµå°¡ ÀÖ´Â row¸¸ ´ë»óÀ¸·Î ¼±Á¤
+                            // ì¡°íšŒëŠ” ì „ì²´ íƒœê·¸ë©”íƒ€
+                            // ì½ì–´ì˜¨ ë©”íƒ€ êµ¬ì¡°ì²´ì— ì‹ ê·œ í‚¤ì›Œë“œ ì¶”ê°€
+                            // from_keyword ê°€ ìˆì„ ê²½ìš° í•´ë‹¹ í‚¤ì›Œë“œê°€ ìˆëŠ” rowë§Œ ëŒ€ìƒìœ¼ë¡œ ì„ ì •
                             if (!from_keyword.equals(to_keyword)) {
                                 req.setKeyword(from_keyword);
                             }
                             break;
                         case "mod":
-                            // Á¶È¸´Â mtype, from_keyword¸¦ ±âÁØÀ¸·Î
+                            // ì¡°íšŒëŠ” mtype, from_keywordë¥¼ ê¸°ì¤€ìœ¼ë¡œ
                             req.setKeyword(from_keyword);
-                            // ÀĞ¾î¿Â ¸ŞÅ¸ ±¸Á¶Ã¼¿¡¼­ ±âÁ¸ Å°¿öµå¸¦ to_keyword·Î º¯°æ
+                            // ì½ì–´ì˜¨ ë©”íƒ€ êµ¬ì¡°ì²´ì—ì„œ ê¸°ì¡´ í‚¤ì›Œë“œë¥¼ to_keywordë¡œ ë³€ê²½
                             break;
                         case "del":
-                            // Á¶È¸´Â mtype, from_keyword¸¦ ±âÁØÀ¸·Î
+                            // ì¡°íšŒëŠ” mtype, from_keywordë¥¼ ê¸°ì¤€ìœ¼ë¡œ
                             req.setKeyword(from_keyword);
-                            // ÀĞ¾î¿Â ¸ŞÅ¸ ±¸Á¶Ã¼¿¡¼­ ±âÁ¸ Å°¿öµå¸¦ Ã£¾Æ Á¦°Å
+                            // ì½ì–´ì˜¨ ë©”íƒ€ êµ¬ì¡°ì²´ì—ì„œ ê¸°ì¡´ í‚¤ì›Œë“œë¥¼ ì°¾ì•„ ì œê±°
                             break;
                     }
 
-                    // º¯°æ ´ë»ó Á¶È¸
+                    // ë³€ê²½ ëŒ€ìƒ ì¡°íšŒ
                     int cnt_all = itemsTagsMapper.cntSearchTagsMetasByMtypeAndKeyword(req);
                     System.out.println("#ELOG.searchTagsCount:" + cnt_all);
 
@@ -1955,7 +1858,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             List<ItemsTags> resCur = itemsTagsMapper.getSearchTagsMetasByMtypeAndKeywordPaging(req);
                             //System.out.println("#ELOG.searchedItemsTags by mtype:"+target_mtype+"/pageno:"+pageno+"/datas::"+resCur.toString());
                             for (ItemsTags itag : resCur) {
-                                // ÀúÀå ´ë»ó »ı¼º
+                                // ì €ì¥ ëŒ€ìƒ ìƒì„±
                                 String origMeta = itag.getMeta();
                                 if (origMeta != null && !"".equals(origMeta) && !"[]".equals(origMeta)) {
                                     JsonParser jsonParser = new JsonParser();
@@ -1977,7 +1880,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                                     }
 
                                     if (destArr2 != null) {
-                                        // idx, tagidx, mtype ¿¡ ¸ÂÃß¾î meta ¾÷µ¥ÀÌÆ®
+                                        // idx, tagidx, mtype ì— ë§ì¶”ì–´ meta ì—…ë°ì´íŠ¸
                                         itag.setMeta(destArr2.toString());
                                         rt = itemsTagsMapper.uptItemsTagsByManual(itag);
                                     }
@@ -1987,14 +1890,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
 
-                    // »çÀü¿¡µµ ¹İ¿µ ÀÛ¾÷
+                    // ì‚¬ì „ì—ë„ ë°˜ì˜ ì‘ì—…
                     if (rt > 0) {
                         int rtd = this.changeDicKeywordsForManual(target_mtype, from_keyword, to_keyword, action);
                     }
 
                     Thread.sleep(3000);
 
-                    // running job Áßº¹¹æÁö¸¦ À§ÇØ ÀÌ·Â ÀúÀå stat = S
+                    // running job ì¤‘ë³µë°©ì§€ë¥¼ ìœ„í•´ ì´ë ¥ ì €ì¥ stat = S
                     ManualChange histOneOld = this.getManualJobHistLastOne();
                     ManualChange histOne = this.getManualJobHistLastOne();
                     histOne.setHidx(histOneOld.getHidx());
@@ -2020,7 +1923,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private int changeDicKeywordsForManual(String target_mtype, String from_keyword, String to_keyword, String action) throws Exception {
         int rt = 0;
 
-            // »çÀü¿¡µµ ¹İ¿µ ÀÛ¾÷
+            // ì‚¬ì „ì—ë„ ë°˜ì˜ ì‘ì—…
             if (!"".equals(target_mtype) && !"".equals(to_keyword) && !"".equals(action)) {
                 DicKeywords newKey = new DicKeywords();
 
@@ -2319,7 +2222,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
 
-        // request param º¯Á¶ metawho -> who
+        // request param ë³€ì¡° metawho -> who
         reqJsonObjStr = StringUtil.removeMetaTag(reqJsonObjStr);
 
         //long itemIdx0 = (long) 0;
@@ -2340,11 +2243,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             try {
 
-                // ÀÔ·Â JsonArray¸¦ META_WORD ÇüÅÂÀÇ °ø¹éÀ¸·Î ±¸ºĞµÈ 1°³ÀÇ ¹®ÀÚ¿­·Î Ä¡È¯
+                // ì…ë ¥ JsonArrayë¥¼ META_WORD í˜•íƒœì˜ ê³µë°±ìœ¼ë¡œ êµ¬ë¶„ëœ 1ê°œì˜ ë¬¸ìì—´ë¡œ ì¹˜í™˜
                 JsonArray reqArr = JsonUtil.getJsonArray(reqJsonObjStr);
                 String reqStr = this.getMetasStringFromJsonArray(reqArr, origTypes);
 
-                // ÀÔ·Â reqStrÀ» ¿¤¶ó½ºÆ½ ¼­Ä¡¸¦ ÅëÇØ À¯»çµµ Æò°¡
+                // ì…ë ¥ reqStrì„ ì—˜ë¼ìŠ¤í‹± ì„œì¹˜ë¥¼ í†µí•´ ìœ ì‚¬ë„ í‰ê°€
                 JsonObject resultEs = null;
                 //Set<String> esReturnArr = new HashSet<String>();
                 List<String> esReturnArr = new ArrayList<>();
@@ -2359,7 +2262,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Set<String> metaSingleArr = new HashSet();
                 Set<String> metaGenreArr = new HashSet();
 
-                // ÀúÀåµÈ Àå¸£¸¦ °¡Á®¿Â´Ù.
+                // ì €ì¥ëœ ì¥ë¥´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
                 ItemsMetas reqIm = new ItemsMetas();
                 reqIm.setIdx(itemid);
                 reqIm.setMtype("genre");
@@ -2367,20 +2270,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
                 System.out.println("#ELOG ORIG item's GENRE:"+itemGenre);
 
-                // ´Ù¸¥ °Í°ú ¾Æ¹« »ó°ü¾øÀÌ Æ¯Á¤ Å°¿öµå°¡ ÀÖÀ¸¸é °á°ú¿¡ ±× Àå¸£¸íÀ» Ãß°¡ÇÑ´Ù. dic_subgenre_genresÀÇ mtype=genre_word
+                // ë‹¤ë¥¸ ê²ƒê³¼ ì•„ë¬´ ìƒê´€ì—†ì´ íŠ¹ì • í‚¤ì›Œë“œê°€ ìˆìœ¼ë©´ ê²°ê³¼ì— ê·¸ ì¥ë¥´ëª…ì„ ì¶”ê°€í•œë‹¤. dic_subgenre_genresì˜ mtype=genre_word
                 System.out.println("#ELOG genre_add_arr from reqStr:"+reqStr.toString());
                 Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
                 System.out.println("#ELOG GENRE_ADD by genre_add:"+genre_add_arr.toString());
 
                 Set<String> combinedWordAndGenres = new HashSet();
                 if (genre_add_arr != null) {
-                    // meta_single°ú ´ëÁ¶ÇÏ¿© °á°ú¿¡ ÀúÀå
+                    // meta_singleê³¼ ëŒ€ì¡°í•˜ì—¬ ê²°ê³¼ì— ì €ì¥
                     for(String gs : genre_add_arr) {
                         metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, gs, "meta_single");
                     }
                     System.out.println("#ELOG metaSingleArr after genre_add:"+metaSingleArr.toString());
 
-                    // meta_genre ¿Í ´ëÁ¶ÇÏ¿© °á°ú¿¡ ÀúÀå
+                    // meta_genre ì™€ ëŒ€ì¡°í•˜ì—¬ ê²°ê³¼ì— ì €ì¥
                     for(String ga : genre_add_arr) {
                         combinedWordAndGenres = this.getCombindEsAndGenre(combinedWordAndGenres, ga, itemGenre);
                     }
@@ -2397,7 +2300,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         , reqStr);
 
                 System.out.println("#resultEs:" + resultEs.toString());
-                // 1Â÷ ES response¿¡¼­ 10°³¸¦ Æ÷ÀÎÆ® »ó°ü¾øÀÌ Ãëµæ
+                // 1ì°¨ ES responseì—ì„œ 10ê°œë¥¼ í¬ì¸íŠ¸ ìƒê´€ì—†ì´ ì·¨ë“
                 hits = this.getEsTopWords(resultEs);
                 System.out.println("#resultEs.words top1::" + hits.toString());
 
@@ -2424,14 +2327,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     esWords = hits.get("words").toString();
                 }
 
-                // ES °Ë»ö ÈÄ ÄÆÆ÷ÀÎÆ® Åë°ú ÇÑ °á°ú´Â 1°³¸¸ Ãëµæ
+                // ES ê²€ìƒ‰ í›„ ì»·í¬ì¸íŠ¸ í†µê³¼ í•œ ê²°ê³¼ëŠ” 1ê°œë§Œ ì·¨ë“
                 if (esReturnArr != null && esReturnArr.size() > 0) {
                     esReturnWord = esReturnArr.get(0);
                 }
 
                 System.out.println("#esReturnWord:(cut " + es_cut_point + ")::" + esReturnWord + " / esWords:" + esWords);
 
-                // ÄÆÆ÷ÀÎÆ® Åë°úÇÑ ES °Ë»ö ÅäÇÈ TOP 1À» resultArr¿¡ ÀúÀå
+                // ì»·í¬ì¸íŠ¸ í†µê³¼í•œ ES ê²€ìƒ‰ í† í”½ TOP 1ì„ resultArrì— ì €ì¥
                 if (!"".equals(esReturnWord)) {
                     if (resultArr == null) resultArr = new JsonArray();
                     /*
@@ -2442,7 +2345,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     resultArr.add(newWord);
                     */
 
-                    // ÅäÇÈ TOP 1 À» dic_subgenre_genres ÀÇ mtype=meta_single°ú ´ëÁ¶ÇÏ¿© Ãß°¡¾î Ãëµæ ÈÄ resultArr¿¡ ÀúÀå
+                    // í† í”½ TOP 1 ì„ dic_subgenre_genres ì˜ mtype=meta_singleê³¼ ëŒ€ì¡°í•˜ì—¬ ì¶”ê°€ì–´ ì·¨ë“ í›„ resultArrì— ì €ì¥
                     metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, esReturnWord, "meta_single");
                     System.out.println("#ELOG metaSingleArr final ::"+metaSingleArr.toString());
 
@@ -2461,9 +2364,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
 
-                    // ÅäÇÈ TOP 1°ú genre¸¦ dic_subgenre_genres ÀÇ mtype=meta_genre ¿Í ´ëÁ¶ÇÏ¿© Ãß°¡¾î Ãëµæ ÈÄ resultArr¿¡ ÀúÀå
+                    // í† í”½ TOP 1ê³¼ genreë¥¼ dic_subgenre_genres ì˜ mtype=meta_genre ì™€ ëŒ€ì¡°í•˜ì—¬ ì¶”ê°€ì–´ ì·¨ë“ í›„ resultArrì— ì €ì¥
 
-                    // Àå¸£°¡ ÀÖÀ¸¸é ESÅäÇÈ___Àå¸£  Á¶ÇÕÀ¸·Î »çÀü°ú ´ëÁ¶ÇÏ¿© ¸®½ºÆ® ÃßÃâ
+                    // ì¥ë¥´ê°€ ìˆìœ¼ë©´ ESí† í”½___ì¥ë¥´  ì¡°í•©ìœ¼ë¡œ ì‚¬ì „ê³¼ ëŒ€ì¡°í•˜ì—¬ ë¦¬ìŠ¤íŠ¸ ì¶”ì¶œ
                     Set<String> combinedEsWordAndGenres = new HashSet();
                     if (!"".equals(itemGenre)) {
                         combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, esReturnWord, itemGenre);
@@ -2486,7 +2389,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonArray resultArr2 = new JsonArray();
         if (resultArr != null && resultArr.size() > 0) {
-            // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+            // ë§ˆì§€ë§‰ ì œì™¸ ëŒ€ìƒ í•„í„° ì ìš©
             for (JsonElement je : resultArr) {
                 JsonObject jo1 = (JsonObject) je;
                 boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -2524,7 +2427,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 toMeta = CommonUtil.removeNationStr(toMeta);
                 System.out.println("#toMeta:"+toMeta);
                 if (cont_type.contains("CcubeSeries")) {
-                    toMeta = toMeta.replace("¿µÈ­", "½Ã¸®Áî");
+                    toMeta = toMeta.replace("ì˜í™”", "ì‹œë¦¬ì¦ˆ");
                 }
             }
 
@@ -2543,7 +2446,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 toMetaOrigin = resultNation.toString();
                 toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
                 if (cont_type.contains("CcubeSeries")) {
-                    toMetaOrigin = toMetaOrigin.replace("¿µÈ­", "½Ã¸®Áî");
+                    toMetaOrigin = toMetaOrigin.replace("ì˜í™”", "ì‹œë¦¬ì¦ˆ");
                 }
             }
 
