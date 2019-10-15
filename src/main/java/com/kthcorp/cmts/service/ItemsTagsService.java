@@ -215,9 +215,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     @Override
     public int getCurrTagsIdxForInsert(int itemIdx) {
         /*
+<<<<<<< HEAD
         1. ï§£ì„ì“¬ ï¿½ë²‘æ¿¡ì•ºë¸· å¯ƒìŽŒìŠ¦ = 0
         2. ï¿½ë“…ï¿½ì”¤ï¿½ë§‚ å«„ëŒì”  ï¿½ì—³æ€¨ï¿½ ï¿½ë‹”ï¿½ì ™ï¿½ë¸· å¯ƒìŽŒìŠ¦ = last tagIdx
         3. ï¿½ë“…ï¿½ì”¤ï¿½ë§‚ å«„ëŒì”  ï¿½ë¾¾æ€¨ï¿½ ï¿½ë‹”ï¿½ì ™ï¿½ë¸· å¯ƒìŽŒìŠ¦ = last tagIdx
+=======
+        1. Ã³À½ µî·ÏÇÒ °æ¿ì = 0
+        2. ½ÂÀÎµÈ °ÇÀÌ ÀÖ°í ¼öÁ¤ÇÒ °æ¿ì = last tagIdx
+        3. ½ÂÀÎµÈ °ÇÀÌ ¾ø°í ¼öÁ¤ÇÒ °æ¿ì = last tagIdx
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
          */
         ItemsTags req = new ItemsTags();
         req.setIdx(itemIdx);
@@ -225,22 +231,38 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         int tagidx = this.getMaxTagsIdxByItemIdx(req);
 
         if (tagidx == 0) {
+<<<<<<< HEAD
             // ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ëš®ë§‚ tagidxåª›ï¿½ ï¿½ì—³ï¿½ë’—ï§žï¿½ ï¿½ì†—ï¿½ì”¤
+=======
+            // ½ÂÀÎ¿Ï·áµÈ tagidx°¡ ÀÖ´ÂÁö È®ÀÎ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             ItemsTags req2 = new ItemsTags();
             req2.setIdx(itemIdx);
             req2.setStat("S");
             int tagidx2 = this.getMaxTagsIdxByItemIdx(req2);
             //System.out.println("#confirmed tagidx2:"+tagidx2);
 
+<<<<<<< HEAD
             // ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ëš®ë§‚ tagidx2åª›ï¿½ ï¿½ë¾¾ï¿½ì‘ï§Žï¿½ ï¿½ë“…ï¿½ì”¤èª˜ëª„ì…¿çŒ·ëš¯ì”¤ tagidxç‘œï¿½ ç”±Ñ‹ê½©
+=======
+            // ½ÂÀÎ¿Ï·áµÈ tagidx2°¡ ¾øÀ¸¸é ½ÂÀÎ¹Ì¿Ï·áÀÎ tagidx¸¦ ¸®ÅÏ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             if (tagidx2 == 0) {
+<<<<<<< HEAD
                 // ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ëš®ë§‚ tagidx åª›ì’–ë‹”åª›ï¿½ > 0 ï¿½ì” ï§Žï¿½ 1 ï§ì•·ï¿½
+=======
+                // ½ÂÀÎ¿Ï·áµÈ tagidx °³¼ö°¡ > 0 ÀÌ¸é 1 Áõ°¡
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 int confirmedTagCnt = this.cntConfirmedTags(req2);
                 System.out.println("#confirmedTagCnt :"+confirmedTagCnt);
                 if (confirmedTagCnt > 0) {
                     tagidx = 1;
                 }
+<<<<<<< HEAD
             // ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ëš®ë§‚ tagidxåª›ï¿½ ï¿½ì—³ï¿½ì‘ï§Žï¿½ 1 ï§ì•·ï¿½ï¿½ë¸¯ï¿½ë¿¬ ï¿½ë–Šæ´¹ì’“êµ”ï¿½ì‘æ¿¡ï¿½ ï¿½ï¿½ï¿½ì˜£
+=======
+            // ½ÂÀÎ¿Ï·áµÈ tagidx°¡ ÀÖÀ¸¸é 1 Áõ°¡ÇÏ¿© ½Å±Ô°ÇÀ¸·Î ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             } else if (tagidx2 > 0) {
                 tagidx = tagidx2 + 1;
             }
@@ -347,7 +369,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             JsonArray metas2 = new JsonArray();
                             if (metas != null && metas.size() > 0) {
                                 if (it.getMtype().toUpperCase().contains("SUBGENRE")) {
+<<<<<<< HEAD
                                     // ï§ë‰ï¿½ï§ï¿½ ï¿½ì £ï¿½ì‡… ï¿½ï¿½ï¿½ê¸½ ï¿½ë¸˜ï¿½ê½£ ï¿½ìŸ»ï¿½ìŠœ
+=======
+                                    // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                                     for (JsonElement je : metas) {
                                         JsonObject jo1 = (JsonObject) je;
                                         boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -445,7 +471,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
         System.out.println("#ELOG.getItemsMetasByItemIdx:: dupCheck.datas::"+resultObj2.toString());
 
+<<<<<<< HEAD
         /* WORDS_ASSOC åª›ë¨¯ê½¦ï¿½ì‘€ï¿½ì“½ï¿½ë¼± - ï¿½ê½•ï¿½ì” è¸°ê¾©ê¶—ï¿½ìŸ¾ */
+=======
+        /* WORDS_ASSOC °¨¼ºÀ¯ÀÇ¾î - ³×ÀÌ¹ö»çÀü */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
         resultObj2 = getWordsAssoc(itemIdx, resultObj2);
 
         System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsAssoc.datas::"+resultObj2.toString());
@@ -844,7 +874,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     private JsonObject setEmptyMetas(JsonObject reqObj, List<String> origTypes) {
+<<<<<<< HEAD
         // é®ì¢Žì­Š typeï¿½ï¿½ æ€¨ë“¬ê°šï¿½ì” ï¿½ì”ªï¿½ë£„ ï§¢ê¾©ì™ä»¥ï¿½ï¿½ë–Ž
+=======
+        // ºüÁø typeÀº °ø¹éÀÌ¶óµµ Ã¤¿öÁØ´Ù
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
         if(reqObj != null) {
             for(String type : origTypes) {
                 if(reqObj.get(type) == null) {
@@ -907,7 +941,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if("LIST_SUBGENRE".equals(type)) {
                 JsonArray listSubgenre2 = new JsonArray();
                 if (typeResultArr != null && typeResultArr.size() > 0) {
+<<<<<<< HEAD
                     // ï§ë‰ï¿½ï§ï¿½ ï¿½ì £ï¿½ì‡… ï¿½ï¿½ï¿½ê¸½ ï¿½ë¸˜ï¿½ê½£ ï¿½ìŸ»ï¿½ìŠœ
+=======
+                    // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     for (JsonElement je : typeResultArr) {
                         JsonObject jo1 = (JsonObject) je;
                         boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -951,7 +989,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         JsonObject njo = (JsonObject) nje;
                         String newWord = njo.get("word").getAsString();
                         if (oldWord.equals(newWord)) {
+<<<<<<< HEAD
                             // OLD:NEW åª›ìˆˆï¿½ å¯ƒê»‹ì”  ï¿½ì—³ï¿½ì‘ï§Žï¿½ type=dup æ¿¡ï¿½ ï¿½ï¿½ï¿½ì˜£
+=======
+                            // OLD:NEW °°Àº °ÍÀÌ ÀÖÀ¸¸é type=dup ·Î ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             //System.out.println("#njo:"+njo.toString());
 
                             JsonObject newItem = new JsonObject();
@@ -971,7 +1013,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
                     if (!isMatch) {
+<<<<<<< HEAD
                         // OLD:NEW åª›ìˆˆï¿½ å¯ƒê»‹ì”  ï¿½ë¾¾ï¿½ì‘ï§Žï¿½ type=ext æ¿¡ï¿½ ï¿½ï¿½ï¿½ì˜£
+=======
+                        // OLD:NEW °°Àº °ÍÀÌ ¾øÀ¸¸é type=ext ·Î ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                         JsonObject newItem = new JsonObject();
                         newItem.addProperty("word", oldWord);
                         //if ("get".equals(when)) {
@@ -1007,7 +1053,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
                     if (!isExist) {
+<<<<<<< HEAD
                         // NEW:RESLT åª›ìˆˆï¿½ å¯ƒê»‹ì”  ï¿½ë¾¾ï¿½ì‘ï§Žï¿½ type=new æ¿¡ï¿½ ï¿½ï¿½ï¿½ì˜£
+=======
+                        // NEW:RESLT °°Àº °ÍÀÌ ¾øÀ¸¸é type=new ·Î ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                         //System.out.println("#njjo:"+njjo.toString());
 
                         JsonObject newItem = new JsonObject();
@@ -1027,7 +1077,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
             }
         } else {
+<<<<<<< HEAD
             /* å¯ƒï¿½ï¿½ê¹‹ï¿½ë¼±ï¿½ë’— ï¿½ë–’ï¿½ë‹š JsonArray */
+=======
+            /* °Ë»ö¾î´Â ´Ü¼ø JsonArray */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             //System.out.println("#TLOG:LIST_SEARCHKEYWORDS :: oldArr:"+oldArr.toString() + "/newArr:"+newArr.toString());
             for (JsonElement je : oldArr) {
                 String os = je.getAsString();
@@ -1073,7 +1127,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
 
             // Y -> D
+<<<<<<< HEAD
             // curTagIdxï¿½ë’— Cæ¿¡ï¿½ ï¿½ë“…ï¿½ì”¤ç—â‘¥ëƒ¼ ï§£ì„Žâ”
+=======
+            // curTagIdx´Â C·Î ½ÂÀÎÃë¼Ò Ã³¸®
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             if (curTagIdx > 0) {
                 ItemsTags reqCC = new ItemsTags();
                 reqCC.setIdx(itemIdx);
@@ -1084,13 +1142,21 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
             */
 
+<<<<<<< HEAD
             // ï§¤ì’–í¹ ï¿½ë“…ï¿½ì”¤ ï§¡â‘¥ë‹”
+=======
+            // ÃÖÃÊ ½ÂÀÎ Â÷¼ö
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             ItemsTags reqO = new ItemsTags();
             reqO.setIdx(itemIdx);
             reqO.setStat("S");
             int firstTaggedIdx = itemsTagsMapper.getMinTagsIdxByItemIdx(reqO);
 
+<<<<<<< HEAD
             // ï§¤ì’–í¹ ï¿½ë“…ï¿½ì”¤ ï§¡â‘¥ë‹”ï¿½ï¿½ ï§ë‰ï¿½ï§ï¿½ ï§¡â‘¥ë‹” (ï¿½ë“…ï¿½ì”¤ ï¿½ë¿¬éºï¿½ è‡¾ë‹¿ï¿½) åª›ï¿½ ï¿½ë–Žç‘œï¿½ å¯ƒìŽŒìŠ¦ï§ï¿½  ï§ë‰ï¿½ï§ï¿½ ï§¡â‘¥ë‹” ï¿½ê¶˜ï¿½ì £
+=======
+            // ÃÖÃÊ ½ÂÀÎ Â÷¼ö¿Í ¸¶Áö¸· Â÷¼ö (½ÂÀÎ ¿©ºÎ ¹«°ü) °¡ ´Ù¸¥ °æ¿ì¸¸  ¸¶Áö¸· Â÷¼ö »èÁ¦
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             ItemsTags req1 = new ItemsTags();
             req1.setIdx(itemIdx);
             int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(req1);
@@ -1106,13 +1172,21 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 reqIt.setIdx(itemIdx);
                 //int rtx = itemsMapper.uptItemsTagcntMinus(reqIt);
 
+<<<<<<< HEAD
                 //items_histï¿½ë¿‰ ï¿½ë²‘æ¿¡ï¿½ for ï¿½ë„»æ€¨ï¿½
+=======
+                //items_hist¿¡ µî·Ï for Åë°è
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
                 int rthist = itemsService.insItemsHist(itemIdx, "meta", "RECV", movietitle, "RESTORE_META", curTagIdx);
 
+<<<<<<< HEAD
                 // items ï¿½ì“½ tagcntç‘œï¿½ ï§ë‰ï¿½ï§ï¿½ tagidx æ¿¡ï¿½ ï¿½ë‹”ï¿½ì ™
+=======
+                // items ÀÇ tagcnt¸¦ ¸¶Áö¸· tagidx ·Î ¼öÁ¤
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 //int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
                 reqIt.setTagcnt(curTagIdx);
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
@@ -1153,7 +1227,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         if(metasTypes.contains(tmpMapArrayName)) {
                             tmpMapArrayName = "METAS" + tmpMapArrayName;
                         }
+<<<<<<< HEAD
                         // uiï¿½ë¿‰ï¿½ê½Œï¿½ë’— listsearchkeywords ï¿½ì‚Žï¿½ê¹­æ¿¡ï¿½ æ€¨ë“¬ê°šï¿½ë¾¾ï¿½ì”  ï¿½ìŸ¾ï¿½ë„šï¿½ë§–
+=======
+                        // ui¿¡¼­´Â listsearchkeywords ÇüÅÂ·Î °ø¹é¾øÀÌ Àü¼ÛµÊ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
                         }
@@ -1200,8 +1278,19 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
             , int itemid, int curTagIdx) {
         int rt = 0;
+<<<<<<< HEAD
 
         /* ï¿½ï¿½ï¿½ì—¯ è¹‚ï¿½ ï¿½ë¸¸ï¿½ë€¡ ï¿½ë¸˜ï¿½ì” ï¿½ë€¥ ä»¥ï¿½ add,modï¿½ë’— ï¿½ê¶—ï¿½ìŸ¾ï¿½ë¿‰ ç•°ë¶½ï¿½ */
+=======
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ½ÃÀÛ");
+        System.out.println(" - origMetasArraysByType = " + origMetasArraysByType.toString());
+        System.out.println(" - actionItemsArraysByType = " + actionItemsArraysByType.toString());
+        System.out.println(" - typesArr = " + typesArr.toString());
+        System.out.println(" - itemid = " + itemid);
+        System.out.println(" - curTagIdx = " + curTagIdx);
+        
+        /* Å¸ÀÔ º° ¾×¼Ç ¾ÆÀÌÅÛ Áß add,mod´Â »çÀü¿¡ Ãß°¡ */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
         ArrayList<String> dicTypes = new ArrayList<String>();
         dicTypes.add("METASWHEN");
         dicTypes.add("METASWHERE");
@@ -1210,6 +1299,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASEMOTION");
         dicTypes.add("METASCHARACTER");
 
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸»çÀü ½ÃÀÛ");
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
             if (actionItemsArraysByType.get(dicType) != null) {
@@ -1245,14 +1335,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
             }
         }
-
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸»çÀü ³¡");
+        
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® ½ÃÀÛ");
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
             System.out.println("#ELOG.origMetasArraysByType:"+origMetasArraysByType.toString());
 
             //for (JsonElement atype1 : typesArr) {
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes setEmptyMetas ½ÃÀÛ");
             JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, this.getOrigTypes());
-
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes setEmptyMetas ³¡");
+            
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® ½ÃÀÛ");
             for (String atype : this.getOrigTypes()) {
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " ½ÃÀÛ");
                 //String atype = atype1.getAsString();
                 atype = atype.replace("\"", "");
                 atype = atype.toUpperCase();
@@ -1273,7 +1369,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
 
                 if (changeMetaArr != null) {
-                    /* get meta data for saving */
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " - changeMetaArr ³Î ¾Æ´Ô");
+                	/* get meta data for saving */
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype) && !"LIST_AWARD".equals(atype)) {
@@ -1291,7 +1388,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                         System.out.println("#MLOG DestArr cause changed for type:" + atype + " :: " + destMeta.toString());
 
+<<<<<<< HEAD
                         /* æ¹²ê³—ã€ˆ ï§Žë·€ï¿½ï¿½ï¿½ ç•°ë¶½ï¿½ ï¿½ë¸¸ï¿½ë€¡ï¿½ë¸˜ï¿½ì” ï¿½ë€¥ï¿½ë±¾ï¿½ì”  è«›ì„ìºï¿½ë§‚ TYPE(ex> METASWHEN) è¹‚ï¿½ ï§Žë·€ï¿½JsonArrayåª›ï¿½ ä»¥ï¿½é®ê¾¨ë¦ºï§Žï¿½ ï¿½ì½ï¿½ì˜± tagIdxç‘œï¿½ æ¹²ê³—ï¿½ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ */
+=======
+                        /* ±âÁ¸ ¸ÞÅ¸¿Í Ãß°¡ ¾×¼Ç¾ÆÀÌÅÛµéÀÌ ¹Ý¿µµÈ TYPE(ex> METASWHEN) º° ¸ÞÅ¸JsonArray°¡ ÁØºñµÇ¸é ÇöÀç tagIdx¸¦ ±âÁØÀ¸·Î ¾÷µ¥ÀÌÆ® */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                         if (!atype.toUpperCase().contains("AWARD")) {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
@@ -1300,49 +1401,80 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setMeta(destMeta);
 
                             //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
-                            rt = this.insItemsTagsMetas(reqMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqMeta = " + reqMeta);
+                            rt = this.insItemsTagsMetas(reqMeta);//ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ® ÁÖ¼®´ÞÀ½!!!!
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
                         } else {
+<<<<<<< HEAD
                             // AWARDï¿½ì“½ å¯ƒìŽŒìŠ¦ items_metasï¿½ë¿‰ æ¹²ê³—ã€ˆï§Žë·€ï¿½ç‘œï¿½ ï¿½ì‘€ï§žï¿½ï¿½ë¸³ï¿½ë–Ž 18.05.15
+=======
+                            // AWARDÀÇ °æ¿ì items_metas¿¡ ±âÁ¸¸ÞÅ¸¸¦ À¯ÁöÇÑ´Ù 18.05.15
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             ItemsMetas reqM = new ItemsMetas();
                             reqM.setIdx(itemid);
                             reqM.setMtype("award");
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
 
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
+                            
                             System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
                         }
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);
                     }
                 } else {
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " - changeMetaArr ³Î ¸ÂÀ½");
                     if (origMetaArr != null) {
                         destMeta = origMetaArr.toString();
+<<<<<<< HEAD
                         /* æ¹²ê³—ã€ˆ ï§Žë·€ï¿½ï¿½ë¿‰ï¿½ê½Œ ç•°ë¶½ï¿½ ï¿½ë¸¸ï¿½ë€¡ ï¿½ë¸˜ï¿½ì” ï¿½ë€¥ï¿½ë±¾ï¿½ì”  ï¿½ë¾¾ï¿½ë’— å¯ƒìŽŒìŠ¦ æ¹²ê³—ã€ˆ ï§Žë·€ï¿½ æ´¹ëªƒï¿½æ¿¡ï¿½ ï¿½ì½ï¿½ì˜± tagIdxï¿½ë¿‰ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ */
+=======
+                        /* ±âÁ¸ ¸ÞÅ¸¿¡¼­ Ãß°¡ ¾×¼Ç ¾ÆÀÌÅÛµéÀÌ ¾ø´Â °æ¿ì ±âÁ¸ ¸ÞÅ¸ ±×´ë·Î ÇöÀç tagIdx¿¡ ¾÷µ¥ÀÌÆ® */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                         if (!atype.toUpperCase().contains("AWARD")) {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
                             reqMeta.setTagidx(curTagIdx);
-                            reqMeta.setMtype(atype);
-                            reqMeta.setMeta(destMeta);
+                            reqMeta.setMtype(atype);	//MTYPE
+                            reqMeta.setMeta(destMeta);	//ÅëÂ°·Î META ÄÃ·³¿¡ ÀúÀå
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
+                            
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
                         } else {
+<<<<<<< HEAD
                             // AWARDï¿½ì“½ å¯ƒìŽŒìŠ¦ items_metasï¿½ë¿‰ æ¹²ê³—ã€ˆï§Žë·€ï¿½ç‘œï¿½ ï¿½ì‘€ï§žï¿½ï¿½ë¸³ï¿½ë–Ž 18.05.15
+=======
+                            // AWARDÀÇ °æ¿ì items_metas¿¡ ±âÁ¸¸ÞÅ¸¸¦ À¯ÁöÇÑ´Ù 18.05.15
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             ItemsMetas reqM = new ItemsMetas();
                             reqM.setIdx(itemid);
                             reqM.setMtype("award");
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : mtype,meta = " + atype+","+destMeta);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ Àü : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
+                            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " insItemsTagsMetas µ¿ÀÛ ÈÄ : rt = " + rt);
 
                             System.out.println("#insItemsMetas for AWARD2:"+reqM.toString());
                         }
                     }
                 }
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® : atype = " + atype + " ³¡");
             }
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® ³¡");
         }
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸ÞÅ¸ ¹Ýº¹¹® ³¡");
+        System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.processMetaObjectByTypes ¸®ÅÏ : rt = " + rt);
         return rt;
     }
 
@@ -1365,7 +1497,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         origTypes.add("LIST_AWARD");
 
+<<<<<<< HEAD
         /* ï¿½ï¿½ï¿½ì—¯ è¹‚ï¿½ ï¿½ë¸¸ï¿½ë€¡ ï¿½ë¸˜ï¿½ì” ï¿½ë€¥ ä»¥ï¿½ add,modï¿½ë’— ï¿½ê¶—ï¿½ìŸ¾ï¿½ë¿‰ ç•°ë¶½ï¿½
+=======
+        /* Å¸ÀÔ º° ¾×¼Ç ¾ÆÀÌÅÛ Áß add,mod´Â »çÀü¿¡ Ãß°¡
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
         ArrayList<String> dicTypes = new ArrayList<String>();
         dicTypes.add("METASWHEN");
         dicTypes.add("METASWHERE");
@@ -1378,6 +1514,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
     @Override
     public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow) {
+		System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems ½ÃÀÛ");
+		System.out.println(" - itemid = " + itemid);
+		System.out.println(" - items = " + items);
+		System.out.println(" - duration = " + duration);
+		System.out.println(" - sendnow = " + sendnow);
+		
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
@@ -1402,7 +1544,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             Items reqIt = null;
 
             /* get action TYPE to Arrays */
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - input asfasfd = " + items);
             JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - output asfasfd = " + actionItemsArraysByType.toString());
             System.out.println("#actionItemsArraysByType:"+actionItemsArraysByType.toString());
             JsonArray typesArr = null;
             if (actionItemsArraysByType.get("typesArr") != null)
@@ -1411,80 +1555,170 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             int tagcnt = 0;
 
+<<<<<<< HEAD
             /* æ¹²ê³—ë“…ï¿½ì”¤ï¿½ë§‚ ï§Žë·€ï¿½åª›ï¿½ ï¿½ë¾¾ï¿½ì“£ å¯ƒìŽŒìŠ¦ (ï§¤ì’“ë  tagIdxåª›ï¿½ èª˜ëª„ë“…ï¿½ì”¤ï¿½ì”¤ å¯ƒìŽŒìŠ¦) ï§Žë·€ï¿½ï¿½ë‹”ï¿½ì ™ ï¿½ì‘ ï¿½ê¸½ï¿½ê¹­è¹‚ï¿½å¯ƒï¿½, ï¿½ë“…ï¿½ì”¤ ï§£ì„Žâ”ï¿½ë¸³ï¿½ë–Ž */
+=======
+            /* ±â½ÂÀÎµÈ ¸ÞÅ¸°¡ ¾øÀ» °æ¿ì (ÃÖ±Ù tagIdx°¡ ¹Ì½ÂÀÎÀÎ °æ¿ì) ¸ÞÅ¸¼öÁ¤ ÈÄ »óÅÂº¯°æ, ½ÂÀÎ Ã³¸®ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
-                JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ±â½ÂÀÎµÈ ¸ÞÅ¸°¡ ¾øÀ» °æ¿ì");
+            	
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx ½ÇÇà Àü");
+            	JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx µ¿ÀÛ ÈÄ : origMetasArraysByType = " + origMetasArraysByType.toString());
 
+<<<<<<< HEAD
                 // AWARD ï§£ì„Žâ”ç‘œï¿½ ï¿½ìžï¿½ë¹ ITEMS_METASï¿½ë¿‰ï¿½ê½Œ ï¿½ì”«ï¿½ë¼±ï¿½ê½Œ æ´ÑŠâ€œï§£ëŒë¿‰ ç•°ë¶½ï¿½
+=======
+                // AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀÐ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject µ¿ÀÛ Àü(È£Ãâ) : AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀÐ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject µ¿ÀÛ ÈÄ : origMetasArraysByType = " + origMetasArraysByType.toString());
 
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
+<<<<<<< HEAD
                 /* action_itemï¿½ì”  ï¿½ì—³ï¿½ë’— å¯ƒìŽŒìŠ¦ ï¿½ï¿½ï¿½ì—¯è¹‚ï¿½ meta ï¿½ë‹”ï¿½ì ™ */
+=======
+                /* action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤ */
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ Àü(È£Ãâ) action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+<<<<<<< HEAD
 
                 /* ï¿½ë¹ï¿½ë–¦ items_tags_keys ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž */
+=======
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ ÈÄ : rtm = " + rtm);
+            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
+            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
+            	System.out.println(" - typesArr " + typesArr);
+            	System.out.println(" - itemid " + itemid);
+            	System.out.println(" - curTagIdx " + curTagIdx);
+            	
+                /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat µ¿ÀÛ Àü");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat µ¿ÀÛ ÈÄ : rts = " + rts);
 
+<<<<<<< HEAD
                 /* ï¿½ë¹ï¿½ë–¦ items_stat ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž */
+=======
+                /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
                 reqIt.setStat("ST");
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                 int rti = itemsMapper.insItemsStat(reqIt);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
 
                 rt = 1;
 
                 tagcnt = curTagIdx + 1;
             } else {
+<<<<<<< HEAD
                 /* ï¿½ì” ï¿½ìŸ¾ ï¿½ê¸½ï¿½ê¹­ è‚„ë¶¾ë±¶ ï¿½ì†—ï¿½ì”¤ï¿½ë¸¯ï¿½ë¿¬ ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ï¿½(ST)åª›ï¿½ ï¿½ë¸˜ï¿½ë•¶ å¯ƒìŽŒìŠ¦ ï¿½ë“…ï¿½ì”¤ï¿½ì…¿çŒ·ëš®ì¤ˆ ï§£ì„Žâ”  added 2018.04.11 */
+=======
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀÌÀü »óÅÂ ÄÚµå È®ÀÎÇÏ¿© ½ÂÀÎ¿Ï·á(ST)°¡ ¾Æ´Ñ °æ¿ì ½ÂÀÎ¿Ï·á·Î Ã³¸®  added 2018.04.11");
+                /* ÀÌÀü »óÅÂ ÄÚµå È®ÀÎÇÏ¿© ½ÂÀÎ¿Ï·á(ST)°¡ ¾Æ´Ñ °æ¿ì ½ÂÀÎ¿Ï·á·Î Ã³¸®  added 2018.04.11 */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - oldItemsStat " + oldItemsStat);
                 if (!"ST".equals(oldItemsStat)) {
+<<<<<<< HEAD
                     /* ï¿½ë¹ï¿½ë–¦ items_tags_keys ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž
+=======
+                    /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     ItemsTags reqConfirm = new ItemsTags();
                     reqConfirm.setIdx(itemid);
                     reqConfirm.setTagidx(curTagIdx);
                     reqConfirm.setStat("S");
                     int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
 
+<<<<<<< HEAD
                     /* ï¿½ë¹ï¿½ë–¦ items_stat ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž */
+=======
+                    /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                     int rti = itemsMapper.insItemsStat(reqIt);
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
                 } else {
+<<<<<<< HEAD
                     /* æ¹²ê³—ë“…ï¿½ì”¤ï¿½ë§‚ ï§Žë·€ï¿½åª›ï¿½ ï¿½ì—³ï¿½ì“£ å¯ƒìŽŒìŠ¦ tagidxç‘œï¿½ ï¿½ë–Šæ´¹ï¿½ ï¿½ê¹®ï¿½ê½¦ï¿½ë¸³ï¿½ë–Ž..  18.05.16 */
+=======
+                    /* ±â½ÂÀÎµÈ ¸ÞÅ¸°¡ ÀÖÀ» °æ¿ì tagidx¸¦ ½Å±Ô »ý¼ºÇÑ´Ù..  18.05.16 */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     curTagIdx =  this.getCurrTagsIdxForInsert(itemid);
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - curTagIdx " + curTagIdx);
 
+<<<<<<< HEAD
                     /* ï¿½ë¹ï¿½ë–¦ items_tags_keys ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž
+=======
+                    /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     ItemsTags reqConfirm = new ItemsTags();
                     reqConfirm.setIdx(itemid);
                     reqConfirm.setTagidx(curTagIdx);
                     reqConfirm.setStat("S");
                     int rts = this.uptItemsTagsKeysStat(reqConfirm);*/
 
+<<<<<<< HEAD
                     /* ï¿½ë¹ï¿½ë–¦ itemsï¿½ì“½ tagcntç‘œï¿½ ï§¤ì’–ì¥Œ tagidxæ¿¡ï¿½ ï¿½ë‹”ï¿½ì ™ï¿½ë¸³ï¿½ë–Ž */
                     // ï¿½ë¸˜ï¿½ì˜’ ï§ë‰ï¿½ï§ï¿½ ï¿½ì”ªï¿½ì”¤ ï§¡ëª„â€œ
                     /* ï¿½ë¹ï¿½ë–¦ items_stat ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž */
+=======
+                    /* ÇØ´ç itemsÀÇ tagcnt¸¦ ÃÖÁ¾ tagidx·Î ¼öÁ¤ÇÑ´Ù */
+                    // ¾Æ·¡ ¸¶Áö¸· ¶óÀÎ ÂüÁ¶
+                    /* ÇØ´ç items_stat ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ Àü");
                     int rti = itemsMapper.insItemsStat(reqIt);
+                	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat µ¿ÀÛ ÈÄ : rti = " + rti);
                 }
 
+<<<<<<< HEAD
                 /* æ¹²ê³—ë“…ï¿½ì”¤ï¿½ë§‚ ï§Žë·€ï¿½åª›ï¿½ ï¿½ì—³ï¿½ì“£ å¯ƒìŽŒìŠ¦, items_tags_metas ï§ï¿½ ï¿½ë‹”ï¿½ì ™ï¿½ë¸³ï¿½ë–Ž */
+=======
+                /* ±â½ÂÀÎµÈ ¸ÞÅ¸°¡ ÀÖÀ» °æ¿ì, items_tags_metas ¸¸ ¼öÁ¤ÇÑ´Ù */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 JsonObject origMetasArraysByType = this.getItemsMetasByItemIdxForUpdate(itemid, this.getOrigTypes());
 
+<<<<<<< HEAD
                 // AWARD ï§£ì„Žâ”ç‘œï¿½ ï¿½ìžï¿½ë¹ ITEMS_METASï¿½ë¿‰ï¿½ê½Œ ï¿½ì”«ï¿½ë¼±ï¿½ê½Œ æ´ÑŠâ€œï§£ëŒë¿‰ ç•°ë¶½ï¿½
+=======
+                // AWARD Ã³¸®¸¦ À§ÇØ ITEMS_METAS¿¡¼­ ÀÐ¾î¼­ ±¸Á¶Ã¼¿¡ Ãß°¡
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
 
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
+<<<<<<< HEAD
                 /* action_itemï¿½ì”  ï¿½ì—³ï¿½ë’— å¯ƒìŽŒìŠ¦ ï¿½ï¿½ï¿½ì—¯è¹‚ï¿½ meta ï¿½ë‹”ï¿½ì ™ */
+=======
+                /* action_itemÀÌ ÀÖ´Â °æ¿ì Å¸ÀÔº° meta ¼öÁ¤ */
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ Àü");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+            	System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes µ¿ÀÛ ÈÄ : rtm = " + rtm);
+            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
+            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
+            	System.out.println(" - typesArr " + typesArr);
+            	System.out.println(" - itemid " + itemid);
+            	System.out.println(" - curTagIdx " + curTagIdx);
 
                 rt = 1;
 
@@ -1493,48 +1727,93 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
 
+            System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç Á÷Àü");
             if (rt > 0) {
+<<<<<<< HEAD
                 /* ï¿½ë¹ï¿½ë–¦ items_tags_keys ç‘œï¿½ ï¿½ë“…ï¿½ì”¤ï¿½ì‘æ¿¡ï¿½ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ ï¿½ë¸³ï¿½ë–Ž  */
+=======
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0");
+                /* ÇØ´ç items_tags_keys ¸¦ ½ÂÀÎÀ¸·Î ¾÷µ¥ÀÌÆ® ÇÑ´Ù  */
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagsKeysStat ½ÇÇà Àü");
+                System.out.println(" - itemid = " + itemid);
+                System.out.println(" - curTagIdx = " + curTagIdx);
+                System.out.println(" - stat = S");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagsKeysStat ½ÇÇà ÈÄ : rts = " + rts);
+                System.out.println(" - itemid = " + itemid);
+                System.out.println(" - curTagIdx = " + curTagIdx);
+                System.out.println(" - stat = S");
 
+<<<<<<< HEAD
                 //items_histï¿½ë¿‰ ï¿½ë²‘æ¿¡ï¿½ for ï¿½ë„»æ€¨ï¿½
+=======
+                //items_hist¿¡ µî·Ï for Åë°è
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - getItemsByIdx ½ÇÇà Àü");
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - getItemsByIdx ½ÇÇà ÈÄ : itemInfo = " + itemInfo.toString());
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insItemsHist ½ÇÇà Àü");
                 int rthist = itemsService.insItemsHist(itemid, "meta", "S", movietitle, "CONFIRM_META", itemid);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insItemsHist ½ÇÇà ÈÄ : rthist = " + rthist);
 
+<<<<<<< HEAD
                 // TagCnt 1 ï§ì•·ï¿½ // ï¿½ì”ªï¿½ë–’ ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ æ´Ñ‰Ð¦ï¿½ì‘æ¿¡ï¿½ ï¿½ë¹å¯ƒï¿½
+=======
+                // TagCnt 1 Áõ°¡ // ÀÏ´Ü ¾÷µ¥ÀÌÆ® ±¸¹®À¸·Î ÇØ°á
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 //int oldTagCnt = itemInfo.getTagcnt();
                 //int newTagCnt = oldTagCnt + 1;
                 //reqIt.setTagcnt(newTagCnt);
 
+<<<<<<< HEAD
                 /* ï¿½ë¹ï¿½ë–¦ items ï¿½ì ™è¹‚ëŒ€ï¿½ï¿½ è¹‚ï¿½å¯ƒì€ë¸³ï¿½ë–Ž.  tagcnt++,  duration */
+=======
+                /* ÇØ´ç items Á¤º¸¸¦ º¯°æÇÑ´Ù.  tagcnt++,  duration */
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - ÇØ´ç items Á¤º¸¸¦ º¯°æÇÑ´Ù");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 if (!"".equals(duration)) reqIt.setDuration(duration);
                 reqIt.setTagcnt(tagcnt);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagcnt ½ÇÇà Àü");
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - uptItemsTagcnt ½ÇÇà ÈÄ : rtu = " + rtu);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
 
+<<<<<<< HEAD
                 /* ï¿½ë¹ï¿½ë–¦ itemsï¿½ì“½ sched_target_content ï¿½ìè‡¾ëª„ì“£ ï§â‘¤ëª¢ ï¿½ê¶˜ï¿½ì £ï¿½ë¸³ï¿½ë–Ž  18.05.16 */
+=======
+                /* ÇØ´ç itemsÀÇ sched_target_content ¿ø¹®À» ¸ðµÎ »èÁ¦ÇÑ´Ù  18.05.16 */
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - deleteSchedTargetContentOrigin ½ÇÇà Àü");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 int rtd = schedTriggerService.deleteSchedTargetContentOrigin(itemid);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - deleteSchedTargetContentOrigin ½ÇÇà ÈÄ : rtd = " + rtd);
             }
 
             if ("Y".equals(sendnow.toUpperCase())) {
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç sendnow=Y");
                 Map<String,Object> reqCcube = new HashMap();
                 reqCcube.put("idx", itemid);
                 reqCcube.put("regid", serverid);
+                System.out.println(" - itemid = " + itemid);
+                System.out.println(" - serverid = " + serverid);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insCcubeOutput ½ÇÇà Àü");
                 int rtc = ccubeService.insCcubeOutput(reqCcube);
+                System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems - ÀúÀå¾×¼Ç rt > 0 - insCcubeOutput ½ÇÇà ÈÄ : rtc = " + rtc);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+		System.out.println("[ÀúÀå½Ã ¸ÞÅ¸Å°¿öµå ´©¶ô Å×½ºÆ®] ItemsTagsService.changeMetasArraysByTypeFromInputItems ³¡ : rt = " + rt);
         return rt;
     }
 
@@ -1567,7 +1846,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     String word1 = jo.get("word").getAsString();
                     word1 = word1.trim();
 
+<<<<<<< HEAD
                     // Mapï¿½ì“½ keyï¿½ë¿‰ wordç‘œï¿½ ï¿½ë²‘æ¿¡ì•ºë¸¯ï¿½ë¿¬ ä»¥ë¬ë‚¬ ï¿½ì £å«„ï¿½
+=======
+                    // MapÀÇ key¿¡ word¸¦ µî·ÏÇÏ¿© Áßº¹ Á¦°Å
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
                         resultArr.add(jo);
                         wordSet.put(word1, "exist");
@@ -1614,7 +1897,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 for (String word1 : origStrArr) {
                     word1 = word1.trim();
 
+<<<<<<< HEAD
                     // Mapï¿½ì“½ keyï¿½ë¿‰ wordç‘œï¿½ ï¿½ë²‘æ¿¡ì•ºë¸¯ï¿½ë¿¬ ä»¥ë¬ë‚¬ ï¿½ì £å«„ï¿½
+=======
+                    // MapÀÇ key¿¡ word¸¦ µî·ÏÇÏ¿© Áßº¹ Á¦°Å
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
                         resultArr.add(word1);
                         wordSet.put(word1, "exist");
@@ -1803,7 +2090,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             if(jobRuuningStat == false) {
                 jobRuuningStat = true;
                 try {
+<<<<<<< HEAD
                     // running job ä»¥ë¬ë‚¬è«›â‘¹ï¿½ç‘œï¿½ ï¿½ìžï¿½ë¹ ï¿½ì” ï¿½ì ° ï¿½ï¿½ï¿½ì˜£
+=======
+                    // running job Áßº¹¹æÁö¸¦ À§ÇØ ÀÌ·Â ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     ManualChange reqm = new ManualChange();
                     reqm.setTarget_mtype(target_mtype);
                     reqm.setFrom_keyword(from_keyword);
@@ -1816,26 +2107,52 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                     switch (action) {
                         case "add":
+<<<<<<< HEAD
                             // è­°ê³ ì‰¶ï¿½ë’— ï¿½ìŸ¾ï§£ï¿½ ï¿½ê¹­æ´¹ëªƒì°“ï¿½ï¿½
                             // ï¿½ì”«ï¿½ë¼±ï¿½ì‚© ï§Žë·€ï¿½ æ´ÑŠâ€œï§£ëŒë¿‰ ï¿½ë–Šæ´¹ï¿½ ï¿½ê¶Žï¿½ì™ï¿½ë±¶ ç•°ë¶½ï¿½
                             // from_keyword åª›ï¿½ ï¿½ì—³ï¿½ì“£ å¯ƒìŽŒìŠ¦ ï¿½ë¹ï¿½ë–¦ ï¿½ê¶Žï¿½ì™ï¿½ë±¶åª›ï¿½ ï¿½ì—³ï¿½ë’— rowï§ï¿½ ï¿½ï¿½ï¿½ê¸½ï¿½ì‘æ¿¡ï¿½ ï¿½ê½‘ï¿½ì ™
+=======
+                            // Á¶È¸´Â ÀüÃ¼ ÅÂ±×¸ÞÅ¸
+                            // ÀÐ¾î¿Â ¸ÞÅ¸ ±¸Á¶Ã¼¿¡ ½Å±Ô Å°¿öµå Ãß°¡
+                            // from_keyword °¡ ÀÖÀ» °æ¿ì ÇØ´ç Å°¿öµå°¡ ÀÖ´Â row¸¸ ´ë»óÀ¸·Î ¼±Á¤
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             if (!from_keyword.equals(to_keyword)) {
                                 req.setKeyword(from_keyword);
                             }
                             break;
                         case "mod":
+<<<<<<< HEAD
                             // è­°ê³ ì‰¶ï¿½ë’— mtype, from_keywordç‘œï¿½ æ¹²ê³—ï¿½ï¿½ì‘æ¿¡ï¿½
+=======
+                            // Á¶È¸´Â mtype, from_keyword¸¦ ±âÁØÀ¸·Î
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             req.setKeyword(from_keyword);
+<<<<<<< HEAD
                             // ï¿½ì”«ï¿½ë¼±ï¿½ì‚© ï§Žë·€ï¿½ æ´ÑŠâ€œï§£ëŒë¿‰ï¿½ê½Œ æ¹²ê³—ã€ˆ ï¿½ê¶Žï¿½ì™ï¿½ë±¶ç‘œï¿½ to_keywordæ¿¡ï¿½ è¹‚ï¿½å¯ƒï¿½
+=======
+                            // ÀÐ¾î¿Â ¸ÞÅ¸ ±¸Á¶Ã¼¿¡¼­ ±âÁ¸ Å°¿öµå¸¦ to_keyword·Î º¯°æ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             break;
                         case "del":
+<<<<<<< HEAD
                             // è­°ê³ ì‰¶ï¿½ë’— mtype, from_keywordç‘œï¿½ æ¹²ê³—ï¿½ï¿½ì‘æ¿¡ï¿½
+=======
+                            // Á¶È¸´Â mtype, from_keyword¸¦ ±âÁØÀ¸·Î
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             req.setKeyword(from_keyword);
+<<<<<<< HEAD
                             // ï¿½ì”«ï¿½ë¼±ï¿½ì‚© ï§Žë·€ï¿½ æ´ÑŠâ€œï§£ëŒë¿‰ï¿½ê½Œ æ¹²ê³—ã€ˆ ï¿½ê¶Žï¿½ì™ï¿½ë±¶ç‘œï¿½ ï§¡ì– ë¸˜ ï¿½ì £å«„ï¿½
+=======
+                            // ÀÐ¾î¿Â ¸ÞÅ¸ ±¸Á¶Ã¼¿¡¼­ ±âÁ¸ Å°¿öµå¸¦ Ã£¾Æ Á¦°Å
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                             break;
                     }
 
+<<<<<<< HEAD
                     // è¹‚ï¿½å¯ƒï¿½ ï¿½ï¿½ï¿½ê¸½ è­°ê³ ì‰¶
+=======
+                    // º¯°æ ´ë»ó Á¶È¸
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     int cnt_all = itemsTagsMapper.cntSearchTagsMetasByMtypeAndKeyword(req);
                     System.out.println("#ELOG.searchTagsCount:" + cnt_all);
 
@@ -1858,7 +2175,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             List<ItemsTags> resCur = itemsTagsMapper.getSearchTagsMetasByMtypeAndKeywordPaging(req);
                             //System.out.println("#ELOG.searchedItemsTags by mtype:"+target_mtype+"/pageno:"+pageno+"/datas::"+resCur.toString());
                             for (ItemsTags itag : resCur) {
+<<<<<<< HEAD
                                 // ï¿½ï¿½ï¿½ì˜£ ï¿½ï¿½ï¿½ê¸½ ï¿½ê¹®ï¿½ê½¦
+=======
+                                // ÀúÀå ´ë»ó »ý¼º
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                                 String origMeta = itag.getMeta();
                                 if (origMeta != null && !"".equals(origMeta) && !"[]".equals(origMeta)) {
                                     JsonParser jsonParser = new JsonParser();
@@ -1880,7 +2201,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                                     }
 
                                     if (destArr2 != null) {
+<<<<<<< HEAD
                                         // idx, tagidx, mtype ï¿½ë¿‰ ï§ìšŽí…›ï¿½ë¼± meta ï¿½ë¾½ï¿½ëœ²ï¿½ì” ï¿½ë“ƒ
+=======
+                                        // idx, tagidx, mtype ¿¡ ¸ÂÃß¾î meta ¾÷µ¥ÀÌÆ®
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                                         itag.setMeta(destArr2.toString());
                                         rt = itemsTagsMapper.uptItemsTagsByManual(itag);
                                     }
@@ -1890,14 +2215,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
 
+<<<<<<< HEAD
                     // ï¿½ê¶—ï¿½ìŸ¾ï¿½ë¿‰ï¿½ë£„ è«›ì„ìº ï¿½ì˜‰ï¿½ë¾½
+=======
+                    // »çÀü¿¡µµ ¹Ý¿µ ÀÛ¾÷
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     if (rt > 0) {
                         int rtd = this.changeDicKeywordsForManual(target_mtype, from_keyword, to_keyword, action);
                     }
 
                     Thread.sleep(3000);
 
+<<<<<<< HEAD
                     // running job ä»¥ë¬ë‚¬è«›â‘¹ï¿½ç‘œï¿½ ï¿½ìžï¿½ë¹ ï¿½ì” ï¿½ì ° ï¿½ï¿½ï¿½ì˜£ stat = S
+=======
+                    // running job Áßº¹¹æÁö¸¦ À§ÇØ ÀÌ·Â ÀúÀå stat = S
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     ManualChange histOneOld = this.getManualJobHistLastOne();
                     ManualChange histOne = this.getManualJobHistLastOne();
                     histOne.setHidx(histOneOld.getHidx());
@@ -1923,7 +2256,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     private int changeDicKeywordsForManual(String target_mtype, String from_keyword, String to_keyword, String action) throws Exception {
         int rt = 0;
 
+<<<<<<< HEAD
             // ï¿½ê¶—ï¿½ìŸ¾ï¿½ë¿‰ï¿½ë£„ è«›ì„ìº ï¿½ì˜‰ï¿½ë¾½
+=======
+            // »çÀü¿¡µµ ¹Ý¿µ ÀÛ¾÷
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             if (!"".equals(target_mtype) && !"".equals(to_keyword) && !"".equals(action)) {
                 DicKeywords newKey = new DicKeywords();
 
@@ -2222,7 +2559,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
 
+<<<<<<< HEAD
         // request param è¹‚ï¿½è­°ï¿½ metawho -> who
+=======
+        // request param º¯Á¶ metawho -> who
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
         reqJsonObjStr = StringUtil.removeMetaTag(reqJsonObjStr);
 
         //long itemIdx0 = (long) 0;
@@ -2243,11 +2584,19 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             try {
 
+<<<<<<< HEAD
                 // ï¿½ì—¯ï¿½ì ° JsonArrayç‘œï¿½ META_WORD ï¿½ì‚Žï¿½ê¹­ï¿½ì“½ æ€¨ë“¬ê°šï¿½ì‘æ¿¡ï¿½ æ´Ñ‰í…‡ï¿½ë§‚ 1åª›ì’–ì“½ è‡¾ëª„ì˜„ï¿½ë¿´æ¿¡ï¿½ ç§»ì„‘ì†š
+=======
+                // ÀÔ·Â JsonArray¸¦ META_WORD ÇüÅÂÀÇ °ø¹éÀ¸·Î ±¸ºÐµÈ 1°³ÀÇ ¹®ÀÚ¿­·Î Ä¡È¯
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 JsonArray reqArr = JsonUtil.getJsonArray(reqJsonObjStr);
                 String reqStr = this.getMetasStringFromJsonArray(reqArr, origTypes);
 
+<<<<<<< HEAD
                 // ï¿½ì—¯ï¿½ì ° reqStrï¿½ì“£ ï¿½ë¿•ï¿½ì”ªï¿½ë’ªï¿½ë–› ï¿½ê½Œç§»ì„Žï¿½ï¿½ ï¿½ë„»ï¿½ë¹ ï¿½ì‘€ï¿½ê¶—ï¿½ë£„ ï¿½ë£Šåª›ï¿½
+=======
+                // ÀÔ·Â reqStrÀ» ¿¤¶ó½ºÆ½ ¼­Ä¡¸¦ ÅëÇØ À¯»çµµ Æò°¡
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 JsonObject resultEs = null;
                 //Set<String> esReturnArr = new HashSet<String>();
                 List<String> esReturnArr = new ArrayList<>();
@@ -2262,7 +2611,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 Set<String> metaSingleArr = new HashSet();
                 Set<String> metaGenreArr = new HashSet();
 
+<<<<<<< HEAD
                 // ï¿½ï¿½ï¿½ì˜£ï¿½ë§‚ ï¿½ì˜£ç‘œëŒ€ï¿½ï¿½ åª›ï¿½ï¿½ì¡‡ï¿½ì‚©ï¿½ë–Ž.
+=======
+                // ÀúÀåµÈ Àå¸£¸¦ °¡Á®¿Â´Ù.
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 ItemsMetas reqIm = new ItemsMetas();
                 reqIm.setIdx(itemid);
                 reqIm.setMtype("genre");
@@ -2270,20 +2623,32 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 String itemGenre = (genreMetas != null && genreMetas.getMeta() != null) ? genreMetas.getMeta() : "";
                 System.out.println("#ELOG ORIG item's GENRE:"+itemGenre);
 
+<<<<<<< HEAD
                 // ï¿½ë–Žç‘œï¿½ å¯ƒê»‰ë‚µ ï¿½ë¸˜è‡¾ï¿½ ï¿½ê¸½æ„¿ï¿½ï¿½ë¾¾ï¿½ì”  ï¿½ë“…ï¿½ì ™ ï¿½ê¶Žï¿½ì™ï¿½ë±¶åª›ï¿½ ï¿½ì—³ï¿½ì‘ï§Žï¿½ å¯ƒê³Œë‚µï¿½ë¿‰ æ´¹ï¿½ ï¿½ì˜£ç‘œëŒ€ì±¸ï¿½ì“£ ç•°ë¶½ï¿½ï¿½ë¸³ï¿½ë–Ž. dic_subgenre_genresï¿½ì“½ mtype=genre_word
+=======
+                // ´Ù¸¥ °Í°ú ¾Æ¹« »ó°ü¾øÀÌ Æ¯Á¤ Å°¿öµå°¡ ÀÖÀ¸¸é °á°ú¿¡ ±× Àå¸£¸íÀ» Ãß°¡ÇÑ´Ù. dic_subgenre_genresÀÇ mtype=genre_word
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 System.out.println("#ELOG genre_add_arr from reqStr:"+reqStr.toString());
                 Set<String> genre_add_arr = dicService.getGenreAddByReqKeywords(reqStr, "genre_add");
                 System.out.println("#ELOG GENRE_ADD by genre_add:"+genre_add_arr.toString());
 
                 Set<String> combinedWordAndGenres = new HashSet();
                 if (genre_add_arr != null) {
+<<<<<<< HEAD
                     // meta_singleæ€¨ï¿½ ï¿½ï¿½è­°ê³ ë¸¯ï¿½ë¿¬ å¯ƒê³Œë‚µï¿½ë¿‰ ï¿½ï¿½ï¿½ì˜£
+=======
+                    // meta_single°ú ´ëÁ¶ÇÏ¿© °á°ú¿¡ ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     for(String gs : genre_add_arr) {
                         metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, gs, "meta_single");
                     }
                     System.out.println("#ELOG metaSingleArr after genre_add:"+metaSingleArr.toString());
 
+<<<<<<< HEAD
                     // meta_genre ï¿½ï¿½ ï¿½ï¿½è­°ê³ ë¸¯ï¿½ë¿¬ å¯ƒê³Œë‚µï¿½ë¿‰ ï¿½ï¿½ï¿½ì˜£
+=======
+                    // meta_genre ¿Í ´ëÁ¶ÇÏ¿© °á°ú¿¡ ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     for(String ga : genre_add_arr) {
                         combinedWordAndGenres = this.getCombindEsAndGenre(combinedWordAndGenres, ga, itemGenre);
                     }
@@ -2300,7 +2665,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         , reqStr);
 
                 System.out.println("#resultEs:" + resultEs.toString());
+<<<<<<< HEAD
                 // 1ï§¡ï¿½ ES responseï¿½ë¿‰ï¿½ê½Œ 10åª›ì’•ï¿½ï¿½ ï¿½ë£·ï¿½ì”¤ï¿½ë“ƒ ï¿½ê¸½æ„¿ï¿½ï¿½ë¾¾ï¿½ì”  ç—â‘¤ë±·
+=======
+                // 1Â÷ ES response¿¡¼­ 10°³¸¦ Æ÷ÀÎÆ® »ó°ü¾øÀÌ Ãëµæ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 hits = this.getEsTopWords(resultEs);
                 System.out.println("#resultEs.words top1::" + hits.toString());
 
@@ -2327,14 +2696,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     esWords = hits.get("words").toString();
                 }
 
+<<<<<<< HEAD
                 // ES å¯ƒï¿½ï¿½ê¹‹ ï¿½ì‘ è€Œë£»ë£·ï¿½ì”¤ï¿½ë“ƒ ï¿½ë„»æ€¨ï¿½ ï¿½ë¸³ å¯ƒê³Œë‚µï¿½ë’— 1åª›ì’•ì­” ç—â‘¤ë±·
+=======
+                // ES °Ë»ö ÈÄ ÄÆÆ÷ÀÎÆ® Åë°ú ÇÑ °á°ú´Â 1°³¸¸ Ãëµæ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 if (esReturnArr != null && esReturnArr.size() > 0) {
                     esReturnWord = esReturnArr.get(0);
                 }
 
                 System.out.println("#esReturnWord:(cut " + es_cut_point + ")::" + esReturnWord + " / esWords:" + esWords);
 
+<<<<<<< HEAD
                 // è€Œë£»ë£·ï¿½ì”¤ï¿½ë“ƒ ï¿½ë„»æ€¨ì‡³ë¸³ ES å¯ƒï¿½ï¿½ê¹‹ ï¿½ë„—ï¿½ëµ¿ TOP 1ï¿½ì“£ resultArrï¿½ë¿‰ ï¿½ï¿½ï¿½ì˜£
+=======
+                // ÄÆÆ÷ÀÎÆ® Åë°úÇÑ ES °Ë»ö ÅäÇÈ TOP 1À» resultArr¿¡ ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 if (!"".equals(esReturnWord)) {
                     if (resultArr == null) resultArr = new JsonArray();
                     /*
@@ -2345,7 +2722,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     resultArr.add(newWord);
                     */
 
+<<<<<<< HEAD
                     // ï¿½ë„—ï¿½ëµ¿ TOP 1 ï¿½ì“£ dic_subgenre_genres ï¿½ì“½ mtype=meta_singleæ€¨ï¿½ ï¿½ï¿½è­°ê³ ë¸¯ï¿½ë¿¬ ç•°ë¶½ï¿½ï¿½ë¼± ç—â‘¤ë±· ï¿½ì‘ resultArrï¿½ë¿‰ ï¿½ï¿½ï¿½ì˜£
+=======
+                    // ÅäÇÈ TOP 1 À» dic_subgenre_genres ÀÇ mtype=meta_single°ú ´ëÁ¶ÇÏ¿© Ãß°¡¾î Ãëµæ ÈÄ resultArr¿¡ ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     metaSingleArr = dicService.getMetaSingleFromGenre(metaSingleArr, esReturnWord, "meta_single");
                     System.out.println("#ELOG metaSingleArr final ::"+metaSingleArr.toString());
 
@@ -2364,9 +2745,17 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
 
+<<<<<<< HEAD
                     // ï¿½ë„—ï¿½ëµ¿ TOP 1æ€¨ï¿½ genreç‘œï¿½ dic_subgenre_genres ï¿½ì“½ mtype=meta_genre ï¿½ï¿½ ï¿½ï¿½è­°ê³ ë¸¯ï¿½ë¿¬ ç•°ë¶½ï¿½ï¿½ë¼± ç—â‘¤ë±· ï¿½ì‘ resultArrï¿½ë¿‰ ï¿½ï¿½ï¿½ì˜£
+=======
+                    // ÅäÇÈ TOP 1°ú genre¸¦ dic_subgenre_genres ÀÇ mtype=meta_genre ¿Í ´ëÁ¶ÇÏ¿© Ãß°¡¾î Ãëµæ ÈÄ resultArr¿¡ ÀúÀå
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
 
+<<<<<<< HEAD
                     // ï¿½ì˜£ç‘œë‹¿ï¿½ ï¿½ì—³ï¿½ì‘ï§Žï¿½ ESï¿½ë„—ï¿½ëµ¿___ï¿½ì˜£ç‘œï¿½  è­°ê³ ë¹€ï¿½ì‘æ¿¡ï¿½ ï¿½ê¶—ï¿½ìŸ¾æ€¨ï¿½ ï¿½ï¿½è­°ê³ ë¸¯ï¿½ë¿¬ ç”±ÑŠë’ªï¿½ë“ƒ ç•°ë¶¿í…§
+=======
+                    // Àå¸£°¡ ÀÖÀ¸¸é ESÅäÇÈ___Àå¸£  Á¶ÇÕÀ¸·Î »çÀü°ú ´ëÁ¶ÇÏ¿© ¸®½ºÆ® ÃßÃâ
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                     Set<String> combinedEsWordAndGenres = new HashSet();
                     if (!"".equals(itemGenre)) {
                         combinedEsWordAndGenres = this.getCombindEsAndGenre(combinedEsWordAndGenres, esReturnWord, itemGenre);
@@ -2389,7 +2778,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonArray resultArr2 = new JsonArray();
         if (resultArr != null && resultArr.size() > 0) {
+<<<<<<< HEAD
             // ï§ë‰ï¿½ï§ï¿½ ï¿½ì £ï¿½ì‡… ï¿½ï¿½ï¿½ê¸½ ï¿½ë¸˜ï¿½ê½£ ï¿½ìŸ»ï¿½ìŠœ
+=======
+            // ¸¶Áö¸· Á¦¿Ü ´ë»ó ÇÊÅÍ Àû¿ë
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
             for (JsonElement je : resultArr) {
                 JsonObject jo1 = (JsonObject) je;
                 boolean isValid = StringUtil.filterLastTagValid(jo1);
@@ -2427,7 +2820,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 toMeta = CommonUtil.removeNationStr(toMeta);
                 System.out.println("#toMeta:"+toMeta);
                 if (cont_type.contains("CcubeSeries")) {
+<<<<<<< HEAD
                     toMeta = toMeta.replace("ï¿½ìºï¿½ì†•", "ï¿½ë–†ç”±ÑŠì«°");
+=======
+                    toMeta = toMeta.replace("¿µÈ­", "½Ã¸®Áî");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 }
             }
 
@@ -2446,7 +2843,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 toMetaOrigin = resultNation.toString();
                 toMetaOrigin = CommonUtil.removeBrackets(toMetaOrigin);
                 if (cont_type.contains("CcubeSeries")) {
+<<<<<<< HEAD
                     toMetaOrigin = toMetaOrigin.replace("ï¿½ìºï¿½ì†•", "ï¿½ë–†ç”±ÑŠì«°");
+=======
+                    toMetaOrigin = toMetaOrigin.replace("¿µÈ­", "½Ã¸®Áî");
+>>>>>>> branch 'cmts_20190322' of https://github.com/swordKein/cmts.git
                 }
             }
 
