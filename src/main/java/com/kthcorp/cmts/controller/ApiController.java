@@ -52,6 +52,8 @@ public class ApiController {
 	@Autowired
 	private UtilService utilService;
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
 	@ResponseBody
@@ -730,12 +732,12 @@ public class ApiController {
 			, @RequestParam(value = "itemid") String itemid
 			, @RequestParam(value = "sendnow", required = false, defaultValue = "") String sendnow
 	) {
-		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
-		System.out.println("[저장시 메타키워드 누락 테스트] ApiController /pop/meta/upt/array");
-		System.out.println("[저장시 메타키워드 누락 테스트] ApiController /pop/meta/upt/array items = " + items);
-		System.out.println("[저장시 메타키워드 누락 테스트] ApiController /pop/meta/upt/array duration = " + duration);
-		System.out.println("[저장시 메타키워드 누락 테스트] ApiController /pop/meta/upt/array itemid = " + itemid);
-		System.out.println("[저장시 메타키워드 누락 테스트] ApiController /pop/meta/upt/array sendnow = " + sendnow);
+		logger.info("\n\n\n\n#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
+		System.out.println("[********] " + dateFormat.format(new Date()) + "  ApiController /pop/meta/upt/array");
+		System.out.println("[********] " + dateFormat.format(new Date()) + "  ApiController /pop/meta/upt/array items = " + items);
+		System.out.println("[********] " + dateFormat.format(new Date()) + "  ApiController /pop/meta/upt/array duration = " + duration);
+		System.out.println("[********] " + dateFormat.format(new Date()) + "  ApiController /pop/meta/upt/array itemid = " + itemid);
+		System.out.println("[********] " + dateFormat.format(new Date()) + "  ApiController /pop/meta/upt/array sendnow = " + sendnow);
 		duration = CommonUtil.removeAllSpec2(duration);
 
 		int itemIdx = 0;
