@@ -1143,6 +1143,14 @@ public class CollectService implements CollectServiceImpl {
                     resultCollect = this.step03_ByHtml(tg);
 
                     break;
+
+                case "CINE21_MOVIE":
+                    logger.info("#STEP:03:cine21_movie:: collecting start CINE21_MOVIE: by sc_id:" + sc_id);
+                    //resultCollect = daumNewsService.getSearchNews(tg);
+                    resultCollect = this.step03_ByHtml(tg);
+
+                    break;
+
             }
             //결과 코드를 만든다.
             int resultContentSize = 0;
