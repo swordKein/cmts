@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ public class Cine21MovieService implements Cine21MovieServiceImpl {
     public JsonObject getSearchCine21(ConfTarget reqInfo) throws Exception {
 
         String orig_title = reqInfo.getParam1();
+        orig_title = URLEncoder.encode(orig_title,"utf-8");
 
         Map<String, Object> paramMap = new HashMap();
         paramMap.put("q", orig_title);
