@@ -94,10 +94,10 @@ public class Cine21MovieService implements Cine21MovieServiceImpl {
                 result.add("contents", contentArr);
                 JsonObject metaObj = new JsonObject();
                 metaObj.addProperty("content", contentArr.getAsString());
-                result.add("metas", metaObj);
                 JsonArray dest_fields = new JsonArray();
                 dest_fields.add("content");
-                result.add("dest_fields",dest_fields);
+                metaObj.add("dest_fields",dest_fields);
+                result.add("metas", metaObj);
                 result.addProperty("rt_code","OK");
                 result.addProperty("rt_msg", "SUCCESS");
             }
