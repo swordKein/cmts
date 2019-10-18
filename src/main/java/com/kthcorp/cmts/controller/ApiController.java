@@ -731,6 +731,11 @@ public class ApiController {
 			, @RequestParam(value = "sendnow", required = false, defaultValue = "") String sendnow
 	) {
 		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
+		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array");
+		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array items = " + items);
+		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array duration = " + duration);
+		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array itemid = " + itemid);
+		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array sendnow = " + sendnow);
 		duration = CommonUtil.removeAllSpec2(duration);
 
 		int itemIdx = 0;
