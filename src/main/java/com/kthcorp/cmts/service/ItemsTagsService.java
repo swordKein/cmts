@@ -1156,6 +1156,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         // ui에서는 listsearchkeywords 형태로 공백없이 전송됨
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
+                            
+                            // LIST_NOT_MAPPED는 LIST__NOT_MAPPED가 되어버려서 __를 _로 수정
+                            tmpMapArrayName = tmpMapArrayName.replace("LIST__", "LIST_");
                         }
                         if(tmpMapArrayName.contains("RECO")) {
                             tmpMapArrayName = tmpMapArrayName.replace("RECO", "RECO_");
@@ -1323,8 +1326,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
                             reqMeta.setTagidx(curTagIdx);
-                            reqMeta.setMtype(atype);
-                            reqMeta.setMeta(destMeta);
+                            reqMeta.setMtype(atype);	//MTYPE
+                            reqMeta.setMeta(destMeta);	//통째로 META 컬럼에 저장
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
                             rt = this.insItemsTagsMetas(reqMeta);
