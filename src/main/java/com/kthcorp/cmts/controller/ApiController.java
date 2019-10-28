@@ -1732,6 +1732,7 @@ public class ApiController {
 		OutputStream os;
 		
 		try {
+			/**
 			strResClasspath = resClasspath.getURI().getPath();
 			logger.debug("strResClasspath =" + strResClasspath);
 			
@@ -1740,11 +1741,15 @@ public class ApiController {
 			logger.debug("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
 			
 			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
+			logger.debug("[파일업다운로드] trying to fis Path = " + strFilePath);
 			fis = new FileInputStream(strFilePath);
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fis = new FileInputStream(~~)");
+			logger.debug("[파일업다운로드] trying to fos Path = " + strResClasspath + File.separator + strFileName);
 			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fos = new FileOutputStream(~~)");
+			*/
 			os = response.getOutputStream();
+			/**
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " os = response.getOutputStream()");
 			
 			int data = 0;
@@ -1764,6 +1769,8 @@ public class ApiController {
 			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " file url = " + strUrl+"/"+strFileName);
 			os.write((strUrl+"/"+strFileName).getBytes());
+			**/
+			os.write(("http://14.63.174.158:8080/VOD_RT_CURR_20191028.csv").getBytes());
 			os.close();
 			
 		} catch (IOException e) {
