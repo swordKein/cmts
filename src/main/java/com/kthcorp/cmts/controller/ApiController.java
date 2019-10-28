@@ -33,7 +33,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1688,6 +1691,9 @@ public class ApiController {
 			, HttpServletRequest request
 			, HttpServletResponse response
 			) {
+    	Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
 		JsonObject result = new JsonObject();
 		
 		System.out.println("#/relknowledge/download/type");	//from /admin/dic/keywords/download
@@ -1698,6 +1704,7 @@ public class ApiController {
 			//strFilePath = adminService.getDicKeywordsListDownload(type);
 			strFilePath = relKnowledgeService.getRelKnowledgeListDownload(type);
 			if (strFilePath.length() > 0) {
+				System.out.println("[파일업다운로드] " + format.format(new Date()) + " strFilePath = " + strFilePath + "file generated success!!");
 				rtmsg = "SUCCESS";
 			}
 		
@@ -1709,12 +1716,16 @@ public class ApiController {
 		result.addProperty("rtfile", strFilePath);
 		result.addProperty("rtmsg", rtmsg);
 		
+		System.out.println("[파일업다운로드] " + format.format(new Date()) + " resourceLoader.getResource(\"classpath:static/\") 시도..");
+		
 		Resource resClasspath;
 		String strResClasspath = "";
 		resClasspath = resourceLoader.getResource("classpath:static/");
 		
-		System.out.println(resClasspath.exists());
-		System.out.println(resClasspath.getDescription());
+		System.out.println("[파일업다운로드] " + format.format(new Date()) + " resClasspath = " + resClasspath);
+		System.out.println("[파일업다운로드] " + format.format(new Date()) + " resClasspath.toString() = " + resClasspath.toString());
+		System.out.println("[파일업다운로드] " + format.format(new Date()) + " resClasspath.exists() = " + resClasspath.exists());
+		System.out.println("[파일업다운로드] " + format.format(new Date()) + " resClasspath.getDescription() = " + resClasspath.getDescription());
 		
 		FileInputStream fis;
 		FileOutputStream fos;
@@ -1730,21 +1741,28 @@ public class ApiController {
 			
 			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
 			fis = new FileInputStream(strFilePath);
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " fis = new FileInputStream(~~)");
 			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " fos = new FileOutputStream(~~)");
 			os = response.getOutputStream();
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " os = response.getOutputStream()");
 			
 			int data = 0;
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " fos.write(data); 루프문 시작");
 			while((data=fis.read())!=-1) {
 				fos.write(data);
 			}
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " fos.write(data); 루프문 끝");
 			
 			fis.close();
 			fos.close();
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " fis.close() fos.close()");
 			
 			//String strFilePath
 			//다운로드 파일 링크
 			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			System.out.println("[파일업다운로드] " + format.format(new Date()) + " file url = " + strUrl+"/"+strFileName);
 			os.write((strUrl+"/"+strFileName).getBytes());
 			os.close();
 			
