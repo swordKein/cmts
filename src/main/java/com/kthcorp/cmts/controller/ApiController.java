@@ -1733,11 +1733,11 @@ public class ApiController {
 		
 		try {
 			strResClasspath = resClasspath.getURI().getPath();
-			System.out.println("strResClasspath =" + strResClasspath);
+			logger.debug("strResClasspath =" + strResClasspath);
 			
 			//파일 복사 from strFileName to strResClasspath
 			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
-			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
+			logger.debug("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
 			
 			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
 			fis = new FileInputStream(strFilePath);
