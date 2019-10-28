@@ -13,6 +13,8 @@ import com.kthcorp.cmts.util.pool.concurrent.task.JobTask;
 import com.kthcorp.cmts.util.pool.concurrent.task.arg.GenericTaskArgument;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -387,6 +389,11 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 	//연관지식 다운로드 권재일 추가
 	@Override
 	public String getRelKnowledgeListDownload(String type) {
+    	Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+        logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
 		String strFileName = "";
 		
 		List<Map<String, Object>> reqItems = null;
@@ -397,6 +404,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		RelKnowledge relKnowledge = new RelKnowledge();
 		relKnowledge.setRelKnowledgeType(type);
 		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 1. Header");
 		//1. 헤더
 		//resultStr = "Type" + seperator + "Keyword" + lineFeed;
 		if(relKnowledge.getRelKnowledgeType().equals("cook")) {
@@ -578,6 +586,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			
 		}
 		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 2. Body");
 		//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
 		//DicKeywords reqKeyword = new DicKeywords();
 		
@@ -600,6 +609,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			
 		}
 		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 3. toString");
 		//4. 문자열화
 		for(RelKnowledge item : relKnowledgeList) {
 			//String strKeyword = item.getKeyword();
@@ -930,12 +940,18 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		}
 		
 		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4. File");
 		//5. 파일형태로 표출
 		String fileNameContent = "VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv";
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
 		int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
 		strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
 		return strFileName;
 	}
 
