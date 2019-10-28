@@ -12,6 +12,8 @@ import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
 import com.kthcorp.cmts.util.HttpClientUtil;
+
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
@@ -43,6 +48,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 
 @Controller
 //@RequestMapping(value = {"", "/dummy"})
@@ -1686,13 +1692,17 @@ public class ApiController {
 	
 	//연관지식 다운로드 권재일 추가
 	@RequestMapping(value="/relknowledge/download/type")//, method=RequestMethod.POST
+	@ResponseStatus(HttpStatus.OK)
 	public String downloadRelKnowledgesByType(Map<String, Object> model
 			, @RequestParam(value="type", required=false, defaultValue = "") String type
 			, HttpServletRequest request
 			, HttpServletResponse response
 			) {
-    	Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment;filename=VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv");
+		
+    	Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
 		JsonObject result = new JsonObject();
 		
@@ -1704,8 +1714,9 @@ public class ApiController {
 			//strFilePath = adminService.getDicKeywordsListDownload(type);
 			strFilePath = relKnowledgeService.getRelKnowledgeListDownload(type);
 			if (strFilePath.length() > 0) {
-				logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFilePath = " + strFilePath + "file generated success!!");
+				//logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFilePath = " + strFilePath + "file generated success!!");
 				rtmsg = "SUCCESS";
+				logger.debug("[파일업다운로드] strFilePath = " + strFilePath);
 			}
 		
 		} catch(Exception e) {
@@ -1716,61 +1727,20 @@ public class ApiController {
 		result.addProperty("rtfile", strFilePath);
 		result.addProperty("rtmsg", rtmsg);
 		
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " resourceLoader.getResource(\"classpath:static/\") 시도..");
-		
-		Resource resClasspath;
-		String strResClasspath = "";
-		resClasspath = resourceLoader.getResource("classpath:static/");
-		
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " resClasspath = " + resClasspath);
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " resClasspath.toString() = " + resClasspath.toString());
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " resClasspath.exists() = " + resClasspath.exists());
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " resClasspath.getDescription() = " + resClasspath.getDescription());
-		
 		FileInputStream fis;
-		FileOutputStream fos;
+		//FileOutputStream fos;
 		OutputStream os;
 		
 		try {
-			/**
-			strResClasspath = resClasspath.getURI().getPath();
-			logger.debug("strResClasspath =" + strResClasspath);
-			
-			//파일 복사 from strFileName to strResClasspath
-			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
-			logger.debug("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
-			
-			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
-			logger.debug("[파일업다운로드] trying to fis Path = " + strFilePath);
-			fis = new FileInputStream(strFilePath);
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fis = new FileInputStream(~~)");
-			logger.debug("[파일업다운로드] trying to fos Path = " + strResClasspath + File.separator + strFileName);
-			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fos = new FileOutputStream(~~)");
-			*/
 			os = response.getOutputStream();
-			/**
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " os = response.getOutputStream()");
+			fis = new FileInputStream(strFilePath);
 			
 			int data = 0;
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fos.write(data); 루프문 시작");
-			while((data=fis.read())!=-1) {
-				fos.write(data);
+			while((data = fis.read()) != -1) {
+				os.write(data);
 			}
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fos.write(data); 루프문 끝");
 			
-			fis.close();
-			fos.close();
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " fis.close() fos.close()");
-			
-			//String strFilePath
-			//다운로드 파일 링크
-			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " file url = " + strUrl+"/"+strFileName);
-			os.write((strUrl+"/"+strFileName).getBytes());
-			**/
-			os.write(("http://14.63.174.158:8080/VOD_RT_CURR_20191028.csv").getBytes());
+			os.flush();
 			os.close();
 			
 		} catch (IOException e) {
@@ -1779,6 +1749,7 @@ public class ApiController {
 		}
 		
 		
+		logger.debug("[파일업다운로드] success");
 		return result.toString();
 	}
 	
