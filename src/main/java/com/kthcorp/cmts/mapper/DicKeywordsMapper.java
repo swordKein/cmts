@@ -50,4 +50,7 @@ public interface DicKeywordsMapper {
     Map<String,Object> getResultTags(Map<String,Object> req);
 
     List<Map<String, Object>> getResultTagsList();
+    
+	int delDicKeywordsAllByType(DicKeywords dicKeywords);
+	List<DicSubgenre> getAllDicSubgenreGenres();
 }

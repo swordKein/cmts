@@ -38,4 +38,6 @@ public interface AdminServiceImpl {
     List<ManualChange> getManualJobHist(ManualChange req);
 
     int cntManualJobHist();
+
+	String getDicKeywordsListDownload(String type);
 }

@@ -94,7 +94,7 @@ public interface DicServiceImpl {
 
     //JsonArray getDicKeywordsByType(String type, int pageSize, int pageno);
 
-    JsonArray getDicKeywordsByType(String type, String keyword, int pageSize, int pageno);
+    JsonArray getDicKeywordsByType(String type, String keyword, String orderby, int pageSize, int pageno);
 
     int modifyDicsByTypesFromArrayList(String items);
 
@@ -117,4 +117,7 @@ public interface DicServiceImpl {
     Map<String, Object> getResultTagsList();
 
     Set<String> getStringArrayFromWordWithResultTag(String word, String mtype);
+    
+    //해당 카테고리 키워드사전 통쨰로 삭제(추가하기전)
+    int delDicKeywordsAllByType(DicKeywords dicKeywords);
 }

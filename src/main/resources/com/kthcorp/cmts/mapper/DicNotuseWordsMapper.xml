@@ -20,7 +20,12 @@
         <if test='word != null and word != ""'>
             where word like concat('%',#{word},'%')
         </if>
-        order by regdate DESC, idx DESC
+        <if test="orderby.equals('new')">
+            order by regdate DESC, idx DESC
+        </if>
+        <if test="orderby.equals('abc')">
+            order by word ASC, idx DESC
+        </if>
         limit ${pageSize} offset ${offsetIdx}
     </select>
 

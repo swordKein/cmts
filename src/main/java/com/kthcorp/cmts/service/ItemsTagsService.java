@@ -1156,6 +1156,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         // ui�뿉�꽌�뒗 listsearchkeywords �삎�깭濡� 怨듬갚�뾾�씠 �쟾�넚�맖
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
+                            
+                            // LIST_NOT_MAPPED는 LIST__NOT_MAPPED가 되어버려서 __를 _로 수정
+                            tmpMapArrayName = tmpMapArrayName.replace("LIST__", "LIST_");
                         }
                         if(tmpMapArrayName.contains("RECO")) {
                             tmpMapArrayName = tmpMapArrayName.replace("RECO", "RECO_");
@@ -1344,8 +1347,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             ItemsTags reqMeta = new ItemsTags();
                             reqMeta.setIdx(itemid);
                             reqMeta.setTagidx(curTagIdx);
-                            reqMeta.setMtype(atype);
-                            reqMeta.setMeta(destMeta);
+                            reqMeta.setMtype(atype);	//MTYPE
+                            reqMeta.setMeta(destMeta);	//통째로 META 컬럼에 저장
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);

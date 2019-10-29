@@ -28,6 +28,8 @@ public class DicKeywords extends Paging {
     private String genre;
 
     private Integer cnt;
+    
+    private String orderby;	//권재일 추가 07.31 5-1
 
     public Integer getCnt() {
         return cnt;
@@ -124,4 +126,12 @@ public class DicKeywords extends Paging {
     public void setRegid(String regid) {
         this.regid = regid;
     }
+    
+    public String getOrderby() {
+		return orderby;
+	}
+    
+    public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
 }
