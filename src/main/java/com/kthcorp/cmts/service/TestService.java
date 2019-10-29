@@ -5656,6 +5656,140 @@ public class TestService implements TestServiceImpl {
     }
 
 
+
+    @Override
+    public void writeCcubeContentsOutputCSVandMETAS() throws Exception {
+        //List<Map<String, Object>> itemList  = testMapper.getCcubeContentsAll();
+        List<Map<String, Object>> itemList  = testMapper.getContentsOrigItemsAll_100();
+        List<Map<String, Object>> resultList = new ArrayList();
+
+        Set<String> whenSet = new HashSet();
+        Set<String> whereSet = new HashSet();
+        Set<String> whoSet = new HashSet();
+        Set<String> whatSet = new HashSet();
+        Set<String> emotionSet = new HashSet();
+        Set<String> characterSet = new HashSet();
+
+        JsonArray contents = null;
+        for (Map<String, Object> item : itemList) {
+            long longIdx = (long) item.get("idx");
+            int idx = (int) longIdx;
+            String type = (String) item.get("type");
+            String cid = (String) item.get("cid");
+            String mcid = (String) item.get("mcid");
+            String content_title = (String) item.get("content_title");
+            String eng_title = (String) item.get("eng_title");
+            String director = (String) item.get("director");
+            String year = (String) item.get("year");
+            //String asset_id = (String) (item.get("asset_id") != null ? item.get("asset_id") : "" );
+
+
+            String meta_when = "";
+            String meta_where = "";
+            String meta_what = "";
+            String meta_who = "";
+            String meta_emotion = "";
+            String meta_subgenre = "";
+            String meta_search = "";
+            String meta_charactor = "";
+            String meta_reco_target = "";
+            String meta_reco_situation = "";
+            String meta_award = "";
+
+            System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
+
+            contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
+            if (contents != null && contents.size() > 0) {
+                JsonObject jo = (JsonObject) contents.get(0);
+                if (jo != null) {
+                    meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
+                    item.put("meta_when", meta_when);
+                    System.out.println("#meta_when : "+meta_when);
+
+                    meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
+                    item.put("meta_where", meta_where);
+                    meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
+                    item.put("meta_what", meta_what);
+                    meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
+                    item.put("meta_who", meta_who);
+                    meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
+                    item.put("meta_emotion", meta_emotion);
+                    meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
+                    item.put("meta_subgenre", meta_subgenre);
+                    meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
+                    item.put("meta_search", meta_search);
+                    meta_charactor = (jo.get("META_CHARACTER") != null ? jo.get("META_CHARACTER").getAsString() : "");
+                    item.put("meta_charactor", meta_charactor);
+                    meta_reco_target = (jo.get("META_RECO_TARGET") != null ? jo.get("META_RECO_TARGET").getAsString() : "");
+                    item.put("meta_reco_target", meta_reco_target);
+                    meta_reco_situation = (jo.get("META_RECO_SITUATION") != null ? jo.get("META_RECO_SITUATION").getAsString() : "");
+                    item.put("meta_reco_situation", meta_reco_situation);
+                    meta_award = (jo.get("META_AWARD") != null ? jo.get("META_AWARD").getAsString() : "");
+                    meta_award = meta_award.replace("현재페이지   1", "").trim(); item.put("meta_award", meta_award);
+                    System.out.println("#meta_when:"+meta_when + " / meta_where:"+meta_where + " / meta_award:"+meta_award);
+                    resultList.add(item);
+                }
+            }
+
+
+        }
+
+        String seperator = "\t";
+        String lineFeed = System.getProperty("line.separator");
+
+        String resultStr = "";
+        resultStr = "content_id" + seperator + "master_content_id" + seperator + "content_title" + seperator + "eng_title"
+                + seperator + "director"
+                + seperator + "year"
+                //+ seperator + "asset_id"
+                + seperator + "meta_when"
+                + seperator + "meta_where"
+                + seperator + "meta_what"
+                + seperator + "meta_who"
+                + seperator + "meta_emotion"
+                + seperator + "meta_subgenre"
+                + seperator + "meta_search"
+                + seperator + "meta_charactor"
+                + seperator + "meta_reco_target"
+                + seperator + "meta_reco_situation"
+                + seperator + "meta_award"
+                + lineFeed;
+
+        String itemStr = "";
+        int cnt = 1;
+        for (Map<String, Object> item : resultList) {
+            //itemStr = item.get("idx").toString();
+            itemStr = item.get("cid").toString();
+            itemStr = itemStr + seperator + item.get("mcid").toString();
+            itemStr = itemStr + seperator + item.get("content_title").toString();
+            itemStr = itemStr + seperator + item.get("eng_title").toString();
+            itemStr = itemStr + seperator + item.get("director").toString();
+            itemStr = itemStr + seperator + item.get("year").toString();
+            //itemStr = itemStr + seperator + item.get("asset_id").toString();
+
+            itemStr = itemStr + seperator + item.get("meta_when").toString();
+            itemStr = itemStr + seperator + item.get("meta_where").toString();
+            itemStr = itemStr + seperator + item.get("meta_what").toString();
+            itemStr = itemStr + seperator + item.get("meta_who").toString();
+            itemStr = itemStr + seperator + item.get("meta_emotion").toString();
+            itemStr = itemStr + seperator + item.get("meta_subgenre").toString();
+            itemStr = itemStr + seperator + item.get("meta_search").toString();
+            itemStr = itemStr + seperator + item.get("meta_charactor").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_target").toString();
+            itemStr = itemStr + seperator + item.get("meta_reco_situation").toString();
+            itemStr = itemStr + seperator + item.get("meta_award").toString();
+
+            resultStr += itemStr + lineFeed;
+            System.out.println("#write "+cnt+"'s item::"+itemStr);
+            cnt++;
+        }
+
+        String fileNameContent = "METAS_BY_CONTENTS_ALL_180827.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+
+    }
+
+
     @Override
     public void writeCcubeSeriesOutputCSV() throws Exception {
         List<Map<String, Object>> itemList  = testMapper.getCcubeSeriesAll();
@@ -6769,6 +6903,7 @@ public class TestService implements TestServiceImpl {
             //파일명에 오늘 날짜와 현재 시각 표시
             //String fileNameContent = "META_DIC_TYPE_"+type+"_190315.csv";
             String fileNameContent = "META_DIC_TYPE_"+type+"_"+strNow+".csv";
+
             int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
         }
         System.out.println("#ALL count by type:"+itemCountByType.toString());
@@ -7352,8 +7487,8 @@ public class TestService implements TestServiceImpl {
             }
         }
 
-        String fileNameContent = "190315__KEYWORDS_AND_COUNT.tsv";
-        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "euc-kr");
+        String fileNameContent = "190827__KEYWORDS_AND_COUNT.tsv";
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
 
         System.out.println("#ALL count by type:"+itemCountByType.toString());
     }
