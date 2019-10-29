@@ -140,7 +140,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
                 	relKnowledge.setCook_nutrient(jo.get("col34") != null ? jo.get("col34").getAsString() : "");
                 	relKnowledge.setCook_ea(jo.get("col35") != null ? jo.get("col35").getAsString() : "");
                 	relKnowledge.setCook_etc_a(jo.get("col36") != null ? jo.get("col36").getAsString() : "");
-                	relKnowledge.setCook_etc_b(jo.get("col37") != null ? jo.get("col37").getAsString() : "");
+                	relKnowledge.setCook_etc_b(jo.get("col38") != null ? jo.get("col38").getAsString() : "");	 //원본에 기타특징과 비교 사이에 한칸 더 있음
                 	
                 	//필수 체크 - sum(len(program title part assetid))>0
                 	if((relKnowledge.getProgram()+relKnowledge.getTitle()+relKnowledge.getPart()+relKnowledge.getAssetid()).equals("")){
@@ -411,8 +411,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			resultStr = //38
 					"작업일" + seperator + 
 					"상태" + seperator + 
+					"프로그램명" + seperator + 
 					"Title" + seperator + 
-					"파트" + seperator + 
 					"ASSETID" + seperator + 
 					"유형" + seperator + 
 					"강습요리명" + seperator + 
@@ -425,16 +425,16 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					"요리분류" + seperator + 
 					"요리강습자" + seperator + 
 					"요리강습자외출연자" + seperator + 
-					"국내지역(도단위)" + seperator + 
-					"국내지역(소단위)" + seperator + 
-					"해외지역(국가)" + seperator + 
-					"해외지역(세계구분)" + seperator + 
+					"국내지역도단위" + seperator + 
+					"국내지역소단위" + seperator + 
+					"해외지역국가" + seperator + 
+					"해외지역세계구분" + seperator + 
 					"식당명" + seperator +
 					
-					"국내식당위치(도단위)" + seperator + 
-					"국내식당위치(소단위)" + seperator + 
-					"해외식당위치(해외지역)" + seperator + 
-					"해외식당위치(국가)" + seperator + 
+					"국내식당위치도단위" + seperator + 
+					"국내식당위치소단위" + seperator + 
+					"해외식당위치해외지역" + seperator + 
+					"해외식당위치국가" + seperator + 
 					"요리적합계절" + seperator + 
 					"요리적합일" + seperator + 
 					"요리목적" + seperator + 
@@ -448,14 +448,14 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					"요리소요시간" + seperator + 
 					"영양성분" + seperator + 
 					"프로그램회당소개요리수" + seperator + 
-					"기타특징" + seperator + 
+					"기타특징" + seperator + seperator +	//원본에 기타특징과 비교 사이에 한칸 더 있음 
 					"비고" + lineFeed;
 		}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
 			resultStr = //15
 					"작업일" + seperator + 
 					"상태" + seperator + 
+					"프로그램명" + seperator + 
 					"Title" + seperator + 
-					"파트" + seperator + 
 					"ASSETID" + seperator + 
 					"주제" + seperator + 
 					"관련인물" + seperator + 
@@ -472,8 +472,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			resultStr = //13
 					"작업일" + seperator + 
 					"상태" + seperator + 
+					"프로그램명" + seperator + 
 					"Title" + seperator + 
-					"파트" + seperator + 
 					"ASSETID" + seperator + 
 					"주제" + seperator + 
 					"관련인물" + seperator + 
@@ -488,8 +488,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			resultStr = //33
 					"작업일" + seperator + 
 					"상태" + seperator + 
+					"프로그램명" + seperator + 
 					"Title" + seperator + 
-					"파트" + seperator + 
 					"ASSETID" + seperator + 
 					"질병명" + seperator + 
 					"질병발생부위" + seperator + 
@@ -546,8 +546,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			resultStr = //35
 					"작업일시" + seperator + 
 					"상태" + seperator + 
+					"프로그램명" + seperator + 
 					"Title" + seperator + 
-					"파트" + seperator + 
 					"ASSETID" + seperator + 
 					"유형" + seperator + 
 					"여행테마" + seperator + 
@@ -691,7 +691,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 						strCook_time + seperator +
 						strCook_nutrient + seperator +
 						strCook_ea + seperator +
-						strCook_etc_a + seperator +
+						strCook_etc_a + seperator + seperator +	//원본에 기타특징과 비교 사이에 한칸 더 있음
 						strCook_etc_b + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
 				String strRegweek = item.getRegweek();

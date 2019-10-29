@@ -850,4 +850,11 @@ public class StringUtilTest {
         res.add("jarr1", jarr1);
         System.out.println("#res:"+res.toString());
     }
+
+
+    @Test
+    public void test_replaceExt() {
+        String sss = "df,|^dfkf";
+        System.out.println("#RES:"+sss.replace(",|^","\t"));
+    }
 }

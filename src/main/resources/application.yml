@@ -49,6 +49,8 @@ cmts:
     daumnews:
       search_url: http://search.daum.net/search?w=news&DA=PGD&cluster=y
       paging_limit: 10
+    cine21:
+      search_url: http://www.cine21.com/search/movie/
 
 google:
   api:
@@ -114,8 +116,9 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
