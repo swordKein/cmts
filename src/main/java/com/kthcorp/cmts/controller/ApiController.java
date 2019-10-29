@@ -1756,7 +1756,17 @@ public class ApiController {
 		
 		
 		logger.debug("[파일업다운로드] success");
-		return "SUCCESS";
+		//return "SUCCESS";
+		
+		
+		JsonObject result_all = result;		//new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+
+		return result_all.toString();
+		
 	}
 	
 }
