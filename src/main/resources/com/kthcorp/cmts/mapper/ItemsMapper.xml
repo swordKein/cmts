@@ -344,7 +344,7 @@
         THEN ( select regdate from ccube_series where series_id = ck.series_id limit 1 )
         ELSE ( select regdate from ccube_contents where content_id = ck.content_id limit 1 )
         END AS regdate
-        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        , it.title, it.regdate as procdate, im.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         , ifnull(ck.series_id, '0') as series_id  , ifnull(ck.content_id,'0') as content_id
         from
         (	select j.* from
@@ -435,6 +435,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join (select idx,max(regid) as regid ,max(regdate) as regdate from items_metas group by idx desc) im on im.idx = a.idx
         order by a.regdate desc, a.idx desc
     </select>
 
@@ -445,7 +446,7 @@
         ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR'
         ELSE 'OTH' END AS type ) END AS type
         , a.regdate
-        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        , it.title, it.regdate as procdate, im.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         , it.cid as content_id
         from
         (	select j.* from
@@ -484,6 +485,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join items_metas on im.idx = a.idx
         order by a.regdate desc, a.idx desc
     </select>
 
@@ -573,6 +575,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join (select idx,max(regid) as regid ,max(regdate) as regdate from items_metas group by idx desc) im on im.idx = a.idx
     </select>
 
 
