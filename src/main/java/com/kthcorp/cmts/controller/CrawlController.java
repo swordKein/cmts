@@ -54,6 +54,8 @@ public class CrawlController {
 	private NavernewsService navernewsService;
 	@Autowired
 	private DaumnewsService daumnewsService;
+	@Autowired
+	private Cine21MovieService cine21MovieService;
 
 	@RequestMapping(value="/crawl/byprefix", method=RequestMethod.GET)
 	@ResponseBody
@@ -129,7 +131,7 @@ public class CrawlController {
 					result = daumblogService.getSearchBlog(reqInfo);
 					break;
 				case "NAVER_MOVIE":
-					result = daumMovieService.getContents(prefix, reqInfo);
+					result = naverMovieService.getContents(prefix, reqInfo);
 					break;
 				case "DAUM_MOVIE":
 					result = daumMovieService.getContents(prefix, reqInfo);
@@ -139,6 +141,9 @@ public class CrawlController {
 					break;
 				case "DAUM_NEWS":
 					result = daumnewsService.getSearchNews(reqInfo);
+					break;
+				case "CINE21_MOVIE":
+					result = cine21MovieService.getSearchCine21(reqInfo);
 					break;
 			}
 		} catch (Exception e) {

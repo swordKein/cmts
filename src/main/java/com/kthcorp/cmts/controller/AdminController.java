@@ -806,6 +806,8 @@ public class AdminController {
 		*/
 		//System.out.println("ClassPathResource(\"data/employees.dat\"); = " + ClassPathResource("data/employees.dat"));
 		
+		/**
+		//구로직
 		//from https://www.baeldung.com/spring-classpath-file-access
 		Resource resClasspath;
 //		Resource testResource1;
@@ -866,6 +868,81 @@ public class AdminController {
 		
 		
 		return result.toString();
+		*/
+		
+		//신로직 from ApiController - /relknowledge/download/type
+		
+/*
+		FileInputStream fis;
+		//FileOutputStream fos;
+		OutputStream os;
+		
+		try {
+			os = response.getOutputStream();
+			fis = new FileInputStream(strFilePath);
+			
+			int data = 0;
+			while((data = fis.read()) != -1) {
+				os.write(data);
+			}
+			
+			os.flush();
+			os.close();
+			
+			fis.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			
+		}
+		
+		
+		
+		logger.debug("[파일업다운로드] success");
+		//return "SUCCESS";
+		
+		
+		JsonObject result_all = result;		//new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+
+		return result_all.toString();
+ */
+		FileInputStream fis;
+		OutputStream os;
+		
+		try {
+			os = response.getOutputStream();
+			fis = new FileInputStream(strFilePath);
+			
+			int data = 0;
+			while((data = fis.read()) != -1) {
+				os.write(data);
+			}
+			
+			os.flush();
+			os.close();
+			
+			fis.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			
+		}
+		
+		JsonObject result_all = result;		//new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+
+		return result_all.toString();
 	}
 	
 	
