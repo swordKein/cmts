@@ -1201,7 +1201,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
-            , int itemid, int curTagIdx) {
+            , int itemid, int curTagIdx, String userId) {	//userId : 로그인 중인 사용자정보 저장
         int rt = 0;
         System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  " + DateUtils.getLocalDateTime3() + " ItemsTagsService.processMetaObjectByTypes start");
         System.out.println(" - origMetasArraysByType = " + origMetasArraysByType.toString());
@@ -1209,6 +1209,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         System.out.println(" - typesArr = " + typesArr.toString());
         System.out.println(" - itemid = " + itemid);
         System.out.println(" - curTagIdx = " + curTagIdx);
+        System.out.println(" - userId = " + userId);	//userId : 로그인 중인 사용자정보 저장
 
         /* ���엯 蹂� �븸�뀡 �븘�씠�뀥 以� add,mod�뒗 �궗�쟾�뿉 異붽� */
         ArrayList<String> dicTypes = new ArrayList<String>();
@@ -1315,12 +1316,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setTagidx(curTagIdx);
                             reqMeta.setMtype(atype);
                             reqMeta.setMeta(destMeta);
+                            reqMeta.setRegid(userId);	//userId : 로그인 중인 사용자정보 저장
 
                             //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
+                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " "
+                            		+ " after : rt = " + rt);
                         } else {
                             // AWARD�쓽 寃쎌슦 items_metas�뿉 湲곗〈硫뷀�瑜� �쑀吏��븳�떎 18.05.15
                             ItemsMetas reqM = new ItemsMetas();
@@ -1349,6 +1352,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setTagidx(curTagIdx);
                             reqMeta.setMtype(atype);	//MTYPE
                             reqMeta.setMeta(destMeta);	//통째로 META 컬럼에 저장
+                            reqMeta.setRegid(userId);	//userId : 로그인 중인 사용자정보 저장
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
@@ -1410,12 +1414,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow) {
+    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow, String userId) {	//userId : 로그인 중인 사용자정보 저장
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems 시작");
 		System.out.println(" - itemid = " + itemid);
 		System.out.println(" - items = " + items);
 		System.out.println(" - duration = " + duration);
 		System.out.println(" - sendnow = " + sendnow);
+		System.out.println(" - userId = " + userId);	//userId : 로그인 중인 사용자정보 저장
 		
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
@@ -1469,7 +1474,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* action_item�씠 �엳�뒗 寃쎌슦 ���엯蹂� meta �닔�젙 */
             	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before(호출) action_item이 있는 경우 타입별 meta 수정");
-                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx, userId);	//userId : 로그인 중인 사용자정보 저장
             	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
             	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
             	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
@@ -1550,7 +1555,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 /* action_item�씠 �엳�뒗 寃쎌슦 ���엯蹂� meta �닔�젙 */
             	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before");
-                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx, userId);
             	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
             	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
             	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());

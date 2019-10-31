@@ -756,8 +756,11 @@ public class ApiController {
 			, @RequestParam(value = "duration", required = false, defaultValue = "") String duration
 			, @RequestParam(value = "itemid") String itemid
 			, @RequestParam(value = "sendnow", required = false, defaultValue = "") String sendnow
+			
+			, @RequestParam(value = "userId", required = false, defaultValue = "") String userId	//로그인 중인 사용자정보 저장
 	) {
 		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
+		logger.info("loginId = " + userId);
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array");
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array items = " + items);
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array duration = " + duration);
@@ -777,7 +780,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration, sendnow);
+				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration, sendnow, userId);		//userId : 로그인 중인 사용자정보 저장
 				if(rt > 0) {
 					rtcode = 1;
 					rtmsg = "SUCCESS";

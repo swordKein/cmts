@@ -49,7 +49,7 @@ public class ItemsTagsServiceImplTest {
 
 		String req = "[{\"meta\":\"압도적인2\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"mod\"}]";
 
-		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "", "Y");
+		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "", "Y", "userId");	//userId : 로그인 중인 사용자정보 저장
 		System.out.println("#Result:"+result);
 	}
 
