@@ -435,7 +435,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
-        inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = it.tagcnt
+        inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
         order by a.regdate desc, a.idx desc
     </select>
 
@@ -575,7 +575,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
-        inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = it.tagcnt
+        inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
     </select>
 
 

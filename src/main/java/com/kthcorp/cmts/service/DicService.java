@@ -574,11 +574,12 @@ public class DicService implements DicServiceImpl {
                         req.setIdx(fw.getIdx());
                         if (req != null && req.getRegid() == null) req.setRegid(serverid);
                         if (req != null && req.getRatio() == null) req.setRatio(0.0);
-                        req.setOldword(req.getKeyword());
-                        req.setKeyword(req.getToword());
+                        req.setOldword(req.getKeyword());	//수정(기존 키워드 dic_keywords에서 삭제)→추가
+                        //req.setKeyword(req.getToword());	//수정(기존 키워드 dic_keywords에서 삭제)→추가
 
                         try {
-                            int rtupt = dicKeywordsMapper.uptDicKeywords(req);
+                            //int rtupt = dicKeywordsMapper.uptDicKeywords(req);	//수정(기존 키워드 dic_keywords에서 삭제)→추가
+                        	int rtupt = dicKeywordsMapper.insDicKeywords(req);
                         } catch (Exception e) {
                             e.printStackTrace();
                             // update 시 중복일 경우 삭제 후 입력
