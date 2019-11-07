@@ -740,13 +740,15 @@ public class AdminController {
 		strFilePath = UPLOAD_DIR + "DIC_KEYWORDS_" + type.toUpperCase()+".csv";
 		logger.debug("#strFilePath = " + strFilePath);
 		
+		String strFileName = "";
+		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		try {
 			//구버전 : 파일경로 띄우기
 			strResClasspath = resClasspath.getURI().getPath();
 			System.out.println("strResClasspath =" + strResClasspath);
 			
 			//파일 복사 from strFileName to strResClasspath
-			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
+			strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
 			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
 			
 			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
@@ -764,7 +766,6 @@ public class AdminController {
 			
 			//String strFilePath
 			//다운로드 파일 링크
-			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
 			os.write((strUrl+"/"+strFileName).getBytes());
 			os.close();
@@ -789,7 +790,8 @@ public class AdminController {
 		//result_all.add("RESULT", result1);
 
 //		if("1"=="1") {
-			return result_all.toString();		
+			//return result_all.toString();
+			return (strUrl+"/"+strFileName);
 //		}
 		
 //		/*
