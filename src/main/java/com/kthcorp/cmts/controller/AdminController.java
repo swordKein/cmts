@@ -743,8 +743,12 @@ public class AdminController {
 		String strFileName = "";
 		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		try {
+			/*
 			//구버전 : 파일경로 띄우기
 			strResClasspath = resClasspath.getURI().getPath();
+			if(strResClasspath==null) {
+				strResClasspath = "/home/daisy/.jenkins/workspace/cmts/target/classes/static/";	//TB
+			}
 			System.out.println("strResClasspath =" + strResClasspath);
 			
 			//파일 복사 from strFileName to strResClasspath
@@ -769,7 +773,21 @@ public class AdminController {
 			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
 			os.write((strUrl+"/"+strFileName).getBytes());
 			os.close();
-		
+			*/
+			
+			//신버전 : 데이터를 그대로 태우기 - 느림
+			os = response.getOutputStream();
+			fis = new FileInputStream(strFilePath);
+			
+			int data = 0;
+			while((data = fis.read()) != -1) {
+				os.write(data);
+			}
+			
+			os.flush();
+			os.close();
+			
+			fis.close();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -790,8 +808,8 @@ public class AdminController {
 		//result_all.add("RESULT", result1);
 
 //		if("1"=="1") {
-			//return result_all.toString();
-			return (strUrl+"/"+strFileName);
+			return result_all.toString();
+			//return (strUrl+"/"+strFileName);
 //		}
 		
 //		/*
