@@ -1762,6 +1762,9 @@ public class ApiController {
 		try {
 			//구버전 : 파일경로 띄우기
 			strResClasspath = resClasspath.getURI().getPath();
+			if(strResClasspath==null) {
+				strResClasspath = "/home/daisy/.jenkins/workspace/cmts/target/classes/static/";	//TB
+			}
 			logger.info("strResClasspath =" + strResClasspath);
 			
 			//파일 복사 from strFileName to strResClasspath
