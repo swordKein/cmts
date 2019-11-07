@@ -1934,29 +1934,29 @@ public class ApiController {
     public String makeFileTest(HttpServletRequest request) throws Exception
     {
     	//from TestServiceTestImpl.makeFileTest
-		System.out.println("#makeFileTest START#\n");
+		logger.info("#makeFileTest START#\n");
 		
 		//메타사전
-		System.out.println("#makeFileTest - dicKeywords# start");
+		logger.info("#makeFileTest - dicKeywords# start");
 		dicService.makeFileDickeywords();
-		System.out.println("#makeFileTest - dicKeywords# end\n");
+		logger.info("#makeFileTest - dicKeywords# end\n");
 		
 		//불용키워드 사전
-		System.out.println("#makeFileTest - notuseWord# start");
+		logger.info("#makeFileTest - notuseWord# start");
 		dicService.makeFileNotuse();
-		System.out.println("#makeFileTest - notuseWord# end\n");
+		logger.info("#makeFileTest - notuseWord# end\n");
 		
 		//대체키워드 사전
-		System.out.println("#makeFileTest - changeWord# start");
+		logger.info("#makeFileTest - changeWord# start");
 		dicService.makeFileChange();
-		System.out.println("#makeFileTest - changeWord# end\n");
+		logger.info("#makeFileTest - changeWord# end\n");
 		
 		//연관지식
-		System.out.println("#makeFileTest - relKnowledge# start");
+		logger.info("#makeFileTest - relKnowledge# start");
 		relKnowledgeService.makeFileRelKnowledge();
-		System.out.println("#makeFileTest - relKnowledge# end\n");
+		logger.info("#makeFileTest - relKnowledge# end\n");
 		
-		System.out.println("#makeFileTest END#\n\n");
+		logger.info("#makeFileTest END#\n\n");
     	
 		return "";
     }
@@ -1965,29 +1965,29 @@ public class ApiController {
     @RequestMapping(value = "/pushCsvToData.do")
     public String pushCsvToData(HttpServletRequest request) throws Exception
     {
-		System.out.println("#pushCsvToData START#\n");
+		logger.info("#pushCsvToData START#\n");
 		
 		//메타사전
-		System.out.println("#pushCsvToData - dicKeywords# start");
+		logger.info("#pushCsvToData - dicKeywords# start");
 		dicService.pushCsvToDicKeywords();
-		System.out.println("#pushCsvToData - dicKeywords# end\n");
+		logger.info("#pushCsvToData - dicKeywords# end\n");
 		
 		//불용키워드 사전
-		System.out.println("#pushCsvToData - notuseWord# start");
+		logger.info("#pushCsvToData - notuseWord# start");
 		dicService.pushCsvToDicNotuseKeywords();
-		System.out.println("#pushCsvToData - notuseWord# end\n");
+		logger.info("#pushCsvToData - notuseWord# end\n");
 		
 		//대체키워드 사전
-		System.out.println("#pushCsvToData - changeWord# start");
+		logger.info("#pushCsvToData - changeWord# start");
 		dicService.pushCsvToDicChangeKeywords();
-		System.out.println("#pushCsvToData - changeWord# end\n");
+		logger.info("#pushCsvToData - changeWord# end\n");
 		
 		//연관지식
-		System.out.println("#pushCsvToData - relKnowledge# start");
+		logger.info("#pushCsvToData - relKnowledge# start");
 		relKnowledgeService.pushCsvToRelKnowledge();
-		System.out.println("#pushCsvToData - relKnowledge# end\n");
+		logger.info("#pushCsvToData - relKnowledge# end\n");
 		
-		System.out.println("#pushCsvToData END#\n\n");
+		logger.info("#pushCsvToData END#\n\n");
     	
     	return "";
     }
