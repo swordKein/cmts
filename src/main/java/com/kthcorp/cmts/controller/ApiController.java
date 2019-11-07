@@ -18,6 +18,7 @@ import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -75,9 +78,11 @@ public class ApiController {
 	@Autowired
 	private RelKnowledgeService relKnowledgeService;
 
-	//권재일 추가 파일다운로드
+    //권재일 추가 파일다운로드
 	@Autowired
 	ResourceLoader resourceLoader;
+    @Value("${spring.static.resource.location}")
+    private String UPLOAD_DIR;
 	
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
@@ -1707,6 +1712,7 @@ public class ApiController {
 			, HttpServletRequest request
 			, HttpServletResponse response
 			) {
+		/*
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv");
 		
@@ -1736,11 +1742,53 @@ public class ApiController {
 		result.addProperty("rtfile", strFilePath);
 		result.addProperty("rtmsg", rtmsg);
 		
+		*/
+		
+		JsonObject result = new JsonObject();
+		
+		String strFilePath = "";
 		FileInputStream fis;
-		//FileOutputStream fos;
+		FileOutputStream fos;
 		OutputStream os;
 		
+		Resource resClasspath;
+		String strResClasspath = "";
+		resClasspath = resourceLoader.getResource("classpath:static/");
+		
+		strFilePath = UPLOAD_DIR + "VOD_RT_" + type.toUpperCase()+".csv";
+		
 		try {
+			//구버전 : 파일경로 띄우기
+			strResClasspath = resClasspath.getURI().getPath();
+			System.out.println("strResClasspath =" + strResClasspath);
+			
+			//파일 복사 from strFileName to strResClasspath
+			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
+			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
+			
+			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
+			fis = new FileInputStream(strFilePath);
+			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
+			os = response.getOutputStream();
+			
+			int data = 0;
+			while((data=fis.read())!=-1) {
+				fos.write(data);
+			}
+			
+			fis.close();
+			fos.close();
+			
+			//String strFilePath
+			//다운로드 파일 링크
+			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			os.write((strUrl+"/"+strFileName).getBytes());
+			os.close();
+			
+			
+			/*
+			//신버전 : 데이터를 그대로 태우기 - 느림
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
 			
@@ -1753,7 +1801,7 @@ public class ApiController {
 			os.close();
 			
 			fis.close();
-			
+			*/
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1777,4 +1825,171 @@ public class ApiController {
 		
 	}
 	
+	//권재일 추가 파일 업로드 - 연관지식 
+	//from web - RelKnowledgeController
+    @RequestMapping(value = "/relknowledgeCsvFileUpload.do")
+    @ResponseBody
+    public String relknowledgeCsvFileUpload(
+    		HttpServletRequest request,
+    		@RequestParam("ex_filename") MultipartFile uploadfile,
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	Calendar calendar = Calendar.getInstance();		//[파일업다운로드]
+        SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");		//[파일업다운로드]
+        SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+        String strResult = "";
+        String strMessage = "";
+        
+        System.out.println("[파일업다운로드]");
+        //파일업로드~
+        //uploadfile.getBytes();
+        
+        //파일명은 ㅇㅇㅇ
+        //복사작업 to 업로드폴더/VOD_RT
+        //파일명 : VOD_RT_COOK.txt
+    	byte[] readByte = null;
+    	String readString = "";
+    	
+    	readByte = uploadfile.getBytes();
+        
+		int byteSize = readByte.length;
+		int viewSize = 0;
+    	System.out.println("#readByte::"+readByte);
+    	System.out.println("#byteSize::"+byteSize);
+
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+
+        
+    	String strFileName = relKnowledgeService.uploadRelknowledgeFile(readString,strType);
+        
+    	
+    	
+    	
+    	
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("strResult", strResult);
+		mav.addObject("strMessage", strMessage);
+		mav.addObject("strType", strType);
+		
+		return "";
+    }
+
+	//권재일 추가 파일 업로드 - 메타사전
+    @RequestMapping(value = "/dictionaryCsvFileUpload.do")
+    @ResponseBody
+    public String dictionaryCsvFileUpload(
+    		HttpServletRequest request,
+    		@RequestParam("fileCsv") MultipartFile uploadfile,
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	
+    	Calendar calendar = Calendar.getInstance();		//[파일업다운로드]
+        SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");		//[파일업다운로드]
+        SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+        String strResult = "";
+        String strMessage = "";
+        
+        System.out.println("[파일업다운로드]");
+        //파일업로드~
+        //uploadfile.getBytes();
+        
+        //파일명은 ㅇㅇㅇ
+        //복사작업 to 업로드폴더/VOD_RT
+        //파일명 : VOD_RT_COOK.txt
+    	byte[] readByte = null;
+    	String readString = "";
+    	
+    	readByte = uploadfile.getBytes();
+        
+		int byteSize = readByte.length;
+		int viewSize = 0;
+    	System.out.println("#readByte::"+readByte);
+    	System.out.println("#byteSize::"+byteSize);
+
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+
+        
+    	//String strFileName = relKnowledgeService.uploadRelknowledgeFile(readString,strType);
+    	String strFileName = dicService.uploadDicFile(readString,strType);
+    	
+    	
+    	
+    	
+    	
+    	
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("strResult", strResult);
+		mav.addObject("strMessage", strMessage);
+		mav.addObject("strType", strType);
+		
+		return "";
+    }
+    
+	//권재일 추가 11.07 테스트 csv 파일 생성 - 다운로드 받을 수 있도록
+    @RequestMapping(value = "/makeFileTest.do")
+    public String makeFileTest(HttpServletRequest request) throws Exception
+    {
+    	//from TestServiceTestImpl.makeFileTest
+		System.out.println("#makeFileTest START#\n");
+		
+		//메타사전
+		System.out.println("#makeFileTest - dicKeywords# start");
+		dicService.makeFileDickeywords();
+		System.out.println("#makeFileTest - dicKeywords# end\n");
+		
+		//불용키워드 사전
+		System.out.println("#makeFileTest - notuseWord# start");
+		dicService.makeFileNotuse();
+		System.out.println("#makeFileTest - notuseWord# end\n");
+		
+		//대체키워드 사전
+		System.out.println("#makeFileTest - changeWord# start");
+		dicService.makeFileChange();
+		System.out.println("#makeFileTest - changeWord# end\n");
+		
+		//연관지식
+		System.out.println("#makeFileTest - relKnowledge# start");
+		relKnowledgeService.makeFileRelKnowledge();
+		System.out.println("#makeFileTest - relKnowledge# end\n");
+		
+		System.out.println("#makeFileTest END#\n\n");
+    	
+		return "";
+    }
+    
+	//권재일 추가 11.07 테스트 csv 파일 파싱하여 DB에 작업
+    @RequestMapping(value = "/pushCsvToData.do")
+    public String pushCsvToData(HttpServletRequest request) throws Exception
+    {
+		System.out.println("#pushCsvToData START#\n");
+		
+		//메타사전
+		System.out.println("#pushCsvToData - dicKeywords# start");
+		dicService.pushCsvToDicKeywords();
+		System.out.println("#pushCsvToData - dicKeywords# end\n");
+		
+		//불용키워드 사전
+		System.out.println("#pushCsvToData - notuseWord# start");
+		dicService.pushCsvToDicNotuseKeywords();
+		System.out.println("#pushCsvToData - notuseWord# end\n");
+		
+		//대체키워드 사전
+		System.out.println("#pushCsvToData - changeWord# start");
+		dicService.pushCsvToDicChangeKeywords();
+		System.out.println("#pushCsvToData - changeWord# end\n");
+		
+		//연관지식
+		System.out.println("#pushCsvToData - relKnowledge# start");
+		relKnowledgeService.pushCsvToRelKnowledge();
+		System.out.println("#pushCsvToData - relKnowledge# end\n");
+		
+		System.out.println("#pushCsvToData END#\n\n");
+    	
+    	return "";
+    }
+    
 }

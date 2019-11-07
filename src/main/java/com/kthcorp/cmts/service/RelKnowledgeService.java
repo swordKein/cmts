@@ -50,17 +50,17 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		String strRelKnowledgeType = relKnowledge.getRelKnowledgeType();
 		int intResult = 0;
 		
-		if(strRelKnowledgeType.equals("cook")) {
+		if(strRelKnowledgeType.toLowerCase().equals("cook")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesCook(relKnowledge);
-		}else if(strRelKnowledgeType.equals("curr")) {
+		}else if(strRelKnowledgeType.toLowerCase().equals("curr")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesCurr(relKnowledge);
-		}else if(strRelKnowledgeType.equals("docu")) {
+		}else if(strRelKnowledgeType.toLowerCase().equals("docu")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesDocu(relKnowledge);
-		}else if(strRelKnowledgeType.equals("heal")) {
+		}else if(strRelKnowledgeType.toLowerCase().equals("heal")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesHeal(relKnowledge);
-		}else if(strRelKnowledgeType.equals("hist")) {
+		}else if(strRelKnowledgeType.toLowerCase().equals("hist")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesHist(relKnowledge);
-		}else if(strRelKnowledgeType.equals("tour")) {
+		}else if(strRelKnowledgeType.toLowerCase().equals("tour")) {
 			intResult = relKnowledgeMapper.delRelKnowledgesTour(relKnowledge);
 		}
 		
@@ -953,6 +953,675 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
 		return strFileName;
+	}
+
+	public String uploadRelknowledgeFile(String readString, String type) {
+		// TODO Auto-generated method stub
+    	Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        
+        
+        //[파일업다운로드]
+        
+        logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
+		String strFileName = "";
+		
+		String resultStr = readString;
+		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4. File");
+		//5. 파일형태로 표출
+		String fileNameContent = "VOD_RT_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
+		int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
+		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
+		strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
+		return strFileName;
+		
+	}
+
+	public int importRelKnowledgesByType(RelKnowledge relKnowledge) {
+		//intResult = relKnowledgeMapper.importRelKnowledgesByType(relKnowledge);
+		
+		String strRelKnowledgeType = relKnowledge.getRelKnowledgeType().toLowerCase();
+		int intResult = 0;
+		
+		if(strRelKnowledgeType.equals("cook")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesCook(relKnowledge);
+		}else if(strRelKnowledgeType.equals("curr")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesCurr(relKnowledge);
+		}else if(strRelKnowledgeType.equals("docu")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesDocu(relKnowledge);
+		}else if(strRelKnowledgeType.equals("heal")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesHeal(relKnowledge);
+		}else if(strRelKnowledgeType.equals("hist")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesHist(relKnowledge);
+		}else if(strRelKnowledgeType.equals("tour")) {
+			intResult = relKnowledgeMapper.importRelKnowledgesTour(relKnowledge);
+		}
+		
+		
+		
+		return intResult;
+	}
+
+	public void makeFileRelKnowledge() {
+		// TODO Auto-generated method stub
+		//from RelKnowledgeService.getRelKnowledgeListDownload
+		// 테스트 완성 후 getRelKnowledgeListDownload 파라미터를 없앨것
+		
+		Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+		String strFileName = "";
+		
+		String[] types = {"cook","curr","docu","heal","hist","tour"};
+		for(String type : types) {
+	        logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
+			
+			List<Map<String, Object>> reqItems = null;
+			String resultStr = "";
+			String lineFeed = System.getProperty("line.separator");
+			String seperator = "\t";
+			
+			RelKnowledge relKnowledge = new RelKnowledge();
+			relKnowledge.setRelKnowledgeType(type);
+			
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 1. Header");
+			//1. 헤더
+			//resultStr = "Type" + seperator + "Keyword" + lineFeed;
+			if(relKnowledge.getRelKnowledgeType().equals("cook")) {
+				resultStr = //38
+						"작업일" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"유형" + seperator + 
+						"강습요리명" + seperator + 
+						"비강습요리명" + seperator + 
+						"요리메인재료" + seperator + 
+						"요리메인재료구분" + seperator + 
+						
+						"요리기타재료" + seperator + 
+						"요리유형" + seperator + 
+						"요리분류" + seperator + 
+						"요리강습자" + seperator + 
+						"요리강습자외출연자" + seperator + 
+						"국내지역도단위" + seperator + 
+						"국내지역소단위" + seperator + 
+						"해외지역국가" + seperator + 
+						"해외지역세계구분" + seperator + 
+						"식당명" + seperator +
+						
+						"국내식당위치도단위" + seperator + 
+						"국내식당위치소단위" + seperator + 
+						"해외식당위치해외지역" + seperator + 
+						"해외식당위치국가" + seperator + 
+						"요리적합계절" + seperator + 
+						"요리적합일" + seperator + 
+						"요리목적" + seperator + 
+						"맛유형" + seperator + 
+						"조리도구" + seperator + 
+						"촬영장소" + seperator + 
+						
+						"요리강습수준" + seperator + 
+						"요리강습비중" + seperator + 
+						"요리관련내용비중" + seperator + 
+						"요리소요시간" + seperator + 
+						"영양성분" + seperator + 
+						"프로그램회당소개요리수" + seperator + 
+						"기타특징" + seperator +
+						"비고" + lineFeed;
+			}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
+				resultStr = //15
+						"작업일" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"주제" + seperator + 
+						"관련인물" + seperator + 
+						"관련사건" + seperator + 
+						"관련제품" + seperator + 
+						"개선방안" + seperator +
+						
+						"유형" + seperator + 
+						"진행자" + seperator + 
+						"출연자" + seperator + 
+						"키워드" + seperator + 
+						"비고" + lineFeed;
+			}else if(relKnowledge.getRelKnowledgeType().equals("docu")) {
+				resultStr = //13
+						"작업일" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"주제" + seperator + 
+						"관련인물" + seperator + 
+						"관련사건" + seperator + 
+						"관련지역" + seperator + 
+						"진행자" + seperator + 
+						
+						"출연자" + seperator + 
+						"키워드" + seperator + 
+						"비고" + lineFeed;
+			}else if(relKnowledge.getRelKnowledgeType().equals("heal")) {
+				resultStr = //33
+						"작업일" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"질병명" + seperator + 
+						"질병발생부위" + seperator + 
+						"증상" + seperator + 
+						"음식외원인" + seperator + 
+						"원인음식" + seperator + 
+						
+						"원인성분" + seperator + 
+						"진단/검사방법" + seperator + 
+						"치료방법유형" + seperator + 
+						"예방방법유형" + seperator + 
+						"약품명/성분" + seperator + 
+						"치료명" + seperator + 
+						"병원명" + seperator + 
+						"의사명" + seperator + 
+						"강연자" + seperator + 
+						"연예인출연자" + seperator + 
+						
+						"전문가출연자" + seperator + 
+						"일반인출연자비중" + seperator + 
+						"진료과목" + seperator + 
+						"건강증진활동유형" + seperator + 
+						"성분명" + seperator + 
+						"건강음식재료명" + seperator + 
+						"건강음식명" + seperator + 
+						"건강증진활동부위" + seperator + 
+						"건강증진활동명" + seperator + 
+						"관련계절" + seperator + 
+						
+						"대상" + seperator + 
+						"키워드" + seperator + 
+						"비고" + lineFeed;
+			}else if(relKnowledge.getRelKnowledgeType().equals("hist")) {
+				resultStr = //17
+						"작업일" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"주제" + seperator + 
+						"배경국가" + seperator + 
+						"당시국가" + seperator + 
+						"시대" + seperator + 
+						"연대" + seperator + 
+						
+						"관련인물" + seperator + 
+						"관련업적" + seperator + 
+						"관련사건" + seperator + 
+						"관련유물/유적" + seperator + 
+						"관련지역" + seperator + 
+						"출연자" + seperator + 
+						"비고" + lineFeed;					
+			}else if(relKnowledge.getRelKnowledgeType().equals("tour")) {
+				resultStr = //35
+						"작업일시" + seperator + 
+						"상태" + seperator + 
+						"프로그램명" + seperator + 
+						"Title" + seperator + 
+						"ASSETID" + seperator + 
+						"유형" + seperator + 
+						"여행테마" + seperator + 
+						"국가명" + seperator + 
+						"도시명" + seperator + 
+						"지역명" + seperator + 
+						
+						"대륙명" + seperator + 
+						"관광지명" + seperator + 
+						"자연비중" + seperator + 
+						"유적지관련국가민족" + seperator + 
+						"관련인물" + seperator + 
+						"축제명" + seperator + 
+						"자연경관유형" + seperator + 
+						"인공경관유형" + seperator + 
+						"여행목적유형" + seperator + 
+						"계절명" + seperator + 
+						
+						"여행자등장비중" + seperator + 
+						"여행자명" + seperator + 
+						"해설자유무" + seperator + 
+						"해설자명" + seperator + 
+						"음식명" + seperator + 
+						"여행체험명" + seperator + 
+						"공연명" + seperator + 
+						"교통수단명" + seperator + 
+						"관광지수" + seperator + 
+						"여행날씨" + seperator + 
+						
+						"배경음악" + seperator + 
+						"여행기간" + seperator + 
+						"여행동반자유형" + seperator + 
+						"기타" + seperator + 
+						"비고" + lineFeed;
+			}else {
+				
+			}
+			
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 2. Body");
+			//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
+			//DicKeywords reqKeyword = new DicKeywords();
+			
+			//type별 동작
+			//List<RelKnowledge> relKnowledgeList = relKnowledgeMapper.getDicKeywordsList(relKnowledge);
+			List<RelKnowledge> relKnowledgeList = null;
+			if(relKnowledge.getRelKnowledgeType().equals("cook")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListCook(relKnowledge);
+			}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListCurr(relKnowledge);
+			}else if(relKnowledge.getRelKnowledgeType().equals("docu")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListDocu(relKnowledge);
+			}else if(relKnowledge.getRelKnowledgeType().equals("heal")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListHeal(relKnowledge);
+			}else if(relKnowledge.getRelKnowledgeType().equals("hist")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListHist(relKnowledge);
+			}else if(relKnowledge.getRelKnowledgeType().equals("tour")) {
+				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListTour(relKnowledge);
+			}else {
+				
+			}
+			
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 3. toString");
+			//4. 문자열화
+			for(RelKnowledge item : relKnowledgeList) {
+				//String strKeyword = item.getKeyword();
+				//resultStr += item.getType() + seperator + strKeyword + lineFeed;
+				if(relKnowledge.getRelKnowledgeType().equals("cook")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strTitle = item.getTitle();
+					String strPart = item.getPart();
+					String strAssetid = item.getAssetid();
+					String strType = item.getType();
+					String strCook_title_a = item.getCook_title_a();
+					String strCook_title_b = item.getCook_title_b();
+					String strCook_parts = item.getCook_parts();
+					String strCook_parts_main = item.getCook_parts_main();
+					String strCook_parts_sub = item.getCook_parts_sub();
+					String strCook_type_a = item.getCook_type_a();
+					String strCook_type_b = item.getCook_type_b();
+					String strCook_chef_a = item.getCook_chef_a();
+					String strCook_chef_b = item.getCook_chef_b();
+					String strCook_kor_area_a = item.getCook_kor_area_a();
+					String strCook_kor_area_b = item.getCook_kor_area_b();
+					String strCook_oth_area_a = item.getCook_oth_area_a();
+					String strCook_oth_area_b = item.getCook_oth_area_b();
+					String strCook_place_name = item.getCook_place_name();
+					String strCook_place_kor_area_a = item.getCook_place_kor_area_a();
+					String strCook_place_kor_area_b = item.getCook_place_kor_area_b();
+					String strCook_place_oth_area_a = item.getCook_place_oth_area_a();
+					String strCook_place_oth_area_b = item.getCook_place_oth_area_b();
+					String strCook_good_season = item.getCook_good_season();
+					String strCook_good_day = item.getCook_good_day();
+					String strCook_purpose = item.getCook_purpose();
+					String strCook_flavor = item.getCook_flavor();
+					String strCook_cooker = item.getCook_cooker();
+					String strCook_shoot_place = item.getCook_shoot_place();
+					String strCook_level_a = item.getCook_level_a();
+					String strCook_level_b = item.getCook_level_b();
+					String strCook_level_c = item.getCook_level_c();
+					String strCook_time = item.getCook_time();
+					String strCook_nutrient = item.getCook_nutrient();
+					String strCook_ea = item.getCook_ea();
+					String strCook_etc_a = item.getCook_etc_a();
+					String strCook_etc_b = item.getCook_etc_b();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strTitle + seperator +
+							strPart + seperator +
+							strAssetid + seperator +
+							strType + seperator +
+							strCook_title_a + seperator +
+							strCook_title_b + seperator +
+							strCook_parts + seperator +
+							strCook_parts_main + seperator +
+							strCook_parts_sub + seperator +
+							strCook_type_a + seperator +
+							strCook_type_b + seperator +
+							strCook_chef_a + seperator +
+							strCook_chef_b + seperator +
+							strCook_kor_area_a + seperator +
+							strCook_kor_area_b + seperator +
+							strCook_oth_area_a + seperator +
+							strCook_oth_area_b + seperator +
+							strCook_place_name + seperator +
+							strCook_place_kor_area_a + seperator +
+							strCook_place_kor_area_b + seperator +
+							strCook_place_oth_area_a + seperator +
+							strCook_place_oth_area_b + seperator +
+							strCook_good_season + seperator +
+							strCook_good_day + seperator +
+							strCook_purpose + seperator +
+							strCook_flavor + seperator +
+							strCook_cooker + seperator +
+							strCook_shoot_place + seperator +
+							strCook_level_a + seperator +
+							strCook_level_b + seperator +
+							strCook_level_c + seperator +
+							strCook_time + seperator +
+							strCook_nutrient + seperator +
+							strCook_ea + seperator +
+							strCook_etc_a + seperator +
+							strCook_etc_b).replace("\r", "").replace("\"", "") + lineFeed;
+				}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strTitle = item.getTitle();
+					String strPart = item.getPart();
+					String strAssetid = item.getAssetid();
+					String strCurr_subject = item.getCurr_subject();
+					String strCurr_person = item.getCurr_person();
+					String strCurr_incident = item.getCurr_incident();
+					String strCurr_product = item.getCurr_product();
+					String strCurr_process = item.getCurr_process();
+					String strCurr_type = item.getCurr_type();
+					String strCurr_mc = item.getCurr_mc();
+					String strCurr_actor = item.getCurr_actor();
+					String strCurr_keyword = item.getCurr_keyword();
+					String strCur_etc = item.getCur_etc();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strTitle + seperator +
+							strPart + seperator +
+							strAssetid + seperator +
+							strCurr_subject + seperator +
+							strCurr_person + seperator +
+							strCurr_incident + seperator +
+							strCurr_product + seperator +
+							strCurr_process + seperator +
+							strCurr_type + seperator +
+							strCurr_mc + seperator +
+							strCurr_actor + seperator +
+							strCurr_keyword + seperator +
+							strCur_etc).replace("\r", "").replace("\"", "") + lineFeed;
+				}else if(relKnowledge.getRelKnowledgeType().equals("docu")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strTitle = item.getTitle();
+					String strPart = item.getPart();
+					String strAssetid = item.getAssetid();
+					String strDocu_subject = item.getDocu_subject();
+					String strDocu_person = item.getDocu_person();
+					String strDocu_incident = item.getDocu_incident();
+					String strDocu_area = item.getDocu_area();
+					String strDocu_mc = item.getDocu_mc();
+					String strDocu_actor = item.getDocu_actor();
+					String strDocu_keyword = item.getDocu_keyword();
+					String strDocu_etc = item.getDocu_etc();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strTitle + seperator +
+							strPart + seperator +
+							strAssetid + seperator +
+							strDocu_subject + seperator +
+							strDocu_person + seperator +
+							strDocu_incident + seperator +
+							strDocu_area + seperator +
+							strDocu_mc + seperator +
+							strDocu_actor + seperator +
+							strDocu_keyword + seperator +
+							strDocu_etc).replace("\r", "").replace("\"", "") + lineFeed;
+				}else if(relKnowledge.getRelKnowledgeType().equals("heal")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strTitle = item.getTitle();
+					String strPart = item.getPart();
+					String strAssetid = item.getAssetid();
+					String strHeal_subject = item.getHeal_subject();
+					String strHeal_part = item.getHeal_part();
+					String strHeal_symtoms = item.getHeal_symtoms();
+					String strHeal_cause_a = item.getHeal_cause_a();
+					String strHeal_cause_b = item.getHeal_cause_b();
+					String strHeal_cause_c = item.getHeal_cause_c();
+					String strHeal_diagnose = item.getHeal_diagnose();
+					String strHeal_treat_type = item.getHeal_treat_type();
+					String strHeal_prevention = item.getHeal_prevention();
+					String strHeal_drug = item.getHeal_drug();
+					String strHeal_treat_name = item.getHeal_treat_name();
+					String strHeal_hospital = item.getHeal_hospital();
+					String strHeal_doctor = item.getHeal_doctor();
+					String strHeal_talker = item.getHeal_talker();
+					String strHeal_actor = item.getHeal_actor();
+					String strHeal_expert = item.getHeal_expert();
+					String strHeal_public = item.getHeal_public();
+					String strHeal_course = item.getHeal_course();
+					String strHeal_activity = item.getHeal_activity();
+					String strHeal_ingredient = item.getHeal_ingredient();
+					String strHeal_food_a = item.getHeal_food_a();
+					String strHeal_food_b = item.getHeal_food_b();
+					String strHeal_activity_part = item.getHeal_activity_part();
+					String strHeal_activity_name = item.getHeal_activity_name();
+					String strHeal_season = item.getHeal_season();
+					String strHeal_target = item.getHeal_target();
+					String strHeal_keyword = item.getHeal_keyword();
+					String strHeal_etc = item.getHeal_etc();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strTitle + seperator +
+							strPart + seperator +
+							strAssetid + seperator +
+							strHeal_subject + seperator +
+							strHeal_part + seperator +
+							strHeal_symtoms + seperator +
+							strHeal_cause_a + seperator +
+							strHeal_cause_b + seperator +
+							strHeal_cause_c + seperator +
+							strHeal_diagnose + seperator +
+							strHeal_treat_type + seperator +
+							strHeal_prevention + seperator +
+							strHeal_drug + seperator +
+							strHeal_treat_name + seperator +
+							strHeal_hospital + seperator +
+							strHeal_doctor + seperator +
+							strHeal_talker + seperator +
+							strHeal_actor + seperator +
+							strHeal_expert + seperator +
+							strHeal_public + seperator +
+							strHeal_course + seperator +
+							strHeal_activity + seperator +
+							strHeal_ingredient + seperator +
+							strHeal_food_a + seperator +
+							strHeal_food_b + seperator +
+							strHeal_activity_part + seperator +
+							strHeal_activity_name + seperator +
+							strHeal_season + seperator +
+							strHeal_target + seperator +
+							strHeal_keyword + seperator +
+							strHeal_etc).replace("\r", "").replace("\"", "") + lineFeed;
+				}else if(relKnowledge.getRelKnowledgeType().equals("hist")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strProgram = item.getProgram();
+					String strTitle = item.getTitle();
+					String strAssetid = item.getAssetid();
+					String strHist_subject = item.getHist_subject();
+					String strHist_area_a = item.getHist_area_a();
+					String strHist_area_b = item.getHist_area_b();
+					String strHist_year_a = item.getHist_year_a();
+					String strHist_year_b = item.getHist_year_b();
+					String strHist_person = item.getHist_person();
+					String strHist_feat = item.getHist_feat();
+					String strHist_incident = item.getHist_incident();
+					String strHist_thing = item.getHist_thing();
+					String strHist_area_c = item.getHist_area_c();
+					String strHist_actor = item.getHist_actor();
+					String strHist_etc = item.getHist_etc();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strProgram + seperator +
+							strTitle + seperator +
+							strAssetid + seperator +
+							strHist_subject + seperator +
+							strHist_area_a + seperator +
+							strHist_area_b + seperator +
+							strHist_year_a + seperator +
+							strHist_year_b + seperator +
+							strHist_person + seperator +
+							strHist_feat + seperator +
+							strHist_incident + seperator +
+							strHist_thing + seperator +
+							strHist_area_c + seperator +
+							strHist_actor + seperator +
+							strHist_etc).replace("\r", "").replace("\"", "") + lineFeed;
+				}else if(relKnowledge.getRelKnowledgeType().equals("tour")) {
+					String strRegweek = item.getRegweek();
+					String strStat = item.getStat();
+					String strTitle = item.getTitle();
+					String strPart = item.getPart();
+					String strAssetid = item.getAssetid();
+					String strType = item.getType();
+					String strTour_theme = item.getTour_theme();
+					String strTour_area_a = item.getTour_area_a();
+					String strTour_area_b = item.getTour_area_b();
+					String strTour_area_c = item.getTour_area_c();
+					String strTour_area_d = item.getTour_area_d();
+					String strTour_area_e = item.getTour_area_e();
+					String strTour_natural = item.getTour_natural();
+					String strTour_nation = item.getTour_nation();
+					String strTour_person = item.getTour_person();
+					String strTour_festival = item.getTour_festival();
+					String strTour_type_a = item.getTour_type_a();
+					String strTour_type_b = item.getTour_type_b();
+					String strTour_type_c = item.getTour_type_c();
+					String strTour_season = item.getTour_season();
+					String strTour_human = item.getTour_human();
+					String strTour_tourist = item.getTour_tourist();
+					String strTour_mc_yn = item.getTour_mc_yn();
+					String strTour_mc = item.getTour_mc();
+					String strTour_food = item.getTour_food();
+					String strTour_type_d = item.getTour_type_d();
+					String strTour_festival_name = item.getTour_festival_name();
+					String strTour_trans = item.getTour_trans();
+					String strTour_peaple = item.getTour_peaple();
+					String strTour_weather = item.getTour_weather();
+					String strTour_music = item.getTour_music();
+					String strTour_period = item.getTour_period();
+					String strTour_companion = item.getTour_companion();
+					String strTour_etc_a = item.getTour_etc_a();
+					String strTour_etc_b = item.getTour_etc_b();
+					
+					resultStr += 
+							(strRegweek + seperator +
+							strStat + seperator +
+							strTitle + seperator +
+							strPart + seperator +
+							strAssetid + seperator +
+							strType + seperator +
+							strTour_theme + seperator +
+							strTour_area_a + seperator +
+							strTour_area_b + seperator +
+							strTour_area_c + seperator +
+							strTour_area_d + seperator +
+							strTour_area_e + seperator +
+							strTour_natural + seperator +
+							strTour_nation + seperator +
+							strTour_person + seperator +
+							strTour_festival + seperator +
+							strTour_type_a + seperator +
+							strTour_type_b + seperator +
+							strTour_type_c + seperator +
+							strTour_season + seperator +
+							strTour_human + seperator +
+							strTour_tourist + seperator +
+							strTour_mc_yn + seperator +
+							strTour_mc + seperator +
+							strTour_food + seperator +
+							strTour_type_d + seperator +
+							strTour_festival_name + seperator +
+							strTour_trans + seperator +
+							strTour_peaple + seperator +
+							strTour_weather + seperator +
+							strTour_music + seperator +
+							strTour_period + seperator +
+							strTour_companion + seperator +
+							strTour_etc_a + seperator +
+							strTour_etc_b).replace("\r", "").replace("\"", "") + lineFeed;
+				}else {
+					
+				}
+			}
+			
+			
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4. File");
+			//5. 파일형태로 표출
+			//String fileNameContent = "VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv";
+			String fileNameContent = "VOD_RT_"+type.toUpperCase()+".csv";
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
+			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+			
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
+			String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
+			strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
+			//return strFileName;
+			
+			System.out.println("♨♨♨♨    strFileName = " + strFileName);
+		}
+	}
+
+	public void pushCsvToRelKnowledge() {
+    	Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+		String[] types = {"COOK","CURR","DOCU","HEAL","HIST","TOUR"};
+		String strFilePath = "";
+		
+		for(String type : types) {
+			//test
+			//strFilePath = UPLOAD_DIR + "testRelKnowledge" + type + ".csv";			
+			
+			strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "VOD_RT_" + type + ".csv";
+			File file = new File(strFilePath);
+			
+			if(file.exists()) {
+				RelKnowledge relKnowledge = new RelKnowledge();
+				relKnowledge.setRelKnowledgeType(type);	//type라는 이름의 컬럼이 있으므로
+				relKnowledge.setRelKnowledgeFilePath(strFilePath);
+				
+		    	//업로드하는 카테고리 데이터 모두 삭제
+		    	//ApoController.delDicKeywordsAllByType - DicService.delDicKeywordsAllByType - dicKeywordsMapper.delDicKeywordsAllByType(dicKeywords)
+				int rtins1 = this.delRelKnowledgesByType(relKnowledge);
+				
+				//csv 파일을 임포트
+				int rtins2 = this.importRelKnowledgesByType(relKnowledge);
+				
+				//csv 파일을 이름변경
+				File fileNew = new File(strFilePath + "_" + format.format(new Date()));
+				file.renameTo(fileNew);
+			}
+		
+			
+		}
 	}
 
 

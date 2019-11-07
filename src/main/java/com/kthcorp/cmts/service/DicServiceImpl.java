@@ -120,4 +120,14 @@ public interface DicServiceImpl {
     
     //해당 카테고리 키워드사전 통쨰로 삭제(추가하기전)
     int delDicKeywordsAllByType(DicKeywords dicKeywords);
+    
+    //2019.11.06
+    String uploadDicFile(String readString, String type);
+    void makeFileDickeywords();
+    void makeFileNotuse();
+    void makeFileChange();
+    void pushCsvToDicKeywords();
+    void pushCsvToDicNotuseKeywords();
+    void pushCsvToDicChangeKeywords();
+    
 }

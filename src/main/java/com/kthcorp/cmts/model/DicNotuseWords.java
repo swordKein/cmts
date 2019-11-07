@@ -20,6 +20,7 @@ public class DicNotuseWords extends Paging {
     private Timestamp regdate;
     private String regid;
     private String orderby;	//권재일 추가 07.31 5-1
+    private String fileName;	//권재일 추가 11.06
 
     public String getOldword() {
         return oldword;
@@ -75,5 +76,13 @@ public class DicNotuseWords extends Paging {
     
     public void setOrderby(String orderby) {
 		this.orderby = orderby;
+	}
+    
+    public String getFileName() {
+		return fileName;
+	}
+    
+    public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

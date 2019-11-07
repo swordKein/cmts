@@ -30,4 +30,12 @@ public interface RelKnowledgeMapper {
 	List<RelKnowledge> getRelKnowledgeListHeal(RelKnowledge relKnowledge);
 	List<RelKnowledge> getRelKnowledgeListHist(RelKnowledge relKnowledge);
 	List<RelKnowledge> getRelKnowledgeListTour(RelKnowledge relKnowledge);
+	
+	//int importRelKnowledgesByType(RelKnowledge relKnowledge);
+	int importRelKnowledgesCook(RelKnowledge relKnowledge);
+	int importRelKnowledgesCurr(RelKnowledge relKnowledge);
+	int importRelKnowledgesDocu(RelKnowledge relKnowledge);
+	int importRelKnowledgesHeal(RelKnowledge relKnowledge);
+	int importRelKnowledgesHist(RelKnowledge relKnowledge);
+	int importRelKnowledgesTour(RelKnowledge relKnowledge);
 }

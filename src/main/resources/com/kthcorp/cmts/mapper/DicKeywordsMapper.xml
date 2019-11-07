@@ -7,7 +7,7 @@
     <select id="getDicKeywordsList" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsList */
         select
-          idx, type, keyword, ratio, regdate, regid
+          idx, type, keyword, ratio, regdate, regid, keyword2
         from dic_keywords
         where type = #{type}
         <if test="orderby!=null">
@@ -261,4 +261,24 @@
         order by
         	meta
     </select>
+    
+    <insert id="importDicKeywordsByType" parameterType="com.kthcorp.cmts.model.DicKeywords">
+		LOAD DATA LOCAL INFILE #{filePath}
+		ignore
+		INTO TABLE `metatagdb`.`dic_keywords`
+		COLUMNS TERMINATED BY '\t'
+		ENCLOSED BY '"'
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3)
+		set
+			type=@col1,
+			keyword=@col2,
+			ratio=0,
+			regdate=now(),
+			regid='sched',	-- ?
+			freq1 = 0,
+			procdate=now(),
+			keyword2=@col3
+    </insert>
 </mapper>

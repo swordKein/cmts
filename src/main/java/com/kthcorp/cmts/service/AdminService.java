@@ -174,36 +174,41 @@ public class AdminService implements AdminServiceImpl {
 
     //CSV 다운로드
     @Override
-	public String getDicKeywordsListDownload(String type) {
+	//public String getDicKeywordsListDownload(String type) {
+   	public String getDicKeywordsListDownload() {
 		String strFileName = "";
 		
-    	List<Map<String, Object>> reqItems = null;
-    	String resultStr = "";
-    	String lineFeed = System.getProperty("line.separator");
-    	String seperator = "\t";
-    	
-    	//1. 헤더
-    	resultStr = "Type" + seperator + "Keyword" + lineFeed;
+		String[] types = {"when","where","what","who","character","emotion"}; 
 		
-    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
-        DicKeywords reqKeyword = new DicKeywords();
-        reqKeyword.setType(type);
-        reqKeyword.setOrderby("old");
-    	List<DicKeywords> dicKeywordList = dicKeywordsMapper.getDicKeywordsList(reqKeyword);
-    	
-		//4. 문자열화
-        for(DicKeywords item : dicKeywordList) {
-        	String strKeyword = item.getKeyword();
-        	resultStr += item.getType() + seperator + strKeyword + lineFeed;
-        }
-    	
-		
-		//5. 파일형태로 표출
-    	String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+"_.csv";
-    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-    	
-    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
-    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+		for(String type : types) {
+	    	List<Map<String, Object>> reqItems = null;
+	    	String resultStr = "";
+	    	String lineFeed = System.getProperty("line.separator");
+	    	String seperator = "\t";
+	    	
+	    	//1. 헤더
+	    	resultStr = "Type" + seperator + "Keyword" + lineFeed;
+			
+	    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
+	        DicKeywords reqKeyword = new DicKeywords();
+	        reqKeyword.setType(type);
+	        reqKeyword.setOrderby("old");
+	    	List<DicKeywords> dicKeywordList = dicKeywordsMapper.getDicKeywordsList(reqKeyword);
+	    	
+			//4. 문자열화
+	        for(DicKeywords item : dicKeywordList) {
+	        	String strKeyword = item.getKeyword();
+	        	resultStr += item.getType() + seperator + strKeyword + lineFeed;
+	        }
+	    	
+			
+			//5. 파일형태로 표출
+	    	String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+"_.csv";
+	    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+	    	
+	    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+	    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+		}
 		return strFileName;
 	}
 

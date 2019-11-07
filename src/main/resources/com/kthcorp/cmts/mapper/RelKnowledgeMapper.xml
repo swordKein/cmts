@@ -559,4 +559,234 @@
 			vod_rt_tour
 	</select>
 	
+	
+	
+	
+	
+	
+	
+	
+	<insert id="importRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_cook`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,	@col2,	@col3,	@col4,	@col5,	@col6,	@col7,	@col8,	@col9,	@col10,	@col11,	@col12,	@col13,	@col14,	@col15,	@col16,	@col17,	@col18,	@col19,	@col20,	@col21,	@col22,	@col23,	@col24,	@col25,	@col26,	@col27,	@col28,	@col29,	@col30,	@col31,	@col32,	@col33,	@col34,	@col35,	@col36,	@col37,	@col38,	@col39,	@col40,	@col41)
+		set
+			regweek=@col1,
+			stat=@col2,
+			title=@col3,
+			part=@col4,
+			assetid=@col5,
+			type=@col6,
+			cook_title_a=@col7,
+			cook_title_b=@col8,
+			cook_parts=@col9,
+			cook_parts_main=@col10,
+			cook_parts_sub=@col11,
+			cook_type_a=@col12,
+			cook_type_b=@col13,
+			cook_chef_a=@col14,
+			cook_chef_b=@col15,
+			cook_kor_area_a=@col16,
+			cook_kor_area_b=@col17,
+			cook_oth_area_a=@col18,
+			cook_oth_area_b=@col19,
+			cook_place_name=@col20,
+			cook_place_kor_area_a=@col21,
+			cook_place_kor_area_b=@col22,
+			cook_place_oth_area_a=@col23,
+			cook_place_oth_area_b=@col24,
+			cook_good_season=@col25,
+			cook_good_day=@col26,
+			cook_purpose=@col27,
+			cook_flavor=@col28,
+			cook_cooker=@col29,
+			cook_shoot_place=@col30,
+			cook_level_a=@col31,
+			cook_level_b=@col32,
+			cook_level_c=@col33,
+			cook_time=@col34,
+			cook_nutrient=@col35,
+			cook_ea=@col36,
+			cook_etc_a=@col37,
+			cook_etc_b=@col38
+	</insert>
+	
+	<insert id="importRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_curr`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@col9,@col10,@col11,@col12,@col13,@col14,@col15)
+		set
+			regweek=@col1,
+			stat=@col2,
+			title=@col3,
+			part=@col4,
+			assetid=@col5,
+			curr_subject=@col6,
+			curr_person=@col7,
+			curr_incident=@col8,
+			curr_product=@col9,
+			curr_process=@col10,
+			curr_type=@col11,
+			curr_mc=@col12,
+			curr_actor=@col13,
+			curr_keyword=@col14,
+			cur_etc=@col15
+	</insert>
+	
+	<insert id="importRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_docu`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@col9,@col10,@col11,@col12,@col13)
+		set
+			regweek=@col1,
+			stat=@col2,
+			title=@col3,
+			part=@col4,
+			assetid=@col5,
+			docu_subject=@col6,
+			docu_person=@col7,
+			docu_incident=@col8,
+			docu_area=@col9,
+			docu_mc=@col10,
+			docu_actor=@col11,
+			docu_keyword=@col12,
+			docu_etc=@col13
+	</insert>
+	
+	<insert id="importRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_heal`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@col9,@col10,@col11,@col12,@col13,@col14,@col15,@col16,@col17,@col18,@col19,@col20,@col21,@col22,@col23,@col24,@col25,@col26,@col27,@col28,@col29,@col30,@col31,@col32,@col33)
+		set
+			regweek=@col1,
+			stat=@col2,
+			title=@col3,
+			part=@col4,
+			assetid=@col5,
+			heal_subject=@col6,
+			heal_part=@col7,
+			heal_symtoms=@col8,
+			heal_cause_a=@col9,
+			heal_cause_b=@col10,
+			heal_cause_c=@col11,
+			heal_diagnose=@col12,
+			heal_treat_type=@col13,
+			heal_prevention=@col14,
+			heal_drug=@col15,
+			heal_treat_name=@col16,
+			heal_hospital=@col17,
+			heal_doctor=@col18,
+			heal_talker=@col19,
+			heal_actor=@col20,
+			heal_expert=@col21,
+			heal_public=@col22,
+			heal_course=@col23,
+			heal_activity=@col24,
+			heal_ingredient=@col25,
+			heal_food_a=@col26,
+			heal_food_b=@col27,
+			heal_activity_part=@col28,
+			heal_activity_name=@col29,
+			heal_season=@col30,
+			heal_target=@col31,
+			heal_keyword=@col32,
+			heal_etc=@col33
+	</insert>
+	
+	<insert id="importRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_hist`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@col9,@col10,@col11,@col12,@col13,@col14,@col15,@col16,@col17)
+		set
+			regweek=@col1,
+			stat=@col2,
+			program=@col3,
+			title=@col4,
+			assetid=@col5,
+			hist_subject=@col6,
+			hist_area_a=@col7,
+			hist_area_b=@col8,
+			hist_year_a=@col9,
+			hist_year_b=@col10,
+			hist_person=@col11,
+			hist_feat=@col12,
+			hist_incident=@col13,
+			hist_thing=@col14,
+			hist_area_c=@col15,
+			hist_actor=@col16,
+			hist_etc=@col17
+	</insert>
+	
+	<insert id="importRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
+		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
+		IGNORE
+		INTO TABLE `metatagdb`.`vod_rt_tour`
+		COLUMNS TERMINATED BY '\t'
+		
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8,@col9,@col10,@col11,@col12,@col13,@col14,@col15,@col16,@col17,@col18,@col19,@col20,@col21,@col22,@col23,@col24,@col25,@col26,@col27,@col28,@col29,@col30,@col31,@col32,@col33,@col34,@col35)
+		set
+			regweek=@col1,
+			stat=@col2,
+			title=@col3,
+			part=@col4,
+			assetid=@col5,
+			type=@col6,
+			tour_theme=@col7,
+			tour_area_a=@col8,
+			tour_area_b=@col9,
+			tour_area_c=@col10,
+			tour_area_d=@col11,
+			tour_area_e=@col12,
+			tour_natural=@col13,
+			tour_nation=@col14,
+			tour_person=@col15,
+			tour_festival=@col16,
+			tour_type_a=@col17,
+			tour_type_b=@col18,
+			tour_type_c=@col19,
+			tour_season=@col20,
+			tour_human=@col21,
+			tour_tourist=@col22,
+			tour_mc_yn=@col23,
+			tour_mc=@col24,
+			tour_food=@col25,
+			tour_type_d=@col26,
+			tour_festival_name=@col27,
+			tour_trans=@col28,
+			tour_peaple=@col29,
+			tour_weather=@col30,
+			tour_music=@col31,
+			tour_period=@col32,
+			tour_companion=@col33,
+			tour_etc_a=@col34,
+			tour_etc_b=@col35
+	</insert>
+	
 </mapper>

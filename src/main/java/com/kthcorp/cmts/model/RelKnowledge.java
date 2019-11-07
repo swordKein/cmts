@@ -25,6 +25,7 @@ public class RelKnowledge extends Paging {
 	private String type;
 	
 	private String relKnowledgeType;
+	private String relKnowledgeFilePath;
 	
 	
 	private String cook_title_a;
@@ -213,6 +214,12 @@ public class RelKnowledge extends Paging {
 	}
 	public void setRelKnowledgeType(String relKnowledgeType) {
 		this.relKnowledgeType = relKnowledgeType;
+	}
+	public String getRelKnowledgeFilePath() {
+		return relKnowledgeFilePath;
+	}
+	public void setRelKnowledgeFilePath(String relKnowledgeFilePath) {
+		this.relKnowledgeFilePath = relKnowledgeFilePath;
 	}
 	public String getCook_title_a() {
 		return cook_title_a;
