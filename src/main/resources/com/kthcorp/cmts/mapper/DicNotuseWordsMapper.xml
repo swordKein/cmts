@@ -90,7 +90,7 @@
 		LOAD DATA LOCAL INFILE #{fileName}
 		ignore
 		INTO TABLE `metatagdb`.`dic_notuse_words`
-		COLUMNS TERMINATED BY '\t'
+		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
 		IGNORE 1 LINES
@@ -100,4 +100,14 @@
 			regdate=now(),
 			regid=''	-- ?
 	</insert>
+
+    <delete id="cleanBlankDicNotuseWords">
+		delete
+		from
+			dic_notuse_words
+		where
+			trim(replace(replace(word,'\r',''),'\n',''))=''
+    </delete>
+     
+
 </mapper>

@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -1793,6 +1794,10 @@ public class ApiController {
 			*/
 			
 			//신버전 : 데이터를 그대로 태우기 - 느림
+			
+			response.setContentType("application/vnd.ms-excel; charset=utf-8");
+			//response.setContentType("application/vnd.ms-excel; charset=euc-kr");
+			
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
 			

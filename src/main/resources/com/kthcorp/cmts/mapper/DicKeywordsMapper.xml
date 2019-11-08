@@ -266,7 +266,7 @@
 		LOAD DATA LOCAL INFILE #{filePath}
 		ignore
 		INTO TABLE `metatagdb`.`dic_keywords`
-		COLUMNS TERMINATED BY '\t'
+		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
 		IGNORE 1 LINES
@@ -281,4 +281,14 @@
 			procdate=now(),
 			keyword2=@col3
     </insert>
+    
+    <delete id="cleanBlankDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
+		delete
+		from
+			dic_keywords
+		where
+			trim(replace(replace(keyword,'\r',''),'\n','')) = ''
+    </delete>
+     
+     
 </mapper>

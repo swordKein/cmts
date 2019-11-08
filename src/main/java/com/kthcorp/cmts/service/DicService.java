@@ -1353,7 +1353,7 @@ public class DicService implements DicServiceImpl {
 	    	List<Map<String, Object>> reqItems = null;
 	    	String resultStr = "";
 	    	String lineFeed = System.getProperty("line.separator");
-	    	String seperator = "\t";
+	    	String seperator = ",";
 	    	
 	    	//1. 헤더
 	    	resultStr = "Type" + seperator + "Keyword" + seperator + "Keyword2" + lineFeed;
@@ -1368,6 +1368,8 @@ public class DicService implements DicServiceImpl {
 	        for(DicKeywords item : dicKeywordList) {
 	        	String strKeyword = item.getKeyword().replace("\r", "").replace("\"", "");
 	        	String strKeyword2 = (item.getKeyword2()==null ? "" : item.getKeyword2().replace("\r", "").replace("\"", ""));
+	        	if(strKeyword.indexOf(",")>-1) strKeyword = "\""+strKeyword+"\"";
+	        	if(strKeyword2.indexOf(",")>-1) strKeyword2 = "\""+strKeyword2+"\"";
 	        	resultStr += item.getType() + seperator + strKeyword + seperator + strKeyword2 + lineFeed;
 	        }
 	    	
@@ -1388,7 +1390,7 @@ public class DicService implements DicServiceImpl {
     	List<Map<String, Object>> reqItems = null;
     	String resultStr = "";
     	String lineFeed = System.getProperty("line.separator");
-    	String seperator = "\t";
+    	String seperator = ",";
     	
     	//1. 헤더
     	//resultStr = "Word" + seperator + "Freq" + lineFeed;
@@ -1403,6 +1405,9 @@ public class DicService implements DicServiceImpl {
         	String strWord = item.getWord().replace("\r", "").replace("\"", "");
         	Double numFreq = item.getFreq();
         	//resultStr += strWord + seperator + numFreq + lineFeed;
+        	
+        	if(strWord.indexOf(",")>-1) strWord = "\""+strWord+"\"";
+        	
         	resultStr += strWord + lineFeed;
         }
     	
@@ -1421,7 +1426,7 @@ public class DicService implements DicServiceImpl {
     	List<Map<String, Object>> reqItems = null;
     	String resultStr = "";
     	String lineFeed = System.getProperty("line.separator");
-    	String seperator = "\t";
+    	String seperator = ",";
     	
     	//1. 헤더
     	//resultStr = "Word" + seperator + "WordTo" + seperator + "Freq" + lineFeed;
@@ -1437,6 +1442,10 @@ public class DicService implements DicServiceImpl {
         	String strWordTo = item.getWordto().replace("\r", "").replace("\"", "");
         	Double numFreq = item.getFreq();
         	//resultStr += strWord + seperator + strWordTo + seperator + numFreq + lineFeed;
+        	
+        	if(strWord.indexOf(",")>-1) strWord = "\""+strWord+"\"";
+        	if(strWordTo.indexOf(",")>-1) strWordTo = "\""+strWordTo+"\"";
+        	
         	resultStr += strWord + seperator + strWordTo + lineFeed;
         }
     	
@@ -1478,6 +1487,9 @@ public class DicService implements DicServiceImpl {
 				//csv 파일을 이름변경
 				File fileNew = new File(strFilePath + "_" + format.format(new Date()));
 				file.renameTo(fileNew);
+				
+				//빈 데이터 정리
+				int rtins3 = dicKeywordsMapper.cleanBlankDicKeywords(dicKeywords);
 			}
 		}
 	}
@@ -1501,6 +1513,9 @@ public class DicService implements DicServiceImpl {
 			//csv 파일을 이름변경
 			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
 			file.renameTo(fileNew);
+			
+			//빈 데이터 정리
+			int rtins3 = dicNotuseWordsMapper.cleanBlankDicNotuseWords();
 		}
 	}
 
@@ -1523,6 +1538,9 @@ public class DicService implements DicServiceImpl {
 			//csv 파일을 이름변경
 			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
 			file.renameTo(fileNew);
+			
+			//빈 데이터 정리
+			int rtins3 = dicChangeWordsMapper.cleanBlankDicChangeWords();
 		}
 	}
 }

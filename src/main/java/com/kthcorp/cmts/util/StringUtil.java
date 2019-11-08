@@ -665,4 +665,9 @@ public class StringUtil {
         }
         return awardList;
     }
+    
+    public static String nvl(String strOriginal, String strIfNull) {
+    	return (strOriginal==null ? strIfNull : strOriginal);
+    }
+    
 }
