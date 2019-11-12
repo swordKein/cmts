@@ -3,6 +3,7 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.ItemsTags;
+import com.kthcorp.cmts.util.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,11 @@ public class ItemsTagsServiceImplTest {
 	@Test
 	public void test_changeMetasArraysByTypeFromInputItems() {
 
-		String req = "[{\"meta\":\"압도적인2\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"mod\"}]";
+		String req = "";
+		req = "[{\"meta\":\"압도적인1\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"del\"},{\"meta\":\"압도적인1\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"add\"}]";
+		//req = "[{\"meta\":\"압도적인1\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"add\"},{\"meta\":\"압도적인1\",\"type\":\"emotion\",\"target_meta\":\"압도적인1\",\"action\":\"del\"}]";
+		req = "[{\"meta\":\"압도적인3\",\"type\":\"emotion\",\"target_meta\":\"압도적인3\",\"action\":\"add\"},{\"meta\":\"압도적인3\",\"type\":\"emotion\",\"target_meta\":\"압도적인4\",\"action\":\"mod\"}]";
+
 
 		int  result = itemsTagsService.changeMetasArraysByTypeFromInputItems(1, req, "", "Y");
 		System.out.println("#Result:"+result);
@@ -148,5 +153,33 @@ public class ItemsTagsServiceImplTest {
 	@Test
 	public void test_getMixedSubgenre2() throws Exception {
 		System.out.println("#RES:"+itemsTagsService.getMixedSubgenre2(13260));
+	}
+
+	@Test
+	public void test_targetMetas() throws Exception {
+		JsonArray destArr = null;
+		JsonArray destArr2 = null;
+
+		String ogarr = "[{\"word\":\"복제인간\",\"type\":\"\",\"ratio\":0.0},{\"word\":\"클론\",\"type\":\"\",\"ratio\":0.0},{\"word\":\"특수요원\",\"type\":\"\",\"ratio\":0.0},{\"word\":\"동료\",\"type\":\"\",\"ratio\":0.0}]";
+		String tgarr = "[{\"meta\":\"블레이드\",\"type\":\"who\",\"target_meta\":\"블레이드\",\"action\":\"del\"},\n" +
+				"\t{\"meta\":\"인간들\",\"type\":\"who\",\"target_meta\":\"인간들\",\"action\":\"del\"},\n" +
+				"\t{\"meta\":\"리플리컨트\",\"type\":\"who\",\"target_meta\":\"리플리컨트\",\"action\":\"del\"},\n" +
+				"\t{\"meta\":\"박사\",\"type\":\"who\",\"target_meta\":\"박사\",\"action\":\"mod\"},\n" +
+				"\t{\"meta\":\"경찰\",\"type\":\"who\",\"target_meta\":\"경찰\",\"action\":\"del\"},\n" +
+				"\t{\"meta\":\"복제인간\",\"type\":\"who\",\"target_meta\":\"복제인간1\",\"action\":\"mod\"},\n" +
+				"\t{\"meta\":\"경찰\",\"type\":\"who\",\"target_meta\":\"경찰\",\"action\":\"add\"}]";
+
+		String ogarr1 = "[{\"word\":\"복제인간1\",\"type\":\"\",\"ratio\":0.0},{\"word\":\"복제인간2\",\"type\":\"\",\"ratio\":0.0}]";
+		String tgarr1 = "[{\"meta\":\"복제인간1\",\"type\":\"who\",\"target_meta\":\"복제인간2\",\"action\":\"mod\"},\n" +
+				"\t{\"meta\":\"복제인간2\",\"type\":\"who\",\"target_meta\":\"복제인간2\",\"action\":\"del\"}]";
+
+
+		JsonArray origMetaArr = JsonUtil.getJsonArray(ogarr1);
+		JsonArray changeMetaArr = JsonUtil.getJsonArray(tgarr1);
+
+		destArr = itemsTagsService.getTargetMetasArray("METASWHO", origMetaArr, changeMetaArr);
+		//destArr2 = itemsTagsService.getRemoveDupTargetMetasArrayOnlyString(destArr);
+		System.out.println("#ELOG.destArr(String): datas::" + destArr.toString());
+
 	}
 }

@@ -589,6 +589,11 @@ public class TestServiceTestImpl {
 	}
 
 	@Test
+	public void test_writeCcubeContentsOutputCSVandMETAS() throws Exception {
+		testService.writeCcubeContentsOutputCSVandMETAS();
+	}
+
+	@Test
 	public void test_writeCcubeSeriesOutputCSV_100() throws Exception {
 		testService.writeCcubeSeriesOutputCSV_100();
 	}

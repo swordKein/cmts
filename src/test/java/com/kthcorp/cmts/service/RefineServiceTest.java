@@ -74,8 +74,8 @@ public class RefineServiceTest {
 	@Test
 	public void test_step04byScid() throws Exception {
 		SchedTrigger req = new SchedTrigger();
-		req.setSc_id(2);
-		req.setParent_sc_id(1);
+		req.setSc_id(81031);
+		req.setParent_sc_id(81032);
 		List<SchedTrigger> res = refineService.step04byScid(req);
 
 		SchedTrigger sched = res.get(0);
