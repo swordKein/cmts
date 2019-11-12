@@ -449,7 +449,7 @@ public class CollectService implements CollectServiceImpl {
                         //System.out.println("#STEP02 process TG:"+target.toString());
 
                         ConfTarget tg = this.step02(target);
-                        //System.out.println("#STEP02 process to TG:"+tg.toString());
+                        System.out.println("#STEP02 process to TG:"+tg.toString());
 
                         tg.setMovietitle(target.getMovietitle());
                         tg.setMoviedirector((target.getMoviedirector() != null) ? target.getMoviedirector() : "");
