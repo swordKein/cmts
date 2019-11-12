@@ -118,6 +118,10 @@ public class StringUtil {
         res = res.replace("\r", "");
         res = res.replace("\\r", "");
         res = res.replace("  "," ");
+        res = res.replace("[","");
+        res = res.replace("]", "");
+        res = res.replace("\"","");
+        res = res.replace("\'","");
         return res;
     }
 
