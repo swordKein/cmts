@@ -658,13 +658,14 @@
             , it.type
             , it.cid
             , iss.regdate
-            from ccube_contents_0430 co
+            from ccube_contents co
             inner join ccube_keys ck on ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
 
             ) a
         order by a.itemidx asc
+        limit 100;
     </select>
 
     <select id="getSeriesOrigItemsAll_100" resultType="map">
@@ -681,12 +682,13 @@
             , it.idx
             , it.type
             , it.cid
-            from ccube_series_0430 co
+            from ccube_series co
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
             ) a
         order by a.itemidx asc
+        limit 100
     </select>
 
 
