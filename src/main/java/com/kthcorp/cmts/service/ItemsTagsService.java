@@ -1318,7 +1318,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                             //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
                         } else {
@@ -1330,10 +1330,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqM.setRegid(serverid);
 
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqM = " + reqM);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
                             System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
-                            System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
+                            //System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
                         }
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);
@@ -1351,10 +1351,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setMeta(destMeta);	//통째로 META 컬럼에 저장
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
                         } else {
                             // AWARD�쓽 寃쎌슦 items_metas�뿉 湲곗〈硫뷀�瑜� �쑀吏��븳�떎 18.05.15
                             ItemsMetas reqM = new ItemsMetas();
@@ -1362,12 +1362,12 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqM.setMtype("award");
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : reqM = " + reqM);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
 
-                            System.out.println("#insItemsMetas for AWARD2:"+reqM.toString());
+                            //System.out.println("#insItemsMetas for AWARD2:"+reqM.toString());
                         }
                     }
                 }
@@ -1705,7 +1705,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         if (origArray != null) {
             try {
-                origStrArr = JsonUtil.convertJsonArrayToList(origArray);
+                origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
                 resultArr = new JsonArray();
 
                 for (String word1 : origStrArr) {
@@ -1809,48 +1809,68 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         try {
             if (jObj != null && origArray != null) {
                 //String asWord = "";
-                String toWord = "";
+                String fromWord = jObj.get("meta").getAsString().trim();
+                String toWord = jObj.get("target_meta").getAsString().trim();
 
                 resultArr = new JsonArray();
                 switch (toAction) {
                     case "add" :
-                        toWord = jObj.get("target_meta").getAsString().trim();
+                        boolean isExist = false;
+                        for (JsonElement je : origArray) {
+                            JsonObject jo = (JsonObject) je;
+                            String word = jo.get("word").getAsString();
+                            word = word.trim();
+                            String toword = jObj.get("target_meta").getAsString();
+                            toword = toword.trim();
+                            //System.out.println("Action:"+toAction+"/word:"+word);
+                            if (word.equals(toword)) {
+                                isExist = true;
+                            }
+                            resultArr.add(jo);
+                        }
+                        if (!isExist) {
+                            JsonObject jo = new JsonObject();
+                            jo.addProperty("word", toWord);
+                            jo.addProperty("ratio",0.0);
+                            resultArr.add(jo);
+                        }
 
-                        List<String> tmpArr = JsonUtil.convertJsonArrayToList(origArray);
-
-                        tmpArr.add(toWord);
-
-                        resultArr = JsonUtil.convertListToJsonArray(tmpArr);
                         break;
 
                     case "mod":
-                        String fromWord = jObj.get("meta").getAsString().trim();
-                        toWord = jObj.get("target_meta").getAsString().trim();
+                        System.out.print("Orig:"+origArray.toString());
+                        for (JsonElement je : origArray) {
+                            JsonObject jo = (JsonObject) je;
+                            String word = jo.get("word").getAsString();
+                            word = word.trim();
 
-                        List<String> tmpArrU = JsonUtil.convertJsonArrayToList(origArray);
-                        List<String> newArrU = new ArrayList<String>();
-                        for(String je : tmpArrU) {
-                            if(!je.trim().equals(fromWord)) {
-                                newArrU.add(je.trim());
+                            //System.out.println("Action:"+toAction+"/word:"+word+"/toword:"+toWord);
+                            if (word.equals(fromWord)) {
+                                JsonObject jo_new = new JsonObject();
+                                jo_new.addProperty("word", toWord);
+                                jo_new.addProperty("ratio", 0.0);
+
+                                resultArr.add(jo_new);
                             } else {
-                                newArrU.add(toWord);
+                                resultArr.add(jo);
                             }
                         }
 
-                        resultArr = JsonUtil.convertListToJsonArray(newArrU);
                         break;
 
                     case "del":
-                        fromWord = jObj.get("meta").getAsString().trim();
-
-                        List<String> tmpArrD = JsonUtil.convertJsonArrayToList(origArray);
-                        List<String> newArrD = new ArrayList<String>();
-                        for(String je : tmpArrD) {
-                            if(!je.trim().equals(fromWord)) {
-                                newArrD.add(je.trim());
+                        System.out.println("Orig:"+origArray.toString());
+                        for (JsonElement je : origArray) {
+                            JsonObject jo = (JsonObject) je;
+                            String word = jo.get("word").getAsString();
+                            word = word.trim();
+                            String toword = jObj.get("target_meta").getAsString();
+                            toword = toword.trim();
+                            //System.out.println("Action:"+toAction+"/word:"+word);
+                            if (!word.equals(toword)) {
+                                resultArr.add(jo);
                             }
                         }
-                        resultArr = JsonUtil.convertListToJsonArray(newArrD);
 
                         break;
                 }
