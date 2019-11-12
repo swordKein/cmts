@@ -1876,13 +1876,18 @@ public class ApiController {
     	
     	
     	
-    	
+    	/*
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("strResult", strResult);
 		mav.addObject("strMessage", strMessage);
 		mav.addObject("strType", strType);
-		
-		return "";
+		*/
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+		return result_all.toString();
     }
 
 	//권재일 추가 파일 업로드 - 메타사전
@@ -1929,13 +1934,21 @@ public class ApiController {
     	
     	
     	
-    	
+    	/*
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("strResult", strResult);
 		mav.addObject("strMessage", strMessage);
 		mav.addObject("strType", strType);
 		
 		return "";
+		*/
+    	
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+		return result_all.toString();
     }
     
 	//권재일 추가 11.07 테스트 csv 파일 생성 - 다운로드 받을 수 있도록

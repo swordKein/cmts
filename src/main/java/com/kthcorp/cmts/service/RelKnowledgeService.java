@@ -982,7 +982,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
 		strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
-		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.uploadRelknowledgeFile 끝(리턴)\n--------\n\n");
 		return strFileName;
 		
 	}
@@ -1893,10 +1893,10 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
 			strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
-			logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
+			logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.makeFileRelKnowledge 끝(리턴)\n--------\n\n");
 			//return strFileName;
 			
-			System.out.println("♨♨♨♨    strFileName = " + strFileName);
+			System.out.println("strFileName = " + strFileName);
 		}
 	}
 

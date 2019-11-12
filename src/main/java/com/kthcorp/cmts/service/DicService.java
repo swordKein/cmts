@@ -1381,7 +1381,7 @@ public class DicService implements DicServiceImpl {
 	    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
 	    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
 	    	
-	    	System.out.println("♨♨♨♨    strFileName = " + strFileName);
+	    	System.out.println("strFileName = " + strFileName);
 		}
 		//return strFileName;	}
 	}
@@ -1419,7 +1419,7 @@ public class DicService implements DicServiceImpl {
     	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
     	
-    	System.out.println("♨♨♨♨    strFileName = " + strFileName);
+    	System.out.println("strFileName = " + strFileName);
 	}
 
 	public void makeFileChange() {
@@ -1457,7 +1457,7 @@ public class DicService implements DicServiceImpl {
     	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
     	
-    	System.out.println("♨♨♨♨    strFileName = " + strFileName);
+    	System.out.println("strFileName = " + strFileName);
 	}
 
 	public void pushCsvToDicKeywords() {
