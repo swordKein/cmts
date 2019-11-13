@@ -1,9 +1,7 @@
 package com.kthcorp.cmts.util;
 
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -460,5 +458,26 @@ public class MapUtil {
         }
 
         return reqMap;
+    }
+
+    public static JsonArray convertListMapToJsonArray(List<Map<String, Object>> list)
+    {
+        JsonArray json_arr=new JsonArray();
+        for (Map<String, Object> map : list) {
+            JsonObject json_obj=new JsonObject();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                String valueStr = StringUtil.removeAllTags3(value.toString());
+                try {
+                    json_obj.addProperty(key,valueStr);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            json_arr.add(json_obj);
+        }
+        return json_arr;
     }
 }

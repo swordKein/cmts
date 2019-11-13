@@ -1,9 +1,6 @@
 package com.kthcorp.cmts.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.service.crawl.DaumMovieService;
@@ -72,7 +69,8 @@ public class TestService implements TestServiceImpl {
     private SftpService sftpService;
     @Autowired
     private DaumMovieService daumMovieService;
-
+    @Autowired
+    private RelKnowledgeService relKnowledgeService;
 
 
     @Value("${spring.static.resource.location}")
@@ -8995,5 +8993,63 @@ public class TestService implements TestServiceImpl {
 			e.printStackTrace();
 		}
 	}
-	
+
+
+    @Override
+    public int writeCcubeOutputDayToJsonByRelKnowleadge() {
+        int rt = 0;
+        try {
+            Map<String,Object> vodMaps = relKnowledgeService.getJsonArrayFromRelKnowledge();
+
+            List<String> codes = new ArrayList();
+            codes.add("ASSOC_FOOD");
+            codes.add("ASSOC_CURR");
+            codes.add("ASSOC_DOCU");
+            codes.add("ASSOC_HEAL");
+            codes.add("ASSOC_HIST");
+            codes.add("ASSOC_TOUR");
+
+            Gson gson = new GsonBuilder().create();
+
+            List<Map<String,Object>> subList = null;
+            JsonObject resultObj = null;
+            for(String code : codes) {
+                subList = (List<Map<String, Object>>) vodMaps.get(code);
+                logger.info("#SCHEDULE process writeCcubeOutputDayToJsonByRelKnowleadge:Copy ccube_output to jsonObj:" + subList.toString());
+
+                resultObj = new JsonObject();
+                int cnt = 0;
+
+                if (subList != null && subList.size() > 0) {
+
+                    JsonArray subArr = MapUtil.convertListMapToJsonArray(subList);
+                    cnt = subList.size();
+                    resultObj.addProperty("TOTAL_COUNT", cnt);
+                    resultObj.add("CONTENTS", subArr);
+                } else {
+                    resultObj.addProperty("TOTAL_COUNT", 0);
+                    resultObj.add("CONTENTS", new JsonArray());
+                }
+
+                logger.info("#SCHEDULE process writeCcubeOutputDayToJsonByRelKnowleadge: " + code + " 's size : " + cnt);
+
+                String fileNameContent = code;
+                fileNameContent += "_" + DateUtils.getLocalDate("yyyyMMddHH") + ".json";
+
+                int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+                logger.info("#SCHEDULE writeCcubeOutputDayToJsonByRelKnowleadge file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
+                if (rtFileC > 0) {
+                    /* 연동 규격 확정 후 경로 지정하여 주석 제거 */
+                    //int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+                }
+
+                rt = 1;
+             }
+        } catch (Exception e) {
+                rt = -3;
+                logger.error("#ERROR:" + e);
+                e.printStackTrace();
+        }
+        return rt;
+    }
 }

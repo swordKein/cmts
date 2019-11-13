@@ -1,6 +1,8 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonObject;
 import com.kthcorp.cmts.mapper.ItemsMapper;
+import com.kthcorp.cmts.mapper.RelKnowledgeMapper;
 import com.kthcorp.cmts.mapper.TestMapper;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.FileUtils;
@@ -37,6 +39,8 @@ public class TestServiceTestImpl {
 	private TestMapper testMapper;
 	@Autowired
 	private DicService dicService;
+	@Autowired
+	private RelKnowledgeService relKnowledgeService;
 
 	@Test
 	public void test_insMovieCine21List() throws Exception {
@@ -830,6 +834,16 @@ public class TestServiceTestImpl {
 		
 		System.out.println("#removeTagsFromMetasByCSV_20190823 END#");
 	}
-	
-	
+
+	@Test
+	public void test_getVods() {
+		Map<String, Object> res = relKnowledgeService.getJsonArrayFromRelKnowledge();
+		System.out.println("#RES:"+res.toString());
+	}
+	@Test
+	public void writeCcubeOutputDayToJsonByRelKnowleadge() {
+		int res = testService.writeCcubeOutputDayToJsonByRelKnowleadge();
+		System.out.println("#RES:"+res);
+	}
+
 }

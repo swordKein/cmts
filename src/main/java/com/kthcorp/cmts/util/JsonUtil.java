@@ -65,7 +65,9 @@ public class JsonUtil {
 				String key = entry.getKey();
 				Object value = entry.getValue();
 				try {
-					json_obj.addProperty(key, value.toString());
+					String objStr = value.toString();
+					objStr = StringUtil.removeAllTags3(objStr);
+					json_obj.addProperty(key, objStr);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
