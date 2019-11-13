@@ -87,4 +87,34 @@
         </if>
     </select>
 
+	<delete id="delDicChangeWords">
+		DELETE
+		FROM
+			dic_change_words
+	</delete>
+	
+	<insert id="importDicChangeWords" parameterType="com.kthcorp.cmts.model.DicChangeWords">
+		LOAD DATA LOCAL INFILE #{fileName}
+		ignore
+		INTO TABLE `metatagdb`.`dic_change_words`
+		COLUMNS TERMINATED BY ','
+		ENCLOSED BY '"'
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1,@col2)
+		set
+			word=@col1,
+			wordto=@col2,
+			regdate=now(),
+			regid=''	-- ?
+	</insert>
+	
+	<delete id="cleanBlankDicChangeWords">
+		delete
+		from
+			dic_change_words
+		where
+			trim(replace(replace(word,'\r',''),'\n',''))='' or trim(replace(replace(wordto,'\r',''),'\n',''))=''
+    </delete>
+	
 </mapper>

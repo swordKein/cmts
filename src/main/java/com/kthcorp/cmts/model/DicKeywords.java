@@ -30,6 +30,8 @@ public class DicKeywords extends Paging {
     private Integer cnt;
     
     private String orderby;	//권재일 추가 07.31 5-1
+    private String keyword2;	//권재일 추가 11.06
+    private String filePath;	//권재일 추가 11.06 (파일저장)
 
     public Integer getCnt() {
         return cnt;
@@ -134,4 +136,21 @@ public class DicKeywords extends Paging {
     public void setOrderby(String orderby) {
 		this.orderby = orderby;
 	}
+    
+    public String getKeyword2() {
+		return keyword2;
+	}
+    
+    public void setKeyword2(String keyword2) {
+		this.keyword2 = keyword2;
+	}
+    
+    public String getFilePath() {
+		return filePath;
+	}
+    
+    public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+    
 }

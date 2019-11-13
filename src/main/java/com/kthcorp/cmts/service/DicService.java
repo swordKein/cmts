@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
+import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.JsonUtil;
 import com.kthcorp.cmts.util.MapUtil;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -48,6 +51,9 @@ public class DicService implements DicServiceImpl {
     @Autowired
     private DicKeywordsMapper dicKeywordsMapper;
 
+    @Value("${spring.static.resource.location}")
+    private String UPLOAD_DIR;
+    
     /** 수집 시 제외 컨텐츠 필터링 문자열 처리 **/
 
     @Override
@@ -574,11 +580,12 @@ public class DicService implements DicServiceImpl {
                         req.setIdx(fw.getIdx());
                         if (req != null && req.getRegid() == null) req.setRegid(serverid);
                         if (req != null && req.getRatio() == null) req.setRatio(0.0);
-                        req.setOldword(req.getKeyword());
-                        req.setKeyword(req.getToword());
+                        req.setOldword(req.getKeyword());	//수정(기존 키워드 dic_keywords에서 삭제)→추가
+                        //req.setKeyword(req.getToword());	//수정(기존 키워드 dic_keywords에서 삭제)→추가
 
                         try {
-                            int rtupt = dicKeywordsMapper.uptDicKeywords(req);
+                            //int rtupt = dicKeywordsMapper.uptDicKeywords(req);	//수정(기존 키워드 dic_keywords에서 삭제)→추가
+                        	int rtupt = dicKeywordsMapper.insDicKeywords(req);
                         } catch (Exception e) {
                             e.printStackTrace();
                             // update 시 중복일 경우 삭제 후 입력
@@ -1305,5 +1312,259 @@ public class DicService implements DicServiceImpl {
 		int intResult = dicKeywordsMapper.delDicKeywordsAllByType(dicKeywords);
 		
 		return intResult;
+	}
+
+	//11.04 추가 파일업로드
+	public String uploadDicFile(String readString, String type) {
+    	Calendar calendar = Calendar.getInstance();			//[파일업다운로드]
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        
+        //[파일업다운로드]
+        
+        logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
+		String strFileName = "";
+		
+		String resultStr = readString;
+		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4. File");
+		//5. 파일형태로 표출
+		String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
+		int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
+//		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.3");
+//		strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " strFileName = " + strFileName);
+		logger.debug("[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 끝(리턴)\n--------\n\n");
+		return strFileName;
+	}
+
+	public void makeFileDickeywords() {
+		//AdminService.getDicKeywordsListDownload
+		String strFileName = "";
+		
+		String[] types = {"when","where","what","who","character","emotion"}; 
+		
+		for(String type : types) {
+	    	List<Map<String, Object>> reqItems = null;
+	    	String resultStr = "";
+	    	String lineFeed = System.getProperty("line.separator");
+	    	String seperator = ",";
+	    	
+	    	//1. 헤더
+	    	resultStr = "Type" + seperator + "Keyword" + seperator + "Keyword2" + lineFeed;
+			
+	    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
+	        DicKeywords reqKeyword = new DicKeywords();
+	        reqKeyword.setType(type);
+	        reqKeyword.setOrderby("old");
+	    	List<DicKeywords> dicKeywordList = dicKeywordsMapper.getDicKeywordsList(reqKeyword);
+	    	
+			//4. 문자열화
+	        for(DicKeywords item : dicKeywordList) {
+	        	String strKeyword = item.getKeyword().replace("\r", "").replace("\"", "");
+	        	String strKeyword2 = (item.getKeyword2()==null ? "" : item.getKeyword2().replace("\r", "").replace("\"", ""));
+	        	if(strKeyword.indexOf(",")>-1) strKeyword = "\""+strKeyword+"\"";
+	        	if(strKeyword2.indexOf(",")>-1) strKeyword2 = "\""+strKeyword2+"\"";
+	        	resultStr += item.getType() + seperator + strKeyword + seperator + strKeyword2 + lineFeed;
+	        }
+	    	
+			
+			//5. 파일형태로 표출
+	    	String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
+	    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+	    	
+	    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+	    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+	    	
+	    	System.out.println("strFileName = " + strFileName);
+		}
+		//return strFileName;	}
+	}
+	
+	public void makeFileNotuse() {
+    	List<Map<String, Object>> reqItems = null;
+    	String resultStr = "";
+    	String lineFeed = System.getProperty("line.separator");
+    	String seperator = ",";
+    	
+    	//1. 헤더
+    	//resultStr = "Word" + seperator + "Freq" + lineFeed;
+    	resultStr = "Word" + lineFeed;
+		
+    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
+        DicKeywords reqKeyword = new DicKeywords();
+    	List<DicNotuseWords> dicNotuseWordList = dicNotuseWordsMapper.getDicNotuseWords();
+    	
+		//4. 문자열화
+        for(DicNotuseWords item : dicNotuseWordList) {
+        	String strWord = item.getWord().replace("\r", "").replace("\"", "");
+        	Double numFreq = item.getFreq();
+        	//resultStr += strWord + seperator + numFreq + lineFeed;
+        	
+        	if(strWord.indexOf(",")>-1) strWord = "\""+strWord+"\"";
+        	
+        	resultStr += strWord + lineFeed;
+        }
+    	
+		
+		//5. 파일형태로 표출
+    	String fileNameContent = "DIC_KEYWORDS_NOTUSE.csv";
+    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+    	
+    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+    	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+    	
+    	System.out.println("strFileName = " + strFileName);
+	}
+
+	public void makeFileChange() {
+    	List<Map<String, Object>> reqItems = null;
+    	String resultStr = "";
+    	String lineFeed = System.getProperty("line.separator");
+    	String seperator = ",";
+    	
+    	//1. 헤더
+    	//resultStr = "Word" + seperator + "WordTo" + seperator + "Freq" + lineFeed;
+    	resultStr = "Word" + seperator + "WordTo" + lineFeed;
+		
+    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
+        DicChangeWords reqKeyword = new DicChangeWords();
+    	List<DicChangeWords> dicChangeWordList = dicChangeWordsMapper.getDicChangeWords();
+    	
+		//4. 문자열화
+        for(DicChangeWords item : dicChangeWordList) {
+        	String strWord = item.getWord().replace("\r", "").replace("\"", "");
+        	String strWordTo = item.getWordto().replace("\r", "").replace("\"", "");
+        	Double numFreq = item.getFreq();
+        	//resultStr += strWord + seperator + strWordTo + seperator + numFreq + lineFeed;
+        	
+        	if(strWord.indexOf(",")>-1) strWord = "\""+strWord+"\"";
+        	if(strWordTo.indexOf(",")>-1) strWordTo = "\""+strWordTo+"\"";
+        	
+        	resultStr += strWord + seperator + strWordTo + lineFeed;
+        }
+    	
+		
+		//5. 파일형태로 표출
+    	String fileNameContent = "DIC_KEYWORDS_CHANGE.csv";
+    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+    	
+    	String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
+    	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
+    	
+    	System.out.println("strFileName = " + strFileName);
+	}
+
+	public void pushCsvToDicKeywords() {
+    	Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION"};
+		String strFilePath = "";
+		
+		for(String type : types) {
+			//test
+			//strFilePath = UPLOAD_DIR + "testRelKnowledge" + type + ".csv";			
+			
+			strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "DIC_KEYWORDS_" + type + ".csv";
+			File file = new File(strFilePath);
+			if(file.exists()) {
+				DicKeywords dicKeywords = new DicKeywords();
+				dicKeywords.setType(type);
+				dicKeywords.setFilePath(strFilePath);
+				
+		    	//업로드하는 카테고리 데이터 모두 삭제
+		    	int rtins1 = dicKeywordsMapper.delDicKeywordsAllByType(dicKeywords);
+						
+				//csv 파일을 임포트
+				int rtins2 = dicKeywordsMapper.importDicKeywordsByType(dicKeywords);
+				
+				//csv 파일을 이름변경
+				File fileNew = new File(strFilePath + "_" + format.format(new Date()));
+				file.renameTo(fileNew);
+				
+				//빈 데이터 정리
+				int rtins3 = dicKeywordsMapper.cleanBlankDicKeywords(dicKeywords);
+			}
+		}
+	}
+
+	public void pushCsvToDicNotuseKeywords() {
+    	Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+		//csv 파일을 임포트
+		String strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "DIC_KEYWORDS_NOTUSE.csv";
+		File file = new File(strFilePath);
+		
+		if(file.exists()) {
+	    	//모두 삭제
+			int rtins1 = dicNotuseWordsMapper.delDicNotuseWords();
+			
+			DicNotuseWords dicNotuseWords = new DicNotuseWords();
+			dicNotuseWords.setFileName(strFilePath);
+			int rtins2 = dicNotuseWordsMapper.importDicNotuseWords(dicNotuseWords);
+			
+			//csv 파일을 이름변경
+			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
+			file.renameTo(fileNew);
+			
+			//빈 데이터 정리
+			int rtins3 = dicNotuseWordsMapper.cleanBlankDicNotuseWords();
+		}
+	}
+
+	public void pushCsvToDicChangeKeywords() {
+    	Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+		//csv 파일을 임포트
+		String strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "DIC_KEYWORDS_CHANGE.csv";
+		File file = new File(strFilePath);
+		
+		if(file.exists()) {
+	    	//모두 삭제
+			int rtins1 = dicChangeWordsMapper.delDicChangeWords();
+			
+			DicChangeWords dicChangeWords = new DicChangeWords();
+			dicChangeWords.setFileName(strFilePath);
+			int rtins2 = dicChangeWordsMapper.importDicChangeWords(dicChangeWords);
+			
+			//csv 파일을 이름변경
+			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
+			file.renameTo(fileNew);
+			
+			//빈 데이터 정리
+			int rtins3 = dicChangeWordsMapper.cleanBlankDicChangeWords();
+		}
+	}
+
+	//권재일 추가 2019.11.12 - 실시간 자동완성
+	//from ApiService - getDicKeywordsByType
+	public JsonObject get10DicKeywordsByType(String type, String keyword) {
+        JsonObject result = new JsonObject();
+        JsonArray list_words = new JsonArray();
+        
+        DicKeywords reqkey = new DicKeywords();
+        reqkey.setPageSize(10);
+        //reqkey.setPageNo(pageno);
+        reqkey.setType(type);
+        reqkey.setKeyword(keyword);
+        //reqkey.setOrderby(orderby);
+
+        List<DicKeywords> resKeywords = dicKeywordsMapper.get10DicKeywordsList(reqkey);
+        if (resKeywords != null) {
+            for (DicKeywords dic : resKeywords) {
+            	list_words.add(dic.getKeyword());
+            }
+        }
+        
+        result.add("LIST_WORDS", list_words);
+        return result;
 	}
 }

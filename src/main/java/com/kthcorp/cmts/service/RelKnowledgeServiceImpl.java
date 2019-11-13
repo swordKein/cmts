@@ -18,4 +18,11 @@ public interface RelKnowledgeServiceImpl {
     int addRelKnowledgesByType(RelKnowledge relKnowledge);
     
     public String getRelKnowledgeListDownload(String type);
+    
+    //2019.11.06
+    String uploadRelknowledgeFile(String readString, String type);
+    int importRelKnowledgesByType(RelKnowledge relKnowledge);
+    
+    void makeFileRelKnowledge();
+    void pushCsvToRelKnowledge();
 }

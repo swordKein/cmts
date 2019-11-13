@@ -18,6 +18,7 @@ import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -75,9 +79,11 @@ public class ApiController {
 	@Autowired
 	private RelKnowledgeService relKnowledgeService;
 
-	//권재일 추가 파일다운로드
+    //권재일 추가 파일다운로드
 	@Autowired
 	ResourceLoader resourceLoader;
+    @Value("${spring.static.resource.location}")
+    private String UPLOAD_DIR;
 	
 	// #1
 	@RequestMapping(value = "/auth/hash", method = RequestMethod.GET)
@@ -756,8 +762,11 @@ public class ApiController {
 			, @RequestParam(value = "duration", required = false, defaultValue = "") String duration
 			, @RequestParam(value = "itemid") String itemid
 			, @RequestParam(value = "sendnow", required = false, defaultValue = "") String sendnow
+			
+			, @RequestParam(value = "userId", required = false, defaultValue = "") String userId	//로그인 중인 사용자정보 저장
 	) {
 		logger.info("#CLOG:API/pop/meta/upt/array input itemid:"+itemid+"/items:" + items + "/duration:" + duration+"/sendnow:"+sendnow);
+		logger.info("loginId = " + userId);
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array");
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array items = " + items);
 		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ApiController /pop/meta/upt/array duration = " + duration);
@@ -777,7 +786,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration, sendnow);
+				int rt = itemsTagsService.changeMetasArraysByTypeFromInputItems(itemIdx, items, duration, sendnow, userId);		//userId : 로그인 중인 사용자정보 저장
 				if(rt > 0) {
 					rtcode = 1;
 					rtmsg = "SUCCESS";
@@ -1704,6 +1713,7 @@ public class ApiController {
 			, HttpServletRequest request
 			, HttpServletResponse response
 			) {
+		/*
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv");
 		
@@ -1712,7 +1722,7 @@ public class ApiController {
         
 		JsonObject result = new JsonObject();
 		
-		System.out.println("#/relknowledge/download/type");	//from /admin/dic/keywords/download
+		logger.info("#/relknowledge/download/type");	//from /admin/dic/keywords/download
 		
 		String rtmsg = "";
 		String strFilePath = "";
@@ -1733,11 +1743,61 @@ public class ApiController {
 		result.addProperty("rtfile", strFilePath);
 		result.addProperty("rtmsg", rtmsg);
 		
+		*/
+		
+		JsonObject result = new JsonObject();
+		
+		String strFilePath = "";
 		FileInputStream fis;
-		//FileOutputStream fos;
+		FileOutputStream fos;
 		OutputStream os;
 		
+		Resource resClasspath;
+		String strResClasspath = "";
+		resClasspath = resourceLoader.getResource("classpath:static/");
+		
+		strFilePath = UPLOAD_DIR + "VOD_RT_" + type.toUpperCase()+".csv";
+		String strFileName = "";
+		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		
 		try {
+			/*
+			//구버전 : 파일경로 띄우기
+			strResClasspath = resClasspath.getURI().getPath();
+			if(strResClasspath==null) {
+				strResClasspath = "/home/daisy/.jenkins/workspace/cmts/target/classes/static/";	//TB
+			}
+			logger.info("strResClasspath =" + strResClasspath);
+			
+			//파일 복사 from strFileName to strResClasspath
+			strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
+			logger.info("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
+			
+			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
+			fis = new FileInputStream(strFilePath);
+			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
+			os = response.getOutputStream();
+			
+			int data = 0;
+			while((data=fis.read())!=-1) {
+				fos.write(data);
+			}
+			
+			fis.close();
+			fos.close();
+			
+			//String strFilePath
+			//다운로드 파일 링크
+			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
+			os.write((strUrl+"/"+strFileName).getBytes());
+			os.close();
+			*/
+			
+			//신버전 : 데이터를 그대로 태우기 - 느림
+			
+			response.setContentType("application/vnd.ms-excel; charset=utf-8");
+			//response.setContentType("application/vnd.ms-excel; charset=euc-kr");
+			
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
 			
@@ -1750,7 +1810,6 @@ public class ApiController {
 			os.close();
 			
 			fis.close();
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1771,7 +1830,245 @@ public class ApiController {
 
 
 		return result_all.toString();
+		//return (strUrl+"/"+strFileName);
 		
 	}
 	
+	//권재일 추가 파일 업로드 - 연관지식 
+	//from web - RelKnowledgeController
+    @RequestMapping(value = "/relknowledgeCsvFileUpload.do")
+    @ResponseBody
+    public String relknowledgeCsvFileUpload(
+    		HttpServletRequest request,
+    		@RequestParam("ex_filename") MultipartFile uploadfile,
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	Calendar calendar = Calendar.getInstance();		//[파일업다운로드]
+        SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");		//[파일업다운로드]
+        SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+        String strResult = "";
+        String strMessage = "";
+        
+        System.out.println("[파일업다운로드]");
+        //파일업로드~
+        //uploadfile.getBytes();
+        
+        //파일명은 ㅇㅇㅇ
+        //복사작업 to 업로드폴더/VOD_RT
+        //파일명 : VOD_RT_COOK.txt
+    	byte[] readByte = null;
+    	String readString = "";
+    	
+    	readByte = uploadfile.getBytes();
+        
+		int byteSize = readByte.length;
+		int viewSize = 0;
+    	System.out.println("#readByte::"+readByte);
+    	System.out.println("#byteSize::"+byteSize);
+
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+
+        
+    	String strFileName = relKnowledgeService.uploadRelknowledgeFile(readString,strType);
+        
+    	
+    	
+    	
+    	/*
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("strResult", strResult);
+		mav.addObject("strMessage", strMessage);
+		mav.addObject("strType", strType);
+		*/
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+		return result_all.toString();
+    }
+
+	//권재일 추가 파일 업로드 - 메타사전
+    @RequestMapping(value = "/dictionaryCsvFileUpload.do")
+    @ResponseBody
+    public String dictionaryCsvFileUpload(
+    		HttpServletRequest request,
+    		@RequestParam("fileCsv") MultipartFile uploadfile,
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	
+    	Calendar calendar = Calendar.getInstance();		//[파일업다운로드]
+        SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");		//[파일업다운로드]
+        SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+        
+        String strResult = "";
+        String strMessage = "";
+        
+        System.out.println("[파일업다운로드]");
+        //파일업로드~
+        //uploadfile.getBytes();
+        
+        //파일명은 ㅇㅇㅇ
+        //복사작업 to 업로드폴더/VOD_RT
+        //파일명 : VOD_RT_COOK.txt
+    	byte[] readByte = null;
+    	String readString = "";
+    	
+    	readByte = uploadfile.getBytes();
+        
+		int byteSize = readByte.length;
+		int viewSize = 0;
+    	System.out.println("#readByte::"+readByte);
+    	System.out.println("#byteSize::"+byteSize);
+
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+
+        
+    	//String strFileName = relKnowledgeService.uploadRelknowledgeFile(readString,strType);
+    	String strFileName = dicService.uploadDicFile(readString,strType);
+    	
+    	
+    	
+    	
+    	
+    	/*
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("strResult", strResult);
+		mav.addObject("strMessage", strMessage);
+		mav.addObject("strType", strType);
+		
+		return "";
+		*/
+    	
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.add("RESULT", result1);
+
+		return result_all.toString();
+    }
+    
+	//권재일 추가 11.07 테스트 csv 파일 생성 - 다운로드 받을 수 있도록
+    @RequestMapping(value = "/makeFileTest.do")
+    public String makeFileTest(HttpServletRequest request) throws Exception
+    {
+    	//from TestServiceTestImpl.makeFileTest
+		logger.info("#makeFileTest START#\n");
+		
+		//메타사전
+		logger.info("#makeFileTest - dicKeywords# start");
+		dicService.makeFileDickeywords();
+		logger.info("#makeFileTest - dicKeywords# end\n");
+		
+		//불용키워드 사전
+		logger.info("#makeFileTest - notuseWord# start");
+		dicService.makeFileNotuse();
+		logger.info("#makeFileTest - notuseWord# end\n");
+		
+		//대체키워드 사전
+		logger.info("#makeFileTest - changeWord# start");
+		dicService.makeFileChange();
+		logger.info("#makeFileTest - changeWord# end\n");
+		
+		//연관지식
+		logger.info("#makeFileTest - relKnowledge# start");
+		relKnowledgeService.makeFileRelKnowledge();
+		logger.info("#makeFileTest - relKnowledge# end\n");
+		
+		logger.info("#makeFileTest END#\n\n");
+    	
+		return "";
+    }
+    
+	//권재일 추가 11.07 테스트 csv 파일 파싱하여 DB에 작업
+    @RequestMapping(value = "/pushCsvToData.do")
+    public String pushCsvToData(HttpServletRequest request) throws Exception
+    {
+		logger.info("#pushCsvToData START#\n");
+		
+		//메타사전
+		logger.info("#pushCsvToData - dicKeywords# start");
+		dicService.pushCsvToDicKeywords();
+		logger.info("#pushCsvToData - dicKeywords# end\n");
+		
+		//불용키워드 사전
+		logger.info("#pushCsvToData - notuseWord# start");
+		dicService.pushCsvToDicNotuseKeywords();
+		logger.info("#pushCsvToData - notuseWord# end\n");
+		
+		//대체키워드 사전
+		logger.info("#pushCsvToData - changeWord# start");
+		dicService.pushCsvToDicChangeKeywords();
+		logger.info("#pushCsvToData - changeWord# end\n");
+		
+		//연관지식
+		logger.info("#pushCsvToData - relKnowledge# start");
+		relKnowledgeService.pushCsvToRelKnowledge();
+		logger.info("#pushCsvToData - relKnowledge# end\n");
+		
+		logger.info("#pushCsvToData END#\n\n");
+    	
+    	return "";
+    }
+    
+	//권재일 추가 2019.11.12 - 실시간 자동완성
+	@RequestMapping(value = "/dic/list10", method = RequestMethod.GET)
+	@ResponseBody
+	public String get__dic_list10(Model model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "type") String type
+			, @RequestParam(value = "pagesize", required = false, defaultValue = "200") String spagesize
+			, @RequestParam(value = "KEYWORD", required = false, defaultValue = "") String keyword
+			, @RequestParam(value = "pageno") String spageno
+			, @RequestParam(value = "orderby", required = false, defaultValue = "new") String orderby
+	) {
+		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/orderby:"+orderby+"/pageSize:"+spagesize+"/pageno:"+spageno);	
+
+		int pageSize = 0;
+		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+        //pageSize = 200;
+
+        type = type.trim().toUpperCase();
+		keyword = keyword.trim();
+
+		int pageNo = 0;
+		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
+
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				//result1 = apiService.getDicKeywordsByType(type, keyword, orderby, pageSize, pageNo);	//권재일 추가 07.31 5-1
+				//result1 = apiService.getDicKeywords10ByType(type, keyword, orderby, pageSize, pageNo);	//권재일 추가 11.12
+				result1 = dicService.get10DicKeywordsByType(type, keyword);
+				if(result1 != null) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Dics data is null!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
+
+		return result_all.toString();
+	}
 }

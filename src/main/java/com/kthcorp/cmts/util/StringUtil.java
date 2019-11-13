@@ -686,6 +686,12 @@ public class StringUtil {
         }
         return awardList;
     }
+    
+    public static String nvl(String strOriginal, String strIfNull) {
+    	return (strOriginal==null ? strIfNull : strOriginal);
+    }
+  
+  
 
     public static boolean compareSetToString(Set<String> reqSet, String reqStr){
         boolean isExists = false;
@@ -745,4 +751,5 @@ public class StringUtil {
 
         return subAwardsMap.get(mainAwards);
     }
+    
 }

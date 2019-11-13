@@ -81,7 +81,7 @@ public interface ItemsTagsServiceImpl {
 
     JsonObject getArraysByTypeFromInputItems(String items);
 
-    int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration, String sendnow);
+    int changeMetasArraysByTypeFromInputItems(int itemid, String items, String duration, String sendnow, String userId);	//userId : 로그인 중인 사용자정보 저장
 
     List<ItemsTags> getYjTagsMetasByItemidx(ItemsTags req);
 

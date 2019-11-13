@@ -53,4 +53,8 @@ public interface DicKeywordsMapper {
     
 	int delDicKeywordsAllByType(DicKeywords dicKeywords);
 	List<DicSubgenre> getAllDicSubgenreGenres();
+	int importDicKeywordsByType(DicKeywords dicKeywords);
+	
+	int cleanBlankDicKeywords(DicKeywords dicKeywords);
+	List<DicKeywords> get10DicKeywordsList(DicKeywords reqkey);
 }

@@ -1115,6 +1115,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 // items �쓽 tagcnt瑜� 留덉�留� tagidx 濡� �닔�젙
                 //int maxTagIdx = itemsTagsMapper.getMaxTagsIdxByItemIdx(reqO);
                 reqIt.setTagcnt(curTagIdx);
+                //reqIt.setRegid(userId);		//userId : 로그인 중인 사용자정보 저장
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
             }
         }
@@ -1201,14 +1202,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     public Integer processMetaObjectByTypes(JsonObject origMetasArraysByType, JsonObject actionItemsArraysByType, JsonArray typesArr
-            , int itemid, int curTagIdx) {
+            , int itemid, int curTagIdx, String userId) {	//userId : 로그인 중인 사용자정보 저장
         int rt = 0;
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  " + DateUtils.getLocalDateTime3() + " ItemsTagsService.processMetaObjectByTypes start");
-        System.out.println(" - origMetasArraysByType = " + origMetasArraysByType.toString());
-        System.out.println(" - actionItemsArraysByType = " + actionItemsArraysByType.toString());
-        System.out.println(" - typesArr = " + typesArr.toString());
-        System.out.println(" - itemid = " + itemid);
-        System.out.println(" - curTagIdx = " + curTagIdx);
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  " + DateUtils.getLocalDateTime3() + " ItemsTagsService.processMetaObjectByTypes start");
+        //System.out.println(" - origMetasArraysByType = " + origMetasArraysByType.toString());
+        //System.out.println(" - actionItemsArraysByType = " + actionItemsArraysByType.toString());
+        //System.out.println(" - typesArr = " + typesArr.toString());
+        //System.out.println(" - itemid = " + itemid);
+        //System.out.println(" - curTagIdx = " + curTagIdx);
+        //System.out.println(" - userId = " + userId);	//userId : 로그인 중인 사용자정보 저장
 
         /* ���엯 蹂� �븸�뀡 �븘�씠�뀥 以� add,mod�뒗 �궗�쟾�뿉 異붽� */
         ArrayList<String> dicTypes = new ArrayList<String>();
@@ -1219,7 +1221,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASEMOTION");
         dicTypes.add("METASCHARACTER");
         
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes metaDic start");
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes metaDic start");
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
             if (actionItemsArraysByType.get(dicType) != null) {
@@ -1255,20 +1257,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
             }
         }
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes metaDic end");
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes metaDic end");
 
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for start");
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for start");
         if (typesArr != null && origMetasArraysByType != null && actionItemsArraysByType != null) {
             System.out.println("#ELOG.origMetasArraysByType:"+origMetasArraysByType.toString());
 
             //for (JsonElement atype1 : typesArr) {
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes setEmptyMetas start");
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes setEmptyMetas start");
             JsonObject origMetasArraysByType2 = setEmptyMetas(origMetasArraysByType, this.getOrigTypes());
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes setEmptyMetas end");
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes setEmptyMetas end");
 
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for start");
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for start");
             for (String atype : this.getOrigTypes()) {
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " start");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " start");
             	//String atype = atype1.getAsString();
                 atype = atype.replace("\"", "");
                 atype = atype.toUpperCase();
@@ -1289,7 +1291,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }
 
                 if (changeMetaArr != null) {
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " - changeMetaArr not null");
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " - changeMetaArr not null");
                 	/* get meta data for saving */
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
@@ -1315,12 +1317,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setTagidx(curTagIdx);
                             reqMeta.setMtype(atype);
                             reqMeta.setMeta(destMeta);
+                            reqMeta.setRegid(userId);	//userId : 로그인 중인 사용자정보 저장
 
                             //System.out.println("#MLOG change insItemsTagsMetas data:"+reqMeta.toString());
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
+
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
+
                             //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqMeta = " + reqMeta);
                             rt = this.insItemsTagsMetas(reqMeta);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " " + " after : rt = " + rt);
                         } else {
                             // AWARD�쓽 寃쎌슦 items_metas�뿉 湲곗〈硫뷀�瑜� �쑀吏��븳�떎 18.05.15
                             ItemsMetas reqM = new ItemsMetas();
@@ -1329,17 +1334,17 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqM.setMeta(destMeta);
                             reqM.setRegid(serverid);
 
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
                             //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas before : reqM = " + reqM);
                             rt = itemsMetasMapper.insItemsMetas(reqM);
-                            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
-                            //System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
+                            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " insItemsTagsMetas after : rt = " + rt);
+                            System.out.println("#insItemsMetas for AWARD1:"+reqM.toString());
                         }
                     } else {
                         System.out.println("#MLOG DestArr null for type:" + atype);
                     }
                 } else {
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " - changeMetaArr null");
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " - changeMetaArr null");
                     if (origMetaArr != null) {
                         destMeta = origMetaArr.toString();
                         /* 湲곗〈 硫뷀��뿉�꽌 異붽� �븸�뀡 �븘�씠�뀥�뱾�씠 �뾾�뒗 寃쎌슦 湲곗〈 硫뷀� 洹몃�濡� �쁽�옱 tagIdx�뿉 �뾽�뜲�씠�듃 */
@@ -1349,6 +1354,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                             reqMeta.setTagidx(curTagIdx);
                             reqMeta.setMtype(atype);	//MTYPE
                             reqMeta.setMeta(destMeta);	//통째로 META 컬럼에 저장
+                            reqMeta.setRegid(userId);	//userId : 로그인 중인 사용자정보 저장
 
                             //System.out.println("#MLOG uptItemsTagsMetas data:"+reqMeta.toString());
                             //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes 메타 반복문 : atype = " + atype + " insItemsTagsMetas before : mtype,meta = " + atype+","+destMeta);
@@ -1371,11 +1377,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         }
                     }
                 }
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " end");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for : atype = " + atype + " end");
             }
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for end");
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for end");
         }
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for end");
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes meta for end");
         return rt;
     }
 
@@ -1410,12 +1416,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     @Override
-    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow) {
-		System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems 시작");
-		System.out.println(" - itemid = " + itemid);
-		System.out.println(" - items = " + items);
-		System.out.println(" - duration = " + duration);
-		System.out.println(" - sendnow = " + sendnow);
+    public int changeMetasArraysByTypeFromInputItems (int itemid, String items, String duration, String sendnow, String userId) {	//userId : 로그인 중인 사용자정보 저장
+		//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems 시작");
+		//System.out.println(" - itemid = " + itemid);
+		//System.out.println(" - items = " + items);
+		//System.out.println(" - duration = " + duration);
+		//System.out.println(" - sendnow = " + sendnow);
+		//System.out.println(" - userId = " + userId);	//userId : 로그인 중인 사용자정보 저장
 		
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
@@ -1441,9 +1448,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             Items reqIt = null;
 
             /* get action TYPE to Arrays */
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - input asfasfd = " + items);
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - input asfasfd = " + items);
             JsonObject actionItemsArraysByType = this.getArraysByTypeFromInputItems(items);
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - output asfasfd = " + actionItemsArraysByType.toString());
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - output asfasfd = " + actionItemsArraysByType.toString());
             System.out.println("#actionItemsArraysByType:"+actionItemsArraysByType.toString());
             JsonArray typesArr = null;
             if (actionItemsArraysByType.get("typesArr") != null)
@@ -1454,54 +1461,54 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             /* 湲곗듅�씤�맂 硫뷀�媛� �뾾�쓣 寃쎌슦 (理쒓렐 tagIdx媛� 誘몄듅�씤�씤 寃쎌슦) 硫뷀��닔�젙 �썑 �긽�깭蹂�寃�, �듅�씤 泥섎━�븳�떎 */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - no gaseungin metas");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - no gaseungin metas");
             	
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx bf");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx bf");
             	JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx af : origMetasArraysByType = " + origMetasArraysByType.toString());
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx af : origMetasArraysByType = " + origMetasArraysByType.toString());
 
                 // AWARD 泥섎━瑜� �쐞�빐 ITEMS_METAS�뿉�꽌 �씫�뼱�꽌 援ъ“泥댁뿉 異붽�
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject bf(call) : AWARD ~~~");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject bf(call) : AWARD ~~~");
                 origMetasArraysByType = this.getAwardObject(itemid, origMetasArraysByType);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject af : origMetasArraysByType = " + origMetasArraysByType.toString());
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getAwardObject af : origMetasArraysByType = " + origMetasArraysByType.toString());
 
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
                 /* action_item�씠 �엳�뒗 寃쎌슦 ���엯蹂� meta �닔�젙 */
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before(호출) action_item이 있는 경우 타입별 meta 수정");
-                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
-            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
-            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
-            	System.out.println(" - typesArr " + typesArr);
-            	System.out.println(" - itemid " + itemid);
-            	System.out.println(" - curTagIdx " + curTagIdx);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before(호출) action_item이 있는 경우 타입별 meta 수정");
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx, userId);	//userId : 로그인 중인 사용자정보 저장
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
+            	//System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
+            	//System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
+            	//System.out.println(" - typesArr " + typesArr);
+            	//System.out.println(" - itemid " + itemid);
+            	//System.out.println(" - curTagIdx " + curTagIdx);
 
                 /* �빐�떦 items_tags_keys 瑜� �듅�씤�쑝濡� �뾽�뜲�씠�듃 �븳�떎 */
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat before");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat before");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat after : rts = " + rts);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - uptItemsTagsKeysStat after : rts = " + rts);
 
                 /* �빐�떦 items_stat 瑜� �듅�씤�쑝濡� �뾽�뜲�씠�듃 �븳�떎 */
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
                 reqIt.setStat("ST");
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
                 int rti = itemsMapper.insItemsStat(reqIt);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
 
                 rt = 1;
 
                 tagcnt = curTagIdx + 1;
             } else {
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems -   added 2018.04.11");
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems -   added 2018.04.11");
                 /* �씠�쟾 �긽�깭 肄붾뱶 �솗�씤�븯�뿬 �듅�씤�셿猷�(ST)媛� �븘�땶 寃쎌슦 �듅�씤�셿猷뚮줈 泥섎━  added 2018.04.11 */
                 String oldItemsStat = itemsMapper.getItemsStatByIdx(itemid);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - oldItemsStat " + oldItemsStat);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - oldItemsStat " + oldItemsStat);
                 if (!"ST".equals(oldItemsStat)) {
                     /* �빐�떦 items_tags_keys 瑜� �듅�씤�쑝濡� �뾽�뜲�씠�듃 �븳�떎
                     ItemsTags reqConfirm = new ItemsTags();
@@ -1514,13 +1521,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
                     int rti = itemsMapper.insItemsStat(reqIt);
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
                 } else {
                     /* 湲곗듅�씤�맂 硫뷀�媛� �엳�쓣 寃쎌슦 tagidx瑜� �떊洹� �깮�꽦�븳�떎..  18.05.16 */
                     curTagIdx =  this.getCurrTagsIdxForInsert(itemid);
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - curTagIdx " + curTagIdx);
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - curTagIdx " + curTagIdx);
 
                     /* �빐�떦 items_tags_keys 瑜� �듅�씤�쑝濡� �뾽�뜲�씠�듃 �븳�떎
                     ItemsTags reqConfirm = new ItemsTags();
@@ -1535,9 +1542,9 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     reqIt = new Items();
                     reqIt.setIdx(itemid);
                     reqIt.setStat("ST");
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat before");
                     int rti = itemsMapper.insItemsStat(reqIt);
-                	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
+                	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - itemsMapper.insItemsStat after : rti = " + rti);
                 }
 
                 /* 湲곗듅�씤�맂 硫뷀�媛� �엳�쓣 寃쎌슦, items_tags_metas 留� �닔�젙�븳�떎 */
@@ -1549,14 +1556,14 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 System.out.println("#origMetasArraysByType:"+origMetasArraysByType.toString());
 
                 /* action_item�씠 �엳�뒗 寃쎌슦 ���엯蹂� meta �닔�젙 */
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before");
-                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx);
-            	System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
-            	System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
-            	System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
-            	System.out.println(" - typesArr " + typesArr);
-            	System.out.println(" - itemid " + itemid);
-            	System.out.println(" - curTagIdx " + curTagIdx);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes before");
+                int rtm = this.processMetaObjectByTypes(origMetasArraysByType, actionItemsArraysByType, typesArr, itemid, curTagIdx, userId);
+            	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - processMetaObjectByTypes after : rtm = " + rtm);
+            	//System.out.println(" - origMetasArraysByType " + origMetasArraysByType.toString());
+            	//System.out.println(" - actionItemsArraysByType " + actionItemsArraysByType.toString());
+            	//System.out.println(" - typesArr " + typesArr);
+            	//System.out.println(" - itemid " + itemid);
+            	//System.out.println(" - curTagIdx " + curTagIdx);
 
                 rt = 1;
 
@@ -1565,35 +1572,35 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             System.out.println("#ELOG./pop/meta/upt/array rt:"+rt);
 
-            System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction befare");
+            //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction befare");
             if (rt > 0) {
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0");
                 /* �빐�떦 items_tags_keys 瑜� �듅�씤�쑝濡� �뾽�뜲�씠�듃 �븳�떎  */
                 ItemsTags reqConfirm = new ItemsTags();
                 reqConfirm.setIdx(itemid);
                 reqConfirm.setTagidx(curTagIdx);
                 reqConfirm.setStat("S");
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagsKeysStat before");
-                System.out.println(" - itemid = " + itemid);
-                System.out.println(" - curTagIdx = " + curTagIdx);
-                System.out.println(" - stat = S");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagsKeysStat before");
+                //System.out.println(" - itemid = " + itemid);
+                //System.out.println(" - curTagIdx = " + curTagIdx);
+                //System.out.println(" - stat = S");
                 int rts = this.uptItemsTagsKeysStat(reqConfirm);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagsKeysStat after : rts = " + rts);
-                System.out.println(" - itemid = " + itemid);
-                System.out.println(" - curTagIdx = " + curTagIdx);
-                System.out.println(" - stat = S");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagsKeysStat after : rts = " + rts);
+                //System.out.println(" - itemid = " + itemid);
+                //System.out.println(" - curTagIdx = " + curTagIdx);
+                //System.out.println(" - stat = S");
 
                 //items_hist�뿉 �벑濡� for �넻怨�
                 reqIt = new Items();
                 reqIt.setIdx(itemid);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - getItemsByIdx before");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - getItemsByIdx before");
                 Items itemInfo = itemsService.getItemsByIdx(reqIt);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - getItemsByIdx after : itemInfo = " + itemInfo.toString());
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - getItemsByIdx after : itemInfo = " + itemInfo.toString());
                 String movietitle = "";
                 movietitle = (itemInfo != null && itemInfo.getTitle() != null) ? itemInfo.getTitle().trim() : "";
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insItemsHist before");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insItemsHist before");
                 int rthist = itemsService.insItemsHist(itemid, "meta", "S", movietitle, "CONFIRM_META", itemid);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insItemsHist after : rthist = " + rthist);
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insItemsHist after : rthist = " + rthist);
 
                 // TagCnt 1 利앷� // �씪�떒 �뾽�뜲�씠�듃 援щЦ�쑝濡� �빐寃�
                 //int oldTagCnt = itemInfo.getTagcnt();
@@ -1601,37 +1608,38 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 //reqIt.setTagcnt(newTagCnt);
 
                 /* �빐�떦 items �젙蹂대�� 蹂�寃쏀븳�떎.  tagcnt++,  duration */
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - target items change");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - target items change");
                 if (!"".equals(duration)) reqIt.setDuration(duration);
                 reqIt.setTagcnt(tagcnt);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagcnt before");
+                reqIt.setRegid(userId);		//userId : 로그인 중인 사용자정보 저장
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagcnt before");
                 int rtu = itemsService.uptItemsTagcnt(reqIt);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagcnt after : rtu = " + rtu);
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - uptItemsTagcnt after : rtu = " + rtu);
                 logger.info("#MLOG:uptItemsTagcnt for itemIdx:"+itemid);
 
                 /* �빐�떦 items�쓽 sched_target_content �썝臾몄쓣 紐⑤몢 �궘�젣�븳�떎  18.05.16 */
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - deleteSchedTargetContentOrigin before");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - deleteSchedTargetContentOrigin before");
                 int rtd = schedTriggerService.deleteSchedTargetContentOrigin(itemid);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - deleteSchedTargetContentOrigin after : rtd = " + rtd);
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - deleteSchedTargetContentOrigin after : rtd = " + rtd);
             }
 
             if ("Y".equals(sendnow.toUpperCase())) {
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction sendnow=Y");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction sendnow=Y");
                 Map<String,Object> reqCcube = new HashMap();
                 reqCcube.put("idx", itemid);
                 reqCcube.put("regid", serverid);
                 System.out.println(" - itemid = " + itemid);
                 System.out.println(" - serverid = " + serverid);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insCcubeOutput before");
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insCcubeOutput before");
                 int rtc = ccubeService.insCcubeOutput(reqCcube);
-                System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insCcubeOutput after : rtc = " + rtc);
+                //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - saveAction rt > 0 - insCcubeOutput after : rtc = " + rtc);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems end : rt = " + rt);
+        //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems end : rt = " + rt);
         return rt;
     }
 

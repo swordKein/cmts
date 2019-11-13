@@ -39,5 +39,6 @@ public interface AdminServiceImpl {
 
     int cntManualJobHist();
 
-	String getDicKeywordsListDownload(String type);
+	//String getDicKeywordsListDownload(String type);
+	String getDicKeywordsListDownload();
 }

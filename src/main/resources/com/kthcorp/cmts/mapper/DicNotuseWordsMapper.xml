@@ -80,4 +80,34 @@
         </if>
     </select>
 
+	<delete id="delDicNotuseWords">
+		DELETE
+		FROM
+			dic_notuse_words
+	</delete>
+	
+	<insert id="importDicNotuseWords" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
+		LOAD DATA LOCAL INFILE #{fileName}
+		ignore
+		INTO TABLE `metatagdb`.`dic_notuse_words`
+		COLUMNS TERMINATED BY ','
+		ENCLOSED BY '"'
+		LINES TERMINATED BY '\n'
+		IGNORE 1 LINES
+		(@col1)
+		set
+			word=@col1,
+			regdate=now(),
+			regid=''	-- ?
+	</insert>
+
+    <delete id="cleanBlankDicNotuseWords">
+		delete
+		from
+			dic_notuse_words
+		where
+			trim(replace(replace(word,'\r',''),'\n',''))=''
+    </delete>
+     
+
 </mapper>
