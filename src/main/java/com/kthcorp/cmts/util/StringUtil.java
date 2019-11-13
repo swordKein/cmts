@@ -617,56 +617,132 @@ public class StringUtil {
 
             try {
                 reqAward = reqAward.trim();
-                if (reqAward.contains("회 ")) {
-                    String m1[] = reqAward.split("회 ");
-                    if (m1.length > 1) {
-                        if (reqAward.contains(".")) {
-                            String awardNum = m1[0];
-                            String awardNames = m1[1];
-                            awardNames = awardNames.replace(" ", "");
+                if (!reqAward.contains("__sub")) {
+                    if (reqAward.contains("회 ")) {
+                        String m1[] = reqAward.split("회 ");
+                        if (m1.length > 1) {
+                            if (reqAward.contains(".")) {
+                                String awardNum = m1[0];
+                                String awardNames = m1[1];
+                                awardNames = awardNames.replace(" ", "");
 
-                            System.out.println("#award prc: awards:"+awardNames);
+                                System.out.println("#award prc: awards:" + awardNames);
 
-                            String awardName = "";
-                            String awardYear = "";
+                                String awardName = "";
+                                String awardYear = "";
 
-                            String tmp = "";
-                            String tmp2 = "";
+                                String tmp = "";
+                                String tmp2 = "";
 
-                            String m2[] = awardNames.split("\\.");
-                            //System.out.println("#award prc m2.size:"+m2.length);
-                            if (m2.length > 1) {
-                                awardName = m2[0].trim();
-                                awardYear = m2[1].trim();
-                                tmp2 = awardYear + " " + awardName;
-                                //System.out.println("#award prc: year:"+awardYear+" / awardName:"+awardName);
-                            } else {
-                                awardName = m1[1];
+                                String m2[] = awardNames.split("\\.");
+                                //System.out.println("#award prc m2.size:"+m2.length);
+                                if (m2.length > 1) {
+                                    awardName = m2[0].trim();
+                                    awardYear = m2[1].trim();
+                                    tmp2 = awardYear + " " + awardName;
+                                    //System.out.println("#award prc: year:"+awardYear+" / awardName:"+awardName);
+                                } else {
+                                    awardName = m1[1];
+                                }
+
+                                tmp = awardNum + "회 " + awardName;
+                                awardList.add(awardName);
+                                if (!"".equals(tmp2)) awardList.add(tmp2);
+                                awardList.add(tmp);
+
+                                String revTmp = addAwardStatic(tmp);
+                                if (!"".equals(revTmp)) {
+                                    awardList.add(revTmp);
+                                }
+                                String revAwardName = addAwardStatic(awardName);
+                                if (!"".equals(revAwardName)) {
+                                    awardList.add(revAwardName);
+                                }
+                                String revTmp2 = addAwardStatic(tmp2);
+                                if (!"".equals(revTmp2)) {
+                                    awardList.add(revTmp2);
+                                }
                             }
 
-                            tmp = awardNum + "회 " + awardName;
-                            awardList.add(awardName);
-                            if (!"".equals(tmp2)) awardList.add(tmp2);
-                            awardList.add(tmp);
-
-                            String revTmp = addAwardStatic(tmp);
-                            if (!"".equals(revTmp)) {
-                                awardList.add(revTmp);
-                            }
-                            String revAwardName = addAwardStatic(awardName);
-                            if (!"".equals(revAwardName)) {
-                                awardList.add(revAwardName);
-                            }
-                            String revTmp2 = addAwardStatic(tmp2);
-                            if (!"".equals(revTmp2)) {
-                                awardList.add(revTmp2);
-                            }
                         }
-
                     }
+                } else {
+                    /* 서브장르는 별도의 규칙으로 하드코딩 맵과 대조하여 존재할 경우만 취득 19.11.12 */
+                    /*  베니스국제영화제__sub__황금사자상  */
+                    String sub1 = reqAward.replace("__sub__", " ");
+                    String sub2[] = sub1.split(" ");
+                    Set<String> subSet = getSubAwards(sub2[0]);
+                    if (subSet != null) {
+                        String sub22 = sub2[1];
+                        sub22 = sub22.trim();
+                        boolean isExists = compareSetToString(subSet, sub22);
+                        if (isExists) {
+                            awardList.add(sub1);
+                        }
+                    }
+
                 }
             } catch (Exception e) { e.printStackTrace(); }
         }
         return awardList;
+    }
+
+    public static boolean compareSetToString(Set<String> reqSet, String reqStr){
+        boolean isExists = false;
+        if (reqSet != null && !"".equals(reqStr)) {
+            Iterator<String> iter = reqSet.iterator();
+
+            while(iter.hasNext()) {
+                String setStr = iter.next();
+                setStr = setStr.trim();
+                if (reqStr.equals(setStr)) {
+                    isExists = true;
+                }
+            }
+        }
+
+        return isExists;
+    }
+
+    public static Set<String> getSubAwards(String mainAwards) {
+        Map<String, Set<String>> subAwardsMap = new HashMap();
+
+        Set<String> sub1 = new HashSet<String>(
+                Arrays.asList("작품상","남우주연상","여우주연상","남우조연상",
+                        "여우조연상","감독상","각본상","주제가상","음악상","외국어영화상","장편애니메이션상"));
+        Set<String> sub2 = new HashSet<String>(
+                Arrays.asList("황금사자상","은사자상-감독상","심사위원대상","볼피컵-여우주연상",
+                        "볼피컵-남우주연상","심사위원특별상","각본상")
+                );
+        Set<String> sub3 = new HashSet<String>(
+                Arrays.asList("금곰상","금곰상-단편영화상","은곰상-감독상","은곰상-남우주연상","은곰상-여우주연상",
+                        "은곰상-심사위원대상","은곰상-예술공헌상","은곰상-각본상","은곰상-예술공헌상","파노라마관객상")
+        );
+        Set<String> sub4 = new HashSet<String>(
+                Arrays.asList("황금종려상","심사위원대상","감독상","각본상","여우주연상","남우주연상","심사위원대상")
+                );
+        Set<String> sub5 = new HashSet<String>(
+                Arrays.asList("최우수작품상","감독상","남우주연상","여우주연상","남우조연상","여우조연상","신인남우상",
+                        "신인여우상","신인감독상")
+                );
+        Set<String> sub6 = new HashSet<String>(
+                Arrays.asList("영화대상","영화작품상","영화감독상","영화남자최우수연기상","영화여자최우수연기상",
+                        "영화남자조연상","영화여자조연상","영화남자신인연기상","영화여자신인연기상","영화신인감독상")
+                );
+        Set<String> sub7 = new HashSet<String>(
+                Arrays.asList("시나리오상","남우주연상","여우주연상","남우조연상","여우조연상",
+                        "신인남자배우상","신인여자배우상","신인감독상")
+                );
+
+
+        subAwardsMap.put("아카데미시상식",sub1);
+        subAwardsMap.put("베니스국제영화제",sub2);
+        subAwardsMap.put("베를린국제영화제",sub3);
+        subAwardsMap.put("칸영화제",sub4);
+        subAwardsMap.put("청룡영화상",sub5);
+        subAwardsMap.put("백상예술대상",sub6);
+        subAwardsMap.put("대종상영화제",sub7);
+
+        return subAwardsMap.get(mainAwards);
     }
 }
