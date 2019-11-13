@@ -326,6 +326,9 @@ public class SftpService implements SftpServiceImpl {
                     newItem.setKmrb_actors_display(eElement.getElementsByTagName("KMRB_ACTORS_DISPLAY").item(0).getTextContent());
                     newItem.setKmrb_actors_display_eng(eElement.getElementsByTagName("KMRB_ACTORS_DISPLAY_ENG").item(0).getTextContent());
 
+                    newItem.setSummary_long(eElement.getElementsByTagName("SUMMARY_LONG").item(0).getTextContent());
+                    newItem.setSummary_medium(eElement.getElementsByTagName("SUMMARY_MEDIUM").item(0).getTextContent());
+
                     resultList.add(newItem);
                 }
             }
@@ -360,6 +363,10 @@ public class SftpService implements SftpServiceImpl {
                     newItem.setSad_ctgry_id(eElement.getElementsByTagName("SAD_CTGRY_ID").item(0).getTextContent());
                     newItem.setSad_ctgry_nm(eElement.getElementsByTagName("SAD_CTGRY_NM").item(0).getTextContent());
                     newItem.setKt_rating(eElement.getElementsByTagName("KT_RATING").item(0).getTextContent());
+
+                    newItem.setSummary_long(eElement.getElementsByTagName("SUMMARY_LONG").item(0).getTextContent());
+                    newItem.setSummary_medium(eElement.getElementsByTagName("SUMMARY_MEDIUM").item(0).getTextContent());
+
                     resultList.add(newItem);
                 }
             }

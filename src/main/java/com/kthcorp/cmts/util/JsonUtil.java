@@ -564,7 +564,7 @@ public class JsonUtil {
 					//System.out.println("#reqObj add new JsonArray:"+type);
 				} else {
 					String orig = reqObj.get(type).getAsString();
-					orig = StringUtil.removeAllTags(orig);
+					orig = StringUtil.removeAllTags2(orig);
 					orig = orig.replace(", ","|");
 					orig = orig.replace(",","|");
 					reqObj.remove(type);

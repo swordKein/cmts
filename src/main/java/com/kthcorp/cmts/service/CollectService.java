@@ -9,6 +9,7 @@ import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.service.crawl.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.JsonUtil;
+import com.kthcorp.cmts.util.StringUtil;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,8 @@ public class CollectService implements CollectServiceImpl {
     private ItemsSchedMappingMapper itemsSchedMappingMapper;
     @Autowired
     private ItemsService itemsService;
+    @Autowired
+    private CcubeMapper ccubeMapper;
 
     @Value("${property.serverid}")
     private String serverid;
@@ -449,7 +452,7 @@ public class CollectService implements CollectServiceImpl {
                         //System.out.println("#STEP02 process TG:"+target.toString());
 
                         ConfTarget tg = this.step02(target);
-                        //System.out.println("#STEP02 process to TG:"+tg.toString());
+                        System.out.println("#STEP02 process to TG:"+tg.toString());
 
                         tg.setMovietitle(target.getMovietitle());
                         tg.setMoviedirector((target.getMoviedirector() != null) ? target.getMoviedirector() : "");
@@ -518,9 +521,18 @@ public class CollectService implements CollectServiceImpl {
                                         System.out.println("## insert! itemIdx:"+itemIdx+ " metas:"+dest+" data::"+metasObj.get(dest));
 
                                         ItemsMetas newMeta = new ItemsMetas();
-                                        newMeta.setIdx(itemIdx);
-                                        newMeta.setMtype(dest);
-                                        newMeta.setMeta(meta);
+                                        // 19.11.12 줄거리를 ccube에서 연동된 summary_long으로 교체
+                                        if ("plot".equals(dest.trim())) {
+                                            newMeta.setIdx(itemIdx);
+                                            newMeta.setMtype("plot");
+                                            String ccube_summary = ccubeMapper.getSummaryFromCcube(itemIdx);
+                                            ccube_summary = StringUtil.removeAllTags2(ccube_summary);
+                                            newMeta.setMeta(ccube_summary);
+                                        } else {
+                                            newMeta.setIdx(itemIdx);
+                                            newMeta.setMtype(dest);
+                                            newMeta.setMeta(meta);
+                                        }
                                         int rtItm = itemsService.insItemsMetas(newMeta);
                                     }
                                 }

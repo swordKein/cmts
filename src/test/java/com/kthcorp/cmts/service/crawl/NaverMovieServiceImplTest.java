@@ -20,6 +20,8 @@ public class NaverMovieServiceImplTest {
 	//@MockBean
 	@Autowired
 	private NaverMovieServiceImpl naverMovieService;
+	@Autowired
+	private DaumMovieServiceImpl daumMovieService;
 
 	@Test
 	public void test_getContents() throws Exception {
@@ -71,7 +73,8 @@ public class NaverMovieServiceImplTest {
 		reqInfo.setPresetList(psList);
 
 		reqInfo.setTg_url("NAVER_MOVIE");
-		reqInfo.setParam1("서편제");
+		reqInfo.setParam1("나랏말싸미");
+		reqInfo.setParam1("타짜: 원 아이드 잭");
 
 		JsonObject result = naverMovieService.getContents("NAVER_MOVIE", reqInfo);
 		System.out.println("#Result:"+result.toString());

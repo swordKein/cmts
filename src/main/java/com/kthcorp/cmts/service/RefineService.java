@@ -252,13 +252,14 @@ public class RefineService implements RefineServiceImpl {
         return result;
     }
 
+    // 네이버 영화 가중치, CINE21 영화 가중치 추가
     private Map<String, Double> getAddedWordsFreqArrays(Map<String, Double> origMap, String subContentTxt, String tg_url) throws Exception {
         if (origMap == null) origMap = new HashMap();
         Map<String, Double> resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
         logger.debug("#ELOG.resultWordFreq orig:"+tg_url+"/ size:"+resultWordFreq.size()+"/datas::"+resultWordFreq.toString());
 
         Double mutexRatio = 0.0;
-        if (tg_url.equals("NAVER_MOVIE")) mutexRatio = 500.0;
+        if (tg_url.equals("NAVER_MOVIE") || tg_url.equals("CINE21_MOVIE")) mutexRatio = 500.0;
 
         Map<String, Double> resultWordFreqMutexByRatio = MapUtil.getParamDoubleMapMutexedRatio(resultWordFreq, mutexRatio);
         logger.debug("#ELOG.resultWordFreq:"+tg_url+"/ mutex: size:"+resultWordFreqMutexByRatio.size()+"/datas::"+resultWordFreqMutexByRatio.toString());
@@ -337,7 +338,7 @@ public class RefineService implements RefineServiceImpl {
                         // 버리는 문자열/특수기호 제거
                         subContentTxt = CommonUtil.removeTex(subContentTxt);
 
-                        // WordFreq 추출
+                        // WordFreq 추출 , 가중치 추가
                         //resultWordFreq = WordFreqUtil.getWordCountsMap2(subContentTxt);
                         resultWordFreq = this.getAddedWordsFreqArrays(resultWordFreq, subContentTxt, tg_url);
 

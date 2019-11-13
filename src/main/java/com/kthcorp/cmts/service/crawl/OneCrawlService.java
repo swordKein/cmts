@@ -81,24 +81,52 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                 for (Element elm : summaryElms) {
                     Elements tit_awards = elm.select(".tit_movie");
                     //String tit_award = tit_awards.text().toString();
+                    Set<String> subAwards = new HashSet();
 
                     for (int i=0; i<tit_awards.size(); i++) {
                         Elements info_prod = elm.select(".info_produce");
                         Elements acts = null;
-
                         String act = "";
                         acts = info_prod.eq(i).select(".list_produce").eq(0).select("dl").select("dt");
                         act = acts.text().toString();
                         act = act.trim();
                         //System.out.println("#acts :: " + acts.toString());
-
                         //System.out.println("#award compare :: " + tit_awards.get(i) + " :: " + act);
 
                         String tit_aw = tit_awards.get(i).text().toString().trim();
                         tit_aw = tit_aw.replace(",", ".");
 
+
                         if ("수상".equals(act)) {
                             awardList.add(tit_aw);
+
+                            /* sub awards 추가 19.11.12 */
+                        /*
+                            #award subs :: 57회 뉴욕영화제. 2019 :: 토드 필립스 (스페셜 이벤트)
+                            #award subs :: 44회 토론토국제영화제. 2019 :: 토드 필립스 (갈라 프레젠테이션)
+                            #award subs :: 76회 베니스국제영화제. 2019 :: 토드 필립스 (황금사자상)*/
+                            /* =>   76회 베니스국제영화제, 2019__sub__황금사자상  */
+                            String subs = "";
+                            Elements sub = info_prod.eq(i).select(".list_produce").eq(0).select("dl").select("dd");
+                            for (Element es : sub) {
+                                String es1 = es.text();
+                                if (!"".equals(tit_aw) && es1.contains("(") && es1.contains(")")) {
+                                    String es2[] = es1.split("\\(");
+                                    String es22 = es2[1];
+                                    if (es22.contains(")")) {
+                                        String es23 = es22.replace(")","")
+                                                .replace(" ","").trim();
+                                        String tt1[] = tit_aw.split("회 ");
+                                        String tt2 = tt1[1];
+                                        String tt21[] = tt2.split("\\.");
+                                        String tt23 = tt21[0];
+                                        tt23 = tt23.replace(" ","").trim();
+                                        String subAward1 = (tt23+"__sub__"+es23);
+                                        awardList.add(subAward1);
+                                        System.out.println("#award subs :: " + subAward1);
+                                    }
+                                }
+                            }
                         }
 
                         //System.out.println("#awardList:" + awardList.toString());
@@ -210,6 +238,7 @@ public class OneCrawlService implements OneCrawlServiceImpl {
 
                             System.out.println("#awardList END::"+awardList.toString()+" : awardList.size::"+awardList.size());
                             Set<String> awardSet = null;
+                            /* 수집된 수상정보를 문자열 규칙에 맞추어 늘리는 작업 */
                             if (awardList != null && awardList.size() > 0) {
                                 for(int i=0; i<awardList.size(); i++) {
                                     awardSet = StringUtil.prcAwardsStr(awardSet, awardList.get(i));

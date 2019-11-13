@@ -95,4 +95,11 @@ public class CcubeMapperTest {
         System.out.println("#COUNT:"+count);
 
     }
+
+    @Test
+    public void test_getSummaryFromCcube() throws Exception {
+        String summary = ccubeMapper.getSummaryFromCcube(27620);
+        System.out.println("#RES:"+summary);
+
+    }
 }

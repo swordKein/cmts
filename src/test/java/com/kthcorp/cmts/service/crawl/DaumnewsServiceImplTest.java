@@ -1644,4 +1644,47 @@ public class DaumnewsServiceImplTest {
 		JsonArray resultArr2 = (JsonArray) result.get("resultArr");
 		System.out.println("#All result.size:"+resultArr2.size());
 	}
+
+
+	@Test
+	public void test_getCine21Movie() throws Exception {
+		ConfTarget reqInfo = new ConfTarget();
+		reqInfo.setTg_id(11);
+		reqInfo.setTg_url("CINE21");
+		reqInfo.setParam1("나랏말싸미");
+		reqInfo.setIs_fail("Y");
+		reqInfo.setIs_manual("N");
+		reqInfo.setContent_min2(2);
+		reqInfo.setContent_max2(20000000);
+		reqInfo.setFail_count2(10);
+
+		ConfPreset ps = new ConfPreset();
+		List<ConfPreset> pslist = new ArrayList<ConfPreset>();
+
+		ps = new ConfPreset();
+		ps.setDescriptp("/www.cine21.com/movie/info/?movie_id=52538");
+		ps.setDest_field("story-area");
+		ps.setPs_tag("#content #story-area");
+		pslist.add(ps);
+
+		reqInfo.setPresetList(pslist);
+
+		JsonObject result = daumnewsService.getSearchNews(reqInfo);
+
+		JsonArray resultArr = (JsonArray) result.get("result");
+		for (JsonElement je : resultArr) {
+			System.out.println("#Result:"+je.toString());
+		}
+
+
+		System.out.println("#All Result:"+result.toString());
+		JsonArray failResultArr = (JsonArray) result.get("failResultArr");
+		for (JsonElement je : failResultArr) {
+			System.out.println("#failResult:"+je.toString());
+		}
+		System.out.println("#All ConfPresetList.size:"+pslist.size());
+
+		JsonArray resultArr2 = (JsonArray) result.get("resultArr");
+		System.out.println("#All result.size:"+resultArr2.size());
+	}
 }

@@ -230,6 +230,7 @@ public class CcubeService implements CcubeServiceImpl {
                 if ((type.contains("METAS") || type.contains("LIST")) && !type.equals("LIST_SEARCHKEYWORDS")) {
                     JsonArray tmpArr = JsonUtil.getJsonArray(metasStr);
                     tmpList = JsonUtil.getListFromJsonArrayByTag(tmpArr, "word", 100);
+
                 } else {
                     tmpList = StringUtil.convertStringToListByComma(metasStr);
                     //System.out.println("#MLOG.tmpLIST:"+tmpList.toString());
@@ -257,7 +258,13 @@ public class CcubeService implements CcubeServiceImpl {
                 if (meta.length() < limitSize) limitSize = meta.length();
                 meta = meta.substring(0,limitSize);
 
+                // 19.11.12 Ccube연동규격 추가로 추천 표현 META_RECO_EXPRESSION 추가
+                if ("META_RECO_TARGET".equals(mtype)) {
+                    origObj.addProperty("META_RECO_EXPRESSION", meta);
+                }
+
                 origObj.addProperty(mtype, meta);
+
                 //System.out.println("#ELOG getTagsMetasObj.result:"+origObj.toString());
             }
         }

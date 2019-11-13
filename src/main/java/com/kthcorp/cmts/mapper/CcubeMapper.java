@@ -50,4 +50,6 @@ public interface CcubeMapper {
     int cntCcubeOutputListSeriesAll();
 
     int cntCcubeKeysByCidOrSid(CcubeKeys req);
+
+    String getSummaryFromCcube(Integer itemidx);
 }
