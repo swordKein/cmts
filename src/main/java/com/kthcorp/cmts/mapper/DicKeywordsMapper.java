@@ -56,4 +56,5 @@ public interface DicKeywordsMapper {
 	int importDicKeywordsByType(DicKeywords dicKeywords);
 	
 	int cleanBlankDicKeywords(DicKeywords dicKeywords);
+	List<DicKeywords> get10DicKeywordsList(DicKeywords reqkey);
 }

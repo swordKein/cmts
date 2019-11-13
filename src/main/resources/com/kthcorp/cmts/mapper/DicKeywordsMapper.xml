@@ -290,5 +290,27 @@
 			trim(replace(replace(keyword,'\r',''),'\n','')) = ''
     </delete>
      
-     
+    <select id="get10DicKeywordsList" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
+		/* get10DicKeywordsList 자동검색 */
+		select
+			a.idx, a.type, a.keyword, a.ratio, a.regdate, a.regid
+		from
+			(
+				select
+					idx, type, keyword, ratio, regdate, regid
+				from dic_keywords
+				where
+					type = #{type}
+					and keyword like concat(#{keyword},'%')
+				union all
+				select
+					idx, type, keyword, ratio, regdate, regid
+				from dic_keywords
+				where
+					type = #{type}
+					and keyword like concat('%',#{keyword},'%')
+					and keyword not like concat(#{keyword},'%')
+			)a
+		limit #{pageSize}	
+	</select>
 </mapper>

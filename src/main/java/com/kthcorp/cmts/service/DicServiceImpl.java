@@ -1,6 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,4 +131,6 @@ public interface DicServiceImpl {
     void pushCsvToDicNotuseKeywords();
     void pushCsvToDicChangeKeywords();
     
+    //2019.11.12 실시간 10건검색
+    public JsonObject get10DicKeywordsByType(String type, String keyword);
 }

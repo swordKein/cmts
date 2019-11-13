@@ -2014,4 +2014,61 @@ public class ApiController {
     	return "";
     }
     
+	//권재일 추가 2019.11.12 - 실시간 자동완성
+	@RequestMapping(value = "/dic/list10", method = RequestMethod.GET)
+	@ResponseBody
+	public String get__dic_list10(Model model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "type") String type
+			, @RequestParam(value = "pagesize", required = false, defaultValue = "200") String spagesize
+			, @RequestParam(value = "KEYWORD", required = false, defaultValue = "") String keyword
+			, @RequestParam(value = "pageno") String spageno
+			, @RequestParam(value = "orderby", required = false, defaultValue = "new") String orderby
+	) {
+		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/orderby:"+orderby+"/pageSize:"+spagesize+"/pageno:"+spageno);	
+
+		int pageSize = 0;
+		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+        //pageSize = 200;
+
+        type = type.trim().toUpperCase();
+		keyword = keyword.trim();
+
+		int pageNo = 0;
+		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
+
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				//result1 = apiService.getDicKeywordsByType(type, keyword, orderby, pageSize, pageNo);	//권재일 추가 07.31 5-1
+				//result1 = apiService.getDicKeywords10ByType(type, keyword, orderby, pageSize, pageNo);	//권재일 추가 11.12
+				result1 = dicService.get10DicKeywordsByType(type, keyword);
+				if(result1 != null) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Dics data is null!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
+
+		return result_all.toString();
+	}
 }

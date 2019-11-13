@@ -1543,4 +1543,28 @@ public class DicService implements DicServiceImpl {
 			int rtins3 = dicChangeWordsMapper.cleanBlankDicChangeWords();
 		}
 	}
+
+	//권재일 추가 2019.11.12 - 실시간 자동완성
+	//from ApiService - getDicKeywordsByType
+	public JsonObject get10DicKeywordsByType(String type, String keyword) {
+        JsonObject result = new JsonObject();
+        JsonArray list_words = new JsonArray();
+        
+        DicKeywords reqkey = new DicKeywords();
+        reqkey.setPageSize(10);
+        //reqkey.setPageNo(pageno);
+        reqkey.setType(type);
+        reqkey.setKeyword(keyword);
+        //reqkey.setOrderby(orderby);
+
+        List<DicKeywords> resKeywords = dicKeywordsMapper.get10DicKeywordsList(reqkey);
+        if (resKeywords != null) {
+            for (DicKeywords dic : resKeywords) {
+            	list_words.add(dic.getKeyword());
+            }
+        }
+        
+        result.add("LIST_WORDS", list_words);
+        return result;
+	}
 }
