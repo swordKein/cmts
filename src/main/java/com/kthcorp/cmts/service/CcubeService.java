@@ -352,6 +352,10 @@ public class CcubeService implements CcubeServiceImpl {
 
                         newItem = new JsonObject();
                         if(type.contains("CcubeContent")) {
+                            /** 임시 MCID **/
+                            newItem.addProperty("MASTER_CONTENT_ID", masterId);
+                            newItem.addProperty("ITEMIDX", itemIdx);
+                            /**--------------------*/
                             newItem.addProperty("CONTENT_ID", contentId);
                             String title = itemInfo.getTitle();
 
