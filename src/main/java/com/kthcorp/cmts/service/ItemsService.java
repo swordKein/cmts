@@ -161,6 +161,7 @@ public class ItemsService implements ItemsServiceImpl {
             // 중복방지로직, cid , title, director, year 순으로 대조
             CcubeKeys reqCk = new CcubeKeys();
             //if (req.getPurity_title() != null) reqCk.setPurity_title(req.getPurity_title().trim());
+
             if (req.getContent_id() != null) reqCk.setContent_id(req.getContent_id().trim());
             String title = (req.getPurity_title() != null && !"".equals(req.getPurity_title())) ? req.getPurity_title() : req.getContent_title();
             reqCk.setPurity_title(title);
@@ -200,6 +201,11 @@ public class ItemsService implements ItemsServiceImpl {
                 item.setRegid("sched");
 
                 rtitem = this.insItems(item);
+
+                // 중복방지로직을 mater_content_id 추가 19.11.12
+                //---- ccube_keys에는 중복 허용하고 item의 stat로만 제어하도록 변경
+                int rtd = ccubeService.chgItemsStatForDupMCIDatNew(req.getMaster_content_id());
+
 
                 // 2018.04.20
                 // 신규 itemIdx로 등록된 경우에도 ccube_keys에 키 등록

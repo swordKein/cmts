@@ -52,4 +52,12 @@ public interface CcubeMapper {
     int cntCcubeKeysByCidOrSid(CcubeKeys req);
 
     String getSummaryFromCcube(Integer itemidx);
+
+    List<Map<String,Object>> getMultipleItemsByMCID();
+    List<Map<String,Object>> getSortedItemsByMCID(String master_content_id);
+    int chgItemsForDisableDup(Long itemidx);
+    int chgItemsStatForDisableDup(Long itemidx);
+    List<Map<String,Object>> getSortedMCIDforNew(String master_content_id);
+
+    int chgItemsStatForRT(Long itemIdx);
 }

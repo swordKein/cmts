@@ -325,13 +325,15 @@
     <select id="getCountInsertedDaily" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
         /* getCountInsertedDaily */
         select count(*) from items
-        where regdate1 between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
+        where stat != 'M'
+        and regdate1 between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
     </select>
 
     <select id="getCountItemsHistByType" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
         /* getCountItemsHistByType  */
         select ith.type, ith.stat, count(*) as cnt
         from items_hist ith
+        inner join items it on it.idx = ith.idx and it.stat != 'M'
         where ith.type in ( 'collect', 'analyze', 'meta' )
         and ith.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         group by ith.type, ith.stat
@@ -342,6 +344,7 @@
         /* getCountsItemsStatByStat  */
         select count(*) as cnt, iss.stat
         from items_stat iss
+        inner join items it on it.idx = iss.idx and it.stat != 'M'
         inner join ccube_keys ck on ck.itemidx = iss.idx
         where iss.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
         <if test='stat != null and stat != ""'>
@@ -352,12 +355,13 @@
 
     <select id="getCountsItemsByStatUniq" resultType="com.kthcorp.cmts.model.Stats" parameterType="com.kthcorp.cmts.model.Stats" useCache="true">
         /* getCountsItemsByStatUniq */
-        select type,stat,count(*) as cnt from (
-        select type, stat, idx
-        from items_hist
-        where type in ('collect', 'analyze', 'meta')
-        and regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
-        group by type, stat, idx
+        select a.type,a.stat,count(*) as cnt from (
+        select ih.type, ih.stat, ih.idx
+        from items_hist ih
+        inner join items it on it.idx = ih.idx and it.stat != 'M'
+        where ih.type in ('collect', 'analyze', 'meta')
+        and ih.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
+        group by ih.type, ih.stat, ih.idx
         ) a group by a.type, a.stat
     </select>
 </mapper>
