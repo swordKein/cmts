@@ -1056,7 +1056,6 @@ public class CcubeService implements CcubeServiceImpl {
                 long itemIdx1 = (long) sortedItems.get(0).get("idx");
                 String itemStat1 = (String) sortedItems.get(0).get("stat");
                 /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
-
                 /**** 신규 입수 건은 최종 승인 상태도 승인대기로 변경!!! *****/
 
                 /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
