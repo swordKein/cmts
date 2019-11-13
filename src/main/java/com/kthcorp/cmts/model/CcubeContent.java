@@ -43,6 +43,25 @@ public class CcubeContent extends Paging {
     private Timestamp regdate;
     private String stat;
 
+    private String summary_long;
+    private String summary_medium;
+
+    public String getSummary_long() {
+        return summary_long;
+    }
+
+    public void setSummary_long(String summary_long) {
+        this.summary_long = summary_long;
+    }
+
+    public String getSummary_medium() {
+        return summary_medium;
+    }
+
+    public void setSummary_medium(String summary_medium) {
+        this.summary_medium = summary_medium;
+    }
+
     public String getStat() {
         return stat;
     }
