@@ -114,4 +114,11 @@ public class CcubeServiceTest {
 		JsonArray contents = ccubeService.getJsonArrayForCcubeOutput(null, "CcubeContents", ins);
 		System.out.println("#RES:"+contents.toString());
 	}
+
+	@Test
+	public void test_processMultipleSuccessItemByMCID() throws Exception {
+		int rt = ccubeService.processMultipleSuccessItemByMCID();
+		System.out.println("#RES:"+rt);
+	}
+
 }

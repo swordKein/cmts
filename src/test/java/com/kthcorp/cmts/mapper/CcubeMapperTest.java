@@ -102,4 +102,10 @@ public class CcubeMapperTest {
         System.out.println("#RES:"+summary);
 
     }
+
+    @Test
+    public void test_getMultipleItemsByMCID() throws Exception {
+        List<Map<String,Object>> res = ccubeMapper.getMultipleItemsByMCID();
+        System.out.println("#RES:"+res);
+    }
 }

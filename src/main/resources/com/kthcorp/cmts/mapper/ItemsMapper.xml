@@ -403,6 +403,7 @@
         </if>
 
         where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
+        and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
         </if>
@@ -487,7 +488,7 @@
         ) a
         inner join items it on it.idx = a.idx
         inner join ccube_keys ck on ck.itemidx = it.idx
-        inner join items_metas on im.idx = a.idx
+        inner join items_metas im on im.idx = a.idx
         order by a.regdate desc, a.idx desc
     </select>
 
@@ -551,6 +552,7 @@
         </if>
 
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
+        and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
         </if>

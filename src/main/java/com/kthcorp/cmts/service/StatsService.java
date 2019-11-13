@@ -404,7 +404,8 @@ public class StatsService implements StatsServiceImpl {
         return stat_search;
     }
 
-    private JsonObject getCountsForStat(Stats reqSt) {
+    @Override
+    public JsonObject getCountsForStat(Stats reqSt) {
         int count_in = statsMapper.getCountInsertedDaily(reqSt);
         int count_sc = 0;
         int count_fc = 0;

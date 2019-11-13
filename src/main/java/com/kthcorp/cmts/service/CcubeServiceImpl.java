@@ -58,4 +58,11 @@ public interface CcubeServiceImpl {
     int insCcubeSeriesManual(CcubeSeries req);
 
     int insCcubeOutput(Map<String, Object> req);
+
+    int processMultipleSuccessItemByMCID();
+
+    @Transactional
+    int chgItemsStatForDupMCIDatBatch(String req_MCID);
+
+    int chgItemsStatForDupMCIDatNew(String req_MCID);
 }

@@ -97,4 +97,16 @@ public class ItemsServiceTest {
 		req.setDirector("권오강");
 		System.out.println("#RES:"+itemsService.copyCcubeContentToItems(req));
 	}
+
+	@Test
+	public void test_copyCcubeContentToItems1911() throws Exception {
+		CcubeContent req = new CcubeContent();
+		req.setCountry_of_origin("ENG");
+		req.setMaster_content_id("0200116901");
+		req.setContent_id("5555555");
+		req.setPurity_title("밤비 (MCID 중복 테스트)");
+		req.setYear("1942");
+		req.setDirector("데이비드 핸드");
+		System.out.println("#RES:"+itemsService.copyCcubeContentToItems(req));
+	}
 }

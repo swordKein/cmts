@@ -57,4 +57,13 @@ public class StatsServiceImplTest {
 		System.out.println("#RESULT:"+statsService.getStatsList(20, 1
 				, "2018-02-17", "2018-06-01", "ST"));
 	}
+
+	@Test
+	public void test_getCountsForStat() throws Exception {
+		Stats req = new Stats();
+		req.setSdate("2018-01-01");
+		req.setEdate("2019-12-01");
+
+		System.out.println("#RESULT:"+statsService.getCountsForStat(req));
+	}
 }

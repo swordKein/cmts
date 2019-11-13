@@ -955,4 +955,153 @@ public class CcubeService implements CcubeServiceImpl {
     public int insCcubeOutput(Map<String,Object> req) {
         return ccubeMapper.insCcubeOutput(req);
     }
+
+    /** 동일 mater_content_id에 승인된 itemidx가 1개 이상일 경우 최종 승인 차수를 제외하고 비노출 처리
+     * 일괄작업 19.11.14
+     * @return
+     */
+    @Override
+    @Transactional
+    public int processMultipleSuccessItemByMCID() {
+        int rt = 0;
+        /* 동일 mcid 에 승인완료된 itemidx 가 1개 이상인 경우*/
+        List<Map<String, Object>> multiMap = ccubeMapper.getMultipleItemsByMCID();
+        if (multiMap != null && multiMap.size() > 0) {
+            System.out.println("#processMultipleSuccessItemByMCID DUP.size:"+multiMap.size());
+            for (Map<String, Object> multiOne : multiMap) {
+                if (multiOne != null) {
+                    String mcid_dup = (String) multiOne.get("master_content_id");
+                    /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
+                    /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                    this.chgItemsStatForDupMCIDatBatch (mcid_dup);
+                }
+            }
+        }
+        return rt;
+    }
+
+    private int chgItemsStatForDisableDup(Long itemIdx) {
+        int rt = 0;
+
+        rt = ccubeMapper.chgItemsForDisableDup(itemIdx);
+        rt = ccubeMapper.chgItemsStatForDisableDup(itemIdx);
+        rt = 1;
+        return rt;
+    }
+
+    @Override
+    @Transactional
+    public int chgItemsStatForDupMCIDatBatch(String req_MCID) {
+        int rt = 0;
+
+        /* mcid로 승인차수 역순 정렬 itemidx 취득 */
+        List<Map<String,Object>> sortedItems = ccubeMapper.getSortedItemsByMCID(req_MCID);
+        if (sortedItems != null && sortedItems.size() > 0) {
+            long itemIdx1 = (long) sortedItems.get(0).get("idx");
+            String itemStat1 = (String) sortedItems.get(0).get("stat");
+            /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
+            /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+            if ("ST".equals(itemStat1)) {
+                int cnt = 1;
+                for(Map<String,Object> item1 : sortedItems) {
+                    long itemIdx = (long) item1.get("idx");
+                    String itemStat = (String) item1.get("stat");
+                    String master_content_id = (String) item1.get("master_content_id");
+
+                    /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
+                    /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                    if(cnt > 1) {
+                        System.out.println("#chgItems "+cnt+" | "+master_content_id+" | "+itemStat+" | "+itemIdx+" =>  비노출");
+                        rt = this.chgItemsStatForDisableDup(itemIdx);
+                    } else {
+                        System.out.println("#chgItems "+cnt+" | "+master_content_id+" | "+itemStat+" | "+itemIdx+" =>  유지");
+                    }
+                    cnt++;
+                }
+            } else {
+                /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+
+                List<Map<String,Object>> sortedMCID = ccubeMapper.getSortedMCIDforNew(req_MCID);
+                int cnt2 = 1;
+                if (sortedMCID != null && sortedMCID.size() > 0) {
+                    for (Map<String,Object> mcid1 : sortedMCID) {
+                        long itemIdx = (long) mcid1.get("idx");
+                        String itemStat = (String) mcid1.get("stat");
+                        String master_content_id = (String) mcid1.get("master_content_id");
+                        /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                        if (cnt2 > 1) {
+                            System.out.println("#chgItemsRT "+cnt2+" | "+master_content_id+" | "+itemStat+" | "+itemIdx+" =>  비노출");
+                            rt = this.chgItemsStatForDisableDup(itemIdx);
+                        } else {
+                            System.out.println("#chgItemsRT "+cnt2+" | "+master_content_id+" | "+itemStat+" | "+itemIdx+" =>  유지");
+                        }
+                        cnt2++;
+                    }
+                }
+            }
+        }
+        return rt;
+    }
+
+
+    @Override
+    @Transactional
+    public int chgItemsStatForDupMCIDatNew(String req_MCID) {
+        int rt = 0;
+        if (!"".equals(req_MCID)) {
+
+            /* mcid로 승인차수 역순 정렬 itemidx 취득 */
+            List<Map<String, Object>> sortedItems = ccubeMapper.getSortedItemsByMCID(req_MCID);
+            if (sortedItems != null && sortedItems.size() > 0) {
+                long itemIdx1 = (long) sortedItems.get(0).get("idx");
+                String itemStat1 = (String) sortedItems.get(0).get("stat");
+                /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
+                /**** 신규 입수 건은 최종 승인 상태도 승인대기로 변경!!! *****/
+
+                /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                if ("ST".equals(itemStat1)) {
+                    int cnt = 1;
+                    for (Map<String, Object> item1 : sortedItems) {
+                        long itemIdx = (long) item1.get("idx");
+                        String itemStat = (String) item1.get("stat");
+                        String master_content_id = (String) item1.get("master_content_id");
+
+                        /* 최종 승인 상태인 itemidx 를 제외하고 비초출 처리 */
+                        /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                        if (cnt > 1) {
+                            System.out.println("#chgItems " + cnt + " | " + master_content_id + " | " + itemStat + " | " + itemIdx + " =>  비노출");
+                            rt = this.chgItemsStatForDisableDup(itemIdx);
+                        } else {
+                            System.out.println("#chgItems " + cnt + " | " + master_content_id + " | " + itemStat + " | " + itemIdx + " =>  승인대기로 변경");
+
+                            /**** 신규 입수 건은 최종 승인 상태도 승인대기로 변경!!! *****/
+                            rt = ccubeMapper.chgItemsStatForRT(itemIdx);
+                        }
+                        cnt++;
+                    }
+                } else {
+                    /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+
+                    List<Map<String, Object>> sortedMCID = ccubeMapper.getSortedMCIDforNew(req_MCID);
+                    int cnt2 = 1;
+                    if (sortedMCID != null && sortedMCID.size() > 0) {
+                        for (Map<String, Object> mcid1 : sortedMCID) {
+                            long itemIdx = (long) mcid1.get("idx");
+                            String itemStat = (String) mcid1.get("stat");
+                            String master_content_id = (String) mcid1.get("master_content_id");
+                            /* 최종 상태가 승인대기 인 경우 mcid 기준 최초 입수건 제외하고 비노출 처리 */
+                            if (cnt2 > 1) {
+                                System.out.println("#chgItemsRT " + cnt2 + " | " + master_content_id + " | " + itemStat + " | " + itemIdx + " =>  비노출");
+                                rt = this.chgItemsStatForDisableDup(itemIdx);
+                            } else {
+                                System.out.println("#chgItemsRT " + cnt2 + " | " + master_content_id + " | " + itemStat + " | " + itemIdx + " =>  유지");
+                            }
+                            cnt2++;
+                        }
+                    }
+                }
+            }
+        }
+        return rt;
+    }
 }

@@ -15,4 +15,6 @@ public interface StatsServiceImpl {
     List<Stats> getCountItemsHistByType(Stats req);
 
     JsonObject getStatsList(int pageSize, int pageno, String searchSdate, String searchEdate, String searchStat);
+
+    JsonObject getCountsForStat(Stats reqSt);
 }

@@ -532,4 +532,69 @@
             from items a
             where a.idx = #{itemidx}
     </select>
+
+    <select id="getMultipleItemsByMCID"  resultType="java.util.Map" >
+        /* getMultipleItemsByMCID */
+
+        /** 중복 대상 master_content_id 전체 조회, 승인된 itemidx 1개 이상인 경우 **/
+        /** 최종 승인건만남기고 비노출 처리 items.stat = M , items_stat.stat = MG */
+        select * from (
+        select b.master_content_id, sum(b.cnt) as cnt from (
+            select a.master_content_id, a.content_id, count(*) cnt  from (
+            select cc.master_content_id, cc.content_id
+            from ccube_contents cc
+            inner join items it on it.cid = cc.content_id and it.stat = 'Y'
+            inner join items_stat iss on iss.idx = it.idx and iss.stat in ('ST','RT')
+            ) a
+            group by a.master_content_id, a.content_id
+        ) b
+        group by b.master_content_id
+        ) c
+        where c.cnt > 1
+    </select>
+
+    <select id="getSortedItemsByMCID"  resultType="java.util.Map" parameterType="java.lang.String">
+        /* getSortedItemsByMCID */
+
+        /** 중복대상 master_content_id 로 최종 승인 차수의 itemidx 리스트 취득 */
+        /** 최종 승인건만남기고 비노출 처리 items.stat = M **/
+        select it.idx, cc.master_content_id, cc.content_id,iss.stat, iss.regdate from ccube_contents cc
+        inner join items it on it.cid = cc.content_id and it.stat = 'Y'
+        left outer join items_stat iss on iss.idx = it.idx and iss.stat in ('ST','RT')
+        where cc.master_content_id = #{master_content_id}
+        order by iss.stat desc, iss.regdate desc, it.idx desc
+    </select>
+
+    <update id="chgItemsForDisableDup" parameterType="java.lang.Long">
+        /* chgItemsForDisableDup */
+
+        /** items_stat.stat=MG,  items.stat=M 으로 변경 **/
+        update items set stat ='M' where idx = #{idx}
+    </update>
+    <update id="chgItemsStatForDisableDup" parameterType="java.lang.Long">
+        /* chgItemsStatForDisableDup */
+
+        /** items_stat.stat=MG,  items.stat=M 으로 변경 **/
+        update items_stat set stat ='MG' where idx = #{idx}
+    </update>
+
+    <select id="getSortedMCIDforNew" resultType="java.util.Map" parameterType="java.lang.String">
+        /* getSortedMCIDforNew */
+
+        /** 중복대상 master_content_id 로 ccube_contents 입수 순서로 itemidx 리스트 취득 */
+        /** 일괄 처리 시에는 승인완료 건이 없을 경우 **/
+        /** 신규 입수 건이 있을 경우에는 해당건만 남기고 비노출 처리 items.stat = M **/
+        select it.idx, cc.master_content_id, cc.content_id,iss.stat, it.regdate1 from ccube_contents cc
+        inner join items it on it.cid = cc.content_id and it.stat = 'Y'
+        inner join items_stat iss on iss.idx = it.idx and iss.stat in ('ST','RT')
+        where cc.master_content_id = #{master_content_id}
+        order by it.regdate1 asc, it.idx asc
+    </select>
+
+
+    <update id="chgItemsStatForRT" parameterType="java.lang.Long">
+        /* chgItemsStatForRT */
+
+        update items_stat set stat ='RT' where idx = #{idx}
+    </update>
 </mapper>
