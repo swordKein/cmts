@@ -1,11 +1,8 @@
 package com.kthcorp.cmts.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.kthcorp.cmts.model.RelKnowledge;
 
-import java.util.List;
+import java.util.Map;
 
 //@Service
 public interface RelKnowledgeServiceImpl {
@@ -25,4 +22,6 @@ public interface RelKnowledgeServiceImpl {
     
     void makeFileRelKnowledge();
     void pushCsvToRelKnowledge();
+
+    Map<String, Object> getJsonArrayFromRelKnowledge();
 }

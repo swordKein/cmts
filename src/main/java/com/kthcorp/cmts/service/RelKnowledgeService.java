@@ -1,24 +1,14 @@
 package com.kthcorp.cmts.service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.kthcorp.cmts.SpringBootWebApplication;
+import com.google.gson.*;
 import com.kthcorp.cmts.mapper.RelKnowledgeMapper;
 import com.kthcorp.cmts.model.RelKnowledge;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.StringUtil;
-import com.kthcorp.cmts.util.pool.concurrent.mgr.GenericTaskThreadPoolExecutor;
-import com.kthcorp.cmts.util.pool.concurrent.task.JobTask;
-import com.kthcorp.cmts.util.pool.concurrent.task.arg.GenericTaskArgument;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.httpclient.util.DateUtil;
 import org.slf4j.Logger;
@@ -26,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class RelKnowledgeService implements RelKnowledgeServiceImpl {
@@ -1938,6 +1927,46 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		}
 	}
 
+	@Override
+	public Map<String, Object> getJsonArrayFromRelKnowledge() {
+		Map<String,Object> result = new HashMap();
+		String code = "";
+
+		String json = "";
+		List<Map<String,Object>> subList = null;
+
+		code = "ASSOC_FOOD";
+		subList = relKnowledgeMapper.getVodCook(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		code = "ASSOC_CURR";
+		subList = relKnowledgeMapper.getVodCurr(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		code = "ASSOC_DOCU";
+		subList = relKnowledgeMapper.getVodDocu(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		code = "ASSOC_HEAL";
+		subList = relKnowledgeMapper.getVodHeal(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		code = "ASSOC_HIST";
+		subList = relKnowledgeMapper.getVodHist(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		code = "ASSOC_TOUR";
+		subList = relKnowledgeMapper.getVodTour(null);
+		result.put(code, subList);
+		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
+
+		return result;
+	}
 
 
 }

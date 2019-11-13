@@ -281,4 +281,6 @@ public interface TestServiceImpl {
     void prcAwardsAll(String type) throws Exception;
     
     void removeTagsFromMetasByCSV_GetTagsCountByType();
+
+    int writeCcubeOutputDayToJsonByRelKnowleadge();
 }
