@@ -884,9 +884,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         origTypes.add("LIST_RECO_SITUATION");
 
         JsonObject oldResultObj = getOldItemsMetasByIdx(itemIdx, origTypes);
+        logger.debug("[********] 11 itemIdx = " + itemIdx);
+        logger.debug("[********] 11 origTypes = " + origTypes);
+        logger.debug("[********] 11 oldResultObj = " + oldResultObj);
         //System.out.println("#oldItemsMetas:" + oldResultObj.toString());
 
         for (String type : origTypes) {
+            logger.debug("\n\n[********] 12 type = " + type);
             JsonArray oldTypesArr = null;
             if (oldResultObj != null && oldResultObj.get(type) != null) oldTypesArr = (JsonArray) oldResultObj.get(type);
             JsonArray newTypesArr = null;
@@ -894,15 +898,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
             JsonArray typeResultArr1 = getCombinedJsonArray(type, oldTypesArr, newTypesArr, isColorCode);
             System.out.println("#TLOG:resultMetasCheckDup for type("+type+") data:"+typeResultArr1.toString());
+            logger.debug("[********] 13 typeResultArr1.toString() = " + typeResultArr1.toString());
 
             JsonArray typeResultArr = null;
             if(!"LIST_SEARCHKEYWORDS".equals(type) && !"WORDS_SNS".equals(type)) {
                 //&& !"LIST_SUBGENRE".equals(atype)) {
                 typeResultArr = this.getRemoveDupTargetMetasArray(typeResultArr1);
                 //System.out.println("#ELOG.destArr(JsonObject): datas::"+destArr2.toString());
+                logger.debug("[********] 14_1 typeResultArr.toString() = " + typeResultArr.toString());
             } else {
                 typeResultArr = this.getRemoveDupTargetMetasArrayOnlyString(typeResultArr1);
                 //System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
+                logger.debug("[********] 14_2 typeResultArr.toString() = " + typeResultArr.toString());
             }
 
             if ("LIST_NOT_MAPPED".equals(type)) {
@@ -929,8 +936,10 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 typeResultArr = listSubgenre2;
             }
 
+            logger.debug("[********] 15 resultObj.toString() = " + resultObj.toString());
             if (resultObj.get(type) != null) resultObj.remove(type);
             resultObj.add(type, typeResultArr);
+            logger.debug("[********] 16 resultObj.toString() = " + resultObj.toString());
         }
 
         return resultObj;
@@ -1665,6 +1674,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     public JsonArray getRemoveDupTargetMetasArray(JsonArray origArray) {
+        logger.debug("[********] 14 getRemoveDupTargetMetasArray origArray.toString() = " + origArray.toString());
         Map<String, Object> wordSet = new HashMap();
         JsonArray resultArr = null;
 
@@ -1674,15 +1684,18 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
                 for (JsonElement je : origArray) {
                     JsonObject jo = (JsonObject) je;
+                    logger.debug("[********] 14    0 jo.toString() = " + jo.toString());
 
                     String word1 = jo.get("word").getAsString();
                     word1 = word1.trim();
 
                     // Map�쓽 key�뿉 word瑜� �벑濡앺븯�뿬 以묐났 �젣嫄�
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
+                        logger.debug("[********] 14    1 jo.toString() = " + jo.toString());
                         resultArr.add(jo);
                         wordSet.put(word1, "exist");
                     } else {
+                        logger.debug("[********] 14    2 jo.toString() = " + jo.toString());
                         System.out.println("#ELOG.metaChange skip by Duplicated word:"+word1);
                     }
                 }
@@ -1691,6 +1704,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
         }
 
+        logger.debug("[********] 14 getRemoveDupTargetMetasArray wordSet.toString() = " + wordSet.toString());
+        logger.debug("[********] 14 getRemoveDupTargetMetasArray resultArr.toString() = " + resultArr.toString());
         return resultArr;
     }
 
@@ -1712,6 +1727,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     }
 
     public JsonArray getRemoveDupTargetMetasArrayOnlyString(JsonArray origArray) {
+    	logger.debug("[********] 14 getRemoveDupTargetMetasArrayOnlyString origArray.toString() = " + origArray.toString());
         JsonArray resultArr = null;
         Map<String, Object> wordSet = new HashMap();
 
@@ -1720,16 +1736,20 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         if (origArray != null) {
             try {
                 origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
+                logger.debug("[********] 14    0 origStrArr.toString() = " + origStrArr.toString());
                 resultArr = new JsonArray();
 
                 for (String word1 : origStrArr) {
+                    logger.debug("[********] 14    1 word1 = " + word1);
                     word1 = word1.trim();
 
                     // Map�쓽 key�뿉 word瑜� �벑濡앺븯�뿬 以묐났 �젣嫄�
                     if (!"".equals(word1) && wordSet.get(word1) == null) {
+                        logger.debug("[********] 14    2 word1 = " + word1);
                         resultArr.add(word1);
                         wordSet.put(word1, "exist");
                     } else {
+                        logger.debug("[********] 14    3 word1 = " + word1);
                         System.out.println("#ELOG.metaChange skip by Duplicated word:"+word1);
                     }
                 }
@@ -1739,6 +1759,8 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             }
         }
 
+        logger.debug("[********] 14 getRemoveDupTargetMetasArray wordSet.toString() = " + wordSet.toString());
+        logger.debug("[********] 14 getRemoveDupTargetMetasArray resultArr.toString() = " + resultArr.toString());
         return resultArr;
     }
 
