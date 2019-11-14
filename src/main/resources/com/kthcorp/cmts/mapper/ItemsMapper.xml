@@ -650,8 +650,8 @@
             ) itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx
         </if>
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
-            left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
-            left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
+            left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc_ids on cc_ids.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs_ids on cs_ids.series_id = it.cid
         </if>
 
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
