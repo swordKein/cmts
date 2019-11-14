@@ -441,18 +441,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes, "Y");
         System.out.println("#ELOG.getItemsMetasByItemIdx:: old.datas::"+resultObj.toString());
+        logger.debug("[********] 1 resultObj.toString() = " + resultObj.toString() + "\n\n");
 
         JsonObject resultObj2 = getItemsMetasDupByItemIdx(resultObj, itemIdx, isColorCode);
         System.out.println("#ELOG.getItemsMetasByItemIdx:: dupCheck.datas::"+resultObj2.toString());
+        logger.debug("[********] 2 resultObj2.toString() = " + resultObj2.toString() + "\n\n");
 
         /* WORDS_ASSOC 媛먯꽦�쑀�쓽�뼱 - �꽕�씠踰꾩궗�쟾 */
         resultObj2 = getWordsAssoc(itemIdx, resultObj2);
+        logger.debug("[********] 3 resultObj2.toString() = " + resultObj2.toString() + "\n\n");
 
         System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsAssoc.datas::"+resultObj2.toString());
 
         /* WORDS_GENRE */
         resultObj2 = getWordsGenre(itemIdx, resultObj2);
         System.out.println("#ELOG.getItemsMetasByItemIdx:: after.wordsGenre.datas::"+resultObj2.toString());
+        logger.debug("[********] 4 resultObj2.toString() = " + resultObj2.toString() + "\n\n");
 
 
         /* WORDS_SNS */
@@ -462,9 +466,11 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         if (resultObj2 != null && resultObj2.get("LIST_SUBGENRE") == null) {
             resultObj2 = getSubgenres(itemIdx, resultObj2);
         }
+        logger.debug("[********] 5 resultObj2.toString() = " + resultObj2.toString() + "\n\n");
 
         /* LIST_AWARD */
         resultObj2 = getAwardObject(itemIdx, resultObj2);
+        logger.debug("[********] 6 resultObj2.toString() = " + resultObj2.toString() + "\n\n");
 
         return resultObj2;
     }
