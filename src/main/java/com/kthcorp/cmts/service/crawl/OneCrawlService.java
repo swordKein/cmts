@@ -69,7 +69,6 @@ public class OneCrawlService implements OneCrawlServiceImpl {
             if (awardList == null) {
                 awardList = new ArrayList();
             }
-
             //System.out.println("#reqHtml :: "+reqHtml);
 
             String contentHtml = JsoupUtil.getTaggedValueAllHtml(reqHtml, ".main_detail");
@@ -107,15 +106,12 @@ public class OneCrawlService implements OneCrawlServiceImpl {
                             #award subs :: 76회 베니스국제영화제. 2019 :: 토드 필립스 (황금사자상)*/
                             /* =>   76회 베니스국제영화제, 2019__sub__황금사자상  */
                             String subs = "";
-                            Elements sub = info_prod.eq(i).select(".list_produce").eq(0).select("dl").select("dd");
+                            Elements sub = info_prod.eq(i).select(".list_produce").eq(0).select("dl").select("dd").select(".info_person");
                             for (Element es : sub) {
                                 String es1 = es.text();
-                                if (!"".equals(tit_aw) && es1.contains("(") && es1.contains(")")) {
-                                    String es2[] = es1.split("\\(");
-                                    String es22 = es2[1];
-                                    if (es22.contains(")")) {
-                                        String es23 = es22.replace(")","")
-                                                .replace(" ","").trim();
+                                if (!"".equals(tit_aw) && !"".equals(es1)) {
+                                    if (!"".equals(es1)) {
+                                        String es23 = es1.trim();
                                         String tt1[] = tit_aw.split("회 ");
                                         String tt2 = tt1[1];
                                         String tt21[] = tt2.split("\\.");
