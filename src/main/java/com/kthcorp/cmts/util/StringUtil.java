@@ -681,7 +681,7 @@ public class StringUtil {
                     Set<String> subSet = getSubAwards(sub2[0]);
                     if (subSet != null) {
                         String sub22 = sub2[1];
-                        sub22 = sub22.trim();
+                        sub22 = sub22.replace(" ","").trim();
                         String validSubAward = compareSetToString(subSet, sub2[0], sub22);
                         if (!"".equals(validSubAward)) {
                             awardList.add(validSubAward);
