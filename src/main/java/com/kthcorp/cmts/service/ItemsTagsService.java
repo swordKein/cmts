@@ -1735,7 +1735,13 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         if (origArray != null) {
             try {
-                origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
+                //origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");	//2019.11.14 - 넘어오는게 텍스트만 있어서 에러남
+                if(origArray.toString().indexOf("\"target_meta\"")<0) {
+                	origStrArr = JsonUtil.convertJsonArrayToList(origArray);
+                }else {
+                	origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
+                }
+            	
                 logger.debug("[********] 14    0 origStrArr.toString() = " + origStrArr.toString());
                 resultArr = new JsonArray();
 
