@@ -133,7 +133,7 @@ public class ItemsMapperTest {
         req.setSearchStat("ALL");
         //req.setSearchSdate("2017-12-01 00:00:00");
         //req.setSearchEdate("2018-02-01 00:00:00");
-        req.setSearchKeyword("결정적");
+        req.setSearchKeyword("사랑도 통역이");
 
         List<String> serarchPartsArr = new ArrayList<String>();
         //serarchPartsArr.add("title");
