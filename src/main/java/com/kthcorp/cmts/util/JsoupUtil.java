@@ -16,7 +16,7 @@ public class JsoupUtil {
         //Elements summaryElms = doc.select(tag).removeAttr("Table");
         Elements summaryElms = doc.select(tag);
         //System.out.println(">> summaryElms0 for tag:"+tag+"  ::" + summaryElms.toString());
-        System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
+        //System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
 
         if (summaryElms != null && summaryElms.size() > 0) {
             Element summaryElm = summaryElms.get(0);
@@ -41,7 +41,7 @@ public class JsoupUtil {
         //Elements summaryElms = doc.select(tag).removeAttr("Table");
         Elements summaryElms = doc.select(tag);
         //System.out.println(">> summaryElms0 for tag:"+tag+"  ::" + summaryElms.toString());
-        System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
+        //System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
 
         if (summaryElms != null && summaryElms.size() > 0) {
             result = summaryElms.text().toString();
@@ -59,7 +59,7 @@ public class JsoupUtil {
         Elements summaryElms = doc.select(tag);
         summaryElms.select(".paging_popcorn").remove();
         //System.out.println(">> summaryElms0 for tag:"+tag+"  ::" + summaryElms.toString());
-        System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.toString());
+        //System.out.println(">> summaryElms for tag:"+tag+"  ::" + summaryElms.toString());
 
         if (summaryElms != null && summaryElms.size() > 0) {
             result = summaryElms.toString();
@@ -100,7 +100,7 @@ public class JsoupUtil {
         //Elements summaryElms = doc.select(tag).removeAttr("Table");
         Elements summaryElms = doc.select(tag);
         //System.out.println(">> summaryElms0 for tag:"+tag+"  ::" + summaryElms.toString());
-        System.out.print(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
+        //System.out.print(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
 
         if (summaryElms != null && summaryElms.size() > 0) {
             Element summaryElm = summaryElms.get(0);
@@ -158,7 +158,7 @@ public class JsoupUtil {
         Document doc = Jsoup.parse(reqStr,"UTF-8");
         System.out.println(">> reqSrtr:"+reqStr);
         Elements summaryElms = doc.select(tag).removeAttr("Table");
-        System.out.print(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
+        //System.out.print(">> summaryElms for tag:"+tag+"  ::" + summaryElms.text().toString());
 
         if (summaryElms != null && summaryElms.size() > 0) {
             Element summaryElm = summaryElms.get(0);

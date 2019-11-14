@@ -99,6 +99,8 @@ public class DaumMovieServiceImplTest {
 		reqInfo.setParam1("333");
 		reqInfo.setMovietitle("조커");
 		reqInfo.setMovieyear("2019");
+		reqInfo.setMovietitle("그린북");
+		reqInfo.setMovieyear("2018");
 
 		JsonObject result = daumMovieService.getContents("DAUM_MOVIE", reqInfo);
 		System.out.println("#Result:"+result.toString());

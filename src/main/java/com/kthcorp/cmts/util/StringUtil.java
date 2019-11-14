@@ -676,15 +676,15 @@ public class StringUtil {
                 } else {
                     /* 서브장르는 별도의 규칙으로 하드코딩 맵과 대조하여 존재할 경우만 취득 19.11.12 */
                     /*  베니스국제영화제__sub__황금사자상  */
-                    String sub1 = reqAward.replace("__sub__", " ");
-                    String sub2[] = sub1.split(" ");
+                    //String sub1 = reqAward.replace("__sub__", " ");
+                    String sub2[] = reqAward.split("__sub__");
                     Set<String> subSet = getSubAwards(sub2[0]);
                     if (subSet != null) {
                         String sub22 = sub2[1];
                         sub22 = sub22.trim();
-                        boolean isExists = compareSetToString(subSet, sub22);
-                        if (isExists) {
-                            awardList.add(sub1);
+                        String validSubAward = compareSetToString(subSet, sub2[0], sub22);
+                        if (!"".equals(validSubAward)) {
+                            awardList.add(validSubAward);
                         }
                     }
 
@@ -700,21 +700,25 @@ public class StringUtil {
   
   
 
-    public static boolean compareSetToString(Set<String> reqSet, String reqStr){
-        boolean isExists = false;
+    public static String compareSetToString(Set<String> reqSet, String tit,  String reqStr){
+        String result  = "";
+
         if (reqSet != null && !"".equals(reqStr)) {
             Iterator<String> iter = reqSet.iterator();
 
             while(iter.hasNext()) {
                 String setStr = iter.next();
                 setStr = setStr.trim();
-                if (reqStr.equals(setStr)) {
-                    isExists = true;
+                if (reqStr.contains(setStr)) {
+                    //System.out.println("## compare req:"+reqStr+" vs "+setStr+" TRUE");
+                    result = tit + " " + setStr;
+                } else {
+                    //System.out.println("## compare req:"+reqStr+" vs "+setStr+" FALSE");
                 }
             }
         }
 
-        return isExists;
+        return result;
     }
 
     public static Set<String> getSubAwards(String mainAwards) {
