@@ -550,7 +550,7 @@
             left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
-        countItemsAll
+        
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
