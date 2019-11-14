@@ -24,6 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1836,6 +1837,7 @@ public class ApiController {
 	
 	//권재일 추가 파일 업로드 - 연관지식 
 	//from web - RelKnowledgeController
+	@CrossOrigin
     @RequestMapping(value = "/relknowledgeCsvFileUpload.do")
     @ResponseBody
     public String relknowledgeCsvFileUpload(
@@ -1891,6 +1893,7 @@ public class ApiController {
     }
 
 	//권재일 추가 파일 업로드 - 메타사전
+    @CrossOrigin
     @RequestMapping(value = "/dictionaryCsvFileUpload.do")
     @ResponseBody
     public String dictionaryCsvFileUpload(

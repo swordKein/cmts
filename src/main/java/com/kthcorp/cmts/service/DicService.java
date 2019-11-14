@@ -912,6 +912,8 @@ public class DicService implements DicServiceImpl {
     }
 
     private int delDicsByParams(String dicType, String oldword, String newword, Double freq) {
+    	logger.info("#delDicsByParams - dicType="+dicType + " , oldword="+oldword + " , newword="+newword + " , freq="+freq);
+    	
         int rt = 0;
         switch(dicType) {
             case "NOTUSE":
@@ -966,6 +968,9 @@ public class DicService implements DicServiceImpl {
                 reqke.setType(dicType);
                 rt = this.delDicKeywords(reqke);
                 break;
+            case "UNCLASSIFIED":		//미분류 항목을 dic_keywords 테이블에서 삭제 - WHEN WHERE 같은 카테고리가 정해져 있지 않으므로
+            	rt = 1;
+            	break;
         }
         return rt;
     }
@@ -1356,7 +1361,7 @@ public class DicService implements DicServiceImpl {
 	    	String seperator = ",";
 	    	
 	    	//1. 헤더
-	    	resultStr = "Type" + seperator + "Keyword" + seperator + "Keyword2" + lineFeed;
+	    	resultStr = "Type" + seperator + "Keyword" + lineFeed;
 			
 	    	//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
 	        DicKeywords reqKeyword = new DicKeywords();
@@ -1367,10 +1372,8 @@ public class DicService implements DicServiceImpl {
 			//4. 문자열화
 	        for(DicKeywords item : dicKeywordList) {
 	        	String strKeyword = item.getKeyword().replace("\r", "").replace("\"", "");
-	        	String strKeyword2 = (item.getKeyword2()==null ? "" : item.getKeyword2().replace("\r", "").replace("\"", ""));
 	        	if(strKeyword.indexOf(",")>-1) strKeyword = "\""+strKeyword+"\"";
-	        	if(strKeyword2.indexOf(",")>-1) strKeyword2 = "\""+strKeyword2+"\"";
-	        	resultStr += item.getType() + seperator + strKeyword + seperator + strKeyword2 + lineFeed;
+	        	resultStr += item.getType() + seperator + strKeyword + lineFeed;
 	        }
 	    	
 			

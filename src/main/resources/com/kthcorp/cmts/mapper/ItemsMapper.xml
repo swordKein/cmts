@@ -422,7 +422,7 @@
 
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
             ) p where p.cid is not null
-            order by p.regdate1 desc, p.idx desc limit ${pageSize} offset ${offsetIdx}
+            order by p.regdate desc, p.idx desc limit ${pageSize} offset ${offsetIdx}
         </if>
 
         <if test='searchActorsYn == null or searchActorsYn != "Y"'>

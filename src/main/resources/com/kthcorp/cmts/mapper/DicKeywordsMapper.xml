@@ -270,16 +270,15 @@
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
 		IGNORE 1 LINES
-		(@col1,@col2,@col3)
+		(@col1,@col2)
 		set
 			type=@col1,
 			keyword=@col2,
 			ratio=0,
 			regdate=now(),
-			regid='sched',	-- ?
+			regid='sched',
 			freq1 = 0,
-			procdate=now(),
-			keyword2=@col3
+			procdate=now()
     </insert>
     
     <delete id="cleanBlankDicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
