@@ -168,6 +168,12 @@ schedule :
     -
       cronExpression : 0 0 3 * * ?
       jobType : processCollectHearbit
+    -
+      cronExpression : 0-59/10 1 1 1 * ?
+      jobType : pushCsvToData
+    -
+      cronExpression : 5-59/10 1 1 1 * ?
+      jobType : makeCsvFile
 property:
   serverid: cmts_local_cm01
   #crawl_api_url: http://14.63.174.158:8080/crawl/byprefix
@@ -278,6 +284,12 @@ schedule :
     -
       cronExpression : 0 55 13 08 06 ? 2018
       jobType : manualJobs
+    -
+      cronExpression : 0 19 * * * ?
+      jobType : pushCsvToData
+    -
+      cronExpression : 30 19 * * * ?
+      jobType : makeCsvFile
 
 property:
   serverid: cmts_dev_cm01

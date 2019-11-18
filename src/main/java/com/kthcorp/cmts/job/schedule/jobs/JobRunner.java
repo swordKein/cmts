@@ -29,6 +29,11 @@ public class JobRunner implements Job {
     @Autowired private CcubeService ccubeService;
     @Autowired private TestService testService;
     @Autowired private SchedTriggerService schedTriggerService;
+    
+    @Autowired private DicService dicService;
+    @Autowired private RelKnowledgeService relKnowledgeService;
+    
+    
     //@Autowired
     //private MainService mainServiceImpl;
     //@Autowired
@@ -174,6 +179,64 @@ public class JobRunner implements Job {
                 	testService.removeTagsFromMetasByCSV_GetTagsCountByType();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
+                case "makeCsvFile":
+                	// = 메타사전/연관지식 csv 파일 생성 makeCsvFile
+                    logger.info("\n\n\n#MLOG schedule.makeCsvFile Start");
+                    
+                    //from TestServiceTestImpl - makeCsvFile , ApiController - /makeCsvFile.do
+                    
+            		//메타사전
+            		logger.info("#makeCsvFile - dicKeywords# start");
+            		dicService.makeFileDickeywords();
+            		logger.info("#makeCsvFile - dicKeywords# end\n");
+            		
+            		//불용키워드 사전
+            		logger.info("#makeCsvFile - notuseWord# start");
+            		dicService.makeFileNotuse();
+            		logger.info("#makeCsvFile - notuseWord# end\n");
+            		
+            		//대체키워드 사전
+            		logger.info("#makeCsvFile - changeWord# start");
+            		dicService.makeFileChange();
+            		logger.info("#makeCsvFile - changeWord# end\n");
+            		
+            		//연관지식
+            		logger.info("#makeCsvFile - relKnowledge# start");
+            		relKnowledgeService.makeFileRelKnowledge();
+            		logger.info("#makeCsvFile - relKnowledge# end\n");
+            		
+                    logger.info("#MLOG schedule.jae12MakeCsvFile End\n\n\n");
+                    break;
+                case "pushCsvToData":
+                	// = 메타사전/연관지식 csv 파일을 데이터로 pushCsvToData
+                    logger.info("\n\n\n#MLOG schedule.pushCsvToData Start");
+                    
+                    //from TestServiceTestImpl - pushCsvToData , ApiController - /pushCsvToData.do
+                    
+            		//메타사전
+            		logger.info("#pushCsvToData - dicKeywords# start");
+            		dicService.pushCsvToDicKeywords();
+            		logger.info("#pushCsvToData - dicKeywords# end\n");
+            		
+            		//불용키워드 사전
+            		logger.info("#pushCsvToData - notuseWord# start");
+            		dicService.pushCsvToDicNotuseKeywords();
+            		logger.info("#pushCsvToData - notuseWord# end\n");
+            		
+            		//대체키워드 사전
+            		logger.info("#pushCsvToData - changeWord# start");
+            		dicService.pushCsvToDicChangeKeywords();
+            		logger.info("#pushCsvToData - changeWord# end\n");
+            		
+            		//연관지식
+            		logger.info("#pushCsvToData - relKnowledge# start");
+            		relKnowledgeService.pushCsvToRelKnowledge();
+            		logger.info("#pushCsvToData - relKnowledge# end\n");
+            		
+                    logger.info("#MLOG schedule.jae12PushCsvToData End\n\n\n");
+                    
+                    break;
+                    
             }
         } catch (Exception e) {
             logger.info("#MLOG schedule.error jobType:"+jobType+"/rt:"+rt);

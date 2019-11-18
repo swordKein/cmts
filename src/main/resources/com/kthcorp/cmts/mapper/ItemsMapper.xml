@@ -341,7 +341,7 @@
         , it.regdate1 as regdate
         , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         ,ifnull(cs.series_id, '0') as series_id
-        ,ifnull(cc.master_content_id,'0') as content_id
+        ,ifnull(cc.content_id,'0') as content_id
         from
         (	select j.* from
         (

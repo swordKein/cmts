@@ -966,7 +966,7 @@ public class DicService implements DicServiceImpl {
                 reqke.setOldword(oldword);
                 reqke.setRatio(freq);
                 reqke.setType(dicType);
-                rt = this.delDicKeywords(reqke);
+                rt += this.delDicKeywords(reqke);	//2019.11.15 rt = ~~ → rt += ~~ : 위에서 지운걸 또 지우려 하는 경우 0이 리턴 → 의도한 결과가 안나옴
                 break;
             case "UNCLASSIFIED":		//미분류 항목을 dic_keywords 테이블에서 삭제 - WHEN WHERE 같은 카테고리가 정해져 있지 않으므로
             	rt = 1;
