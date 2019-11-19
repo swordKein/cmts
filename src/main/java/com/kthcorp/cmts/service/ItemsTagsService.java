@@ -1311,7 +1311,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                     JsonArray destArr = null;
                     JsonArray destArr2 = null;
                     if(!"LIST_SEARCHKEYWORDS".equals(atype) && !"WORDS_SNS".equals(atype)
-                    //        && !"LIST_AWARD".equals(atype)
+                            && !"LIST_AWARD".equals(atype)
                     ) {
                             //&& !"LIST_SUBGENRE".equals(atype)) {
                         destArr = this.getTargetMetasArray(atype, origMetaArr, changeMetaArr);
