@@ -1893,7 +1893,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 	    	
 	    	
 	    	//파일 정보를 저장 (파일명 + 생성시각 timestamp)
-	    	fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase();
+	    	fileNameContent = "VOD_RT_"+type.toUpperCase();
 	    	DicKeywords fileInfo = new DicKeywords();
 	    	fileInfo.setFilePath(fileNameContent);
 	    	
