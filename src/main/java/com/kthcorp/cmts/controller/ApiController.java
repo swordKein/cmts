@@ -1762,37 +1762,20 @@ public class ApiController {
 		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		
 		try {
-			/*
-			//구버전 : 파일경로 띄우기
-			strResClasspath = resClasspath.getURI().getPath();
-			if(strResClasspath==null) {
-				strResClasspath = "/home/daisy/.jenkins/workspace/cmts/target/classes/static/";	//TB
+			//2019.11.20 파일정보 로딩
+			DicKeywords fileInfoParam = new DicKeywords();
+			fileInfoParam.setFilePath("VOD_RT_" + type.toUpperCase());
+			DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
+			if(fileInfoResult!=null) {
+				String strDateTime = fileInfoResult.getRegdate().toString();
+				System.out.println("strDateTime = " + strDateTime);
+				strDateTime = strDateTime.substring(0, 19).replace("-", "").replace(" ", "_").replace(":", "");
+				System.out.println("strDateTime = " + strDateTime);
+				strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+				System.out.println("strFileName = " + strFileName);
+			}else {
+				strFileName = fileInfoParam.getFilePath() + ".csv";
 			}
-			logger.info("strResClasspath =" + strResClasspath);
-			
-			//파일 복사 from strFileName to strResClasspath
-			strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
-			logger.info("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
-			
-			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
-			fis = new FileInputStream(strFilePath);
-			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
-			os = response.getOutputStream();
-			
-			int data = 0;
-			while((data=fis.read())!=-1) {
-				fos.write(data);
-			}
-			
-			fis.close();
-			fos.close();
-			
-			//String strFilePath
-			//다운로드 파일 링크
-			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
-			os.write((strUrl+"/"+strFileName).getBytes());
-			os.close();
-			*/
 			
 			//신버전 : 데이터를 그대로 태우기 - 느림
 			
@@ -1801,6 +1784,8 @@ public class ApiController {
 			
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
+			
+			os.write((strFileName+"::::").getBytes("UTF-8"));
 			
 			int data = 0;
 			while((data = fis.read()) != -1) {
@@ -1827,7 +1812,10 @@ public class ApiController {
 		JsonObject result_all = result;		//new JsonObject();
 		result_all.addProperty("RT_CODE", 1);
 		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.addProperty("CSV_FILENAME", strFileName);//x?
 		//result_all.add("RESULT", result1);
+		//response.addHeader("CSV_FILENAME", strFileName);
+		//response.setHeader("CSV_FILENAME", strFileName);
 
 
 		return result_all.toString();

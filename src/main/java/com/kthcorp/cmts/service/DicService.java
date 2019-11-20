@@ -1385,6 +1385,15 @@ public class DicService implements DicServiceImpl {
 	    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
 	    	
 	    	System.out.println("strFileName = " + strFileName);
+	    	
+	    	
+	    	//6. 파일 정보를 저장 (파일명 + 생성시각 timestamp)
+	    	fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase();
+	    	DicKeywords fileInfo = new DicKeywords();
+	    	fileInfo.setFilePath(fileNameContent);
+	    	
+	    	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
+	    	
 		}
 		//return strFileName;	}
 	}
@@ -1423,6 +1432,14 @@ public class DicService implements DicServiceImpl {
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
     	
     	System.out.println("strFileName = " + strFileName);
+    	
+    	
+    	//6. 파일 정보를 저장 (파일명 + 생성시각 timestamp)
+    	fileNameContent = "DIC_KEYWORDS_NOTUSE";
+    	DicKeywords fileInfo = new DicKeywords();
+    	fileInfo.setFilePath(fileNameContent);
+    	
+    	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 	}
 
 	public void makeFileChange() {
@@ -1461,6 +1478,14 @@ public class DicService implements DicServiceImpl {
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
     	
     	System.out.println("strFileName = " + strFileName);
+    	
+    	
+    	//6. 파일 정보를 저장 (파일명 + 생성시각 timestamp)
+    	fileNameContent = "DIC_KEYWORDS_CHANGE";
+    	DicKeywords fileInfo = new DicKeywords();
+    	fileInfo.setFilePath(fileNameContent);
+    	
+    	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 	}
 
 	public void pushCsvToDicKeywords() {
@@ -1569,5 +1594,9 @@ public class DicService implements DicServiceImpl {
         
         result.add("LIST_WORDS", list_words);
         return result;
+	}
+
+	public DicKeywords getCsvFileNameTimestamp(DicKeywords fileInfoParam) {
+		return dicKeywordsMapper.getCsvFileNameTimestamp(fileInfoParam);
 	}
 }

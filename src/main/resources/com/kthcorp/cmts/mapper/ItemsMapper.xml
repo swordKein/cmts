@@ -336,12 +336,12 @@
     <select id="searchItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         /* searchItemsPaging */
         select a.idx
-        , CASE WHEN (cs.series_id is not null and cs.series_id != '0')
+        , CASE WHEN (ck.series_id is not null and ck.series_id != '0')
         THEN 'SER' ELSE ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR' ELSE 'OTH' END AS type ) END AS type
         , it.regdate1 as regdate
         , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
-        ,ifnull(cs.series_id, '0') as series_id
-        ,ifnull(cc.content_id,'0') as content_id
+        ,ifnull(ck.series_id, '0') as series_id
+        ,ifnull(ck.content_id,'0') as content_id
         from
         (	select j.* from
         (
@@ -351,9 +351,9 @@
         </if>
         select it.idx, iss.stat, it.regdate
 
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        <!-- <if test='searchActorsYn != null and searchActorsYn == "Y"'> -->
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
-        </if>
+        <!-- </if> -->
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR', 'CT')
         <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
@@ -375,29 +375,34 @@
 
         <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
 
-        left outer join (
-        select t.* from (
-        select tk.idx, tk.tagidx
-        , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
-        from items_tags_keys tk
-        where tk.stat = 'S'
-        ) t where t.tagidx = t.maxTagIdx
-        ) itk on itk.idx = it.idx
+            left outer join (
+            select t.* from (
+            select tk.idx, tk.tagidx
+            , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
+            from items_tags_keys tk
+            where tk.stat = 'S'
+            ) t where t.tagidx = t.maxTagIdx
+            ) itk on itk.idx = it.idx
 
-        inner join (
-        select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
+            inner join (
+            select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
             <foreach item="item2" index="index" collection="searchTagsArr"
                      open="(" separator="," close=")">
                 #{item2}
             </foreach>
-        and meta like concat('%',#{searchKeyword},'%')
-        ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
+            and meta like concat('%',#{searchKeyword},'%')
+            ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
         </if>
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
-        left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
-        left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
-        </if>
-
+        <choose>
+        <when test='searchActorsYn != null and searchActorsYn == "Y"'>
+            left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
+        </when>
+        <otherwise>
+            left outer join ( select distinct(content_id) from ccube_contents) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series) cs on cs.series_id = it.cid
+        </otherwise>
+        </choose>
         where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
@@ -431,8 +436,24 @@
         order by j.regdate desc, j.idx desc limit ${pageSize}
         ) a
         inner join items it on it.idx = a.idx
-        left outer join ccube_contents cc on cc.content_id = it.cid
-        left outer join ccube_series cs on cs.series_id = it.cid
+        inner join
+        	(
+        		select ck2.*
+        		from
+        			(
+        				select
+        					@row_number:=case when @itemidx_2=itemidx then @row_number+1 else 1 end as num,
+        					@itemidx_2:=itemidx as itemidx,
+        					content_id,
+        					series_id,
+        					regdate
+        				from
+        					ccube_keys
+        				order by
+        					itemidx asc, regdate desc, content_id desc, series_id desc
+        			) ck2
+        		where ck2.num=1
+        	) ck on a.idx=ck.itemidx and (ck.content_id = a.cid or ck.series_id = a.cid)
         <!--
         inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
         -->
@@ -457,9 +478,9 @@
         </if>
         select it.idx, iss.stat, iss.regdate
 
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        <!-- <if test='searchActorsYn != null and searchActorsYn == "Y"'> -->
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
-        </if>
+        <!-- </if> -->
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR', 'CT')
         <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
@@ -502,9 +523,9 @@
         </if>
         select it.idx, iss.stat, it.regdate
 
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        <!-- <if test='searchActorsYn != null and searchActorsYn == "Y"'> -->
             , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
-        </if>
+        <!-- </if> -->
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR', 'CT')
         <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
@@ -544,11 +565,17 @@
             and meta like concat('%',#{searchKeyword},'%')
             ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
         </if>
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        <choose>
+        <when test='searchActorsYn != null and searchActorsYn == "Y"'>
             left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
-        </if>
-        where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
+        </when>
+        <otherwise>
+            left outer join ( select distinct(content_id) from ccube_contents) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series) cs on cs.series_id = it.cid
+        </otherwise>
+        </choose>
+        where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
             and it.title like CONCAT('%',#{searchKeyword},'%')
@@ -575,8 +602,24 @@
         ) j
         ) a
         inner join items it on it.idx = a.idx
-        left outer join ccube_contents cc on cc.content_id = it.cid
-        left outer join ccube_series cs on cs.series_id = it.cid
+        inner join
+        	(
+        		select ck2.*
+        		from
+        			(
+        				select
+        					@row_number:=case when @itemidx_2=itemidx then @row_number+1 else 1 end as num,
+        					@itemidx_2:=itemidx as itemidx,
+        					content_id,
+        					series_id,
+        					regdate
+        				from
+        					ccube_keys
+        				order by
+        					itemidx asc, regdate desc, content_id desc, series_id desc
+        			) ck2
+        		where ck2.num=1
+        	) ck on a.idx=ck.itemidx and (ck.content_id = a.cid or ck.series_id = a.cid)
         <!--
         inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
         -->

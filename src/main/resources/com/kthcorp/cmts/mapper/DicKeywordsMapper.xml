@@ -312,4 +312,29 @@
 			)a
 		limit #{pageSize}	
 	</select>
+	
+	<!-- 2019.11.20 : 사전관리 + 연관지식 CSV 업로드 파일 정보 저장 -->
+	<insert id="updateCsvFileInfo" parameterType="com.kthcorp.cmts.model.DicKeywords">
+		INSERT INTO file_csv_info
+		(
+			filename, regdate
+		)
+		values(
+			#{filePath},now()
+		)
+		
+		ON DUPLICATE KEY
+		UPDATE
+			regdate = now()
+	</insert> 
+	
+	<!-- 2019.11.20 : 사전관리 + 연관지식 CSV 업로드 파일 정보 불러오기 -->
+	<select id="getCsvFileNameTimestamp" parameterType="com.kthcorp.cmts.model.DicKeywords" resultType="com.kthcorp.cmts.model.DicKeywords">
+		SELECt
+			*
+		FROM
+			file_csv_info
+		WHERE
+			filename = #{filePath}
+	</select>
 </mapper>

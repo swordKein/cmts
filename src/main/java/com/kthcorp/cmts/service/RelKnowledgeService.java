@@ -1,7 +1,9 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.*;
+import com.kthcorp.cmts.mapper.DicKeywordsMapper;
 import com.kthcorp.cmts.mapper.RelKnowledgeMapper;
+import com.kthcorp.cmts.model.DicKeywords;
 import com.kthcorp.cmts.model.RelKnowledge;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.StringUtil;
@@ -23,6 +25,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private RelKnowledgeMapper relKnowledgeMapper;
+    @Autowired
+    private DicKeywordsMapper dicKeywordsMapper;	//2019.11.20 CSV 파일 정보 저장
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -1886,6 +1890,14 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			//return strFileName;
 			
 			System.out.println("strFileName = " + strFileName);
+	    	
+	    	
+	    	//파일 정보를 저장 (파일명 + 생성시각 timestamp)
+	    	fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase();
+	    	DicKeywords fileInfo = new DicKeywords();
+	    	fileInfo.setFilePath(fileNameContent);
+	    	
+	    	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 		}
 	}
 
