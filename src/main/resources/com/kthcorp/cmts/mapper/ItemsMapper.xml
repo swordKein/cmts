@@ -450,7 +450,7 @@
         				from
         					ccube_keys
         				order by
-        					itemidx asc, regdate desc, content_id desc, series_id desc
+        					itemidx asc, content_id desc, series_id desc, regdate desc
         			) ck2
         		where ck2.num=1
         	) ck on a.idx=ck.itemidx and (ck.content_id = a.cid or ck.series_id = a.cid)
@@ -490,10 +490,16 @@
             and iss.stat in ('FR', 'FA')
         </if>
 
-        <if test='searchActorsYn != null and searchActorsYn == "Y"'>
+        <choose>
+        <when test='searchActorsYn != null and searchActorsYn == "Y"'>
             left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
-        </if>
+        </when>
+        <otherwise>
+            left outer join ( select distinct(content_id) from ccube_contents) cc on cc.content_id = it.cid
+            left outer join ( select distinct(series_id) from ccube_series) cs on cs.series_id = it.cid
+        </otherwise>
+        </choose>
 
         where iss.regdate between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
 
@@ -616,7 +622,7 @@
         				from
         					ccube_keys
         				order by
-        					itemidx asc, regdate desc, content_id desc, series_id desc
+        					itemidx asc, content_id desc, series_id desc, regdate desc
         			) ck2
         		where ck2.num=1
         	) ck on a.idx=ck.itemidx and (ck.content_id = a.cid or ck.series_id = a.cid)

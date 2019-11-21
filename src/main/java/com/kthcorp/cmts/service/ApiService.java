@@ -652,7 +652,7 @@ public class ApiService implements ApiServiceImpl {
             for (Items tm : itemsList) {
                 JsonObject newItem = new JsonObject();
                 newItem.addProperty("TITLE", tm.getTitle());
-                newItem.addProperty("CID", (tm.getContent_id() != null ? tm.getContent_id() : ""));
+                newItem.addProperty("CID", (tm.getContent_id() != null ? (tm.getContent_id().equals("0") ? tm.getSeries_id() : tm.getContent_id()) : ""));	//2019.11.21 "" to series_id
                 newItem.addProperty("TYPE", (tm.getType() != null ? tm.getType() : ""));
                 newItem.addProperty("CNT_TAG", tm.getTagcnt());
                 newItem.addProperty("REGDATE", (tm.getRegdate() != null ? tm.getRegdate().toString() : ""));
