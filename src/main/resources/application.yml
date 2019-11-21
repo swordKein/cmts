@@ -285,10 +285,10 @@ schedule :
       cronExpression : 0 55 13 08 06 ? 2018
       jobType : manualJobs
     -
-      cronExpression : 50 * * * * ?
+      cronExpression : 0-59/10 * * * * ?
       jobType : pushCsvToData
     -
-      cronExpression : 0 * * * * ?
+      cronExpression : 5-59/10 * * * * ?
       jobType : makeCsvFile
 
 property:
