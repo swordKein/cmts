@@ -1769,7 +1769,7 @@ public class ApiController {
 			if(fileInfoResult!=null) {
 				String strDateTime = fileInfoResult.getRegdate().toString();
 				System.out.println("strDateTime = " + strDateTime);
-				strDateTime = strDateTime.substring(0, 19).replace("-", "").replace(" ", "_").replace(":", "");
+				strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
 				System.out.println("strDateTime = " + strDateTime);
 				strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
 				System.out.println("strFileName = " + strFileName);
