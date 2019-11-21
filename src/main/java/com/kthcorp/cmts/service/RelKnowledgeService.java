@@ -1980,5 +1980,32 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		return result;
 	}
 
+	public JsonObject getCsvFileName(String strType) {
+        JsonObject result = new JsonObject();
+        JsonArray list_files= new JsonArray();
+        String strFileName = "";
+        
+        //from /relknowledge/download/type
+		DicKeywords fileInfoParam = new DicKeywords();
+		fileInfoParam.setFilePath("VOD_RT_" + strType.toUpperCase());
+		DicKeywords fileInfoResult = dicKeywordsMapper.getCsvFileNameTimestamp(fileInfoParam);
+		
+		if(fileInfoResult!=null) {
+			String strDateTime = fileInfoResult.getRegdate().toString();
+			System.out.println("strDateTime = " + strDateTime);
+			strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+			System.out.println("strDateTime = " + strDateTime);
+			strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+			System.out.println("strFileName = " + strFileName);
+		}else {
+			strFileName = fileInfoParam.getFilePath() + ".csv";
+		}
+		
+		list_files.add(strFileName);
+		
+		result.add("CSV_FILE_NAME", list_files);
+		return result;
+	}
+
 
 }

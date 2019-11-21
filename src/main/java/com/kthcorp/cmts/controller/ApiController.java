@@ -2017,7 +2017,7 @@ public class ApiController {
 			, @RequestParam(value = "pageno") String spageno
 			, @RequestParam(value = "orderby", required = false, defaultValue = "new") String orderby
 	) {
-		logger.info("#CLOG:API/dic/list get for type:"+type+"/keyword:"+keyword+"/orderby:"+orderby+"/pageSize:"+spagesize+"/pageno:"+spageno);	
+		logger.info("#CLOG:API/dic/list10 get for type:"+type+"/keyword:"+keyword+"/orderby:"+orderby+"/pageSize:"+spagesize+"/pageno:"+spageno);	
 
 		int pageSize = 0;
 		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
@@ -2062,4 +2062,26 @@ public class ApiController {
 
 		return result_all.toString();
 	}
+	
+    @RequestMapping(value = "/relknowledge/getCsvFileName.do")
+    @ResponseBody
+    public String getCsvFileName(
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	
+    	JsonObject result1 = null;
+    	String strFileName = "";
+    	//strFileName = relKnowledgeService.getCsvFileName(strType);
+    	result1 = relKnowledgeService.getCsvFileName(strType);
+    	
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		result_all.add("RESULT", result1);
+		//result_all.addProperty("CSV_FILE_NAME", strFileName);
+
+		return result_all.toString();
+    }
+	
 }
