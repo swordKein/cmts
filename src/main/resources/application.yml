@@ -357,12 +357,6 @@ schedule :
     -
       cronExpression : 0 0 * * * ?
       jobType : dummyService
-    -
-      cronExpression : 0 0/10 * * * ?
-      jobType : pushCsvToData
-    -
-      cronExpression : 0 5/10 * * * ?
-      jobType : makeCsvFile
 property:
   serverid: cmts_dev_nosched01
   crawl_api_url:
@@ -434,6 +428,12 @@ schedule :
     -
       cronExpression : 0 0 * * * ?
       jobType : dummyService
+    -
+      cronExpression : 0 0/10 * * * ?
+      jobType : pushCsvToData
+    -
+      cronExpression : 0 5/10 * * * ?
+      jobType : makeCsvFile
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
