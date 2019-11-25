@@ -50,14 +50,14 @@ public class ApiServiceTest {
 		//		, "2018-02-03", "2019-05-15", "모두 다 따를 것이다", "title");
 
 		JsonObject result = apiService.getItemsSearch(50, 1, "ALL", ""
-				, "", "", "사랑도 통역이", "title");
+				, "", "", "프렌즈 시즌 4", "title");
 
 		System.out.println("#result:"+result.toString());
 	}
 
 	@Test
 	public void test_getMovieInfoByIdx() {
-		System.out.println(apiService.getMovieInfoByIdx(4422));
+		System.out.println(apiService.getMovieInfoByIdx(17132));
 	}
 
 	@Test
