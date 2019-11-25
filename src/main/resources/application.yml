@@ -420,8 +420,37 @@ spring:
 schedule :
   jobs :
     -
+      cronExpression: 0 * * * * ?
+      jobType: collectService
+    -
+      cronExpression: 0 * * * * ?
+      jobType: itemsService
+    -
+      cronExpression: 20 * * * * ?
+      jobType: processCollectHearbit
+    -
+      cronExpression : 0 * * * * ?
+      jobType : refineService
+    -
+      cronExpression : 0 * * * * ?
+      jobType : analyzeService
+    #- cronExpression: 0 0 * * * ?
+    #  jobType: snsTopWords
+    #- cronExpression: 0 * * * * ?
+    #  jobType: ccubeOutputNow
+    # - cronExpression: 0 10 0 * * ?
+    #  jobType: ccubeOutputDay
+    # - cronExpression: 0 40 19 * * ?
+    #  jobType: ccubeOutputAll
+    -
       cronExpression : 0 0 * * * ?
       jobType : dummyService
+    -
+      cronExpression: 0 0/10 * * * ?
+      jobType: pushCsvToData
+    -
+      cronExpression: 0 5/10 * * * ?
+      jobType: makeCsvFile
 property:
   serverid: cmts_dev_crawl01
   crawl_api_url:
