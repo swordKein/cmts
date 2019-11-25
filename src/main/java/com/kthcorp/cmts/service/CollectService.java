@@ -116,7 +116,7 @@ public class CollectService implements CollectServiceImpl {
                         //System.out.println("#STEP02 process TG:"+target.toString());
 
                         ConfTarget tg = this.step02(target);
-                        //System.out.println("#STEP02 process to TG:"+tg.toString());
+                        System.out.println("#STEP02 process to TG:"+tg.toString());
 
                         tg.setMovietitle(target.getMovietitle());
                         tg.setMoviedirector((target.getMoviedirector() != null) ? target.getMoviedirector() : "");
@@ -516,7 +516,9 @@ public class CollectService implements CollectServiceImpl {
                                     JsonArray metaDestFields = (JsonArray) metasObj.get("dest_fields");
                                     for (JsonElement je : metaDestFields) {
                                         String dest = je.getAsString().trim();
-                                        String meta = metasObj.get(dest).getAsString();
+                                        System.out.println("#metas field:"+dest+" #metasobj:"+metasObj.toString());
+
+                                        String meta = (metasObj.get(dest) != null) ?  metasObj.get(dest).getAsString() : "";
                                         meta = CommonUtil.removeTex(meta);
                                         System.out.println("## insert! itemIdx:"+itemIdx+ " metas:"+dest+" data::"+metasObj.get(dest));
 
@@ -525,7 +527,9 @@ public class CollectService implements CollectServiceImpl {
                                         if ("plot".equals(dest.trim())) {
                                             newMeta.setIdx(itemIdx);
                                             newMeta.setMtype("plot");
-                                            String ccube_summary = ccubeMapper.getSummaryFromCcube(itemIdx);
+                                            String ccube_summary =
+                                                    (ccubeMapper.getSummaryFromCcube(itemIdx) != null) ?
+                                                            ccubeMapper.getSummaryFromCcube(itemIdx) : "";
                                             ccube_summary = StringUtil.removeAllTags2(ccube_summary);
                                             newMeta.setMeta(ccube_summary);
                                         } else {

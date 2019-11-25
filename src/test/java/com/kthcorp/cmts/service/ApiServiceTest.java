@@ -57,7 +57,7 @@ public class ApiServiceTest {
 
 	@Test
 	public void test_getMovieInfoByIdx() {
-		System.out.println(apiService.getMovieInfoByIdx(17132));
+		System.out.println(apiService.getMovieInfoByIdx(19968));
 	}
 
 	@Test
