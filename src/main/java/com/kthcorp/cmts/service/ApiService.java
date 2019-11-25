@@ -312,17 +312,22 @@ public class ApiService implements ApiServiceImpl {
                 CcubeContent reqcon = new CcubeContent();
 
                 String master_cid = "";
-                //master_cid = ckeys.getContent_id();
-                List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckeys.getMaster_content_id());
-                if (mcidObj != null && mcidObj.size() > 0 ) {
+                List<Map<String, Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckeys.getMaster_content_id());
+                if (mcidObj != null && mcidObj.size() > 0) {
                     master_cid = (String) mcidObj.get(0).get("content_id");
+                    reqcon.setContent_id(master_cid);
+                    CcubeContent ccon = ccubeMapper.getCcubeContentByCid(reqcon);
+                    resultObj = convertCcubeContentToJsonObject(ccon);
+                }
+
+                if (resultObj == null) {
+                    master_cid = ckeys.getContent_id();
                     reqcon.setContent_id(master_cid);
 
                     CcubeContent ccon = ccubeMapper.getCcubeContentByCid(reqcon);
-                    if (ccon != null) {
-                        resultObj = convertCcubeContentToJsonObject(ccon);
-                    }
+                    resultObj = convertCcubeContentToJsonObject(ccon);
                 }
+
             }
         }
 

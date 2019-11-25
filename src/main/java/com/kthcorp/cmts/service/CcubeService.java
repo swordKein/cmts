@@ -157,15 +157,23 @@ public class CcubeService implements CcubeServiceImpl {
                         result.addProperty("POSTER_URL", getEmptyCheck(curSer.getPoster_url()));
                     }
                 } else if (result == null && ckey.getContent_id() != null && !"0".equals(ckey.getContent_id())) {
-                    String master_mcid = "";
-                    master_mcid = ckey.getContent_id();
-                    //List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckey.getMaster_content_id());
-                    //if (mcidObj != null && mcidObj.size() > 0 ) {
-                       // master_mcid = (String) mcidObj.get(0).get("content_id");
 
                         CcubeContent con = new CcubeContent();
-                        con.setContent_id(master_mcid);
-                        CcubeContent curCon = ccubeMapper.getCcubeContentByCid(con);
+                        CcubeContent curCon = null;
+
+                        String master_cid = "";
+                        List<Map<String, Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckey.getMaster_content_id());
+                        if (mcidObj != null && mcidObj.size() > 0) {
+                            master_cid = (String) mcidObj.get(0).get("content_id");
+                            con.setContent_id(master_cid);
+                            curCon = ccubeMapper.getCcubeContentByCid(con);
+                        }
+
+                        if (curCon == null) {
+                            con.setContent_id(ckey.getContent_id());
+                            curCon = ccubeMapper.getCcubeContentByCid(con);
+                        }
+
                         if (curCon != null) {
                             result = new JsonObject();
                             result.addProperty("SERIES_ID", "");
