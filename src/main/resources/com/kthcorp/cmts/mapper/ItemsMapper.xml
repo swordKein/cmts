@@ -398,7 +398,7 @@
         left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
@@ -475,7 +475,7 @@
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where iss.regdate between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
 
         order by iss.regdate desc, iss.idx desc limit ${pageSize} offset ${offsetIdx}
@@ -551,7 +551,7 @@
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
@@ -591,7 +591,7 @@
             useCache="true">
         /* countItemsAll */
         select count(*) from items it
-        inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.stat = 'Y';
     </select>
 
@@ -657,7 +657,7 @@
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
 
-        inner join ccube_keys ck on ck.itemidx = it.idx
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
