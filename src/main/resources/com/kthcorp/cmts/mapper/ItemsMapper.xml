@@ -592,7 +592,9 @@
     <select id="countItemsPagingByStat" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items"
             useCache="true">
         /* countItemsPagingByStat 191125 x3 */
-        select a.stat, count(*) as cnt
+        select b.stat, count(*) as cnt
+        from
+        (select a.*
         from
         (	select j.* from
         (
@@ -673,11 +675,12 @@
         )
 
         ) j
-        inner join items it on it.idx = j.idx
-        left outer join ccube_contents cc on cc.content_id = j.cid
-        left outer join ccube_series cs on cs.series_id = j.cid
         ) a
-        group by a.stat
+        inner join items it on it.idx = a.idx
+        left outer join ccube_contents cc on cc.content_id = it.cid
+        left outer join ccube_series cs on cs.series_id = it.cid
+        ) b
+        group by b.stat
     </select>
 
     <select id="searchTestMetas" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
