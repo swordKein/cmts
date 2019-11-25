@@ -157,28 +157,35 @@ public class CcubeService implements CcubeServiceImpl {
                         result.addProperty("POSTER_URL", getEmptyCheck(curSer.getPoster_url()));
                     }
                 } else if (result == null && ckey.getContent_id() != null && !"0".equals(ckey.getContent_id())) {
-                    CcubeContent con = new CcubeContent();
-                    con.setContent_id(ckey.getContent_id());
-                    CcubeContent curCon = ccubeMapper.getCcubeContentByCid(con);
-                    if (curCon != null) {
-                        result = new JsonObject();
-                        result.addProperty("SERIES_ID", "");
-                        result.addProperty("SERIES_NM", "");
-                        result.addProperty("MASTER_CONTENT_ID", getEmptyCheck(curCon.getMaster_content_id()));
-                        result.addProperty("CONTENT_ID", getEmptyCheck(curCon.getContent_id()));
-                        result.addProperty("PURITY_TITLE", getEmptyCheck(curCon.getPurity_title()));
-                        result.addProperty("CONTENT_TITLE", getEmptyCheck(curCon.getContent_title()));
-                        result.addProperty("ENG_TITLE", getEmptyCheck(curCon.getEng_title()));
-                        result.addProperty("TITLE_BRIEF", getEmptyCheck(curCon.getTitle_brief()));
-                        result.addProperty("DIRECTOR", getEmptyCheck(curCon.getDirector()));
-                        result.addProperty("YEAR", getEmptyCheck(curCon.getYear()));
-                        result.addProperty("ACTORS_DISPLAY", getEmptyCheck(curCon.getActors_display()));
-                        result.addProperty("COUNTRY_OF_ORIGIN", getEmptyCheck(curCon.getCountry_of_origin()));
-                        result.addProperty("SAD_CTGRY_NM", getEmptyCheck(curCon.getSad_ctgry_nm()));
-                        result.addProperty("DOMESTIC_RELEASE_DATE", getEmptyCheck(curCon.getDomestic_release_date()));
-                        result.addProperty("KT_RATING", getEmptyCheck(curCon.getKt_rating()));
-                        result.addProperty("KMRB_ID", getEmptyCheck(curCon.getKmrb_id()));
-                        result.addProperty("POSTER_URL", getEmptyCheck(curCon.getPoster_url()));
+                    String master_mcid = "";
+                    //master_mcid = ckey.getContent_id();
+                    List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckey.getMaster_content_id());
+                    if (mcidObj != null && mcidObj.size() > 0 ) {
+                        master_mcid = (String) mcidObj.get(0).get("content_id");
+
+                        CcubeContent con = new CcubeContent();
+                        con.setContent_id(master_mcid);
+                        CcubeContent curCon = ccubeMapper.getCcubeContentByCid(con);
+                        if (curCon != null) {
+                            result = new JsonObject();
+                            result.addProperty("SERIES_ID", "");
+                            result.addProperty("SERIES_NM", "");
+                            result.addProperty("MASTER_CONTENT_ID", getEmptyCheck(curCon.getMaster_content_id()));
+                            result.addProperty("CONTENT_ID", getEmptyCheck(curCon.getContent_id()));
+                            result.addProperty("PURITY_TITLE", getEmptyCheck(curCon.getPurity_title()));
+                            result.addProperty("CONTENT_TITLE", getEmptyCheck(curCon.getContent_title()));
+                            result.addProperty("ENG_TITLE", getEmptyCheck(curCon.getEng_title()));
+                            result.addProperty("TITLE_BRIEF", getEmptyCheck(curCon.getTitle_brief()));
+                            result.addProperty("DIRECTOR", getEmptyCheck(curCon.getDirector()));
+                            result.addProperty("YEAR", getEmptyCheck(curCon.getYear()));
+                            result.addProperty("ACTORS_DISPLAY", getEmptyCheck(curCon.getActors_display()));
+                            result.addProperty("COUNTRY_OF_ORIGIN", getEmptyCheck(curCon.getCountry_of_origin()));
+                            result.addProperty("SAD_CTGRY_NM", getEmptyCheck(curCon.getSad_ctgry_nm()));
+                            result.addProperty("DOMESTIC_RELEASE_DATE", getEmptyCheck(curCon.getDomestic_release_date()));
+                            result.addProperty("KT_RATING", getEmptyCheck(curCon.getKt_rating()));
+                            result.addProperty("KMRB_ID", getEmptyCheck(curCon.getKmrb_id()));
+                            result.addProperty("POSTER_URL", getEmptyCheck(curCon.getPoster_url()));
+                        }
                     }
                 }
             }
