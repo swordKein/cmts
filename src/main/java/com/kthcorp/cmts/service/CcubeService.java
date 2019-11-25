@@ -158,10 +158,10 @@ public class CcubeService implements CcubeServiceImpl {
                     }
                 } else if (result == null && ckey.getContent_id() != null && !"0".equals(ckey.getContent_id())) {
                     String master_mcid = "";
-                    //master_mcid = ckey.getContent_id();
-                    List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckey.getMaster_content_id());
-                    if (mcidObj != null && mcidObj.size() > 0 ) {
-                        master_mcid = (String) mcidObj.get(0).get("content_id");
+                    master_mcid = ckey.getContent_id();
+                    //List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckey.getMaster_content_id());
+                    //if (mcidObj != null && mcidObj.size() > 0 ) {
+                       // master_mcid = (String) mcidObj.get(0).get("content_id");
 
                         CcubeContent con = new CcubeContent();
                         con.setContent_id(master_mcid);
@@ -186,7 +186,7 @@ public class CcubeService implements CcubeServiceImpl {
                             result.addProperty("KMRB_ID", getEmptyCheck(curCon.getKmrb_id()));
                             result.addProperty("POSTER_URL", getEmptyCheck(curCon.getPoster_url()));
                         }
-                    }
+                    //}
                 }
             }
         }

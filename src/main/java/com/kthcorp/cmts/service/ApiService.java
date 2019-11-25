@@ -310,10 +310,18 @@ public class ApiService implements ApiServiceImpl {
                 }
             } else if (ckeys.getContent_id() != null && !"0".equals(ckeys.getContent_id())) {
                 CcubeContent reqcon = new CcubeContent();
-                reqcon.setContent_id(ckeys.getContent_id());
-                CcubeContent ccon = ccubeMapper.getCcubeContentByCid(reqcon);
-                if (ccon != null) {
-                    resultObj = convertCcubeContentToJsonObject(ccon);
+
+                String master_cid = "";
+                //master_cid = ckeys.getContent_id();
+                List<Map<String,Object>> mcidObj = ccubeMapper.getSortedItemsByMCID(ckeys.getMaster_content_id());
+                if (mcidObj != null && mcidObj.size() > 0 ) {
+                    master_cid = (String) mcidObj.get(0).get("content_id");
+                    reqcon.setContent_id(master_cid);
+
+                    CcubeContent ccon = ccubeMapper.getCcubeContentByCid(reqcon);
+                    if (ccon != null) {
+                        resultObj = convertCcubeContentToJsonObject(ccon);
+                    }
                 }
             }
         }
