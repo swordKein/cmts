@@ -1,5 +1,6 @@
 package com.kthcorp.cmts.service;
 
+import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.RelKnowledge;
 
 import java.util.Map;
@@ -24,4 +25,6 @@ public interface RelKnowledgeServiceImpl {
     void pushCsvToRelKnowledge();
 
     Map<String, Object> getJsonArrayFromRelKnowledge();
+    
+    JsonObject getCsvFileName(String strType);	//2019.11.20
 }

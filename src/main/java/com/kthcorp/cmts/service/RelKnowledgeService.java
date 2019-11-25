@@ -1,7 +1,9 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.*;
+import com.kthcorp.cmts.mapper.DicKeywordsMapper;
 import com.kthcorp.cmts.mapper.RelKnowledgeMapper;
+import com.kthcorp.cmts.model.DicKeywords;
 import com.kthcorp.cmts.model.RelKnowledge;
 import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.StringUtil;
@@ -23,6 +25,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private RelKnowledgeMapper relKnowledgeMapper;
+    @Autowired
+    private DicKeywordsMapper dicKeywordsMapper;	//2019.11.20 CSV 파일 정보 저장
 
     @Value("${spring.static.resource.location}")
     private String UPLOAD_DIR;
@@ -1886,6 +1890,14 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			//return strFileName;
 			
 			System.out.println("strFileName = " + strFileName);
+	    	
+	    	
+	    	//파일 정보를 저장 (파일명 + 생성시각 timestamp)
+	    	fileNameContent = "VOD_RT_"+type.toUpperCase();
+	    	DicKeywords fileInfo = new DicKeywords();
+	    	fileInfo.setFilePath(fileNameContent);
+	    	
+	    	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 		}
 	}
 
@@ -1965,6 +1977,33 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		result.put(code, subList);
 		System.out.println("## getVodRT :: "+code+" :: "+subList.toString());
 
+		return result;
+	}
+
+	public JsonObject getCsvFileName(String strType) {
+        JsonObject result = new JsonObject();
+        JsonArray list_files= new JsonArray();
+        String strFileName = "";
+        
+        //from /relknowledge/download/type
+		DicKeywords fileInfoParam = new DicKeywords();
+		fileInfoParam.setFilePath("VOD_RT_" + strType.toUpperCase());
+		DicKeywords fileInfoResult = dicKeywordsMapper.getCsvFileNameTimestamp(fileInfoParam);
+		
+		if(fileInfoResult!=null) {
+			String strDateTime = fileInfoResult.getRegdate().toString();
+			System.out.println("strDateTime = " + strDateTime);
+			strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+			System.out.println("strDateTime = " + strDateTime);
+			strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+			System.out.println("strFileName = " + strFileName);
+		}else {
+			strFileName = fileInfoParam.getFilePath() + ".csv";
+		}
+		
+		list_files.add(strFileName);
+		
+		result.add("CSV_FILE_NAME", list_files);
 		return result;
 	}
 

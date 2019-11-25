@@ -745,37 +745,20 @@ public class AdminController {
 		String strFileName = "";
 		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		try {
-			/*
-			//구버전 : 파일경로 띄우기
-			strResClasspath = resClasspath.getURI().getPath();
-			if(strResClasspath==null) {
-				strResClasspath = "/home/daisy/.jenkins/workspace/cmts/target/classes/static/";	//TB
+			//2019.11.20 파일정보 로딩
+			DicKeywords fileInfoParam = new DicKeywords();
+			fileInfoParam.setFilePath("DIC_KEYWORDS_" + type.toUpperCase());
+			DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
+			if(fileInfoResult!=null) {
+				String strDateTime = fileInfoResult.getRegdate().toString();
+				System.out.println("strDateTime = " + strDateTime);
+				strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+				System.out.println("strDateTime = " + strDateTime);
+				strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+				System.out.println("strFileName = " + strFileName);
+			}else {
+				strFileName = fileInfoParam.getFilePath() + ".csv";
 			}
-			System.out.println("strResClasspath =" + strResClasspath);
-			
-			//파일 복사 from strFileName to strResClasspath
-			strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
-			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
-			
-			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
-			fis = new FileInputStream(strFilePath);
-			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
-			os = response.getOutputStream();
-			
-			int data = 0;
-			while((data=fis.read())!=-1) {
-				fos.write(data);
-			}
-			
-			fis.close();
-			fos.close();
-			
-			//String strFilePath
-			//다운로드 파일 링크
-			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
-			os.write((strUrl+"/"+strFileName).getBytes());
-			os.close();
-			*/
 			
 			//신버전 : 데이터를 그대로 태우기 - 느림
 			
@@ -784,6 +767,8 @@ public class AdminController {
 			
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
+			
+			os.write((strFileName+"::::").getBytes("UTF-8"));
 			
 			int data = 0;
 			while((data = fis.read()) != -1) {
@@ -811,237 +796,13 @@ public class AdminController {
 		JsonObject result_all = result;		//new JsonObject();
 		result_all.addProperty("RT_CODE", 1);
 		result_all.addProperty("RT_MSG", "SUCCESS");
+		//result_all.addProperty("CSV_FILENAME", strFileName);//x?
 		//result_all.add("RESULT", result1);
+		//response.addHeader("CSV_FILENAME", strFileName);
+		//response.setHeader("CSV_FILENAME", strFileName);
 
-//		if("1"=="1") {
-			return result_all.toString();
-			//return (strUrl+"/"+strFileName);
-//		}
+		return result_all.toString();
 		
-//		/*
-//		logger.debug("#/admin/dic/keywords get");
-//		String type = "keywords";
-//
-//		ModelAndView mav = new ModelAndView("admin/keywordsList");
-//		mav.addObject("type", type);
-//
-//		List<DicKeywords> keywordsList = dicService.getDicKeywordsListAll();
-//		System.out.println("#keywordsList:"+keywordsList.toString());
-//		mav.addObject("wordsList", keywordsList);
-//		*/
-//		
-//		/*
-//    	List<Map<String, Object>> reqItems = null;
-//    	//reqItems = testMapper.getDicKeywords_0401();
-//    	String resultStr = "";
-//    	String lineFeed = System.getProperty("line.separator");
-//    	String seperator = "\t";
-//    	
-//		//1. 모든 태그 유형 로딩
-//		List<String> types = dicService.getKeywordTypes();
-//		
-//		for(String strType : types) {
-//			//2. 태그 하나씩 불러오기
-//			List<DicKeywords> dicKeywordList = dicKeywordsMapper.getDicKeywordsList(reqKeyword);
-//			
-//			//3. 문자열화
-//			
-//		}
-//		
-//		//4. 파일형태로 표출
-//		*/
-//		JsonObject result = new JsonObject();
-//
-//		System.out.println("#/admin/dic/keywords/download");
-//
-//		//int rtcode = 0;
-//		String rtmsg = "";
-//		String strFilePath = "";
-//		try {
-//			//ConfPreset req = new ConfPreset();
-//			//req.setPs_id(ps_id);
-//
-//			//rtcode = adminService.delConfPreset(req);
-//			//TODO 주석처리 했음 11.04
-//			//strFilePath = adminService.getDicKeywordsListDownload(type);
-//			if (strFilePath.length() > 0) {
-//				rtmsg = "SUCCESS";
-//			}
-//
-//		} catch(Exception e) {
-//			//rtcode = -999;
-//			rtmsg = "System fail.";
-//			e.printStackTrace();
-//		}
-//		result.addProperty("rtfile", strFilePath);
-//		result.addProperty("rtmsg", rtmsg);
-//		
-//		/*
-//        // 파일명 지정
-//        // from ?        
-//        response.setContentType("application/octer-stream");
-//        response.setHeader("Content-Transfer-Encoding", "binary;");
-//        response.setHeader("Content-Disposition", "attachment; filename=\"" + "aaaa" + "\"");
-//        try {
-//            OutputStream os = response.getOutputStream();
-//            FileInputStream fis = new FileInputStream(strFileName);
-// 
-//            int ncount = 0;
-//            byte[] bytes = new byte[512];
-// 
-//            while ((ncount = fis.read(bytes)) != -1 ) {
-//                os.write(bytes, 0, ncount);
-//            }
-//            fis.close();
-//            os.close();
-//        } catch (FileNotFoundException ex) {
-//            System.out.println("FileNotFoundException");
-//        } catch (IOException ex) {
-//            System.out.println("IOException");
-//        }
-//		return result.toString();
-//		*/
-//		//System.out.println("ClassPathResource(\"data/employees.dat\"); = " + ClassPathResource("data/employees.dat"));
-//		
-//		/**
-//		//구로직
-//		//from https://www.baeldung.com/spring-classpath-file-access
-//		Resource resClasspath;
-////		Resource testResource1;
-////		Resource testResource2;
-//		String strResClasspath = "";
-////		String strTestFilePath = "";
-////		String strTestDirPath = "";
-//		//testResource1 = resourceLoader.getResource("classpath:data/employees.dat");
-////		testResource1 = resourceLoader.getResource("classpath:static/js/main.js");
-////		System.out.println("testResource1 = " + testResource1);
-////		testResource2 = resourceLoader.getResource(strFileName);
-////		System.out.println("testResource2 = " + testResource2);
-////
-////		//testResource1 = resourceLoader.getResource("classpath:5cen.txt");
-////		//System.out.println("resourceLoader = " + resourceLoader.getClassLoader().get);
-//		resClasspath = resourceLoader.getResource("classpath:static/");
-//		
-//		System.out.println(resClasspath.exists());
-//		System.out.println(resClasspath.getDescription());
-//		
-//		FileInputStream fis;
-//		FileOutputStream fos;
-//		OutputStream os;
-//		
-//		try {
-//			strResClasspath = resClasspath.getURI().getPath();
-//			System.out.println("strResClasspath =" + strResClasspath);
-//			//strTestFilePath = testResource1.getURI().getRawPath();
-//			//strTestDirPath = strTestFilePath.substring(0, strTestFilePath.lastIndexOf(File.separator)-1);
-//			
-//			//파일 복사 from strFileName to strResClasspath
-//			String strFileName = strFilePath.substring(strFilePath.lastIndexOf(File.separator)+1);
-//			System.out.println("Copy from " + strFilePath + " " + strFileName + " to " + strResClasspath);
-//			
-//			//파일 복사 from https://blowmj.tistory.com/entry/JAVA-%ED%8C%8C%EC%9D%BC%EC%9D%98-%EB%B3%B5%EC%82%AC-%EC%9D%B4%EB%8F%99-%EC%82%AD%EC%A0%9C-%EC%83%9D%EC%84%B1-%EC%A1%B4%EC%9E%AC%EC%97%AC%EB%B6%80-%ED%99%95%EC%9D%B8
-//			fis = new FileInputStream(strFilePath);
-//			fos = new FileOutputStream(strResClasspath + File.separator + strFileName);
-//			os = response.getOutputStream();
-//			
-//			int data = 0;
-//			while((data=fis.read())!=-1) {
-//				fos.write(data);
-//			}
-//			
-//			fis.close();
-//			fos.close();
-//			
-//			//String strFilePath
-//			String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();	// + "/" + "file";
-//			//os.write(("파일 생성 완료 <a href='"+strUrl+"/"+strFileName+"'>다운로드</a>").getBytes());
-//			os.write((strUrl+"/"+strFileName).getBytes());
-//			os.close();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return result.toString();
-//		*/
-//		
-//		//신로직 from ApiController - /relknowledge/download/type
-//		
-///*
-//		FileInputStream fis;
-//		//FileOutputStream fos;
-//		OutputStream os;
-//		
-//		try {
-//			os = response.getOutputStream();
-//			fis = new FileInputStream(strFilePath);
-//			
-//			int data = 0;
-//			while((data = fis.read()) != -1) {
-//				os.write(data);
-//			}
-//			
-//			os.flush();
-//			os.close();
-//			
-//			fis.close();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}finally {
-//			
-//		}
-//		
-//		
-//		
-//		logger.debug("[파일업다운로드] success");
-//		//return "SUCCESS";
-//		
-//		
-//		JsonObject result_all = result;		//new JsonObject();
-//		result_all.addProperty("RT_CODE", 1);
-//		result_all.addProperty("RT_MSG", "SUCCESS");
-//		//result_all.add("RESULT", result1);
-//
-//
-//		return result_all.toString();
-// */
-//		FileInputStream fis;
-//		OutputStream os;
-//		
-//		strFilePath = UPLOAD_DIR + "DIC_KEYWORDS_" + type.toUpperCase()+".csv";
-//		
-//		try {
-//			os = response.getOutputStream();
-//			fis = new FileInputStream(strFilePath);
-//			
-//			int data = 0;
-//			while((data = fis.read()) != -1) {
-//				os.write(data);
-//			}
-//			
-//			os.flush();
-//			os.close();
-//			
-//			fis.close();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}finally {
-//			
-//		}
-//		
-//		JsonObject result_all = result;		//new JsonObject();
-//		result_all.addProperty("RT_CODE", 1);
-//		result_all.addProperty("RT_MSG", "SUCCESS");
-//		//result_all.add("RESULT", result1);
-//
-//
-//		return result_all.toString();
 	}
 	
 	

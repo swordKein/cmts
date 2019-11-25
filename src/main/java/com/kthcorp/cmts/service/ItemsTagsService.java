@@ -1318,6 +1318,25 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         destArr2 = this.getRemoveDupTargetMetasArray(destArr);
                         System.out.println("#ELOG.destArr(JsonObject): datas::"+destArr2.toString());
                     } else {
+                        //destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
+                        //destArr2 = this.getRemoveDupTargetMetasArrayOnlyString(destArr);
+                        //System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
+                        
+                    	//2019.11.21 origMetaArr를 string array 에서 json array로 해야 한다. {"word":"테스트키워드1","ratio":0.0}
+                    	System.out.println(1);
+                    	if(origMetaArr.size()>0) {
+	                        if(origMetaArr.get(0).isJsonPrimitive()) {
+	                        	JsonArray tmpJsonArray = new JsonArray();
+	                        	for(JsonElement tmpJe : origMetaArr) {
+	                        		JsonObject tmpJsonObject = new JsonObject();
+	                        		tmpJsonObject.addProperty("word", tmpJe.getAsString());
+	                        		tmpJsonObject.addProperty("ratio", "0.0");
+	                        		tmpJsonArray.add(tmpJsonObject);
+	                        	}
+	                        	
+	                        	origMetaArr = tmpJsonArray;
+	                        }
+                    	}
                         destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
                         destArr2 = this.getRemoveDupTargetMetasArrayOnlyString(destArr);
                         System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
@@ -1737,10 +1756,15 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         if (origArray != null) {
             try {
-                //origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");	//2019.11.14 - 넘어오는게 텍스트만 있어서 에러남
-                if(origArray.toString().indexOf("\"target_meta\"")<0) {
-                	origStrArr = JsonUtil.convertJsonArrayToList(origArray);
-                }else {
+                //origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");	//2019.11.14 - 넘어오는게 텍스트만 있어서 에러남    2019.11.22 target_meta 말고 word가 있음 
+                if(origArray.toString().indexOf("\"target_meta\"")<0) {		//target_meta가 없음
+                	//origStrArr = JsonUtil.convertJsonArrayToList(origArray);
+                    if(origArray.toString().indexOf("\"word\"")<0) {		//word도 없음
+                    	origStrArr = JsonUtil.convertJsonArrayToList(origArray);
+                    }else {		//word는 있음
+                    	origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "word");
+                    }
+                }else {	//target_meta 있음
                 	origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
                 }
             	

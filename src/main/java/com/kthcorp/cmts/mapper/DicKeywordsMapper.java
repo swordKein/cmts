@@ -57,4 +57,6 @@ public interface DicKeywordsMapper {
 	
 	int cleanBlankDicKeywords(DicKeywords dicKeywords);
 	List<DicKeywords> get10DicKeywordsList(DicKeywords reqkey);
+	int updateCsvFileInfo(DicKeywords fileInfo);
+	DicKeywords getCsvFileNameTimestamp(DicKeywords fileInfoParam);
 }
