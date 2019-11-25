@@ -334,7 +334,7 @@
 
 
     <select id="searchItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
-        /* searchItemsPaging 191125 */
+        /* searchItemsPaging 191125 x3 */
         select a.idx
         , CASE WHEN (cs.series_id is not null and cs.series_id != '0')
         THEN 'SER' ELSE ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR' ELSE 'OTH' END AS type ) END AS type
