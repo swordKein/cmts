@@ -591,7 +591,7 @@
 
     <select id="countItemsPagingByStat" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items"
             useCache="true">
-        /* countItemsPagingByStat */
+        /* countItemsPagingByStat 191125 x3 */
         select a.stat, count(*) as cnt
         from
         (	select j.* from
@@ -613,12 +613,6 @@
         <if test='searchStat != null and searchStat == "FA"'>
             and iss.stat in ('FR', 'FA')
         </if>
-
-
-        left outer join ccube_contents cc on cc.content_id = it.cid
-        left outer join ccube_series cs on cs.series_id = it.cid
-
-
         <if test='searchMetasYn != null and searchMetasYn == "Y"'>
             inner join (
             select distinct(idx) as idx from items_metas where mtype in
@@ -631,6 +625,16 @@
         </if>
 
         <if test='searchTagsYn != null and searchTagsYn == "Y" and searchTagsArr != null'>
+
+            left outer join (
+            select t.* from (
+            select tk.idx, tk.tagidx
+            , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
+            from items_tags_keys tk
+            where tk.stat = 'S'
+            ) t where t.tagidx = t.maxTagIdx
+            ) itk on itk.idx = it.idx
+
             inner join (
             select distinct(idx) as idx, tagidx from items_tags_metas where mtype in
             <foreach item="item2" index="index" collection="searchTagsArr"
@@ -638,22 +642,12 @@
                 #{item2}
             </foreach>
             and meta like concat('%',#{searchKeyword},'%')
-            ) itm on itm.idx = it.idx
-
-            inner join (
-            select t.* from (
-            select tk.idx, tk.tagidx
-            , ( select max(tagidx) from items_tags_keys where idx = tk.idx ) as maxTagIdx
-            from items_tags_keys tk
-            where tk.stat = 'S'
-            ) t where t.tagidx = t.maxTagIdx
-            ) itk on itk.idx = itm.idx and itk.tagidx = itm.tagidx
+            ) itm on itm.idx = it.idx and itm.tagidx = itk.tagidx
         </if>
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
             left outer join ( select distinct(content_id) from ccube_contents where actors_display like concat('%',#{searchKeyword},'%') ) cc on cc.content_id = it.cid
             left outer join ( select distinct(series_id) from ccube_series where actors_display like concat('%',#{searchKeyword},'%') ) cs on cs.series_id = it.cid
         </if>
-
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
@@ -679,6 +673,10 @@
         )
 
         ) j
+        ) a
+        inner join items it on it.idx = a.idx
+        left outer join ccube_contents cc on cc.content_id = it.cid
+        left outer join ccube_series cs on cs.series_id = it.cid
         ) a
         group by a.stat
     </select>
