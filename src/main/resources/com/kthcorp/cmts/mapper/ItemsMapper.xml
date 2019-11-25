@@ -673,10 +673,9 @@
         )
 
         ) j
-        ) a
-        inner join items it on it.idx = a.idx
-        left outer join ccube_contents cc on cc.content_id = it.cid
-        left outer join ccube_series cs on cs.series_id = it.cid
+        inner join items it on it.idx = j.idx
+        left outer join ccube_contents cc on cc.content_id = j.cid
+        left outer join ccube_series cs on cs.series_id = j.cid
         ) a
         group by a.stat
     </select>
