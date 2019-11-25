@@ -91,7 +91,7 @@ public class CcubeServiceTest {
 
 	@Test
 	public void test_getCcubeDatasByItemIdx() throws Exception{
-		JsonObject result = ccubeService.getCcubeDatasByItemIdx(10410);
+		JsonObject result = ccubeService.getCcubeDatasByItemIdx(4442);
 		System.out.println("#Result:"+result.toString());
 
 	}

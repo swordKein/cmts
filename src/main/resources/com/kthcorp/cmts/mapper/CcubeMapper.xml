@@ -226,6 +226,15 @@
         limit 1
     </select>
 
+    <select id="getCcubeKeys_1st" parameterType="java.lang.Integer" resultType="com.kthcorp.cmts.model.CcubeKeys">
+        /* getCcubeKeys  */
+        select cidx, master_content_id, content_id, series_id, purity_title, kmrb_id, itemidx, regdate
+        from ccube_keys
+        where itemidx = #{idx}
+        order by regdate desc
+        limit 1
+    </select>
+
     <insert id="insCcubeContent" parameterType="com.kthcorp.cmts.model.CcubeContent">
         /* insCcubeContent */
         insert into ccube_contents (
