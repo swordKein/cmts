@@ -177,7 +177,8 @@ public class JobRunner implements Job {
                     //testService.removeAllTagsFromMetasByCsv();
                     //testService.prcAwardsAll("CcubeContent");
                 	//testService.removeTagsFromMetasByCSV_GetTagsCountByType();
-                    testService.getRemoveManualDest();
+                    //testService.getRemoveManualDest();
+                    ccubeService.processMultipleSuccessItemByMCID();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
                 case "makeCsvFile":
