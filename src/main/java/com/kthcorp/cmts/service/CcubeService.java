@@ -939,7 +939,7 @@ public class CcubeService implements CcubeServiceImpl {
         rt = ccubeMapper.insCcubeContent(req);
 
         // 줄거리를 mcid 기준 items_metas에 등록
-        /* collectService에서 진행
+        /* collectService에서 진행 보완 */
         List<Integer> listIdx = ccubeMapper.getItemidxByMC_ID(req.getMaster_content_id());
         if (listIdx != null && listIdx.size() > 0) {
             for(Integer idx : listIdx) {
@@ -952,8 +952,6 @@ public class CcubeService implements CcubeServiceImpl {
             }
         }
 
-        */
-
         return rt;
     }
     @Override
@@ -965,8 +963,7 @@ public class CcubeService implements CcubeServiceImpl {
         rt = ccubeMapper.insCcubeSeries(req);
 
         // 줄거리를 series_id기준 items_metas에 등록
-        // collectService에서 진행
-        /*
+        /* collectService에서 진행 보완 */
         List<Integer> listIdx = ccubeMapper.getItemidxBySERIES_ID(req.getSeries_id());
         if (listIdx != null && listIdx.size() > 0) {
             for(Integer idx : listIdx) {
@@ -978,7 +975,6 @@ public class CcubeService implements CcubeServiceImpl {
                 itemsMetasMapper.insItemsMetas(im);
             }
         }
-        */
         return rt;
     }
 
