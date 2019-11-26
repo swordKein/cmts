@@ -87,6 +87,15 @@
         </if>
     </select>
 
+    <select id="cntDicKeywordsByTypeKeyword" resultType="java.lang.Integer" parameterType="com.kthcorp.cmts.model.DicKeywords">
+        /* cntDicKeywordsByTypeKeyword */
+        select
+        count(*) as cnt
+        from dic_keywords
+        where type = #{type}
+            and keyword = #{keyword}
+    </select>
+
     <select id="getDicKeywords" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
         /* getDicKeywordsList */
         select

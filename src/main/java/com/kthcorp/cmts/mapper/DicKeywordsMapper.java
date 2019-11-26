@@ -59,4 +59,5 @@ public interface DicKeywordsMapper {
 	List<DicKeywords> get10DicKeywordsList(DicKeywords reqkey);
 	int updateCsvFileInfo(DicKeywords fileInfo);
 	DicKeywords getCsvFileNameTimestamp(DicKeywords fileInfoParam);
+	int cntDicKeywordsByTypeKeyword(DicKeywords dicKeywordsParam);//2019,11,26
 }

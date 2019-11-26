@@ -136,4 +136,7 @@ public interface DicServiceImpl {
     
     //2019.11.20 파일명 불러오기(저장은 파일 생성 로직 내에 있음)
     public DicKeywords getCsvFileNameTimestamp(DicKeywords fileInfoParam);
+    
+    //2019.11.26 중복검사
+    public int cntDicKeywordsByType(String strType, String strKeyword);
 }

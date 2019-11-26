@@ -1863,8 +1863,8 @@ public class ApiController {
     	System.out.println("#readByte::"+readByte);
     	System.out.println("#byteSize::"+byteSize);
 
-    	//readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
-    	readString = new String(readByte,"MS949");	//인코딩 맞춰야
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	//readString = new String(readByte,"MS949");	//인코딩 맞춰야
 
         //파일 검사 - 탭 숫자
     	System.out.println("[********] file test - strType = " + strType);
@@ -1991,8 +1991,8 @@ public class ApiController {
     	System.out.println("#readByte::"+readByte);
     	System.out.println("#byteSize::"+byteSize);
 
-    	//readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
-    	readString = new String(readByte,"MS949");	//인코딩 맞춰야
+    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	//readString = new String(readByte,"MS949");	//인코딩 맞춰야
 
         
     	//파일 검사 - 탭 숫자
@@ -2258,5 +2258,33 @@ public class ApiController {
 
 		return result_all.toString();
     }
-	
+
+    @RequestMapping(value = "/dic/check/dupl")
+    @ResponseBody
+    public String dicCheckDupl(
+    		@RequestParam("keyword") String strKeyword,
+    		@RequestParam("type") String strType
+    		) throws Exception
+    {
+    	JsonObject result1 = null;
+    	/*
+    	JsonObject result1 = null;
+    	String strFileName = "";
+    	//strFileName = relKnowledgeService.getCsvFileName(strType);
+    	result1 = relKnowledgeService.getCsvFileName(strType);
+    	*/
+    	int cnt = 0;
+    	cnt = dicService.cntDicKeywordsByType(strType,strKeyword);
+    	
+    	
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", 1);
+		result_all.addProperty("RT_MSG", "SUCCESS");
+		result_all.addProperty("RT_CNT", cnt);
+		result_all.add("RESULT", result1);
+		//result_all.addProperty("CSV_FILE_NAME", strFileName);
+
+		return result_all.toString();
+    }
+
 }

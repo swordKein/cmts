@@ -1603,4 +1603,19 @@ public class DicService implements DicServiceImpl {
 	public DicKeywords getCsvFileNameTimestamp(DicKeywords fileInfoParam) {
 		return dicKeywordsMapper.getCsvFileNameTimestamp(fileInfoParam);
 	}
+	
+	//2019.11.26 메타사전 중복검사(텍박입력시)
+	public int cntDicKeywordsByType(String strType, String strKeyword) {
+        JsonObject result = new JsonObject();
+        //JsonArray list_files= new JsonArray();
+        //String strFileName = "";
+        
+        DicKeywords dicKeywordsParam = new DicKeywords();
+        dicKeywordsParam.setType(strType);
+        dicKeywordsParam.setKeyword(strKeyword);
+        
+        int cnt = dicKeywordsMapper.cntDicKeywordsByTypeKeyword(dicKeywordsParam);
+        
+		return cnt;
+	}
 }
