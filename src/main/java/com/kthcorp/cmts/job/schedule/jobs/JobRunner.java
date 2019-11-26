@@ -179,7 +179,8 @@ public class JobRunner implements Job {
                 	//testService.removeTagsFromMetasByCSV_GetTagsCountByType();
                     //testService.getRemoveManualDest();
                     ccubeService.processMultipleSuccessItemByMCID();
-                    logger.info("#MLOG schedule.manualJobs");
+
+                    logger.info("#MLOG schedule.manualJobs...");
                     break;
                 case "makeCsvFile":
                 	// = 메타사전/연관지식 csv 파일 생성 makeCsvFile
