@@ -2272,6 +2272,8 @@ public class ApiController {
     		) throws Exception
     {
     	JsonObject result1 = null;
+    	
+    	strType = strType.replace("%20", " ");
     	/*
     	JsonObject result1 = null;
     	String strFileName = "";
