@@ -1562,7 +1562,7 @@ public class DicService implements DicServiceImpl {
 		    		
 		    		//키워드 양 끝의 " 제거
 		    		System.out.println("keyword.indexOf(0,keyword.length()-1) = " + keyword.indexOf(0) + "," + keyword.indexOf(keyword.length()-1));
-		    		if(keyword.indexOf(0)==61 && keyword.indexOf(keyword.length()-1)==61) {
+		    		if(keyword.indexOf(0)==34 && keyword.indexOf(keyword.length()-1)==34) {
 		    			System.out.println("BeFore - " + keyword);
 		    			keyword = keyword.substring(1, keyword.length()-2);
 		    			System.out.println("After - " + keyword);
