@@ -1879,11 +1879,11 @@ public class ApiController {
     		    char currentChar = tmpSbLine.charAt(idx);
     		    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
     		    if (currentChar == ',' && inQuotes) {
-    		    	tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+    		    	tmpSbLine.setCharAt(idx, ' '); // or '♡', and replace later
     		    }
     		}
     		readString2 += tmpSbLine.toString() + "\n";
-    		readString2 = readString.replace("，", "-_-_");
+    		//readString2 = readString.replace("，", "-_-_");
     		
     		int intTabs = tmpSbLine.toString().split(seperator,-1).length;
     		int intCompareTabs = 0;
@@ -2020,11 +2020,11 @@ public class ApiController {
     		    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
     		    if (currentChar == ',' && inQuotes) {
     		    	//tmpSbLine.setCharAt(idx, ';'); // or '♡', and replace later
-    		    	tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+    		    	tmpSbLine.setCharAt(idx, ' '); // or '♡', and replace later
     		    }
     		}
 		    readString2 += tmpSbLine.toString() + "\n";
-    		readString2 = readString.replace("，", "-_-_");
+    		//readString2 = readString.replace("，", "-_-_");
     		
     		//int intTabs = tmpSbLine.toString().split(seperator,-1).length;
     		String[] arrLineItem = tmpSbLine.toString().split(seperator,-1);
