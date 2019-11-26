@@ -702,6 +702,12 @@ schedule :
     -
       cronExpression : 0 * * * * ?
       jobType : analyzeService
+    -
+      cronExpression: 0 0 3 * * ?
+      jobType: pushCsvToData
+    -
+      cronExpression: 0 30 3 * * ?
+      jobType: makeCsvFile
 property:
   serverid: cmts_prod_api01
   crawl_api_url:
