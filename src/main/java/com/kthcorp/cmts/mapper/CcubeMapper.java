@@ -60,4 +60,7 @@ public interface CcubeMapper {
     List<Map<String,Object>> getSortedMCIDforNew(String master_content_id);
 
     int chgItemsStatForRT(Long itemIdx);
+
+    List<Integer> getItemidxByMC_ID(String mcid);
+    List<Integer> getItemidxBySERIES_ID(String series_id);
 }

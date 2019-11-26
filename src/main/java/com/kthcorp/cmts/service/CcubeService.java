@@ -35,6 +35,8 @@ public class CcubeService implements CcubeServiceImpl {
     @Autowired
     private CcubeMapper ccubeMapper;
     @Autowired
+    private ItemsMetasMapper itemsMetasMapper;
+    @Autowired
     private ItemsService itemsService;
     @Autowired
     private ItemsTagsService itemsTagsService;
@@ -936,6 +938,21 @@ public class CcubeService implements CcubeServiceImpl {
         // CID 중복 제거 컨텐츠 등록
         rt = ccubeMapper.insCcubeContent(req);
 
+        // 줄거리를 mcid 기준 items_metas에 등록
+        /* collectService에서 진행
+        List<Integer> listIdx = ccubeMapper.getItemidxByMC_ID(req.getMaster_content_id());
+        if (listIdx != null && listIdx.size() > 0) {
+            for(Integer idx : listIdx) {
+                ItemsMetas im = new ItemsMetas();
+                im.setIdx(idx);
+                im.setRegid("sched");
+                im.setMtype("PLOT");
+                im.setMeta(req.getSummary_long());
+                itemsMetasMapper.insItemsMetas(im);
+            }
+        }
+        */
+
         return rt;
     }
     @Override
@@ -946,6 +963,21 @@ public class CcubeService implements CcubeServiceImpl {
         // SID 중복제거 시리즈 등록
         rt = ccubeMapper.insCcubeSeries(req);
 
+        // 줄거리를 series_id기준 items_metas에 등록
+        // collectService에서 진행
+        /*
+        List<Integer> listIdx = ccubeMapper.getItemidxBySERIES_ID(req.getSeries_id());
+        if (listIdx != null && listIdx.size() > 0) {
+            for(Integer idx : listIdx) {
+                ItemsMetas im = new ItemsMetas();
+                im.setIdx(idx);
+                im.setRegid("sched");
+                im.setMtype("PLOT");
+                im.setMeta(req.getSummary_long());
+                itemsMetasMapper.insItemsMetas(im);
+            }
+        }
+        */
         return rt;
     }
 

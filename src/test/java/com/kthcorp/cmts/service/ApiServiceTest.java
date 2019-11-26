@@ -103,12 +103,28 @@ public class ApiServiceTest {
 
 	@Test
 	public void fileReadAndSaveTest() throws Exception {
-		MultipartFile uploadfile = FileUtils.convertFileToMultipart("c:\\upload\\","DIC_KEYWORDS_WHEN_20191126_0811.csv");
+		MultipartFile uploadfile = FileUtils.convertFileToMultipart("c:\\upload\\","다큐201911262.csv");
 		String result = apiService.returnStringFromMultiPartFileForDIC(uploadfile,"WHEN") ;
 		System.out.println("#RES:"+result.toString());
 
-		String result2 = dicService.uploadDicFile(result,"WHEN");
+		String result2 = relKnowledgeService.uploadRelknowledgeFile(result,"WHEN");
 		System.out.println("#RES2:"+result2.toString());
+
+	}
+
+	@Test
+	public void fileReadAndSaveTest2() throws Exception {
+		MultipartFile uploadfile = FileUtils.convertFileToMultipart("c:\\upload\\","DIC_KEYWORDS_WHEN_20191126_0811.csv");
+		String result = apiService.returnStringFromMultiPartFile(uploadfile,"DOCU") ;
+		System.out.println("#RES:"+result.toString());
+
+		String result2 = dicService.uploadDicFile(result,"DOCU");
+		System.out.println("#RES2:"+result2.toString());
+
+		dicService.pushCsvToDicKeywords();
+
+		dicService.makeFileDickeywords();
+
 
 	}
 }

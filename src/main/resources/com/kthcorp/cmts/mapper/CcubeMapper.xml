@@ -606,4 +606,13 @@
 
         update items_stat set stat ='RT' where idx = #{idx}
     </update>
+
+    <select id="getItemidxByMC_ID" resultType="java.lang.Integer" parameterType="java.lang.String">
+      /* getItemidxByMC_ID  */
+      select itemidx from ccube_keys where master_content_id = #{master_content_id}#
+    </select>
+    <select id="getItemidxBySERIES_ID" resultType="java.lang.Integer" parameterType="java.lang.String">
+        /* getItemidxBySERIES_ID  */
+        select itemidx from ccube_keys where series_id = #{series_id}#
+    </select>
 </mapper>
