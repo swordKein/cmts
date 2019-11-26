@@ -93,7 +93,7 @@
         count(*) as cnt
         from dic_keywords
         where type = #{type}
-            and keyword = #{keyword}
+            and (keyword = #{keyword} or keyword = concat(#{keyword},'\r')
     </select>
 
     <select id="getDicKeywords" resultType="com.kthcorp.cmts.model.DicKeywords" parameterType="com.kthcorp.cmts.model.DicKeywords">
