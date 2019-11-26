@@ -1883,6 +1883,7 @@ public class ApiController {
     		    }
     		}
     		readString2 += tmpSbLine.toString() + "\n";
+    		readString2 = readString.replace("，", "-_-_");
     		
     		int intTabs = tmpSbLine.toString().split(seperator,-1).length;
     		int intCompareTabs = 0;
@@ -2023,6 +2024,7 @@ public class ApiController {
     		    }
     		}
 		    readString2 += tmpSbLine.toString() + "\n";
+    		readString2 = readString.replace("，", "-_-_");
     		
     		//int intTabs = tmpSbLine.toString().split(seperator,-1).length;
     		String[] arrLineItem = tmpSbLine.toString().split(seperator,-1);

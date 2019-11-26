@@ -6826,7 +6826,7 @@ public class TestService implements TestServiceImpl {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		Calendar time = Calendar.getInstance();
 		String strNow = format1.format(time.getTime());
-		
+
         for(String type : types) {
             reqMap = new HashMap();
             reqMap.put("mtype", type);
@@ -8909,7 +8909,7 @@ public class TestService implements TestServiceImpl {
             }
         }
     }
-    
+
 	//권재일 작업 2019.08.23 유형별 메타태그 총량통계 + CSV에 있는 항목 매타태그에서 삭제작업
 	public void removeTagsFromMetasByCSV_GetTagsCountByType() {
 		//from getMetaChara_0724 ...?
@@ -8921,71 +8921,71 @@ public class TestService implements TestServiceImpl {
 		JsonObject newItem = null;
 
 		//countAll = 40;//for test
-		
+
 		String str;
 		String resultStr;
-		
+
 		//작업 전 태그 수량 세기
 		str = "beforeProcess";
 		resultStr = "mtype" + seperator + "count" + lineFeed;
 		try {
 			//reqItems = testMapper.getTestCidsForAsset();
 			reqItems = testMapper.getTagsCountByType();
-			
+
 			for (Map<String, Object> item : reqItems) {
 				resultStr = resultStr + item.get("mtype").toString()
 						+ seperator + item.get("wordscnt").toString()
 						+ lineFeed;;
 			}
-			
+
 			SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 			Calendar time = Calendar.getInstance();
 			String strToday = format1.format(time.getTime());
 
-			
-			
-			
+
+
+
 			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
 			//파일표출
 			int rtFileC1 = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			//작업 전 CSV 생성
 			this.writeMetaDicKeywordsByTypes();
-			
+
 			//메타태그 삭제 작업(기존 로직)
 			this.removeAllTagsFromMetasByCsv();
-			
+
 			//작업 후 CSV 생성
 			this.writeMetaDicKeywordsByTypes();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		//작업 후 태그 수량 세기
 		str = "afterProcess";
 		resultStr = "mtype" + seperator + "count" + lineFeed;
 		try {
 			//reqItems = testMapper.getTestCidsForAsset();
 			reqItems = testMapper.getTagsCountByType();
-			
+
 			for (Map<String, Object> item : reqItems) {
 				resultStr = resultStr + item.get("mtype").toString()
 						+ seperator + item.get("wordscnt").toString()
 						+ lineFeed;;
 			}
-			
+
 			SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 			Calendar time = Calendar.getInstance();
 			String strToday = format1.format(time.getTime());
 
-			
-			
-			
+
+
+
 			String fileNameContent = "getTagsCountByType_" + strToday + str + ".csv";
 			//파일표출
 			int rtFileC2 = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");//utf-8
@@ -9051,5 +9051,94 @@ public class TestService implements TestServiceImpl {
                 e.printStackTrace();
         }
         return rt;
+    }
+
+    @Override
+    public void getRemoveManualDest() {
+        try {
+            List<Map<String,Object>> maps = testMapper.getRemoveManualDest();
+
+            int cnt = 1;
+            for (Map<String,Object> map1 : maps) {
+                String title = (String) map1.get("title");
+                Long o_idx = (Long) map1.get("idx");
+                Integer o_tagidx = (Integer) map1.get("tagidx");
+                String o_mtype = (String) map1.get("mtype");
+                String o_meta = (String) map1.get("meta");
+                String d_meta = "";
+
+                System.out.println("### "+cnt+" 'st # idx:"+o_idx+" / mtype:"+o_mtype+"/orig:"+o_meta);
+
+                JsonArray origArr = null;
+                JsonArray destArr = null;
+                JsonArray destArr2 = null;
+                JsonObject jObj = null;
+                jObj = new JsonObject();
+                jObj.addProperty("meta", "미국");
+                jObj.addProperty("target_meta", "미국");
+
+
+                if (!o_mtype.contains("SEARCH")) {
+
+                    origArr = JsonUtil.getJsonArray(o_meta);
+                   if (origArr != null && origArr.size() > 0) {
+                        destArr = itemsTagsService.changeTargetMetasArray("del", jObj, origArr);
+
+                        System.out.println("### ORIG_SZ:"+origArr.size()+" ### ++ "+cnt+" 'st # idx:"+o_idx+" /title:"+title+" / mtype:"+o_mtype+"/orig:"+origArr);
+                        if (destArr == null) destArr = new JsonArray();
+                        System.out.println("### DEST_SZ:"+destArr.size()+" ### ++ "+cnt+" 'st # idx:"+o_idx+" /title:"+title+" / mtype:"+o_mtype+"/dest:"+destArr);
+                        d_meta = destArr.toString();
+                   }
+
+                } else {
+
+                    origArr = JsonUtil.getJsonArray(o_meta);
+                    if(origArr.size()>0) {
+                        if(origArr.get(0).isJsonPrimitive()) {
+                            JsonArray tmpJsonArray = new JsonArray();
+                            for(JsonElement tmpJe : origArr) {
+                                JsonObject tmpJsonObject = new JsonObject();
+                                tmpJsonObject.addProperty("word", tmpJe.getAsString());
+                                tmpJsonObject.addProperty("ratio", "0.0");
+                                tmpJsonArray.add(tmpJsonObject);
+                            }
+
+                            origArr = tmpJsonArray;
+                        }
+
+                    destArr = itemsTagsService.changeTargetMetasArray("del", jObj, origArr);
+
+                        //sif (destArr == null) destArr = new JsonArray();
+                        //System.out.println("### DEST111_SZ:"+destArr.size()+" ### ++ "+cnt+" 'st # idx:"+o_idx+" / mtype:"+o_mtype+"/dest111:"+destArr);
+
+                        if (destArr != null) {
+                        destArr2 = itemsTagsService.getRemoveDupTargetMetasArrayOnlyString(destArr);
+                    }
+
+                    System.out.println("### ORIG_SZ:"+origArr.size()+" ### ++ "+cnt+" 'st # idx:"+o_idx+" /title:"+title+" / mtype:"+o_mtype+"/orig:"+origArr);
+                    if (destArr2 == null) destArr2 = new JsonArray();
+                    System.out.println("### DEST_SZ:"+destArr2.size()+" ### ++ "+cnt+" 'st # idx:"+o_idx+" /title:"+title+" / mtype:"+o_mtype+"/dest:"+destArr2);
+                    d_meta = destArr2.toString();
+                    }
+                }
+
+                if (!"".equals((o_meta.trim()))) {
+                    int idx2 = o_idx.intValue();
+                    ItemsTags it = new ItemsTags();
+                    it.setIdx(idx2);
+                    it.setTagidx(o_tagidx);
+                    it.setMtype(o_mtype);
+                    it.setMeta(d_meta);
+
+                    //System.out.println("### DEST update ::"+it);
+                    int rk = itemsTagsMapper.uptItemsTagsByManual(it);
+
+                }
+
+                cnt++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -282,7 +282,7 @@
 		(@col1,@col2)
 		set
 			type=@col1,
-			keyword=replace(@col2,'，',','),
+			keyword=replace(@col2,'-_-_',','),
 			ratio=0,
 			regdate=now(),
 			regid='sched',
