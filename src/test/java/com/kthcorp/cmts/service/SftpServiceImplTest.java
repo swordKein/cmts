@@ -67,6 +67,7 @@ public class SftpServiceImplTest {
 	@Test
 	public void test_processDownloadMultipleXmlFileToDB_0426() throws Exception {
 		String fileName = "C:\\Users\\wodus77\\Documents\\KTH_META\\03.구현\\CCUBE_입수_데이터\\CCUBE_DOWN_0426\\Content_2016051423.xml";
+		fileName="c:\\upload\\TGG_Content_2019082801.xml";
 		int rt = sftpService.processDownloadMultipleXmlFileToDB(fileName);
 
 	}

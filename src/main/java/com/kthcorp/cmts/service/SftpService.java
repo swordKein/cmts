@@ -326,8 +326,12 @@ public class SftpService implements SftpServiceImpl {
                     newItem.setKmrb_actors_display(eElement.getElementsByTagName("KMRB_ACTORS_DISPLAY").item(0).getTextContent());
                     newItem.setKmrb_actors_display_eng(eElement.getElementsByTagName("KMRB_ACTORS_DISPLAY_ENG").item(0).getTextContent());
 
-                    newItem.setSummary_long(eElement.getElementsByTagName("SUMMARY_LONG").item(0).getTextContent());
-                    newItem.setSummary_medium(eElement.getElementsByTagName("SUMMARY_MEDIUM").item(0).getTextContent());
+                    if(eElement.getElementsByTagName("SUMMARY_LONG") != null && eElement.getElementsByTagName("SUMMARY_LONG").item(0) != null) {
+                        newItem.setSummary_long(eElement.getElementsByTagName("SUMMARY_LONG").item(0).getTextContent());
+                    }
+                    if (eElement.getElementsByTagName("SUMMARY_MEDIUM") != null && eElement.getElementsByTagName("SUMMARY_MEDIUM").item(0) != null) {
+                        newItem.setSummary_medium(eElement.getElementsByTagName("SUMMARY_MEDIUM").item(0).getTextContent());
+                    }
 
                     resultList.add(newItem);
                 }
