@@ -1863,7 +1863,8 @@ public class ApiController {
     	System.out.println("#readByte::"+readByte);
     	System.out.println("#byteSize::"+byteSize);
 
-    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	//readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	readString = new String(readByte,"MS949");	//인코딩 맞춰야
 
         //파일 검사 - 탭 숫자
     	System.out.println("[********] file test - strType = " + strType);
@@ -1920,7 +1921,10 @@ public class ApiController {
     	System.out.println("[********] file test end");
     	
     	if(readByte[0] == -17 && readByte[1] == -69 && readByte[2] == -65) {
+    		
+    	}else {
     		//errCode = -1;	//BOM utf8이 아님
+    		
     	}
     	
     	String strFileName = "";
@@ -1987,7 +1991,8 @@ public class ApiController {
     	System.out.println("#readByte::"+readByte);
     	System.out.println("#byteSize::"+byteSize);
 
-    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	//readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	readString = new String(readByte,"MS949");	//인코딩 맞춰야
 
         
     	//파일 검사 - 탭 숫자
