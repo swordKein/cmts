@@ -283,4 +283,6 @@ public interface TestServiceImpl {
     void removeTagsFromMetasByCSV_GetTagsCountByType();
 
     int writeCcubeOutputDayToJsonByRelKnowleadge();
+
+    void getRemoveManualDest();
 }
