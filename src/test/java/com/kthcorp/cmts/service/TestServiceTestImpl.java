@@ -846,4 +846,8 @@ public class TestServiceTestImpl {
 		System.out.println("#RES:"+res);
 	}
 
+	@Test
+	public void getRemoveManualDest() {
+		testService.getRemoveManualDest();
+	}
 }

@@ -151,7 +151,7 @@ public class JobRunner implements Job {
                     logger.info("#MLOG schedule.hadoopWordCount");
                     break;
                 case "manualJob2":
-                    testService.writeAllAwards_0315("CcubeContent");
+                    //testService.writeAllAwards_0315("CcubeContent");
                     logger.info("#MLOG schedule.writeAllAwards_0315");
                     break;
                 case "manualJobs":
@@ -176,7 +176,8 @@ public class JobRunner implements Job {
                     //testService.writeGenSubgenre_0725("CcubeContents");
                     //testService.removeAllTagsFromMetasByCsv();
                     //testService.prcAwardsAll("CcubeContent");
-                	testService.removeTagsFromMetasByCSV_GetTagsCountByType();
+                	//testService.removeTagsFromMetasByCSV_GetTagsCountByType();
+                    testService.getRemoveManualDest();
                     logger.info("#MLOG schedule.manualJobs");
                     break;
                 case "makeCsvFile":

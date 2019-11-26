@@ -121,4 +121,6 @@ public interface TestMapper {
     List<Map<String,Object>> getAllAwards();
 
 	List<Map<String, Object>> getTagsCountByType();
+
+	List<Map<String,Object>> getRemoveManualDest();
 }

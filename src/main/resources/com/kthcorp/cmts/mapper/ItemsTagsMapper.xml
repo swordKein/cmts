@@ -189,7 +189,7 @@
 
     <update id="uptItemsTagsByManual" parameterType="com.kthcorp.cmts.model.ItemsTags">
         /* uptItemsTagsByManual */
-        update items_tags_metas set meta_orig = meta , meta = #{meta}, regdate = '2018-10-25 17:00:00'
+        update items_tags_metas set meta_orig = meta , meta = #{meta}, regid='ghkdwo77_1126', regdate = '2019-11-26 23:33:00'
         where idx = #{idx} and tagidx = #{tagidx} and mtype = #{mtype}
     </update>
 

@@ -824,5 +824,25 @@
 		) a
 		group by a.mtype 
     </select>
+
+    <select id="getRemoveManualDest" resultType="java.util.HashMap">
+        /*  getRemoveManualDest */
+        select it.title, b.idx, itm.tagidx, itm.meta, itm.mtype from
+        (
+            select distinct(a.idx) idx from (
+                select it.idx from items it
+                                       inner join ccube_contents cc on cc.content_id = it.cid and trim(cc.country_of_origin) = 'USA'
+                                       inner join items_tags_metas itm on itm.idx =it.idx and itm.meta like '%미국%'
+                union all
+                select it.idx from items it
+                                       inner join ccube_series cc on cc.series_id = it.cid and trim(cc.country_of_origin) = 'USA'
+                                       inner join items_tags_metas itm on itm.idx = it.idx and itm.meta like '%미국%'
+            ) a
+        ) b
+        inner join items_tags_metas itm on itm.idx = b.idx and itm.meta like '%미국%'
+        inner join items it on it.idx = b.idx
+        order by b.idx asc
+
+    </select>
     
 </mapper>
