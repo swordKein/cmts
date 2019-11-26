@@ -21,8 +21,8 @@ public interface RelKnowledgeServiceImpl {
     String uploadRelknowledgeFile(String readString, String type);
     int importRelKnowledgesByType(RelKnowledge relKnowledge);
     
-    void makeFileRelKnowledge();
-    void pushCsvToRelKnowledge();
+    void makeFileRelKnowledge() throws Exception;
+    void pushCsvToRelKnowledge() throws Exception;
 
     Map<String, Object> getJsonArrayFromRelKnowledge();
     

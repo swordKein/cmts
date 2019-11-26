@@ -1327,6 +1327,9 @@ public class DicService implements DicServiceImpl {
         
         //[파일업다운로드]
         
+        //디렉토리 체크
+        FileUtils.checkDirAndCreate(UPLOAD_DIR+"csv_import"+File.separator);
+        
         logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
 		String strFileName = "";
@@ -1348,7 +1351,8 @@ public class DicService implements DicServiceImpl {
 		return strFileName;
 	}
 
-	public void makeFileDickeywords() {
+	@Transactional
+	public void makeFileDickeywords() throws Exception{
 		//AdminService.getDicKeywordsListDownload
 		String strFileName = "";
 		
@@ -1398,7 +1402,7 @@ public class DicService implements DicServiceImpl {
 		//return strFileName;	}
 	}
 	
-	public void makeFileNotuse() {
+	public void makeFileNotuse() throws Exception{
     	List<Map<String, Object>> reqItems = null;
     	String resultStr = "";
     	String lineFeed = System.getProperty("line.separator");
@@ -1442,7 +1446,7 @@ public class DicService implements DicServiceImpl {
     	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 	}
 
-	public void makeFileChange() {
+	public void makeFileChange() throws Exception{
     	List<Map<String, Object>> reqItems = null;
     	String resultStr = "";
     	String lineFeed = System.getProperty("line.separator");
@@ -1488,7 +1492,7 @@ public class DicService implements DicServiceImpl {
     	int iFile = dicKeywordsMapper.updateCsvFileInfo(fileInfo);
 	}
 
-	public void pushCsvToDicKeywords() {
+	public void pushCsvToDicKeywords() throws Exception{
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         
@@ -1522,7 +1526,7 @@ public class DicService implements DicServiceImpl {
 		}
 	}
 
-	public void pushCsvToDicNotuseKeywords() {
+	public void pushCsvToDicNotuseKeywords() throws Exception{
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         
@@ -1547,7 +1551,7 @@ public class DicService implements DicServiceImpl {
 		}
 	}
 
-	public void pushCsvToDicChangeKeywords() {
+	public void pushCsvToDicChangeKeywords() throws Exception{
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         

@@ -958,6 +958,9 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
         
         //[파일업다운로드]
         
+        //디렉토리 체크
+        FileUtils.checkDirAndCreate(UPLOAD_DIR+"csv_import"+File.separator);
+        
         logger.debug("\n\n--------\n[파일업다운로드] " + format.format(new Date()) + " relKnowledgeService.getRelKnowledgeListDownload 시작");
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " type = " + type);
 		String strFileName = "";
@@ -1005,7 +1008,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		return intResult;
 	}
 
-	public void makeFileRelKnowledge() {
+	public void makeFileRelKnowledge() throws Exception {
 		// TODO Auto-generated method stub
 		//from RelKnowledgeService.getRelKnowledgeListDownload
 		// 테스트 완성 후 getRelKnowledgeListDownload 파라미터를 없앨것
@@ -1901,7 +1904,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		}
 	}
 
-	public void pushCsvToRelKnowledge() {
+	public void pushCsvToRelKnowledge() throws Exception{
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         

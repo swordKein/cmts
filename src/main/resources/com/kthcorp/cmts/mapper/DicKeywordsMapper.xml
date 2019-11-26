@@ -267,13 +267,13 @@
 		ignore
 		INTO TABLE `metatagdb`.`dic_keywords`
 		COLUMNS TERMINATED BY ','
-		ENCLOSED BY '"'
+		OPTIONALLY ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
 		IGNORE 1 LINES
 		(@col1,@col2)
 		set
 			type=@col1,
-			keyword=@col2,
+			keyword=replace(@col2,'，',','),
 			ratio=0,
 			regdate=now(),
 			regid='sched',

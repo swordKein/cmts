@@ -124,12 +124,12 @@ public interface DicServiceImpl {
     
     //2019.11.06
     String uploadDicFile(String readString, String type);
-    void makeFileDickeywords();
-    void makeFileNotuse();
-    void makeFileChange();
-    void pushCsvToDicKeywords();
-    void pushCsvToDicNotuseKeywords();
-    void pushCsvToDicChangeKeywords();
+    void makeFileDickeywords() throws Exception;
+    void makeFileNotuse() throws Exception;
+    void makeFileChange() throws Exception;
+    void pushCsvToDicKeywords() throws Exception;
+    void pushCsvToDicNotuseKeywords() throws Exception;
+    void pushCsvToDicChangeKeywords() throws Exception;
     
     //2019.11.12 실시간 10건검색
     public JsonObject get10DicKeywordsByType(String type, String keyword);
