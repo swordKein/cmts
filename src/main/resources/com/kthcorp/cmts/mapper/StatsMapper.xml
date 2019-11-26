@@ -33,6 +33,7 @@
             from items it
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
             inner join ccube_keys ck on ck.itemidx = it.idx and (ck.content_id = it.cid or ck.series_id = it.cid)
+            where it.stat != 'M'
           ) a
           where a.tagidx is not null
     </select>
@@ -128,7 +129,7 @@
         select count(*) from (
         select ism.idx from sched_trigger st
         inner join items_sched_mapping ism on ism.sc_id = st.sc_id
-        inner join items it on it.idx = ism.idx
+        inner join items it on it.idx = ism.idx and it.stat != 'M'
         where st.type in ('C','R','A') and st.stat = 'Y'
         ) a
     </select>
@@ -153,7 +154,7 @@
         inner join sched_trigger sc on sc.sc_id = ism.sc_id and sc.type = 'C' and sc.stat = 'F';
         */
         select count(*) from items_stat iss
-        inner join items it on it.idx = iss.idx
+        inner join items it on it.idx = iss.idx and it.stat != 'M'
         inner join ccube_keys ck on ck.itemidx = it.idx and (ck.content_id = it.cid or ck.series_id = it.cid)
         where iss.stat in ('FC');
     </select>
@@ -181,7 +182,7 @@
         ) a
         */
         select count(*) from items_stat iss
-        inner join items it on it.idx = iss.idx
+        inner join items it on it.idx = iss.idx and it.stat != 'M'
         inner join ccube_keys ck on ck.itemidx = it.idx and (ck.content_id = it.cid or ck.series_id = it.cid)
         where iss.stat in ('FR','FA');
     </select>
@@ -202,6 +203,7 @@
         from items it
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'RT'
         inner join ccube_keys ck on ck.itemidx = it.idx and (ck.content_id = it.cid or ck.series_id = it.cid)
+        where it.stat != 'M'
     </select>
 
     <select id="mid_down_stats" resultType="java.lang.Integer" useCache="true">
@@ -258,7 +260,7 @@
             select a.idx, a.regdate, 1 as cnt from (
                 select ism.idx, st.regdate from sched_trigger st
                 inner join items_sched_mapping ism on ism.sc_id = st.sc_id
-                inner join items it on it.idx = ism.idx
+                inner join items it on it.idx = ism.idx and it.stat != 'M'
                 where st.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 and st.type = 'C' and st.stat in ('S','F')
                 group by ism.idx
@@ -276,7 +278,7 @@
             select a.idx, a.regdate, 1 as cnt from (
                 select ism.idx, st.regdate from sched_trigger st
                 inner join items_sched_mapping ism on ism.sc_id = st.sc_id
-                inner join items it on it.idx = ism.idx
+                inner join items it on it.idx = ism.idx and it.stat != 'M'
                 where  st.regdate between concat(#{sdate}, ' 00:00:00') and concat(#{edate}, ' 23:59:59')
                 and st.type = 'A' and st.stat in ('S')
                 group by ism.idx
