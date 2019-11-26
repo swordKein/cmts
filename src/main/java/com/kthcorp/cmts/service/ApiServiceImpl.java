@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.Items;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -73,4 +74,8 @@ public interface ApiServiceImpl {
     
     //mcid로 동일 컨텐츠 검색
     public JsonObject getItemListSameMcid(Integer itemid);
+
+    String returnStringFromMultiPartFile(MultipartFile uploadfile, String strType);
+
+    String returnStringFromMultiPartFileForDIC(MultipartFile uploadfile, String strType);
 }

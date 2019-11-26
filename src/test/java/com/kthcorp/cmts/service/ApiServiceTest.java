@@ -3,12 +3,14 @@ package com.kthcorp.cmts.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.Items;
+import com.kthcorp.cmts.util.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,10 @@ import java.util.List;
 public class ApiServiceTest {
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private RelKnowledgeService relKnowledgeService;
+	@Autowired
+	private DicService dicService;
 
 	@Test
 	public void test_getMovieCine21ByTitle() throws Exception{
@@ -93,5 +99,16 @@ public class ApiServiceTest {
 	public void test_getResultSnsMap() throws Exception {
 		List<String> result = apiService.getResultSnsMapByTag("twitter", "20180314", "word");
 		System.out.println("#RES:"+result.toString());
+	}
+
+	@Test
+	public void fileReadAndSaveTest() throws Exception {
+		MultipartFile uploadfile = FileUtils.convertFileToMultipart("c:\\upload\\","DIC_KEYWORDS_WHEN_20191126_0811.csv");
+		String result = apiService.returnStringFromMultiPartFileForDIC(uploadfile,"WHEN") ;
+		System.out.println("#RES:"+result.toString());
+
+		String result2 = dicService.uploadDicFile(result,"WHEN");
+		System.out.println("#RES2:"+result2.toString());
+
 	}
 }

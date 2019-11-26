@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -1213,5 +1215,257 @@ public class ApiService implements ApiServiceImpl {
 		
 		return result;
 	}
+
+
+    @Override
+    public String returnStringFromMultiPartFile(MultipartFile uploadfile, String strType) {
+        String result = "";
+
+        try {
+            Calendar calendar = Calendar.getInstance();        //[파일업다운로드]
+            SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");        //[파일업다운로드]
+            SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");        //[파일업다운로드]
+
+            String strResult = "";
+            String strMessage = "";
+
+            String lineFeed = System.getProperty("line.separator");
+            String seperator = ",";
+
+            int errCode = 0;    //파일 분석
+
+            System.out.println("[파일업다운로드]");
+            //파일업로드~
+            //uploadfile.getBytes();
+
+            //파일명은 ㅇㅇㅇ
+            //복사작업 to 업로드폴더/VOD_RT
+            //파일명 : VOD_RT_COOK.txt
+            byte[] readByte = null;
+            String readString = "";
+
+            readByte = uploadfile.getBytes();
+
+            int byteSize = readByte.length;
+            int viewSize = 0;
+            System.out.println("#readByte::" + readByte);
+            System.out.println("#byteSize::" + byteSize);
+
+            readString = new String(readByte, "UTF-8");    //인코딩 맞춰야
+            //readString = new String(readByte,"MS949");	//인코딩 맞춰야
+
+            //파일 검사 - 탭 숫자
+            System.out.println("[********] file test - strType = " + strType);
+            String[] arrLine = readString.split(lineFeed);
+            StringBuilder tmpSbLine;
+            String readString2 = "";
+            boolean inQuotes = false;
+            for (String line : arrLine) {
+                //따옴표 안의 쉼표
+                tmpSbLine = new StringBuilder(line);
+                for (int idx = 0; idx < tmpSbLine.length(); idx++) {
+                    char currentChar = tmpSbLine.charAt(idx);
+                    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
+                    if (currentChar == ',' && inQuotes) {
+                        System.out.println("- from : " + tmpSbLine.toString());
+                        tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+                        System.out.println("- to : " + tmpSbLine.toString());
+                    }
+                }
+                readString2 += tmpSbLine.toString() + "\n";
+                readString2 = readString.replace("，", "-_-_");
+
+                int intTabs = tmpSbLine.toString().split(seperator, -1).length;
+                int intCompareTabs = 0;
+
+                switch (strType) {
+                    case "cook":
+                        intCompareTabs = 38;
+                        break;
+                    case "curr":
+                        intCompareTabs = 15;
+                        break;
+                    case "docu":
+                        intCompareTabs = 13;
+                        break;
+                    case "heal":
+                        intCompareTabs = 33;
+                        break;
+                    case "hist":
+                        intCompareTabs = 17;
+                        break;
+                    case "tour":
+                        intCompareTabs = 35;
+                        break;
+                    default:
+                        intCompareTabs = -1;
+                        break;
+                }
+
+                if (intTabs != intCompareTabs && errCode > -1) {
+                    errCode = -1;    //파일 분석
+                    System.out.println(strType + "csv error intTabs!=intCompareTabs(" + intTabs + " vs " + intCompareTabs + ")\nline = " + line);
+                    break;
+                }
+                //System.out.println();
+            }
+            System.out.println("[********] file test end");
+
+            if (readByte[0] == -17 && readByte[1] == -69 && readByte[2] == -65) {
+
+            } else {
+                //errCode = -1;	//BOM utf8이 아님
+
+            }
+
+            result = readString2;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public String returnStringFromMultiPartFileForDIC(MultipartFile uploadfile, String strType) {
+        String result = "";
+
+        try {
+
+            Calendar calendar = Calendar.getInstance();		//[파일업다운로드]
+            SimpleDateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");		//[파일업다운로드]
+            SimpleDateFormat dateFormatLog = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
+
+            String strResult = "";
+            String strMessage = "";
+
+            String lineFeed = System.getProperty("line.separator");
+            String seperator = ",";
+
+            int errCode = 0;	//파일 분석
+
+            System.out.println("[파일업다운로드]");
+            //파일업로드~
+            //uploadfile.getBytes();
+
+            //파일명은 ㅇㅇㅇ
+            //복사작업 to 업로드폴더/VOD_RT
+            //파일명 : VOD_RT_COOK.txt
+            byte[] readByte = null;
+            String readString = "";
+
+            readByte = uploadfile.getBytes();
+
+            int byteSize = readByte.length;
+            int viewSize = 0;
+            System.out.println("#readByte::"+readByte);
+            System.out.println("#byteSize::"+byteSize);
+
+            readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+            //readString = new String(readByte,"MS949");	//인코딩 맞춰야
+
+
+            //파일 검사 - 탭 숫자
+            //(dicKeyword)
+            //	나머지는 2 , 불용어만 1
+            //(relKnowledge)
+            //	cook	curr	docu	heal	hist	tour
+            //	38		15		13		33		17		35
+            System.out.println("[********] file test");
+            String[] arrLine = readString.split(lineFeed);
+            StringBuilder tmpSbLine;
+            boolean inQuotes = false;
+            int rows=0;
+            String readString2 = "";
+            for(String line : arrLine) {
+                if(errCode<0) {
+                    break;
+                }
+
+                //따옴표 안의 쉼표
+                tmpSbLine = new StringBuilder(line);
+                for(int idx=0 ; idx<tmpSbLine.length() ; idx++) {
+                    char currentChar = tmpSbLine.charAt(idx);
+                    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
+                    if (currentChar == ',' && inQuotes) {
+                        System.out.println("- from : " + tmpSbLine.toString());
+                        tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+                        System.out.println("- to : " + tmpSbLine.toString());
+                    }
+                }
+                readString2 += tmpSbLine.toString() + "\n";
+                readString2 = readString.replace("，", "-_-_");
+
+                //int intTabs = tmpSbLine.toString().split(seperator,-1).length;
+                String[] arrLineItem = tmpSbLine.toString().split(seperator,-1);
+                int intTabs = arrLineItem.length;
+                int intCompareTabs = 0;
+
+                switch(strType) {
+                    case "notuse":
+                        intCompareTabs = 1;
+                        if(intTabs!=1) {
+                            errCode = -1;
+                        }
+                        break;
+                    case "what":case "where":case "who":case "when":case "emotion":case "character":
+                        intCompareTabs = 2;
+                        if(intTabs!=2) {
+                            errCode = -1;
+                        }else {
+                            if(rows<1) {
+                                if(!arrLineItem[0].equals("")) {
+                                    System.out.println("Header row : pass");
+                                    rows++;
+                                    continue;
+                                }
+                            }else {
+                                if(!arrLineItem[0].equals(strType.toUpperCase())) {	//다른 카테고리
+                                    System.out.println("다른 카테고리 strType vs arrLineItem[0] = " + strType + " vs " + arrLineItem[0]);
+                                    errCode = -1;
+                                }
+                            }
+                        }
+                        break;
+                    case "change":
+                        intCompareTabs = 2;
+                        if(intTabs!=2) {
+                            errCode = -1;
+                        }else {
+                            if(arrLineItem[0].equals("") || arrLineItem[1].equals("")) {
+                                System.out.println("빈줄");
+                                errCode = -1;
+                            }else if(arrLineItem[0].equals("what")||arrLineItem[0].equals("where")||arrLineItem[0].equals("who")||arrLineItem[0].equals("when")||arrLineItem[0].equals("emotion")||arrLineItem[0].equals("character")) {
+                                System.out.println("딕키워즈");
+                                errCode = -1;
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("다른 카테고리 strType = " + strType);
+                        intCompareTabs = -1;
+                        break;
+                }
+
+                if(intTabs!=intCompareTabs && errCode>-1) {
+                    errCode = -1;	//파일 분석
+                    System.out.println(strType + "csv error intTabs!=intCompareTabs("+intTabs+" vs "+intCompareTabs+")\nline = " + line);
+                    break;
+                }
+                //System.out.println();
+            }
+            System.out.println("[********] file test end");
+
+            if(readByte[0] == -17 && readByte[1] == -69 && readByte[2] == -65) {
+                //errCode = -1;	//BOM utf8이 아님
+            }
+
+            result = readString2;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
 }
