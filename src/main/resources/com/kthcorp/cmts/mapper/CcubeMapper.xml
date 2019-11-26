@@ -39,7 +39,7 @@
         from ccube_contents
         where stat = 'Y'
         order by regdate ASC
-        limit 50
+        limit 1
     </select>
 
     <update id="uptCcubeContentStat" parameterType="com.kthcorp.cmts.model.CcubeContent">
@@ -108,7 +108,7 @@
         from ccube_series
         where STAT = 'Y'
         order by regdate ASC
-        limit 50
+        limit 1
     </select>
 
     <update id="uptCcubeSeriesStat" parameterType="com.kthcorp.cmts.model.CcubeSeries">

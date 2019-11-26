@@ -1,10 +1,7 @@
 package com.kthcorp.cmts.service;
 
 import com.google.gson.JsonObject;
-import com.kthcorp.cmts.model.CcubeContent;
-import com.kthcorp.cmts.model.ConfTarget;
-import com.kthcorp.cmts.model.InItems;
-import com.kthcorp.cmts.model.SchedTrigger;
+import com.kthcorp.cmts.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,5 +105,18 @@ public class ItemsServiceTest {
 		req.setYear("1942");
 		req.setDirector("데이비드 핸드");
 		System.out.println("#RES:"+itemsService.copyCcubeContentToItems(req));
+	}
+
+
+	@Test
+	public void test_copyCcubeSeriesToItems1911() throws Exception {
+		CcubeSeries req = new CcubeSeries();
+		req.setCountry_of_origin("ENG");
+		req.setSeries_id("60020478530000");
+		req.setPurity_title("양릉전 (SID 중복 테스트)");
+		req.setSeries_nm("양릉전 (SID 중복 테스트)");
+		//req.setYear("1942");
+		//req.setDirector("데이비드 핸드");
+		System.out.println("#RES:"+itemsService.copyCcubeSeriesToItems(req));
 	}
 }
