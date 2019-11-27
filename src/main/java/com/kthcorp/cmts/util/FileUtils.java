@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -714,13 +715,74 @@ public class FileUtils {
         return result;
     }
 
+    /**
+     * UTF-8 encoding 파일을 MS949 encoding 파일로 변경
+     * @param inFileName UTF-8 파일 존재위치
+     * @param outFileName 새로 생성될 MS949 파일 저장위치
+     * @throws Exception
+     */
+    public static void convertUTF8toMS949(String inFileName, String outFileName) throws Exception {
+
+        // ================================
+        FileInputStream fileInputStream = null;
+        Reader reader = null;
+        Writer writer = null;
+        StringBuffer stringBuffer = new StringBuffer();
+
+        int intRead = 0;
+        fileInputStream = new FileInputStream(inFileName);
+        Charset inputCharset = Charset.forName("utf-8");
+        InputStreamReader isr = new InputStreamReader(fileInputStream, inputCharset);
+
+        reader = new BufferedReader(isr);
+
+        while( ( intRead = reader.read() ) > -1 ) {
+            stringBuffer.append((char)intRead);
+        }
+        reader.close();
+
+        //
+        FileOutputStream fos = new FileOutputStream(outFileName);
+        writer = new OutputStreamWriter(fos, "MS949");
+        writer.write(stringBuffer.toString());
+        stringBuffer.setLength(0);
+        writer.close();
+    }
+
     public static int writeYyyymmddFileFromStr(String reqStr, String upload_dir, String fileName, String charset) {
         int rt = 0;
-
         BufferedWriter output = null;
         try {
 
             File targetFile = new File(upload_dir + fileName);
+            targetFile.createNewFile();
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), charset));
+
+            String lineFeed = System.getProperty("line.separator");
+
+            reqStr += lineFeed;
+            output.write(reqStr);
+
+            output.close();
+
+            rt = 1;
+        } catch (Exception e) {
+            rt = -1;
+            e.printStackTrace();
+        }
+
+        return rt;
+    }
+
+
+    public static int writeYyyymmddFileFromStrAndConvMS949(String reqStr, String upload_dir, String fileName, String charset) {
+        int rt = 0;
+        String imsi_fileName = fileName+".utf8";
+
+        BufferedWriter output = null;
+        try {
+
+            File targetFile = new File(upload_dir + imsi_fileName);
             targetFile.createNewFile();
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), charset));
 
@@ -734,6 +796,8 @@ public class FileUtils {
             output.write(reqStr);
 
             output.close();
+
+            convertUTF8toMS949(upload_dir+imsi_fileName, upload_dir+fileName);
             rt = 1;
         } catch (Exception e) {
             rt = -1;
@@ -742,6 +806,7 @@ public class FileUtils {
 
         return rt;
     }
+
 
     public static int writeFileFromStr(String reqStr, String upload_dir, String fileName, String charset) {
         int rt = 0;
