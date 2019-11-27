@@ -767,7 +767,7 @@ public class StringUtil {
 
     public static String convertUTF8toMS949(String req) {
         String result = "";
-        String utf = new String(req.getBytes(StandardCharsets.UTF_8));
+        String utf = new String(req.getBytes(Charset.forName("utf-8")));
         //byte[] data = utf.getBytes(StandardCharsets.ISO_8859_1);
         byte[] data = utf.getBytes(Charset.forName("MS949"));
 
