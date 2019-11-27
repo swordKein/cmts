@@ -726,8 +726,12 @@ public class FileUtils {
 
             String lineFeed = System.getProperty("line.separator");
 
+            reqStr += lineFeed;
+
+            if ("MS949".equals(charset.toUpperCase())) {
+                reqStr = StringUtil.convertUTF8toMS949(reqStr);
+            }
             output.write(reqStr);
-            output.write(lineFeed);
 
             output.close();
             rt = 1;

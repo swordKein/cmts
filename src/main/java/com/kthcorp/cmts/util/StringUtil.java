@@ -3,6 +3,7 @@ package com.kthcorp.cmts.util;
 import com.google.gson.JsonObject;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -762,5 +763,14 @@ public class StringUtil {
 
         return subAwardsMap.get(mainAwards);
     }
-    
+
+    public static String convertUTF8toMS949(String req) {
+        String result = "";
+        String utf = new String(req.getBytes(StandardCharsets.UTF_8));
+        byte[] data = utf.getBytes(StandardCharsets.ISO_8859_1);
+
+        result = new String(data, StandardCharsets.ISO_8859_1);
+
+        return result;
+    }
 }
