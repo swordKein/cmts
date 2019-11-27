@@ -613,7 +613,7 @@
 			cook_nutrient=replace(@col35,'-_-_',','),
 			cook_ea=replace(@col36,'-_-_',','),
 			cook_etc_a=replace(@col37,'-_-_',','),
-			cook_etc_b=replace(@col38,'-_-_',','),
+			cook_etc_b=replace(@col38,'-_-_',',')
 	</insert>
 	
 	<insert id="importRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -640,7 +640,7 @@
 			curr_mc=replace(@col12,'-_-_',','),
 			curr_actor=replace(@col13,'-_-_',','),
 			curr_keyword=replace(@col14,'-_-_',','),
-			cur_etc=replace(@col15,'-_-_',','),
+			cur_etc=replace(@col15,'-_-_',',')
 	</insert>
 	
 	<insert id="importRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -665,7 +665,7 @@
 			docu_mc=replace(@col10,'-_-_',','),
 			docu_actor=replace(@col11,'-_-_',','),
 			docu_keyword=replace(@col12,'-_-_',','),
-			docu_etc=replace(@col13,'-_-_',','),
+			docu_etc=replace(@col13,'-_-_',',')
 	</insert>
 	
 	<insert id="importRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -710,7 +710,7 @@
 			heal_season=replace(@col30,'-_-_',','),
 			heal_target=replace(@col31,'-_-_',','),
 			heal_keyword=replace(@col32,'-_-_',','),
-			heal_etc=replace(@col33,'-_-_',','),
+			heal_etc=replace(@col33,'-_-_',',')
 	</insert>
 	
 	<insert id="importRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -739,7 +739,7 @@
 			hist_thing=replace(@col14,'-_-_',','),
 			hist_area_c=replace(@col15,'-_-_',','),
 			hist_actor=replace(@col16,'-_-_',','),
-			hist_etc=replace(@col17,'-_-_',','),
+			hist_etc=replace(@col17,'-_-_',',')
 	</insert>
 	
 	<insert id="importRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -786,7 +786,7 @@
 			tour_period=replace(@col32,'-_-_',','),
 			tour_companion=replace(@col33,'-_-_',','),
 			tour_etc_a=replace(@col34,'-_-_'-_-_','),
-			tour_etc_b=replace(@col35,'-_-_',','),
+			tour_etc_b=replace(@col35,'-_-_',',')
 	</insert>
 
 

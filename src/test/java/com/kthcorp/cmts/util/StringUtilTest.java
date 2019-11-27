@@ -9,6 +9,7 @@ import org.testng.annotations.DataProvider;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -856,5 +857,15 @@ public class StringUtilTest {
     public void test_replaceExt() {
         String sss = "df,|^dfkf";
         System.out.println("#RES:"+sss.replace(",|^","\t"));
+    }
+
+    @Test
+    public void test_convert() {
+        String befo = new String("한글".getBytes(Charset.forName("utf-8")));
+        System.out.println("#Bf:"+befo);
+        String aftr = StringUtil.convertUTF8toMS949(befo);
+        System.out.println("#Af:"+aftr);
+
+
     }
 }

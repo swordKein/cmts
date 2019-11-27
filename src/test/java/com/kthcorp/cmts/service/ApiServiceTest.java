@@ -118,10 +118,10 @@ public class ApiServiceTest {
 		String result = apiService.returnStringFromMultiPartFile(uploadfile,"DOCU") ;
 		System.out.println("#RES:"+result.toString());
 
-		String result2 = dicService.uploadDicFile(result,"DOCU");
-		System.out.println("#RES2:"+result2.toString());
+		//String result2 = dicService.uploadDicFile(result,"DOCU");
+		//System.out.println("#RES2:"+result2.toString());
 
-		dicService.pushCsvToDicKeywords();
+		//dicService.pushCsvToDicKeywords();
 
 		dicService.makeFileDickeywords();
 
