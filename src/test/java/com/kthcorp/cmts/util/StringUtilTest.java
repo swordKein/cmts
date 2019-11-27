@@ -865,5 +865,7 @@ public class StringUtilTest {
         System.out.println("#Bf:"+befo);
         String aftr = StringUtil.convertUTF8toMS949(befo);
         System.out.println("#Af:"+aftr);
+
+
     }
 }

@@ -728,9 +728,9 @@ public class FileUtils {
 
             reqStr += lineFeed;
 
-            if ("MS949".equals(charset.toUpperCase())) {
-                reqStr = StringUtil.convertUTF8toMS949(reqStr);
-            }
+            //if ("MS949".equals(charset.toUpperCase())) {
+            //    reqStr = StringUtil.convertUTF8toMS949(reqStr);
+            //}
             output.write(reqStr);
 
             output.close();
