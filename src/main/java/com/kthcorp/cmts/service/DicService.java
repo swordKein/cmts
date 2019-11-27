@@ -1564,7 +1564,7 @@ public class DicService implements DicServiceImpl {
 		    		System.out.println("keyword.indexOf(0,keyword.length()-1) = " + keyword.indexOf(0) + "," + keyword.indexOf(keyword.length()-1));
 		    		if(keyword.substring(0,1).equals("\"") && keyword.substring(keyword.length()-1,keyword.length()).equals("\"")) {
 		    			System.out.println("BeFore - " + keyword);
-		    			keyword = keyword.substring(1, keyword.length()-2);
+		    			keyword = keyword.substring(1, keyword.length()-1);
 		    			System.out.println("After - " + keyword);
 		    		}
 		    		
@@ -1594,14 +1594,76 @@ public class DicService implements DicServiceImpl {
 		String strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "DIC_KEYWORDS_NOTUSE.csv";
 		File file = new File(strFilePath);
 		
+		//파일관련
+		StringBuilder tmpSbLine;
+		boolean inQuotes = false;
+		int rt = 0;
+		
 		if(file.exists()) {
+			//파일내용 가져오기
+			// 바이트 단위로 파일읽기
+			//String filePath = "D:/Eclipse/Java/Output.txt"; // 대상 파일
+			FileInputStream fileStream = null; // 파일 스트림
+			
+			fileStream = new FileInputStream( strFilePath );// 파일 스트림 생성
+			//버퍼 선언
+			byte[ ] readBuffer = new byte[fileStream.available()];
+			while (fileStream.read( readBuffer ) != -1){}
+			//System.out.println(new String(readBuffer)); //출력
+			String items = new String(readBuffer);	//파일 내용
+			
+			
 	    	//모두 삭제
 			int rtins1 = dicNotuseWordsMapper.delDicNotuseWords();
 			
-			DicNotuseWords dicNotuseWords = new DicNotuseWords();
-			dicNotuseWords.setFileName(strFilePath);
-			int rtins2 = dicNotuseWordsMapper.importDicNotuseWords(dicNotuseWords);
+			//DicNotuseWords dicNotuseWords = new DicNotuseWords();
+			//dicNotuseWords.setFileName(strFilePath);
+			//int rtins2 = dicNotuseWordsMapper.importDicNotuseWords(dicNotuseWords);
 			
+	    	
+			//csv 파일을 임포트
+			//int rtins2 = dicKeywordsMapper.importDicKeywordsByType(dicKeywords);
+			boolean isPassHeader = false;
+			String item[] = items.replace("\r", "").split("\n");
+			//String type = "";	//정의되어 있음 WHAT 등 영어대문자로
+			String keyword = "";
+			
+			String tmpLine = "";
+			for(String line : item) {
+	    		//따옴표 안의 쉼표
+	    		tmpSbLine = new StringBuilder(line);
+	    		for(int idx=0 ; idx<tmpSbLine.length() ; idx++) {
+	    		    char currentChar = tmpSbLine.charAt(idx);
+	    		    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
+	    		    if (currentChar == ',' && inQuotes) {
+	    		    	System.out.println("- from : " + tmpSbLine.toString());
+	    		    	tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+	    		    	System.out.println("- to : " + tmpSbLine.toString());
+	    		    }
+	    		}
+	    		
+	    		tmpLine = tmpSbLine.toString();
+	    		
+	    		//type = WHAT 등
+	    		//keyword = tmpLine.split(",")[1].replace("，", ",");
+	    		keyword = tmpLine.replace("，", ",");
+	    		
+	    		//키워드 양 끝의 " 제거
+	    		System.out.println("keyword.indexOf(0,keyword.length()-1) = " + keyword.indexOf(0) + "," + keyword.indexOf(keyword.length()-1));
+	    		if(keyword.substring(0,1).equals("\"") && keyword.substring(keyword.length()-1,keyword.length()).equals("\"")) {
+	    			System.out.println("BeFore - " + keyword);
+	    			keyword = keyword.substring(1, keyword.length()-1);
+	    			System.out.println("After - " + keyword);
+	    		}
+	    		
+	    		//키워드 추가 : modifyDicsByTypesFromArrayList 의 로직 참고함
+	    		String dicType = "NOTUSE";
+	    		String oldword = keyword;
+	    		String newword = keyword;
+	    		rt = this.addDicsByParams(dicType, oldword, newword, 0.0);
+			}
+			
+	    	
 			//csv 파일을 이름변경
 			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
 			file.renameTo(fileNew);
@@ -1619,14 +1681,79 @@ public class DicService implements DicServiceImpl {
 		String strFilePath = UPLOAD_DIR + "csv_import" + File.separator + "DIC_KEYWORDS_CHANGE.csv";
 		File file = new File(strFilePath);
 		
+		//파일관련
+		StringBuilder tmpSbLine;
+		boolean inQuotes = false;
+		int rt = 0;
+		
 		if(file.exists()) {
+			//파일내용 가져오기
+			// 바이트 단위로 파일읽기
+			//String filePath = "D:/Eclipse/Java/Output.txt"; // 대상 파일
+			FileInputStream fileStream = null; // 파일 스트림
+			
+			fileStream = new FileInputStream( strFilePath );// 파일 스트림 생성
+			//버퍼 선언
+			byte[ ] readBuffer = new byte[fileStream.available()];
+			while (fileStream.read( readBuffer ) != -1){}
+			//System.out.println(new String(readBuffer)); //출력
+			String items = new String(readBuffer);	//파일 내용
+			
+			
 	    	//모두 삭제
 			int rtins1 = dicChangeWordsMapper.delDicChangeWords();
 			
-			DicChangeWords dicChangeWords = new DicChangeWords();
-			dicChangeWords.setFileName(strFilePath);
-			int rtins2 = dicChangeWordsMapper.importDicChangeWords(dicChangeWords);
+			//DicChangeWords dicChangeWords = new DicChangeWords();
+			//dicChangeWords.setFileName(strFilePath);
+			//int rtins2 = dicChangeWordsMapper.importDicChangeWords(dicChangeWords);
 			
+			//csv 파일을 임포트
+			//int rtins2 = dicKeywordsMapper.importDicKeywordsByType(dicKeywords);
+			boolean isPassHeader = false;
+			String item[] = items.replace("\r", "").split("\n");
+			//String type = "";	//정의되어 있음 WHAT 등 영어대문자로
+			String keyword = "";
+			String keywordTo = "";
+			
+			String tmpLine = "";
+			for(String line : item) {
+	    		//따옴표 안의 쉼표
+	    		tmpSbLine = new StringBuilder(line);
+	    		for(int idx=0 ; idx<tmpSbLine.length() ; idx++) {
+	    		    char currentChar = tmpSbLine.charAt(idx);
+	    		    if (currentChar == '\"') inQuotes = !inQuotes; // toggle state
+	    		    if (currentChar == ',' && inQuotes) {
+	    		    	System.out.println("- from : " + tmpSbLine.toString());
+	    		    	tmpSbLine.setCharAt(idx, '，'); // or '♡', and replace later
+	    		    	System.out.println("- to : " + tmpSbLine.toString());
+	    		    }
+	    		}
+	    		
+	    		tmpLine = tmpSbLine.toString();
+	    		
+	    		//type = WHAT 등
+	    		//keyword = tmpLine.split(",")[1].replace("，", ",");
+	    		keyword = tmpLine.split(",")[0].replace("，", ",");
+	    		keywordTo = tmpLine.split(",")[1].replace("，", ",");
+	    		
+	    		//키워드 양 끝의 " 제거
+	    		/*
+	    		System.out.println("keyword.indexOf(0,keyword.length()-1) = " + keyword.indexOf(0) + "," + keyword.indexOf(keyword.length()-1));
+	    		if(keyword.substring(0,1).equals("\"") && keyword.substring(keyword.length()-1,keyword.length()).equals("\"")) {
+	    			System.out.println("BeFore - " + keyword);
+	    			keyword = keyword.substring(1, keyword.length()-1);
+	    			System.out.println("After - " + keyword);
+	    		}
+	    		*/
+	    		
+	    		//키워드 추가 : modifyDicsByTypesFromArrayList 의 로직 참고함
+	    		String dicType = "CHANGE";
+	    		String oldword = keyword;
+	    		String newword = keywordTo;
+	    		rt = this.addDicsByParams(dicType, oldword, newword, 0.0);
+			}
+			
+	    	
 			//csv 파일을 이름변경
 			File fileNew = new File(strFilePath + "_" + format.format(new Date()));
 			file.renameTo(fileNew);
