@@ -1384,8 +1384,8 @@ public class DicService implements DicServiceImpl {
 			
 			//5. 파일형태로 표출
 	    	String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
-	    	//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-            int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
+	    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+            //int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
 
             String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
 	    	strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
@@ -1432,8 +1432,8 @@ public class DicService implements DicServiceImpl {
 		
 		//5. 파일형태로 표출
     	String fileNameContent = "DIC_KEYWORDS_NOTUSE.csv";
-    	//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-        int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
+    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+        //int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
 
         String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
@@ -1479,8 +1479,8 @@ public class DicService implements DicServiceImpl {
 		
 		//5. 파일형태로 표출
     	String fileNameContent = "DIC_KEYWORDS_CHANGE.csv";
-    	//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-        int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
+    	int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+        //int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
 
         String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
     	String strFileName = UPLOAD_DIR + strSeparator + fileNameContent;
