@@ -971,7 +971,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		//5. 파일형태로 표출
 		String fileNameContent = "VOD_RT_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
-		int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvUTF8(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
 		
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
@@ -1027,196 +1028,196 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			String resultStr = "";
 			String lineFeed = System.getProperty("line.separator");
 			String seperator = ",";
-			
+
 			RelKnowledge relKnowledge = new RelKnowledge();
 			relKnowledge.setRelKnowledgeType(type);
-			
+
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 1. Header");
 			//1. 헤더
 			//resultStr = "Type" + seperator + "Keyword" + lineFeed;
 			if(relKnowledge.getRelKnowledgeType().equals("cook")) {
 				resultStr = //38
-						"작업일" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"유형" + seperator + 
-						"강습요리명" + seperator + 
-						"비강습요리명" + seperator + 
-						"요리메인재료" + seperator + 
-						"요리메인재료구분" + seperator + 
-						
-						"요리기타재료" + seperator + 
-						"요리유형" + seperator + 
-						"요리분류" + seperator + 
-						"요리강습자" + seperator + 
-						"요리강습자외출연자" + seperator + 
-						"국내지역도단위" + seperator + 
-						"국내지역소단위" + seperator + 
-						"해외지역국가" + seperator + 
-						"해외지역세계구분" + seperator + 
+						"작업일" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"유형" + seperator +
+						"강습요리명" + seperator +
+						"비강습요리명" + seperator +
+						"요리메인재료" + seperator +
+						"요리메인재료구분" + seperator +
+
+						"요리기타재료" + seperator +
+						"요리유형" + seperator +
+						"요리분류" + seperator +
+						"요리강습자" + seperator +
+						"요리강습자외출연자" + seperator +
+						"국내지역도단위" + seperator +
+						"국내지역소단위" + seperator +
+						"해외지역국가" + seperator +
+						"해외지역세계구분" + seperator +
 						"식당명" + seperator +
-						
-						"국내식당위치도단위" + seperator + 
-						"국내식당위치소단위" + seperator + 
-						"해외식당위치해외지역" + seperator + 
-						"해외식당위치국가" + seperator + 
-						"요리적합계절" + seperator + 
-						"요리적합일" + seperator + 
-						"요리목적" + seperator + 
-						"맛유형" + seperator + 
-						"조리도구" + seperator + 
-						"촬영장소" + seperator + 
-						
-						"요리강습수준" + seperator + 
-						"요리강습비중" + seperator + 
-						"요리관련내용비중" + seperator + 
-						"요리소요시간" + seperator + 
-						"영양성분" + seperator + 
-						"프로그램회당소개요리수" + seperator + 
+
+						"국내식당위치도단위" + seperator +
+						"국내식당위치소단위" + seperator +
+						"해외식당위치해외지역" + seperator +
+						"해외식당위치국가" + seperator +
+						"요리적합계절" + seperator +
+						"요리적합일" + seperator +
+						"요리목적" + seperator +
+						"맛유형" + seperator +
+						"조리도구" + seperator +
+						"촬영장소" + seperator +
+
+						"요리강습수준" + seperator +
+						"요리강습비중" + seperator +
+						"요리관련내용비중" + seperator +
+						"요리소요시간" + seperator +
+						"영양성분" + seperator +
+						"프로그램회당소개요리수" + seperator +
 						"기타특징" + seperator +
 						"비고" + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("curr")) {
 				resultStr = //15
-						"작업일" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"주제" + seperator + 
-						"관련인물" + seperator + 
-						"관련사건" + seperator + 
-						"관련제품" + seperator + 
+						"작업일" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"주제" + seperator +
+						"관련인물" + seperator +
+						"관련사건" + seperator +
+						"관련제품" + seperator +
 						"개선방안" + seperator +
-						
-						"유형" + seperator + 
-						"진행자" + seperator + 
-						"출연자" + seperator + 
-						"키워드" + seperator + 
+
+						"유형" + seperator +
+						"진행자" + seperator +
+						"출연자" + seperator +
+						"키워드" + seperator +
 						"비고" + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("docu")) {
 				resultStr = //13
-						"작업일" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"주제" + seperator + 
-						"관련인물" + seperator + 
-						"관련사건" + seperator + 
-						"관련지역" + seperator + 
-						"진행자" + seperator + 
-						
-						"출연자" + seperator + 
-						"키워드" + seperator + 
+						"작업일" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"주제" + seperator +
+						"관련인물" + seperator +
+						"관련사건" + seperator +
+						"관련지역" + seperator +
+						"진행자" + seperator +
+
+						"출연자" + seperator +
+						"키워드" + seperator +
 						"비고" + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("heal")) {
 				resultStr = //33
-						"작업일" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"질병명" + seperator + 
-						"질병발생부위" + seperator + 
-						"증상" + seperator + 
-						"음식외원인" + seperator + 
-						"원인음식" + seperator + 
-						
-						"원인성분" + seperator + 
-						"진단/검사방법" + seperator + 
-						"치료방법유형" + seperator + 
-						"예방방법유형" + seperator + 
-						"약품명/성분" + seperator + 
-						"치료명" + seperator + 
-						"병원명" + seperator + 
-						"의사명" + seperator + 
-						"강연자" + seperator + 
-						"연예인출연자" + seperator + 
-						
-						"전문가출연자" + seperator + 
-						"일반인출연자비중" + seperator + 
-						"진료과목" + seperator + 
-						"건강증진활동유형" + seperator + 
-						"성분명" + seperator + 
-						"건강음식재료명" + seperator + 
-						"건강음식명" + seperator + 
-						"건강증진활동부위" + seperator + 
-						"건강증진활동명" + seperator + 
-						"관련계절" + seperator + 
-						
-						"대상" + seperator + 
-						"키워드" + seperator + 
+						"작업일" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"질병명" + seperator +
+						"질병발생부위" + seperator +
+						"증상" + seperator +
+						"음식외원인" + seperator +
+						"원인음식" + seperator +
+
+						"원인성분" + seperator +
+						"진단/검사방법" + seperator +
+						"치료방법유형" + seperator +
+						"예방방법유형" + seperator +
+						"약품명/성분" + seperator +
+						"치료명" + seperator +
+						"병원명" + seperator +
+						"의사명" + seperator +
+						"강연자" + seperator +
+						"연예인출연자" + seperator +
+
+						"전문가출연자" + seperator +
+						"일반인출연자비중" + seperator +
+						"진료과목" + seperator +
+						"건강증진활동유형" + seperator +
+						"성분명" + seperator +
+						"건강음식재료명" + seperator +
+						"건강음식명" + seperator +
+						"건강증진활동부위" + seperator +
+						"건강증진활동명" + seperator +
+						"관련계절" + seperator +
+
+						"대상" + seperator +
+						"키워드" + seperator +
 						"비고" + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("hist")) {
 				resultStr = //17
-						"작업일" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"주제" + seperator + 
-						"배경국가" + seperator + 
-						"당시국가" + seperator + 
-						"시대" + seperator + 
-						"연대" + seperator + 
-						
-						"관련인물" + seperator + 
-						"관련업적" + seperator + 
-						"관련사건" + seperator + 
-						"관련유물/유적" + seperator + 
-						"관련지역" + seperator + 
-						"출연자" + seperator + 
-						"비고" + lineFeed;					
+						"작업일" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"주제" + seperator +
+						"배경국가" + seperator +
+						"당시국가" + seperator +
+						"시대" + seperator +
+						"연대" + seperator +
+
+						"관련인물" + seperator +
+						"관련업적" + seperator +
+						"관련사건" + seperator +
+						"관련유물/유적" + seperator +
+						"관련지역" + seperator +
+						"출연자" + seperator +
+						"비고" + lineFeed;
 			}else if(relKnowledge.getRelKnowledgeType().equals("tour")) {
 				resultStr = //35
-						"작업일시" + seperator + 
-						"상태" + seperator + 
-						"프로그램명" + seperator + 
-						"Title" + seperator + 
-						"ASSETID" + seperator + 
-						"유형" + seperator + 
-						"여행테마" + seperator + 
-						"국가명" + seperator + 
-						"도시명" + seperator + 
-						"지역명" + seperator + 
-						
-						"대륙명" + seperator + 
-						"관광지명" + seperator + 
-						"자연비중" + seperator + 
-						"유적지관련국가민족" + seperator + 
-						"관련인물" + seperator + 
-						"축제명" + seperator + 
-						"자연경관유형" + seperator + 
-						"인공경관유형" + seperator + 
-						"여행목적유형" + seperator + 
-						"계절명" + seperator + 
-						
-						"여행자등장비중" + seperator + 
-						"여행자명" + seperator + 
-						"해설자유무" + seperator + 
-						"해설자명" + seperator + 
-						"음식명" + seperator + 
-						"여행체험명" + seperator + 
-						"공연명" + seperator + 
-						"교통수단명" + seperator + 
-						"관광지수" + seperator + 
-						"여행날씨" + seperator + 
-						
-						"배경음악" + seperator + 
-						"여행기간" + seperator + 
-						"여행동반자유형" + seperator + 
-						"기타" + seperator + 
+						"작업일시" + seperator +
+						"상태" + seperator +
+						"프로그램명" + seperator +
+						"Title" + seperator +
+						"ASSETID" + seperator +
+						"유형" + seperator +
+						"여행테마" + seperator +
+						"국가명" + seperator +
+						"도시명" + seperator +
+						"지역명" + seperator +
+
+						"대륙명" + seperator +
+						"관광지명" + seperator +
+						"자연비중" + seperator +
+						"유적지관련국가민족" + seperator +
+						"관련인물" + seperator +
+						"축제명" + seperator +
+						"자연경관유형" + seperator +
+						"인공경관유형" + seperator +
+						"여행목적유형" + seperator +
+						"계절명" + seperator +
+
+						"여행자등장비중" + seperator +
+						"여행자명" + seperator +
+						"해설자유무" + seperator +
+						"해설자명" + seperator +
+						"음식명" + seperator +
+						"여행체험명" + seperator +
+						"공연명" + seperator +
+						"교통수단명" + seperator +
+						"관광지수" + seperator +
+						"여행날씨" + seperator +
+
+						"배경음악" + seperator +
+						"여행기간" + seperator +
+						"여행동반자유형" + seperator +
+						"기타" + seperator +
 						"비고" + lineFeed;
 			}else {
-				
+
 			}
-			
+
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 2. Body");
 			//2. 모든 태그 유형 로딩 + 3. 태그 하나씩 불러오기  이 둘을 합치기 - 모든 태그 받기 getDicKeywordsListAll
 			//DicKeywords reqKeyword = new DicKeywords();
-			
+
 			//type별 동작
 			//List<RelKnowledge> relKnowledgeList = relKnowledgeMapper.getDicKeywordsList(relKnowledge);
 			List<RelKnowledge> relKnowledgeList = null;
@@ -1233,9 +1234,9 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 			}else if(relKnowledge.getRelKnowledgeType().equals("tour")) {
 				relKnowledgeList = relKnowledgeMapper.getRelKnowledgeListTour(relKnowledge);
 			}else {
-				
+
 			}
-			
+
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 3. toString");
 			//4. 문자열화
 			for(RelKnowledge item : relKnowledgeList) {
@@ -1318,9 +1319,9 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strCook_ea = StringUtil.nvl(item.getCook_ea(), "");
 					String strCook_etc_a = StringUtil.nvl(item.getCook_etc_a(), "");
 					String strCook_etc_b = StringUtil.nvl(item.getCook_etc_b(), "");
-					
+
 					System.out.println(strRegweek + " / " + strStat + " / " + strTitle + " / " + strPart + " / " + strAssetid + " / " + strType);
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strTitle.indexOf(",")>-1) strTitle = "\""+strTitle+"\"";
@@ -1359,8 +1360,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strCook_ea.indexOf(",")>-1) strCook_ea = "\""+strCook_ea+"\"";
 					if(strCook_etc_a.indexOf(",")>-1) strCook_etc_a = "\""+strCook_etc_a+"\"";
 					if(strCook_etc_b.indexOf(",")>-1) strCook_etc_b = "\""+strCook_etc_b+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strTitle + seperator +
@@ -1430,7 +1431,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strCurr_actor = StringUtil.nvl(item.getCurr_actor(), "");
 					String strCurr_keyword = StringUtil.nvl(item.getCurr_keyword(), "");
 					String strCur_etc = StringUtil.nvl(item.getCur_etc(), "");
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strTitle.indexOf(",")>-1) strTitle = "\""+strTitle+"\"";
@@ -1446,8 +1447,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strCurr_actor.indexOf(",")>-1) strCurr_actor = "\""+strCurr_actor+"\"";
 					if(strCurr_keyword.indexOf(",")>-1) strCurr_keyword = "\""+strCurr_keyword+"\"";
 					if(strCur_etc.indexOf(",")>-1) strCur_etc = "\""+strCur_etc+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strTitle + seperator +
@@ -1490,7 +1491,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strDocu_actor = StringUtil.nvl(item.getDocu_actor(), "");
 					String strDocu_keyword = StringUtil.nvl(item.getDocu_keyword(), "");
 					String strDocu_etc = StringUtil.nvl(item.getDocu_etc(), "");
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strTitle.indexOf(",")>-1) strTitle = "\""+strTitle+"\"";
@@ -1504,8 +1505,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strDocu_actor.indexOf(",")>-1) strDocu_actor = "\""+strDocu_actor+"\"";
 					if(strDocu_keyword.indexOf(",")>-1) strDocu_keyword = "\""+strDocu_keyword+"\"";
 					if(strDocu_etc.indexOf(",")>-1) strDocu_etc = "\""+strDocu_etc+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strTitle + seperator +
@@ -1586,7 +1587,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strHeal_target = StringUtil.nvl(item.getHeal_target(), "");
 					String strHeal_keyword = StringUtil.nvl(item.getHeal_keyword(), "");
 					String strHeal_etc = StringUtil.nvl(item.getHeal_etc(), "");
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strTitle.indexOf(",")>-1) strTitle = "\""+strTitle+"\"";
@@ -1620,8 +1621,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strHeal_target.indexOf(",")>-1) strHeal_target = "\""+strHeal_target+"\"";
 					if(strHeal_keyword.indexOf(",")>-1) strHeal_keyword = "\""+strHeal_keyword+"\"";
 					if(strHeal_etc.indexOf(",")>-1) strHeal_etc = "\""+strHeal_etc+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strTitle + seperator +
@@ -1690,7 +1691,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strHist_area_c = StringUtil.nvl(item.getHist_area_c(), "");
 					String strHist_actor = StringUtil.nvl(item.getHist_actor(), "");
 					String strHist_etc = StringUtil.nvl(item.getHist_etc(), "");
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strProgram.indexOf(",")>-1) strProgram = "\""+strProgram+"\"";
@@ -1708,8 +1709,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strHist_area_c.indexOf(",")>-1) strHist_area_c = "\""+strHist_area_c+"\"";
 					if(strHist_actor.indexOf(",")>-1) strHist_actor = "\""+strHist_actor+"\"";
 					if(strHist_etc.indexOf(",")>-1) strHist_etc = "\""+strHist_etc+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strProgram + seperator +
@@ -1798,7 +1799,7 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					String strTour_companion = StringUtil.nvl(item.getTour_companion(), "");
 					String strTour_etc_a = StringUtil.nvl(item.getTour_etc_a(), "");
 					String strTour_etc_b = StringUtil.nvl(item.getTour_etc_b(), "");
-					
+
 					if(strRegweek.indexOf(",")>-1) strRegweek = "\""+strRegweek+"\"";
 					if(strStat.indexOf(",")>-1) strStat = "\""+strStat+"\"";
 					if(strTitle.indexOf(",")>-1) strTitle = "\""+strTitle+"\"";
@@ -1834,8 +1835,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 					if(strTour_companion.indexOf(",")>-1) strTour_companion = "\""+strTour_companion+"\"";
 					if(strTour_etc_a.indexOf(",")>-1) strTour_etc_a = "\""+strTour_etc_a+"\"";
 					if(strTour_etc_b.indexOf(",")>-1) strTour_etc_b = "\""+strTour_etc_b+"\"";
-					
-					resultStr += 
+
+					resultStr +=
 							(strRegweek + seperator +
 							strStat + seperator +
 							strTitle + seperator +
@@ -1872,18 +1873,18 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 							strTour_etc_a + seperator +
 							strTour_etc_b).replace("\r", "") + lineFeed;
 				}else {
-					
+
 				}
 			}
-			
+
 			
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4. File");
 			//5. 파일형태로 표출
 			//String fileNameContent = "VOD_RT_"+type.toUpperCase()+"_"+DateUtil.formatDate(new Date(), "yyyyMMdd")+".csv";
 			String fileNameContent = "VOD_RT_"+type.toUpperCase()+".csv";
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
-			int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
-			//int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
+			//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR, fileNameContent, "utf-8");
+			int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR, fileNameContent, "MS949");
 			
 			logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 			String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
