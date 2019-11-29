@@ -116,9 +116,9 @@ spring:
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://127.0.0.1:3306/guladb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: metataguser
     password: daisy!
@@ -452,10 +452,10 @@ schedule :
       cronExpression : 0 0 * * * ?
       jobType : dummyService
     -
-      cronExpression: 0 0/10 * * * ?
+      cronExpression: 0 0/20 * * * ?
       jobType: pushCsvToData
     -
-      cronExpression: 0 5/10 * * * ?
+      cronExpression: 0 10/20 * * * ?
       jobType: makeCsvFile
 property:
   serverid: cmts_dev_crawl01
