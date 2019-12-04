@@ -187,6 +187,7 @@ public class ApiService implements ApiServiceImpl {
         origTypes.add("ACTOR");
         origTypes.add("GENRE");
         origTypes.add("PLOT");
+        origTypes.add("CID");	//2019.12.03
 
         //JsonObject resultObj = getItemsMetasByIdx(itemIdx, origTypes);
         JsonObject resultObj = getCcubeMetasByIdx(itemIdx, origTypes);
@@ -277,6 +278,9 @@ public class ApiService implements ApiServiceImpl {
             if (cser.getYear() != null) resultObj.addProperty("YEAR", cser.getYear());
             if (cser.getDirector() != null) resultObj.addProperty("DIRECTOR", cser.getDirector());
             if (cser.getActors_display() != null) resultObj.addProperty("ACTOR", cser.getActors_display());
+            
+            //2019.12.03
+            resultObj.addProperty("CID",cser.getSeries_id());
         }
 
         return resultObj;
@@ -293,6 +297,9 @@ public class ApiService implements ApiServiceImpl {
             if (cser.getYear() != null) resultObj.addProperty("YEAR", cser.getYear());
             if (cser.getDirector() != null) resultObj.addProperty("DIRECTOR", cser.getDirector());
             if (cser.getActors_display() != null) resultObj.addProperty("ACTOR", cser.getActors_display());
+            
+            //2019.12.03
+            resultObj.addProperty("CID",cser.getContent_id());
         }
 
         return resultObj;
