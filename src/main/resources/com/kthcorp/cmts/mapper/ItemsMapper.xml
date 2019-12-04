@@ -784,9 +784,13 @@
 				where 1=1
 				and c.content_id=(select d.cid from items d where d.idx=#{idx})
 			)
-			
-			union all
-			
+		)
+		
+		union all
+		
+		select a.*, a.cid as content_id
+		from items a
+		where a.cid in (
 			select b.series_id
 			from ccube_series b
 			where b.series_id = (
@@ -795,6 +799,7 @@
 				where d.idx=#{idx}
 			)
 		)
+		and a.idx=#{idx}
     </select>
 
 </mapper>
