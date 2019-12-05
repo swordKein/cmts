@@ -371,9 +371,11 @@
             , iss.regdate
             from ccube_contents_orig co
             inner join ccube_keys ck on (
-              /* ( ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0' )
-            or */
-              (ck.MASTER_CONTENT_ID = co.MASTER_CONTENT_ID and ck.MASTER_CONTENT_ID != '0') )
+              ( ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0' )
+
+              /* (ck.MASTER_CONTENT_ID = co.MASTER_CONTENT_ID and ck.MASTER_CONTENT_ID != '0') */
+               )
+
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%') and it.stat != 'M'
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
 
@@ -399,9 +401,9 @@
             , it.idx as itemidx
             from ccube_contents_orig co
             inner join ccube_keys ck on (
-            /*  ( ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0' )
-            or  */
-              (ck.MASTER_CONTENT_ID = co.MASTER_CONTENT_ID and ck.MASTER_CONTENT_ID != '0')
+             ( ck.CONTENT_ID = co.CONTENT_ID and ck.CONTENT_ID != '0' )
+                    /*  or
+                      (ck.MASTER_CONTENT_ID = co.MASTER_CONTENT_ID and ck.MASTER_CONTENT_ID != '0')*/
               )
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeContent','%') and it.stat !='M'
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
