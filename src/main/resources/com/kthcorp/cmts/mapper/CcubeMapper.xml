@@ -359,8 +359,8 @@
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         <if test='type != null and type == "CcubeContent"'>
             inner join ccube_keys ck on ck.itemidx = it.idx
-            inner join ccube_contents_orig coo on coo.content_id = ck.content_id
-            or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)
+            inner join ccube_contents_orig coo on coo.master_content_id = ck.master_content_id
+            <!--or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)-->
         </if>
         <if test='type != null and type == "CcubeSeries"'>
             inner join ccube_keys ck on ck.itemidx = it.idx
@@ -379,8 +379,8 @@
         inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
         <if test='type != null and type == "CcubeContent"'>
             inner join ccube_keys ck on ck.itemidx = it.idx
-            inner join ccube_contents_orig coo on coo.content_id = ck.content_id
-            or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)
+            inner join ccube_contents_orig coo on coo.master_content_id = ck.master_content_id
+            <!--or (coo.CONTENT_TITLE = ck.purity_title and coo.YEAR = ck.year and coo.DIRECTOR = ck.director)-->
         </if>
         <if test='type != null and type == "CcubeSeries"'>
             inner join ccube_keys ck on ck.itemidx = it.idx
