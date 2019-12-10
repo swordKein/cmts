@@ -666,11 +666,14 @@ public class ApiController {
 			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
 			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
 			, @RequestParam(value = "itemid") String itemid
+			, @RequestParam(value = "cid") String cid	//2019.12.06
 	) {
-		logger.info("#CLOG:API/pop/c_cube get for itemid:"+itemid);
+		logger.info("#CLOG:API/pop/c_cube get for itemid:"+itemid + " , cid:"+cid);
 
 		int itemIdx = 0;
 		if (!"".equals(itemid)) itemIdx = Integer.parseInt(itemid);
+		//int intCid = 0;	//2019.12.06
+		//if (!"".equals(cid)) intCid = Integer.parseInt(cid);	//2019.12.06
 
 		String hashcode = "";
 		int rtcode = -1;
@@ -681,7 +684,7 @@ public class ApiController {
 		try {
 			rtcode = apiService.checkAuthByHashCode(custid, hash);
 			if (rtcode == 1) {
-				result1 = ccubeService.getCcubeDatasByItemIdx(itemIdx);
+				result1 = ccubeService.getCcubeDatasByItemIdx(itemIdx,cid);	//2019.12.06 itemIdx -> itemIdx + cid
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {

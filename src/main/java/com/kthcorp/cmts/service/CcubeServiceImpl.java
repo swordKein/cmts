@@ -31,7 +31,7 @@ public interface CcubeServiceImpl {
 
     int insCcubeKeys(CcubeKeys req);
 
-    JsonObject getCcubeDatasByItemIdx(int itemIdx);
+    JsonObject getCcubeDatasByItemIdx(int itemIdx, String cid);		//2019.12.06 itemIdx -> itemIdx + cid
 
     JsonArray getJsonArrayForCcubeOutput(JsonArray contentsArr, String type, Map<String, Object> reqMap) throws Exception;
 

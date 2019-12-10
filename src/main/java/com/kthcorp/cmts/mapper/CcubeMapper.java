@@ -63,4 +63,5 @@ public interface CcubeMapper {
 
     List<Integer> getItemidxByMC_ID(String mcid);
     List<Integer> getItemidxBySERIES_ID(String series_id);
+	CcubeKeys getCcubeKeys2(CcubeKeys ckParam);		//2019.12.06
 }

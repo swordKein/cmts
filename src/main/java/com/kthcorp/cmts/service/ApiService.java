@@ -683,6 +683,9 @@ public class ApiService implements ApiServiceImpl {
 
                 newItem.addProperty("ITEMID", tm.getIdx());
                 newItem.addProperty("REGID", tm.getRegid());
+                
+                //2019.12.10 seriesId contentId
+                newItem.addProperty("CID_POP", (tm.getCorigin() != null ? (tm.getCorigin().equals("0") ? tm.getSorigin() : tm.getCorigin()) : ""));
 
                 result.add(newItem);
             }

@@ -129,10 +129,16 @@ public class CcubeService implements CcubeServiceImpl {
     }
 
     @Override
-    public JsonObject getCcubeDatasByItemIdx(int itemIdx) {
+    public JsonObject getCcubeDatasByItemIdx(int itemIdx, String cid) {	//2019.12.06 itemIdx -> itemIdx + cid
         JsonObject result = null;
         if (itemIdx > 0) {
-            CcubeKeys ckey = ccubeMapper.getCcubeKeys(itemIdx);
+            //CcubeKeys ckey = ccubeMapper.getCcubeKeys(itemIdx);
+        	//2019.12.06 itemIdx -> itemIdx + cid
+        	CcubeKeys ckParam = new CcubeKeys();	//2019.12.06
+        	ckParam.setItemidx(itemIdx);			//2019.12.06
+        	ckParam.setContent_id(cid);				//2019.12.06
+        	CcubeKeys ckey = ccubeMapper.getCcubeKeys2(ckParam);	//2019.12.06
+        	
             if(ckey != null) {
                 if(ckey.getSeries_id() != null && !"0".equals(ckey.getSeries_id())) {
                     CcubeSeries ser = new CcubeSeries();
@@ -719,7 +725,7 @@ public class CcubeService implements CcubeServiceImpl {
         int countAll = 0;
         countAll = ccubeMapper.cntCcubeOutputListStandby(req);
         JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("TOTAL_COUNT", countAll);
+        //resultObj.addProperty("TOTAL_COUNT", countAll);
 
         logger.info("#MLLOG:processCcubeOutput:: type:"+type+" / countAll:"+countAll);
         if(countAll > 0) {
@@ -744,6 +750,10 @@ public class CcubeService implements CcubeServiceImpl {
 
                             logger.info("#SCHEDULE processCcubeOutputToJson.reqMap:"+ins.toString());
                             contents = this.getJsonArrayForCcubeOutput(contents, type, ins);
+
+                            if(contents != null) countAll  = contents.size();
+                            //content_id, series_id 기준 중복 제거 후 카운트 취득
+                            resultObj.addProperty("TOTAL_COUNT", countAll);
 
                             uptKeyAndTagCntList.put((Long) ins.get("hidx"), (Integer) ins.get("uptcnt"));
                             logger.info("#SCHEDULE processCcubeOutputToJson:Copy ccube_output to json ContentsArr:" + contents.toString());
