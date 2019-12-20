@@ -777,7 +777,7 @@
 
 		select a.*, a.cid as content_id
 		from items a
-		inner join ccube_keys ck on a.idx=ck.itemidx and (a.cid = ck.content_id)
+
 		where a.cid in (
 			select b.content_id
 			from ccube_contents b
@@ -793,7 +793,7 @@
 		
 		select a.*, a.cid as content_id
 		from items a
-		inner join ccube_keys ck on a.idx=ck.itemidx and (a.cid = ck.series_id)
+
 		where a.cid in (
 			select b.series_id
 			from ccube_series b
