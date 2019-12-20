@@ -759,10 +759,13 @@ public class AdminController {
 			}
 			
 			//신버전 : 데이터를 그대로 태우기 - 느림
-			
+
 			//response.setContentType("application/vnd.ms-excel; charset=utf-8");
-			response.setContentType("application/vnd.ms-excel; charset=euc-kr");
-			response.reset();
+			response.setContentType("application/vnd.ms-excel; charset=iso-8859-1");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" +
+					java.net.URLEncoder.encode(strFileName, "utf-8") + "\";");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			//response.reset();
 
 			os = response.getOutputStream();
 
