@@ -19,13 +19,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import scala.Char;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -778,7 +781,10 @@ public class AdminController {
 			while( ( intRead = reader.read() ) > -1 ) {
 				stringBuffer.append((char)intRead);
 			}
+
+			ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(stringBuffer.toString());
 			reader.close();
+
 
 
 			Writer writer = null;
@@ -790,9 +796,9 @@ public class AdminController {
 			// for Write by Charset
 			writer = new OutputStreamWriter(os, "MS949");
 
-			logger.info("#MLOG Write Buffer to Response::"+stringBuffer.toString());
+			logger.info("#MLOG Write Buffer to Response::"+byteBuffer.toString());
 
-			writer.write(stringBuffer.toString());
+			writer.write(byteBuffer.toString());
 			stringBuffer.setLength(0);
 			writer.close();
 			
