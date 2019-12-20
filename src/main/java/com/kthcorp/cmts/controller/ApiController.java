@@ -11,6 +11,7 @@ import com.kthcorp.cmts.model.RelKnowledge;
 import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
 import com.kthcorp.cmts.util.DateUtils;
+import com.kthcorp.cmts.util.FileUtils;
 import com.kthcorp.cmts.util.HttpClientUtil;
 
 import org.apache.commons.httpclient.util.DateUtil;
@@ -20,8 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,6 +48,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1707,12 +1714,73 @@ public class ApiController {
 
 		return result_all.toString();
 	}
-	
-	//연관지식 다운로드 권재일 추가
-	@RequestMapping(value="/relknowledge/download/type")//, method=RequestMethod.POST
+
+	// 연관지식 다운로드 by jaeyeon.hwang
+	@RequestMapping(value="/relknowledge/download/type")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public String downloadRelKnowledgesByType(Map<String, Object> model
+	public ResponseEntity<Resource> downloadRelKnowledgesByType(Map<String, Object> model
+			, @RequestParam(value="type", required=false, defaultValue = "") String type
+			, HttpServletRequest request
+			, HttpServletResponse response
+	) {
+		String contentType = null;
+		String strFilePath = "";
+		FileInputStream fis;
+		FileOutputStream fos;
+		OutputStream os;
+
+		Resource resClasspath;
+		String strResClasspath = "";
+		resClasspath = resourceLoader.getResource("classpath:static/");
+
+		String strFileName = "";
+		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		ByteArrayResource resource = null;
+
+		strFilePath = UPLOAD_DIR + "VOD_RT_" + type.toUpperCase()+".csv";
+		logger.debug("#strFilePath = " + strFilePath);
+
+		try {
+			//2019.11.20 파일정보 로딩
+			DicKeywords fileInfoParam = new DicKeywords();
+			fileInfoParam.setFilePath("VOD_RT_" + type.toUpperCase());
+			DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
+			if(fileInfoResult!=null) {
+				String strDateTime = fileInfoResult.getRegdate().toString();
+				System.out.println("strDateTime = " + strDateTime);
+				strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+				System.out.println("strDateTime = " + strDateTime);
+				strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+				System.out.println("strFileName = " + strFileName);
+			}else {
+				strFileName = fileInfoParam.getFilePath() + ".csv";
+			}
+
+			// copy for new File
+			FileUtils.copy(strFilePath, strFileName);
+
+			byte[] data = Files.readAllBytes(Paths.get(strFileName));
+			resource = new ByteArrayResource(data);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + strFileName + "\"")
+				.body(resource);
+	}
+
+	//연관지식 다운로드 권재일 추가
+	@RequestMapping(value="/relknowledge/download/type_old")//, method=RequestMethod.POST
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public String downloadRelKnowledgesByType_old(Map<String, Object> model
 			, @RequestParam(value="type", required=false, defaultValue = "") String type
 			, HttpServletRequest request
 			, HttpServletResponse response

@@ -725,7 +725,7 @@ public class AdminController {
 		return result;
 	}
 
-	//CSV 다운로드 by jaeyeon.hwang
+	// CSV 다운로드 by jaeyeon.hwang
 	@RequestMapping(value="/admin/dic/keywords/download")
 	public ResponseEntity<Resource> getDicKeywordsListDownload_NEW(Map<String, Object> model
 			, @RequestParam(value="type", required=false, defaultValue = "") String type
@@ -781,12 +781,6 @@ public class AdminController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//
-//		JsonObject result_all = new JsonObject();
-//		result_all.addProperty("RT_CODE", 1);
-//		result_all.addProperty("RT_MSG", "SUCCESS");
-//		return result_all.toString();\
-
 
 		if (contentType == null) {
 			contentType = "application/octet-stream";
