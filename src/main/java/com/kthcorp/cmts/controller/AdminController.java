@@ -762,13 +762,14 @@ public class AdminController {
 			
 			//신버전 : 데이터를 그대로 태우기 - 느림
 			
-			response.setContentType("application/vnd.ms-excel; charset=utf-8");
-			//response.setContentType("application/vnd.ms-excel; charset=euc-kr");
+			//response.setContentType("application/vnd.ms-excel; charset=utf-8");
+			response.setContentType("application/vnd.ms-excel; charset=euc-kr");
 			
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
-			
-			os.write((strFileName+"::::").getBytes("UTF-8"));
+
+			//os.write((strFileName+"::::").getBytes("UTF-8"));
+			os.write((strFileName+"::::").getBytes("MS949"));
 			
 			int data = 0;
 			while((data = fis.read()) != -1) {
