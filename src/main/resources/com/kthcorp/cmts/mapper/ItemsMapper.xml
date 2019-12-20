@@ -339,7 +339,7 @@
         , CASE WHEN (cs.series_id is not null and cs.series_id != '0')
         THEN 'SER' ELSE ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR' ELSE 'OTH' END AS type ) END AS type
         , it.regdate1 as regdate
-        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        , IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE) as title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         ,ifnull(cs.series_id, '0') as series_id
         ,ifnull(cc.master_content_id,'0') as content_id
         ,ifnull(cs.series_id, '0') as sorigin
@@ -404,7 +404,7 @@
         where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         and it.stat != 'M'
         <if test='searchTitleYn == "Y"'>
-            and it.title like CONCAT('%',#{searchKeyword},'%')
+            and title like CONCAT('%',#{searchKeyword},'%')
         </if>
         <if test='searchType != null and searchType == "KOR"'>
             and it.type = 'CcubeContentK'
