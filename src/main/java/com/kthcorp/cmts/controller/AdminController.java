@@ -24,13 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -764,18 +759,39 @@ public class AdminController {
 			
 			//response.setContentType("application/vnd.ms-excel; charset=utf-8");
 			response.setContentType("application/vnd.ms-excel; charset=euc-kr");
-			
+			response.reset();
+
 			os = response.getOutputStream();
+
 			fis = new FileInputStream(strFilePath);
 
-			//os.write((strFileName+"::::").getBytes("UTF-8"));
-			//os.write((strFileName+"::::").getBytes("MS949"));
-			os.write((strFileName+"::::").getBytes());
-			
-			int data = 0;
-			while((data = fis.read()) != -1) {
-				os.write(data);
+			// for FileName
+			os.write((strFileName+"::::").getBytes("UTF-8"));
+
+			// for Read by Charset
+			int intRead = 0;
+			Charset inputCharset = Charset.forName("MS949");
+			InputStreamReader isr = new InputStreamReader(fis, inputCharset);
+			Reader reader = null;
+			reader = new BufferedReader(isr);
+			StringBuffer stringBuffer = new StringBuffer();
+			while( ( intRead = reader.read() ) > -1 ) {
+				stringBuffer.append((char)intRead);
 			}
+			reader.close();
+
+
+			Writer writer = null;
+			//int data = 0;
+			//while((data = fis.read()) != -1) {
+			//	os.write(data);
+			//}
+
+			// for Write by Charset
+			writer = new OutputStreamWriter(os, "MS949");
+			writer.write(stringBuffer.toString());
+			stringBuffer.setLength(0);
+			writer.close();
 			
 			os.flush();
 			os.close();
