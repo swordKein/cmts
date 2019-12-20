@@ -24,13 +24,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9140,5 +9145,85 @@ public class TestService implements TestServiceImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getDicKeywordsListDownload(String type
+    ) {
+
+        JsonObject result = new JsonObject();
+
+        String strFilePath = "";
+        FileInputStream fis;
+
+        strFilePath = UPLOAD_DIR + "DIC_KEYWORDS_" + type.toUpperCase()+".csv";
+        logger.debug("#strFilePath = " + strFilePath);
+
+        String strFileName = "";
+        try {
+            //2019.11.20 파일정보 로딩
+            DicKeywords fileInfoParam = new DicKeywords();
+            fileInfoParam.setFilePath("DIC_KEYWORDS_" + type.toUpperCase());
+            DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
+            if(fileInfoResult!=null) {
+                String strDateTime = fileInfoResult.getRegdate().toString();
+                System.out.println("strDateTime = " + strDateTime);
+                strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+                System.out.println("strDateTime = " + strDateTime);
+                strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+                System.out.println("strFileName = " + strFileName);
+            }else {
+                strFileName = fileInfoParam.getFilePath() + ".csv";
+            }
+
+            //신버전 : 데이터를 그대로 태우기 - 느림
+
+            fis = new FileInputStream(strFilePath);
+
+            // for Read by Charset
+            int intRead = 0;
+            Charset inputCharset = Charset.forName("MS949");
+            InputStreamReader isr = new InputStreamReader(fis, inputCharset);
+            Reader reader = null;
+            reader = new BufferedReader(isr);
+            StringBuffer stringBuffer = new StringBuffer();
+            while( ( intRead = reader.read() ) > -1 ) {
+                stringBuffer.append((char)intRead);
+            }
+
+            //String writeString = stringBuffer.toString();
+            //ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(writeString);
+            reader.close();
+
+            String writeStr = stringBuffer.toString();
+            byte[] ptext = writeStr.getBytes(Charset.forName("MS949"));
+            String toValue = new String(ptext, Charset.forName("ISO-55"));
+            logger.info("#MLOG Write Buffer to Response::"+ toValue.toString());
+
+
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+
+        }
+
+
+
+        logger.debug("[파일업다운로드] success");
+        //return "SUCCESS";
+
+
+        JsonObject result_all = result;		//new JsonObject();
+        result_all.addProperty("RT_CODE", 1);
+        result_all.addProperty("RT_MSG", "SUCCESS");
+        //result_all.addProperty("CSV_FILENAME", strFileName);//x?
+        //result_all.add("RESULT", result1);
+        //response.addHeader("CSV_FILENAME", strFileName);
+        //response.setHeader("CSV_FILENAME", strFileName);
+
+        return result_all.toString();
+
     }
 }

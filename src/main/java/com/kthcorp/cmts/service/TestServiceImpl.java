@@ -285,4 +285,7 @@ public interface TestServiceImpl {
     int writeCcubeOutputDayToJsonByRelKnowleadge();
 
     void getRemoveManualDest();
+
+    String getDicKeywordsListDownload(String type
+    );
 }

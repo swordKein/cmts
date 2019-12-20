@@ -850,4 +850,11 @@ public class TestServiceTestImpl {
 	public void getRemoveManualDest() {
 		testService.getRemoveManualDest();
 	}
+
+	@Test
+	public void getDicKeywordsListDownload() {
+		testService.getDicKeywordsListDownload("WHEN");
+	}
+
+
 }

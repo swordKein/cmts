@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.service.*;
 import com.kthcorp.cmts.util.CommonUtil;
+import com.kthcorp.cmts.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +34,8 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -717,9 +724,81 @@ public class AdminController {
 
 		return result;
 	}
+
+	//CSV 다운로드 by jaeyeon.hwang
+	@RequestMapping(value="/admin/dic/keywords/download")
+	public ResponseEntity<Resource> getDicKeywordsListDownload_NEW(Map<String, Object> model
+			, @RequestParam(value="type", required=false, defaultValue = "") String type
+			, HttpServletRequest request
+			, HttpServletResponse response
+	) {
+
+		String contentType = null;
+		String strFilePath = "";
+		FileInputStream fis;
+		FileOutputStream fos;
+		OutputStream os;
+
+		Resource resClasspath;
+		String strResClasspath = "";
+		resClasspath = resourceLoader.getResource("classpath:static/");
+
+		strFilePath = UPLOAD_DIR + "DIC_KEYWORDS_" + type.toUpperCase() + ".csv";
+		logger.debug("#strFilePath = " + strFilePath);
+
+		String strFileName = "";
+		String strUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		ByteArrayResource resource = null;
+
+		try {
+			//2019.11.20 파일정보 로딩
+			DicKeywords fileInfoParam = new DicKeywords();
+			String origFileName="DIC_KEYWORD_" + type.toUpperCase();
+			String origFilePath="";
+			fileInfoParam.setFilePath(origFileName);
+			DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
+			if (fileInfoResult != null) {
+				String strDateTime = fileInfoResult.getRegdate().toString();
+				System.out.println("strDateTime = " + strDateTime);
+				strDateTime = strDateTime.substring(0, 16).replace("-", "").replace(" ", "_").replace(":", "");
+				System.out.println("strDateTime = " + strDateTime);
+				strFileName = fileInfoParam.getFilePath() + "_" + strDateTime + ".csv";
+				System.out.println("strFileName = " + strFileName);
+
+				origFilePath = strFileName = fileInfoParam.getFilePath() + ".csv";
+			} else {
+				strFileName = fileInfoParam.getFilePath() + ".csv";
+
+				origFilePath = strFileName = fileInfoParam.getFilePath() + ".csv";
+			}
+
+			// copy for new File
+			FileUtils.copy(strFilePath, strFileName);
+
+			byte[] data = Files.readAllBytes(Paths.get(strFileName));
+			resource = new ByteArrayResource(data);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//
+//		JsonObject result_all = new JsonObject();
+//		result_all.addProperty("RT_CODE", 1);
+//		result_all.addProperty("RT_MSG", "SUCCESS");
+//		return result_all.toString();\
+
+
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + strFileName + "\"")
+				.body(resource);
+	}
 	
 	//CSV 다운로드 권재일 추가 5_2_1
-	@RequestMapping(value="/admin/dic/keywords/download")//, method=RequestMethod.POST
+	@RequestMapping(value="/admin/dic/keywords/download_old")//, method=RequestMethod.POST
 	public String getDicKeywordsListDownload(Map<String, Object> model
 			, @RequestParam(value="type", required=false, defaultValue = "") String type
 			, HttpServletRequest request
