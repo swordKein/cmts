@@ -818,7 +818,7 @@ public class FileUtils {
 
             File targetFile = new File(upload_dir + imsi_fileName);
             targetFile.createNewFile();
-            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "utf-8"));
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "MS949"));
 
             String lineFeed = System.getProperty("line.separator");
 
@@ -843,14 +843,14 @@ public class FileUtils {
 
     public static int writeYyyymmddFileFromStrAndConvUTF8(String reqStr, String upload_dir, String fileName, String charset) {
         int rt = 0;
-        String imsi_fileName = fileName+".ms949";
+        String imsi_fileName = fileName+".utf8";
 
         BufferedWriter output = null;
         try {
 
             File targetFile = new File(upload_dir + imsi_fileName);
             targetFile.createNewFile();
-            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "MS949"));
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "utf-8"));
 
             String lineFeed = System.getProperty("line.separator");
 
