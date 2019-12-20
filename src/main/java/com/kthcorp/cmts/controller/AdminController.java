@@ -798,11 +798,11 @@ public class AdminController {
 			//}
 
 			// for Write by Charset
-			writer = new OutputStreamWriter(os, "MS949");
+			writer = new OutputStreamWriter(os, Charset.forName("MS949"));
 
 			String writeStr = stringBuffer.toString();
 			byte[] ptext = writeStr.getBytes(Charset.forName("MS949"));
-			String toValue = new String(ptext, "MS949");
+			String toValue = new String(ptext, Charset.forName("MS949"));
 
 			logger.info("#MLOG Write Buffer to Response::"+ toValue.toString());
 
