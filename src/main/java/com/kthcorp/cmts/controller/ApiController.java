@@ -1788,7 +1788,8 @@ public class ApiController {
 			os = response.getOutputStream();
 			fis = new FileInputStream(strFilePath);
 			
-			os.write((strFileName+"::::").getBytes("UTF-8"));
+			//os.write((strFileName+"::::").getBytes("UTF-8"));
+			os.write((strFileName+"::::").getBytes("MS949"));
 			
 			int data = 0;
 			while((data = fis.read()) != -1) {
