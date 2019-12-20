@@ -782,8 +782,8 @@ public class AdminController {
 				stringBuffer.append((char)intRead);
 			}
 
-			String writeString = stringBuffer.toString();
-			ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(writeString);
+			//String writeString = stringBuffer.toString();
+			//ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(writeString);
 			reader.close();
 
 
@@ -797,12 +797,16 @@ public class AdminController {
 			// for Write by Charset
 			writer = new OutputStreamWriter(os, "MS949");
 
-			logger.info("#MLOG Write Buffer to Response::"+byteBuffer.toString());
+			String writeStr = stringBuffer.toString();
+			byte[] ptext = writeStr.getBytes(Charset.forName("MS949"));
+			String toValue = new String(ptext, "MS949");
 
-			String writeStr = byteBuffer.toString();
-			writer.write(writeStr);
+			logger.info("#MLOG Write Buffer to Response::"+ toValue.toString());
+
+			//String writeStr = byteBuffer.toString();
+			writer.write(toValue);
 			stringBuffer.setLength(0);
-			byteBuffer.reset();
+			//byteBuffer.reset();
 
 			writer.close();
 			
