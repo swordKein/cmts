@@ -818,7 +818,7 @@ public class FileUtils {
 
             File targetFile = new File(upload_dir + imsi_fileName);
             targetFile.createNewFile();
-            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "MS949"));
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), "utf-8"));
 
             String lineFeed = System.getProperty("line.separator");
 
