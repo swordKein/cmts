@@ -798,8 +798,11 @@ public class AdminController {
 
 			logger.info("#MLOG Write Buffer to Response::"+byteBuffer.toString());
 
-			writer.write(byteBuffer.toString());
+			String writeStr = byteBuffer.toString();
+			writer.write(writeStr);
 			stringBuffer.setLength(0);
+			byteBuffer.reset();
+
 			writer.close();
 			
 			os.flush();
