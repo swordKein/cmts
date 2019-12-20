@@ -789,6 +789,9 @@ public class AdminController {
 
 			// for Write by Charset
 			writer = new OutputStreamWriter(os, "MS949");
+
+			logger.info("#MLOG Write Buffer to Response::"+stringBuffer.toString());
+
 			writer.write(stringBuffer.toString());
 			stringBuffer.setLength(0);
 			writer.close();
