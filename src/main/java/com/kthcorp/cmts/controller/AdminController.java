@@ -769,7 +769,8 @@ public class AdminController {
 			fis = new FileInputStream(strFilePath);
 
 			//os.write((strFileName+"::::").getBytes("UTF-8"));
-			os.write((strFileName+"::::").getBytes("MS949"));
+			//os.write((strFileName+"::::").getBytes("MS949"));
+			os.write((strFileName+"::::").getBytes());
 			
 			int data = 0;
 			while((data = fis.read()) != -1) {
