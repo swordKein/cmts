@@ -782,7 +782,8 @@ public class AdminController {
 				stringBuffer.append((char)intRead);
 			}
 
-			ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(stringBuffer.toString());
+			String writeString = stringBuffer.toString();
+			ByteBuffer byteBuffer = StandardCharsets.ISO_8859_1.encode(writeString);
 			reader.close();
 
 
