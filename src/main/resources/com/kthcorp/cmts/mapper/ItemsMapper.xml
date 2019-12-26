@@ -339,7 +339,7 @@
         , CASE WHEN (cs.series_id is not null and cs.series_id != '0')
         THEN 'SER' ELSE ( select CASE WHEN (it.type = 'CcubeContentK') THEN 'KOR' ELSE 'OTH' END AS type ) END AS type
         , it.regdate1 as regdate
-        , it.title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
+        , IFNULL( IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE),title) as title, it.regdate as procdate, it.regid, it.director, it.year, it.tagcnt, it.duration , a.stat
         ,ifnull(cs.series_id, '0') as series_id
         ,ifnull(cc.master_content_id,'0') as content_id
         ,ifnull(cs.series_id, '0') as sorigin
@@ -403,9 +403,7 @@
         inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
         and it.stat != 'M'
-        <if test='searchTitleYn == "Y"'>
-            and it.title like CONCAT('%',#{searchKeyword},'%')
-        </if>
+
         <if test='searchType != null and searchType == "KOR"'>
             and it.type = 'CcubeContentK'
         </if>
@@ -421,17 +419,17 @@
 
         <if test='searchActorsYn != null and searchActorsYn == "Y"'>
             ) p where p.cid is not null
-            order by p.regdate desc, p.idx desc limit ${pageSize} offset ${offsetIdx}
+            order by p.regdate desc, p.idx desc
         </if>
 
         <if test='searchActorsYn == null or searchActorsYn != "Y"'>
-            order by it.regdate1 desc, it.idx desc limit ${pageSize} offset ${offsetIdx}
+            order by it.regdate1 desc, it.idx desc
         </if>
 
         )
 
         ) j
-        order by j.regdate desc, j.idx desc limit ${pageSize}
+        order by j.regdate desc, j.idx desc
         ) a
         inner join items it on it.idx = a.idx
         left outer join ccube_contents cc on cc.content_id = it.cid
@@ -439,7 +437,10 @@
         <!--
         inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
         -->
-        order by a.regdate desc, a.idx desc
+        <if test='searchTitleYn == "Y"'>
+            where IFNULL( IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE),title) like CONCAT('%',#{searchKeyword},'%')
+        </if>
+        order by a.regdate desc, a.idx desc limit ${pageSize} offset ${offsetIdx}
     </select>
 
     <select id="searchItemsPagingByStatDate" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
@@ -480,18 +481,18 @@
         inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where iss.regdate between concat(#{searchSdate}, ' 00:00:00') and concat(#{searchEdate}, ' 23:59:59')
 
-        order by iss.regdate desc, iss.idx desc limit ${pageSize} offset ${offsetIdx}
+        order by iss.regdate desc, iss.idx desc
 
         )
 
         ) j
-        order by j.regdate desc, j.idx desc limit ${pageSize}
+        order by j.regdate desc, j.idx desc
         ) a
         inner join items it on it.idx = a.idx
         left outer join ccube_contents cc on cc.content_id = it.cid
         left outer join ccube_series cs on cs.series_id = it.cid
         inner join items_metas im on im.idx = a.idx
-        order by a.regdate desc, a.idx desc
+        order by a.regdate desc, a.idx desc limit ${pageSize} offset ${offsetIdx}
     </select>
 
     <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer" useCache="true">
@@ -556,9 +557,7 @@
         inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
-        <if test='searchTitleYn == "Y"'>
-            and it.title like CONCAT('%',#{searchKeyword},'%')
-        </if>
+
         <if test='searchType != null and searchType == "KOR"'>
             and it.type = 'CcubeContentK'
         </if>
@@ -583,6 +582,9 @@
         inner join items it on it.idx = a.idx
         left outer join ccube_contents cc on cc.content_id = it.cid
         left outer join ccube_series cs on cs.series_id = it.cid
+        <if test='searchTitleYn == "Y"'>
+            where IFNULL( IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE),title) like CONCAT('%',#{searchKeyword},'%')
+        </if>
         <!--
         inner join (select idx,regid,tagidx from items_tags_metas group by idx,tagidx) im on im.idx = a.idx and im.tagidx = (select max(z.tagidx) from items_tags_metas z where z.idx=it.idx)
         -->
@@ -662,9 +664,7 @@
         inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
         where it.regdate1 <![CDATA[ >= ]]> #{searchSdate} and it.regdate1 <![CDATA[ <= ]]> #{searchEdate}
         and it.stat != 'M'
-        <if test='searchTitleYn == "Y"'>
-            and it.title like CONCAT('%',#{searchKeyword},'%')
-        </if>
+
         <if test='searchType != null and searchType == "KOR"'>
             and it.type = 'CcubeContentK'
         </if>
@@ -689,6 +689,9 @@
         inner join items it on it.idx = a.idx
         left outer join ccube_contents cc on cc.content_id = it.cid
         left outer join ccube_series cs on cs.series_id = it.cid
+        <if test='searchTitleYn == "Y"'>
+            where IFNULL( IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE),title) like CONCAT('%',#{searchKeyword},'%')
+        </if>
         ) b
         group by b.stat
     </select>
@@ -774,36 +777,38 @@
     <!-- mcid로 동일 컨텐츠 검색 -->
     <select id="getItemListSameMcid" parameterType="com.kthcorp.cmts.model.Items" resultType="com.kthcorp.cmts.model.Items">
         /* getItemListSameMcid */
+        select * from (
+            select a.*, a.cid as content_id
+            from items a
 
-		select a.*, a.cid as content_id
-		from items a
-		inner join ccube_keys ck on a.idx=ck.itemidx and (a.cid = ck.content_id)
-		where a.cid in (
-			select b.content_id
-			from ccube_contents b
-			where b.master_content_id = (
-				select c.master_content_id
-				from ccube_contents c
-				where 1=1
-				and c.content_id=(select d.cid from items d where d.idx=#{idx})
-			)
-		)
-		
-		union all
-		
-		select a.*, a.cid as content_id
-		from items a
-		inner join ccube_keys ck on a.idx=ck.itemidx and (a.cid = ck.series_id)
-		where a.cid in (
-			select b.series_id
-			from ccube_series b
-			where b.series_id = (
-				select d.cid
-				from items d
-				where d.idx=#{idx}
-			)
-		)
-		and a.idx=#{idx}
+            where a.cid in (
+                select b.content_id
+                from ccube_contents b
+                where b.master_content_id = (
+                    select c.master_content_id
+                    from ccube_contents c
+                    where 1=1
+                    and c.content_id=(select d.cid from items d where d.idx=#{idx})
+                )
+            )
+
+            union all
+
+            select a.*, a.cid as content_id
+            from items a
+
+            where a.cid in (
+                select b.series_id
+                from ccube_series b
+                where b.series_id = (
+                    select d.cid
+                    from items d
+                    where d.idx=#{idx}
+                )
+            )
+            and a.idx=#{idx}
+		) as meta_table order by cid asc, stat desc;
+
     </select>
 
 </mapper>
