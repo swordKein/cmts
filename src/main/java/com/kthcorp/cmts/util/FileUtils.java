@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 public class FileUtils {
-    private static final Logger logger = LoggerFactory.getLogger(CheckCrawlProfiles.class);
 
     public static void checkDirAndCreate(String dir) {
         File theDir = new File(dir);
@@ -791,9 +790,6 @@ public class FileUtils {
 
             File targetFile = new File(upload_dir + fileName);
             targetFile.createNewFile();
-
-            logger.debug("[파일업다운로드 - TARGET FILEPATH] " + targetFile.getPath());
-
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile.getPath()), charset));
 
             String lineFeed = System.getProperty("line.separator");
