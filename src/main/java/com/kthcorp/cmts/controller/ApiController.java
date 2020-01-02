@@ -1935,7 +1935,7 @@ public class ApiController {
     	System.out.println("#readByte::"+readByte);
     	System.out.println("#byteSize::"+byteSize);
 
-    	//readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+//    	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
     	readString = new String(readByte,"MS949");	//인코딩 맞춰야
 
         //파일 검사 - 탭 숫자
