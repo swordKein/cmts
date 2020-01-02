@@ -97,6 +97,7 @@
 		LOAD DATA LOCAL INFILE #{fileName}
 		ignore
 		INTO TABLE `metatagdb`.`dic_change_words`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
