@@ -971,8 +971,8 @@ public class RelKnowledgeService implements RelKnowledgeServiceImpl {
 		//5. 파일형태로 표출
 		String fileNameContent = "VOD_RT_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
-		//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
-		int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvUTF8(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
+		//int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvUTF8(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
 		
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
