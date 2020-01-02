@@ -570,6 +570,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_cook`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
@@ -620,6 +621,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_curr`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
@@ -647,6 +649,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_docu`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
@@ -672,6 +675,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_heal`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
@@ -717,6 +721,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_hist`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
@@ -746,6 +751,7 @@
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
 		INTO TABLE `metatagdb`.`vod_rt_tour`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
