@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FileUtils {
+    private static final Logger logger = LoggerFactory.getLogger(CheckCrawlProfiles.class);
 
     public static void checkDirAndCreate(String dir) {
         File theDir = new File(dir);
