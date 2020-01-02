@@ -275,6 +275,7 @@
 		LOAD DATA LOCAL INFILE #{filePath}
 		ignore
 		INTO TABLE `metatagdb`.`dic_keywords`
+		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		OPTIONALLY ENCLOSED BY '"'
 		LINES TERMINATED BY '\n'
