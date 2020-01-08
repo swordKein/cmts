@@ -1342,7 +1342,7 @@ public class DicService implements DicServiceImpl {
 		String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
 		//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
-        int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvMS949(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "MS949");
+        int rtFileC = FileUtils.writeYyyymmddFileFromStrAndConvUTF8(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "MS949");
 
         logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 //		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
