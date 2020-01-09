@@ -815,17 +815,17 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-
-                String[] newwords = newword.trim().split("\\|");
-                if (newwords != null && newwords.length > 1) {
-                    String oldword1 = newwords[0];
-                    String newword1 = newwords[1];
-                    reqc.setWord(oldword1);
-                    reqc.setOldword(oldword1);
-                    reqc.setWordto(newword1);
+//                System.out.println("OLD"+oldword + " , LINE =>" + newword);
+//                String[] newwords = newword.trim().split("\\|");
+//                if (newwords != null && newwords.length > 1) {
+//                    String oldword1 = newwords[0];
+//                    String newword1 = newwords[1];
+                    reqc.setWord(oldword);
+                    reqc.setOldword(oldword);
+                    reqc.setWordto(newword);
 
                     rt = this.insDicChangeWords(reqc);
-                }
+//                }
                 break;
 
             case "ADD":
@@ -1501,7 +1501,7 @@ public class DicService implements DicServiceImpl {
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         
-		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION","CHANGE"};
+		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION"};
 		String strFilePath = "";
 		
 		//파일관련
