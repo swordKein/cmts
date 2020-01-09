@@ -1501,7 +1501,7 @@ public class DicService implements DicServiceImpl {
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         
-		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION"};
+		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION","CHANGE"};
 		String strFilePath = "";
 		
 		//파일관련
