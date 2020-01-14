@@ -712,8 +712,8 @@ schedule :
 property:
   serverid: cmts_prod_api01
   crawl_api_url:
-  crawl_sns_topwords_url: http://127.0.0.1:8080/sns/topwords
-  crawl_naver_kordic_url: http://127.0.0.1:8080/naver/kordic?query=#KEYWORD
+  crawl_sns_topwords_url: http://172.16.208.51:8080/sns/topwords
+  crawl_naver_kordic_url: http://172.16.208.51:8080/naver/kordic?query=#KEYWORD
 ccube_sftp:
   ip:
   port:
