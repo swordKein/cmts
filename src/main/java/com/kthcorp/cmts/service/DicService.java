@@ -815,17 +815,17 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-
-                String[] newwords = newword.trim().split("\\|");
-                if (newwords != null && newwords.length > 1) {
-                    String oldword1 = newwords[0];
-                    String newword1 = newwords[1];
-                    reqc.setWord(oldword1);
-                    reqc.setOldword(oldword1);
-                    reqc.setWordto(newword1);
+//                System.out.println("OLD"+oldword + " , LINE =>" + newword);
+//                String[] newwords = newword.trim().split("\\|");
+//                if (newwords != null && newwords.length > 1) {
+//                    String oldword1 = newwords[0];
+//                    String newword1 = newwords[1];
+                    reqc.setWord(oldword);
+                    reqc.setOldword(oldword);
+                    reqc.setWordto(newword);
 
                     rt = this.insDicChangeWords(reqc);
-                }
+//                }
                 break;
 
             case "ADD":
@@ -1342,7 +1342,7 @@ public class DicService implements DicServiceImpl {
 		String fileNameContent = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";	//날짜 요소 뺌 DateUtil.formatDate(new Date(), "yyyyMMdd")
 		logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.1");
 		//int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
-        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "MS949");
+        int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultStr, UPLOAD_DIR+"csv_import"+File.separator, fileNameContent, "utf-8");
 
         logger.debug("[파일업다운로드] " + format.format(new Date()) + " 4.2");
 //		String strSeparator = (UPLOAD_DIR.substring(UPLOAD_DIR.length()-1).equals(File.separator) ? "" : File.separator);
@@ -1563,7 +1563,7 @@ public class DicService implements DicServiceImpl {
 		    		
 		    		//type = WHAT 등
 		    		keyword = tmpLine.split(",")[1].replace("，", ",");
-		    		
+
 		    		//키워드 양 끝의 " 제거
 		    		System.out.println("keyword.indexOf(0,keyword.length()-1) = " + keyword.indexOf(0) + "," + keyword.indexOf(keyword.length()-1));
 		    		if(keyword.substring(0,1).equals("\"") && keyword.substring(keyword.length()-1,keyword.length()).equals("\"")) {

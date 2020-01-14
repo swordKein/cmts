@@ -753,7 +753,7 @@ public class AdminController {
 		try {
 			//2019.11.20 파일정보 로딩
 			DicKeywords fileInfoParam = new DicKeywords();
-			String origFileName="DIC_KEYWORD_" + type.toUpperCase();
+			String origFileName="DIC_KEYWORDS_" + type.toUpperCase();
 			String origFilePath="";
 			fileInfoParam.setFilePath(origFileName);
 			DicKeywords fileInfoResult = dicService.getCsvFileNameTimestamp(fileInfoParam);
