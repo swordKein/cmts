@@ -19,6 +19,7 @@ public class CheckAdminProfiles implements Condition {
                 || context.getEnvironment().acceptsProfiles("dev_crawl")
                 || context.getEnvironment().acceptsProfiles("dev_no_sched")
                 || context.getEnvironment().acceptsProfiles("staging")
+                || context.getEnvironment().acceptsProfiles("prod_api")
         );
         logger.info("##CheckAdminProfiles result isActive:"+isActive);
         return isActive;
