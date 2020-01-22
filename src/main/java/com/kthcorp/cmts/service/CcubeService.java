@@ -282,13 +282,13 @@ public class CcubeService implements CcubeServiceImpl {
                 meta = meta.substring(0,limitSize);
 
                 // 19.11.12 Ccube연동규격 추가로 추천 표현 META_RECO_EXPRESSION 추가
+
                 if ("META_RECO_TARGET".equals(mtype)) {
                     origObj.addProperty("META_RECO_EXPRESSION", meta);
                 }
-
                 origObj.addProperty(mtype, meta);
 
-                //System.out.println("#ELOG getTagsMetasObj.result:"+origObj.toString());
+                System.out.println("#ELOG getTagsMetasObj.result:"+origObj.toString());
             }
         }
 
@@ -376,8 +376,8 @@ public class CcubeService implements CcubeServiceImpl {
                         newItem = new JsonObject();
                         if(type.contains("CcubeContent")) {
                             /** 임시 MCID **/
-                            newItem.addProperty("MASTER_CONTENT_ID", masterId);
-                            newItem.addProperty("ITEMIDX", itemIdx);
+//                            newItem.addProperty("MASTER_CONTENT_ID", masterId);
+//                            newItem.addProperty("ITEMIDX", itemIdx);
                             /**--------------------*/
                             newItem.addProperty("CONTENT_ID", contentId);
                             String title = itemInfo.getTitle();
