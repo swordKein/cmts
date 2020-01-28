@@ -274,7 +274,7 @@
     <insert id="importDicKeywordsByType" parameterType="com.kthcorp.cmts.model.DicKeywords">
 		LOAD DATA LOCAL INFILE #{filePath}
 		ignore
-		INTO TABLE `metatagdb`.`dic_keywords`
+		INTO TABLE `dic_keywords`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		OPTIONALLY ENCLOSED BY '"'

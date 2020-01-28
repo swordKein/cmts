@@ -89,7 +89,7 @@
 	<insert id="importDicNotuseWords" parameterType="com.kthcorp.cmts.model.DicNotuseWords">
 		LOAD DATA LOCAL INFILE #{fileName}
 		ignore
-		INTO TABLE `metatagdb`.`dic_notuse_words`
+		INTO TABLE `dic_notuse_words`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'

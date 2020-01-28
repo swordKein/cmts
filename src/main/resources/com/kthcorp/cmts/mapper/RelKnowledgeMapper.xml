@@ -569,7 +569,7 @@
 	<insert id="importRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_cook`
+		INTO TABLE `vod_rt_cook`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
@@ -620,7 +620,7 @@
 	<insert id="importRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_curr`
+		INTO TABLE `vod_rt_curr`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
@@ -648,7 +648,7 @@
 	<insert id="importRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_docu`
+		INTO TABLE `vod_rt_docu`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
@@ -674,7 +674,7 @@
 	<insert id="importRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_heal`
+		INTO TABLE `vod_rt_heal`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
@@ -720,7 +720,7 @@
 	<insert id="importRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_hist`
+		INTO TABLE `vod_rt_hist`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
@@ -750,7 +750,7 @@
 	<insert id="importRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
-		INTO TABLE `metatagdb`.`vod_rt_tour`
+		INTO TABLE `vod_rt_tour`
 		CHARACTER SET euckr
 		COLUMNS TERMINATED BY ','
 		ENCLOSED BY '"'
