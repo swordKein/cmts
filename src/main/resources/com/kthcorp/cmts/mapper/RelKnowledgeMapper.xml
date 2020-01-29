@@ -791,7 +791,7 @@
 			tour_music=replace(@col31,'-_-_',','),
 			tour_period=replace(@col32,'-_-_',','),
 			tour_companion=replace(@col33,'-_-_',','),
-			tour_etc_a=replace(@col34,'-_-_'-_-_','),
+			tour_etc_a=replace(@col34,'-_-_',','),
 			tour_etc_b=replace(@col35,'-_-_',',')
 	</insert>
 
@@ -800,11 +800,12 @@
 	<select id="getVodCook" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodCook */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
+			'' as program,
 			title,
-			part,
+-- 			part,
 			assetid,
 			type,
 			cook_title_a,
@@ -847,11 +848,12 @@
 	<select id="getVodCurr" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodCurr */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
+			'' as program,
 			title,
-			part,
+-- 			part,
 			assetid,
 			curr_subject,
 			curr_person,
@@ -871,11 +873,12 @@
 	<select id="getVodDocu" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodDocu */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
+			'' as program,
 			title,
-			part,
+-- 			part,
 			assetid,
 			docu_subject,
 			docu_person,
@@ -893,11 +896,12 @@
 	<select id="getVodHeal" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodHeal */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
+			'' as program,
 			title,
-			part,
+-- 			part,
 			assetid,
 			heal_subject,
 			heal_part,
@@ -935,7 +939,7 @@
 	<select id="getVodHist" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodHist */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
 			program,
@@ -961,11 +965,12 @@
 	<select id="getVodTour" parameterType="java.util.Map" resultType="java.util.Map">
 		/* getVodTour */
 		SELECT
-			idx,
+-- 			idx,
 			regweek,
 			stat,
+			'' as program,
 			title,
-			part,
+-- 			part,
 			assetid,
 			type,
 			tour_theme,
