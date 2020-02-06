@@ -815,17 +815,17 @@ public class DicService implements DicServiceImpl {
 
             case "CHANGE":
                 DicChangeWords reqc = new DicChangeWords();
-//                System.out.println("OLD"+oldword + " , LINE =>" + newword);
-//                String[] newwords = newword.trim().split("\\|");
-//                if (newwords != null && newwords.length > 1) {
-//                    String oldword1 = newwords[0];
-//                    String newword1 = newwords[1];
-                    reqc.setWord(oldword);
-                    reqc.setOldword(oldword);
-                    reqc.setWordto(newword);
+               // System.out.println("OLD"+oldword + " , LINE =>" + newword);
+                String[] newwords = newword.trim().split("\\|");
+                if (newwords != null && newwords.length > 1) {
+                    String oldword1 = newwords[0];
+                    String newword1 = newwords[1];
+                    reqc.setWord(oldword1);
+//                    reqc.setOldword(oldword);
+                    reqc.setWordto(newword1);
 
                     rt = this.insDicChangeWords(reqc);
-//                }
+               }
                 break;
 
             case "ADD":
