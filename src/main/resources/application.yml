@@ -110,13 +110,14 @@ spring:
       max-request-size: 100MB
   static:
     resource:
-      location: F:\\UPLOAD\\
+      location: C:\\UPLOAD\\
   task:
     fixedDelay: 5000
     name: devTask
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    #url: jdbc:mysql://172.16.208.41:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+   # url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     url: jdbc:mysql://14.63.167.59:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
@@ -186,19 +187,20 @@ ccube_sftp:
   user: daisy
   passwd: daisy!
   #workdir: /home/daisy/ccube_work/
-  workdir: f:\\upload\\
+  workdir: C:\\upload\\
   #downdir: /home/daisy/service/cmts
   downdir: /home/daisy/down_tmp
   downext: xml
   end_after_movedir: /home/daisy/download/DELETE
   uploaddir: /home/daisy/download/META_EXT/
+  knowuploaddir: /ASSOC/UPLOAD/
   #uploaddir: /META_EXT
 prism_sftp:
   ip: 14.63.170.72
   port: 22
   user: daisy
   passwd: daisy!
-  workdir: f:\\upload\\prism\\
+  workdir: C\\upload\\prism\\
   downdir: /home/daisy/prism/
   uploaddir: /home/daisy/prism/
 elasticsearch:
@@ -210,7 +212,7 @@ logging:
     ROOT: INFO
     org.springframework: INFO
     com.kthcorp: DEBUG
-  file: f:\\upload\\service.log
+  file: C:\\upload\\service.log
   filepattern:
     #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     console: "DEV::%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
@@ -637,7 +639,7 @@ ccube_sftp:
   downdir: /caims/SFTP/TGG/DOWNLOAD
   end_after_movedir: /caims/SFTP/TGG/DOWNLOAD/DELETE
   uploaddir: /caims/SFTP/TGG/META_EXT/
-
+  knowuploaddir: /caims/SFTP/TGG/ASSOC/UPLOAD
   #ip: 172.16.208.51
   #user: ktipmedia
   #passwd: 3!aleldj

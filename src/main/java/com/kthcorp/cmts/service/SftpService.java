@@ -45,6 +45,10 @@ public class SftpService implements SftpServiceImpl {
     private String ccube_sftp_end_after_movedir;
     @Value("${ccube_sftp.uploaddir}")
     private String ccube_sftp_uploaddir;
+    @Value("${ccube_sftp.knowuploaddir}")
+    private String ccube_sftp_knowuploaddir;
+
+
 
     @Autowired
     private CcubeService ccubeService;
@@ -383,6 +387,21 @@ public class SftpService implements SftpServiceImpl {
             e.printStackTrace();
         }
         return resultList;
+    }
+
+    @Override
+    public int uploadToCcubeKnow(String work_dir, String fileName) {
+        int rt = 0;
+
+        logger.info("#SftpService:uploadToCcube:: from:"+work_dir+fileName);
+        try {
+            rt = this.uploadSftpToCcubeOutput(ccube_sftp_ip, ccube_sftp_port, ccube_sftp_user, ccube_sftp_passwd
+                    , ccube_sftp_knowuploaddir, work_dir, fileName);
+        } catch (Exception e) {
+            rt = -2;
+            e.printStackTrace();
+        }
+        return rt;
     }
 
     @Override

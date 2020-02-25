@@ -36,9 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.nio.file.Files;
 
 @Service
 public class TestService implements TestServiceImpl {
@@ -9041,11 +9043,27 @@ public class TestService implements TestServiceImpl {
                 String fileNameContent = code;
                 fileNameContent += "_" + DateUtils.getLocalDate("yyyyMMddHH") + ".json";
 
+                String yesterDate =  DateUtils.calculateDateTime(Calendar.DATE,-1, DateUtils.getLocalDate("yyyyMMddHHmmss")).substring(0,10);
+                String fileNameYesyerdayContent = code;
+                fileNameYesyerdayContent += "_" + yesterDate + ".json";
+                logger.info("#SCHEDULE yesterDate : " + yesterDate);
+                logger.info("#SCHEDULE today : " + fileNameContent + "  yesterday : " + fileNameYesyerdayContent);
                 int rtFileC = FileUtils.writeYyyymmddFileFromStr(resultObj.toString(), UPLOAD_DIR, fileNameContent, "utf-8");
+
+                long  todayBytes = Files.size(Paths.get(UPLOAD_DIR+"/"+fileNameContent));
+                long  yesterdayBytes =  0 ;
+                try {
+                     yesterdayBytes =  Files.size(Paths.get(UPLOAD_DIR + "/" + fileNameYesyerdayContent));
+                } catch (Exception e) {
+                    ;
+                }
+
+               logger.info("#SCHEDULE today : " + todayBytes );
+
                 logger.info("#SCHEDULE writeCcubeOutputDayToJsonByRelKnowleadge file:" + UPLOAD_DIR + fileNameContent + " rt:" + rtFileC);
-                if (rtFileC > 0) {
+                if (rtFileC > 0 && ( yesterdayBytes == 0 || (todayBytes != yesterdayBytes ))) {
                     /* 연동 규격 확정 후 경로 지정하여 주석 제거 */
-                    //int rtUp = sftpService.uploadToCcube(WORK_DIR, fileNameContent);
+                    int rtUp = sftpService.uploadToCcubeKnow(WORK_DIR, fileNameContent);
                 }
 
                 rt = 1;

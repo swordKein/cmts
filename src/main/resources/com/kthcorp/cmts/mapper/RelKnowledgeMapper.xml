@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kthcorp.cmts.mapper.RelKnowledgeMapper">
 	<delete id="delRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
@@ -21,7 +21,7 @@
 	<delete id="delRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		DELETE FROM vod_rt_tour
 	</delete>
-	
+
 	<insert id="addRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_cook(
 			regweek,
@@ -104,7 +104,7 @@
 			#{cook_etc_b}
 		)
 	</insert>
-	
+
 	<insert id="addRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_curr(
 			regweek,
@@ -141,7 +141,7 @@
 			#{cur_etc}
 		)
 	</insert>
-	
+
 	<insert id="addRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_docu(
 			regweek,
@@ -174,7 +174,7 @@
 			#{docu_etc}
 		)
 	</insert>
-	
+
 	<insert id="addRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_heal(
 			regweek,
@@ -247,7 +247,7 @@
 			#{heal_etc}
 		)
 	</insert>
-	
+
 	<insert id="addRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_hist(
 			regweek,
@@ -288,7 +288,7 @@
 			#{hist_etc}
 		)
 	</insert>
-	
+
 	<insert id="addRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		INSERT INTO vod_rt_tour(
 			regweek,
@@ -365,7 +365,7 @@
 			#{tour_etc_b}
 		)
 	</insert>
-	
+
 	<select id="getRelKnowledgeListCook" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -410,7 +410,7 @@
 		FROM
 			vod_rt_cook
 	</select>
-	
+
 	<select id="getRelKnowledgeListCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -432,7 +432,7 @@
 		FROM
 			vod_rt_curr
 	</select>
-	
+
 	<select id="getRelKnowledgeListDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -452,7 +452,7 @@
 		FROM
 			vod_rt_docu
 	</select>
-	
+
 	<select id="getRelKnowledgeListHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -492,7 +492,7 @@
 		FROM
 			vod_rt_heal
 	</select>
-	
+
 	<select id="getRelKnowledgeListHist" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -516,7 +516,7 @@
 		FROM
 			vod_rt_hist
 	</select>
-	
+
 	<select id="getRelKnowledgeListTour" parameterType="com.kthcorp.cmts.model.RelKnowledge" resultType="com.kthcorp.cmts.model.RelKnowledge">
 		SELECT
 			idx,
@@ -558,14 +558,14 @@
 		FROM
 			vod_rt_tour
 	</select>
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 	<insert id="importRelKnowledgesCook" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -616,7 +616,7 @@
 			cook_etc_a=replace(@col37,'-_-_',','),
 			cook_etc_b=replace(@col38,'-_-_',',')
 	</insert>
-	
+
 	<insert id="importRelKnowledgesCurr" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -644,7 +644,7 @@
 			curr_keyword=replace(@col14,'-_-_',','),
 			cur_etc=replace(@col15,'-_-_',',')
 	</insert>
-	
+
 	<insert id="importRelKnowledgesDocu" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -670,7 +670,7 @@
 			docu_keyword=replace(@col12,'-_-_',','),
 			docu_etc=replace(@col13,'-_-_',',')
 	</insert>
-	
+
 	<insert id="importRelKnowledgesHeal" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -716,7 +716,7 @@
 			heal_keyword=replace(@col32,'-_-_',','),
 			heal_etc=replace(@col33,'-_-_',',')
 	</insert>
-	
+
 	<insert id="importRelKnowledgesHist" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -746,7 +746,7 @@
 			hist_actor=replace(@col16,'-_-_',','),
 			hist_etc=replace(@col17,'-_-_',',')
 	</insert>
-	
+
 	<insert id="importRelKnowledgesTour" parameterType="com.kthcorp.cmts.model.RelKnowledge">
 		LOAD DATA LOCAL INFILE #{relKnowledgeFilePath}
 		IGNORE
@@ -831,7 +831,7 @@
 			cook_purpose,
 			cook_flavor,
 			cook_cooker,
-			cook_shoot_place,
+			cook_shoot_place as cook_shot_place,
 			cook_level_a,
 			cook_level_b,
 			cook_level_c,
@@ -864,7 +864,7 @@
 			curr_mc,
 			curr_actor,
 			curr_keyword,
-			cur_etc
+			cur_etc as curr_etc
 		FROM
 			vod_rt_curr
 		WHERE regweek != '' and title != ''

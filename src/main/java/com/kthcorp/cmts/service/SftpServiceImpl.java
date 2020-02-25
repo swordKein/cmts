@@ -16,6 +16,8 @@ public interface SftpServiceImpl {
 
     int manualDownloadMultipleXmlFileToDB(String fileName);
 
+    int uploadToCcubeKnow(String work_dir, String fileName);
+
     int uploadToCcube(String work_dir, String fileName);
 
     int uploadSftpToCcubeOutput(String ip, int port, String user, String passwd
