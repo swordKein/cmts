@@ -65,7 +65,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public List<ItemsTags> getItemsTagsMetasByItemIdx(ItemsTags req) {
         return itemsTagsMapper.getItemsTagsMetasByItemIdx(req);
     }
-    
+
     @Override
     public String getItemsTagsMetasStringByItemIdx(ItemsTags req) throws Exception {
         String result = "";
@@ -1172,7 +1172,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         // ui�뿉�꽌�뒗 listsearchkeywords �삎�깭濡� 怨듬갚�뾾�씠 �쟾�넚�맖
                         if(tmpMapArrayName.startsWith("LIST")) {
                             tmpMapArrayName = tmpMapArrayName.replace("LIST", "LIST_");
-                            
+
                             // LIST_NOT_MAPPED는 LIST__NOT_MAPPED가 되어버려서 __를 _로 수정
                             tmpMapArrayName = tmpMapArrayName.replace("LIST__", "LIST_");
                         }
@@ -1235,7 +1235,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
         dicTypes.add("METASWHAT");
         dicTypes.add("METASEMOTION");
         dicTypes.add("METASCHARACTER");
-        
+
         //System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.processMetaObjectByTypes metaDic start");
         for (String dicType : dicTypes) {
             JsonArray dicActionArr = null;
@@ -1321,7 +1321,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                         //destArr = this.getTargetMetasArrayOnlyString(atype, origMetaArr, changeMetaArr);
                         //destArr2 = this.getRemoveDupTargetMetasArrayOnlyString(destArr);
                         //System.out.println("#ELOG.destArr(String): datas::"+destArr2.toString());
-                        
+
                     	//2019.11.21 origMetaArr를 string array 에서 json array로 해야 한다. {"word":"테스트키워드1","ratio":0.0}
                     	System.out.println(1);
                     	if(origMetaArr.size()>0) {
@@ -1333,7 +1333,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 	                        		tmpJsonObject.addProperty("ratio", "0.0");
 	                        		tmpJsonArray.add(tmpJsonObject);
 	                        	}
-	                        	
+
 	                        	origMetaArr = tmpJsonArray;
 	                        }
                     	}
@@ -1459,7 +1459,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 		//System.out.println(" - duration = " + duration);
 		//System.out.println(" - sendnow = " + sendnow);
 		//System.out.println(" - userId = " + userId);	//userId : 로그인 중인 사용자정보 저장
-		
+
         int rt = 0;
         //int curTagIdx = this.getCurrTagsIdxForInsert(itemid);
         //int curTagIdx = this.getCurrTagsIdxForSuccess(itemid);
@@ -1498,7 +1498,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
             /* 湲곗듅�씤�맂 硫뷀�媛� �뾾�쓣 寃쎌슦 (理쒓렐 tagIdx媛� 誘몄듅�씤�씤 寃쎌슦) 硫뷀��닔�젙 �썑 �긽�깭蹂�寃�, �듅�씤 泥섎━�븳�떎 */
             if(lastTag != null && !"S".equals(lastTag.getStat())) {
             	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - no gaseungin metas");
-            	
+
             	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx bf");
             	JsonObject origMetasArraysByType = this.getItemsMetasByItemIdx(itemid, false);
             	//System.out.println("[********] " + DateUtils.getLocalDateTime3() + "  ItemsTagsService.changeMetasArraysByTypeFromInputItems - getItemsMetasByItemIdx af : origMetasArraysByType = " + origMetasArraysByType.toString());
@@ -1756,7 +1756,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
 
         if (origArray != null) {
             try {
-                //origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");	//2019.11.14 - 넘어오는게 텍스트만 있어서 에러남    2019.11.22 target_meta 말고 word가 있음 
+                //origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");	//2019.11.14 - 넘어오는게 텍스트만 있어서 에러남    2019.11.22 target_meta 말고 word가 있음
                 if(origArray.toString().indexOf("\"target_meta\"")<0) {		//target_meta가 없음
                 	//origStrArr = JsonUtil.convertJsonArrayToList(origArray);
                     if(origArray.toString().indexOf("\"word\"")<0) {		//word도 없음
@@ -1767,7 +1767,7 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
                 }else {	//target_meta 있음
                 	origStrArr = JsonUtil.convertJsonArrayToListByLabel(origArray, "target_meta");
                 }
-            	
+
                 logger.debug("[********] 14    0 origStrArr.toString() = " + origStrArr.toString());
                 resultArr = new JsonArray();
 
