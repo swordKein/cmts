@@ -120,9 +120,9 @@ spring:
    # url: jdbc:mysql://127.0.0.1:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.170.72:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     #url: jdbc:mysql://14.63.174.158:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://14.63.167.59:3306/metatagdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-    username: metataguser
-    password: daisy!
+    url: jdbc:mysql://localhost:3306/metatag?zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+    username: wwwuser
+    password: wwwuser
   thymeleaf:
     cache: false
     check-template: false
