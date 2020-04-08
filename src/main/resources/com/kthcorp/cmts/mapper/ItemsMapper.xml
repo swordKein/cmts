@@ -495,6 +495,60 @@
         order by a.regdate desc, a.idx desc limit ${pageSize} offset ${offsetIdx}
     </select>
 
+    <select id="countListItemsPaging" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(*) as cnt
+        from
+        (	select j.* from
+        (
+        (
+        <if test='items[0].searchActorsYn != null and items[0].searchActorsYn == "Y"'>
+            select p.* from (
+        </if>
+        select it.idx, iss.stat, it.regdate
+
+        <if test='items[0].searchActorsYn != null and items[0].searchActorsYn == "Y"'>
+            , case when (it.type = 'CcubeContent' or it.type = 'CcubeContentK') then cc.content_id ELSE cs.series_id END AS cid
+        </if>
+        from items it
+        inner join items_stat iss on iss.idx = it.idx and iss.stat not in ('RC', 'RR', 'RA', 'SC', 'SR', 'CT')
+        <foreach item="item" index="index" collection="items">
+            <if test='searchStat != null and searchStat != "ALL" and searchStat != "FA"'>
+                and iss.stat = #{item.searchStat}
+            </if>
+            <if test='searchStat != null and searchStat == "FA"'>
+                and iss.stat in ('FR', 'FA')
+            </if>
+            <if test='searchMetasYn != null and searchMetasYn == "Y"'>
+                inner join (
+                select distinct(idx) as idx from items_metas where mtype in
+                <foreach item="item1" index="index" collection="searchMetasArr"
+                         open="(" separator="," close=")">
+                    #{item1}
+                </foreach>
+                and meta like concat('%',#{item.searchKeyword},'%')
+                ) imm on imm.idx = it.idx
+            </if>
+        </foreach>
+        inner join ccube_keys ck on ck.itemidx = it.idx and (it.cid = ck.content_id or it.cid = ck.series_id)
+        where it.regdate1 <![CDATA[ >= ]]> ${items[0].searchSdate} and it.regdate1 <![CDATA[ <= ]]> ${items[0].searchEdate}
+        and it.stat != 'M'
+        <if test='items[0].searchActorsYn != null and items[0].searchActorsYn == "Y"'>
+            ) p where p.cid is not null
+        </if>
+
+        )
+
+        ) j
+        ) a
+        inner join items it on it.idx = a.idx
+        left outer join ccube_contents cc on cc.content_id = it.cid
+        left outer join ccube_series cs on cs.series_id = it.cid
+        <if test='items[0].searchTitleYn == "Y"'>
+            where IFNULL( IFNULL(cc.CONTENT_TITLE,cs.PURITY_TITLE),title) like CONCAT('%',#{items[0].searchKeyword},'%')
+        </if>
+
+    </select>
+
     <select id="countItemsPaging" parameterType="com.kthcorp.cmts.model.Items" resultType="java.lang.Integer" useCache="true">
       /* countItemsPaging */
         select count(*) as cnt

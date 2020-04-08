@@ -46,6 +46,7 @@ public interface ItemsMapper {
 
     List<Items> countItemsPagingByStat(Items req);
     int countItemsPaging(Items req);
+    int countListItemsPaging(Map<String,Object> map);
     int countItemsAll();
     List<Items> searchTestMetas(Items req);
 

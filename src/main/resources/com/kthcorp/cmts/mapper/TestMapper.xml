@@ -593,7 +593,7 @@
             inner join ccube_keys ck on ck.SERIES_ID = co.SERIES_ID and ck.SERIES_ID != '0'
             inner join items it on it.idx = ck.ITEMIDX and it.type like concat ('CcubeSeries','%')
             inner join items_stat iss on iss.idx = it.idx and iss.stat = 'ST'
-            and iss.regdate between concat(#{searchSdate}, '%Y-%m-%d'), ' 00:00:00')
+            and iss.regdate between concat(date_format(#{searchSdate}, '%Y-%m-%d'), ' 00:00:00')
 				and concat(date_format(#{searchSdate}, '%Y-%m-%d'), ' 23:59:59')
             ) a
         order by a.itemidx asc

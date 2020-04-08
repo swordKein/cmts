@@ -1,8 +1,10 @@
 package com.kthcorp.cmts.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kthcorp.cmts.mapper.*;
 import com.kthcorp.cmts.model.*;
 import com.kthcorp.cmts.util.*;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -511,6 +514,20 @@ public class ApiService implements ApiServiceImpl {
         searchParts = searchParts.replace("recotarget", "LIST_RECO_TARGET");
         searchParts = searchParts.replace("recositu", "LIST_RECO_SITUATION");
 
+
+
+        searchParts = searchParts.replace("whenera","METASWHENERA");
+        searchParts = searchParts.replace("whenhis","METASWHENHIS");
+        searchParts = searchParts.replace("whenetc","METASWHENETC");
+
+
+        searchParts = searchParts.replace("wherenation","METASWHERENATION");
+        searchParts = searchParts.replace("wherecity","METASWHERECITY");
+        searchParts = searchParts.replace("wheresights","METASWHERESIGHTS");
+        searchParts = searchParts.replace("whereetc","METASWHEREETC");
+
+
+        searchParts = searchParts.replace("int","METASINT");
         return searchParts;
     }
 
@@ -547,6 +564,155 @@ public class ApiService implements ApiServiceImpl {
     }
 
     @Override
+    public JsonObject getItemsReSearch(
+            int pageSize, int pageno
+            , String searchType
+            , String searchStat
+            , String searchSdate
+            , String searchEdate
+            , String searchKeyword
+            , String searchParts
+            , String resultSearch
+            , String[] precondition
+            , String _precondition
+    ) {
+        if(pageSize < 1) pageSize = 50;
+        if ("".equals(searchKeyword.trim())) searchParts = "";
+
+        searchParts = getChangedMtypes(searchParts);
+
+        JsonObject result = new JsonObject();
+
+        Items reqIt = new Items();
+        reqIt.setPageSize(pageSize);
+        reqIt.setPageNo(pageno);
+
+        String newType = "";
+        if ("".equals(searchType)) {
+            newType = "ALL";
+        } else {
+            newType = searchType;
+        }
+        reqIt.setSearchType(newType);
+
+        String newStat = "";
+        if ("".equals(searchStat)) {
+            newStat = "ALL";
+        } else {
+            newStat = searchStat;
+        }
+        reqIt.setSearchStat(newStat);
+
+        String newSdate = "";
+        String newEdate = "";
+        //시간은 쿼리식에서 붙어서 여기서는 빼버림
+        if ("".equals(searchSdate) || "".equals(searchEdate)) {
+            newSdate = "2017-01-01"; newEdate = "2025-12-31";
+        } else {
+            newSdate = searchSdate;
+            newEdate = searchEdate;
+        }
+        reqIt.setSearchSdate(newSdate);
+        reqIt.setSearchEdate(newEdate);
+
+        if (!"".equals(searchKeyword)) reqIt.setSearchKeyword(searchKeyword);
+
+        if (!"".equals(searchParts)) {
+            List<String> searchPartsArr = null;
+            String sp[] = searchParts.trim().split(",");
+            if (searchParts.contains(",")) {
+                for (String ps : sp) {
+                    // searchParts중 1개에 대해 검색옵션 설정
+                    reqIt = getSearchPartsOptions(reqIt, ps);
+                }
+            } else {
+                // searchParts중 1개에 대해 검색옵션 설정
+                reqIt = getSearchPartsOptions(reqIt, searchParts);
+            }
+            reqIt.setSearchParts(searchParts);
+        }
+
+        List<Items> _items = new ArrayList<>();
+        for(String one : precondition) {
+//            System.out.println("-===========================-");
+            JsonParser jsonParser = new JsonParser();
+            try {
+                //JsonArray metas = new Gson().fromJson(it.getMeta(), new TypeToken<List<MetasType>>(){}.getType());
+                JsonObject metas = (JsonObject) jsonParser.parse(one);
+                Items board = new Items();
+                board.setSearchType(metas.get("searchtype").toString());
+                board.setSearchStat(metas.get("searchstat").toString());
+                board.setSearchSdate(metas.get("searchsdate").toString());
+                board.setSearchEdate(metas.get("searchedate").toString());
+                board.setSearchKeyword(metas.get("searchkeyword").toString());
+                board.setSearchParts(metas.get("searchparts").toString());
+//                System.out.println(board.toString());
+                _items.add(board);
+            } catch (Exception e) {
+                ;
+            }
+        }
+
+        Map<String, Object> reqMap = null;
+//        //int countItems = itemsMapper.countItems(reqIt);
+//        //System.out.println("#ELOG.searchItems:: req:"+reqIt.toString());
+        reqMap = new HashMap();
+        reqMap.put("items", _items);
+//
+        int countItems = itemsMapper.countListItemsPaging(reqMap);
+//        int countAll = itemsMapper.countItemsAll();
+//
+//        System.out.println("#COUNT_SEARCH_ITEMS:: / count:"+countItems);
+//
+//        List<Items> list_items = itemsMapper.searchItemsPaging(reqIt);
+//        List<Items> list_items2 = new ArrayList();
+//        for(Items one : list_items) {
+//            if (one != null && one.getSeries_id() != null && !"0".equals(one.getSeries_id())) {
+//                one.setContent_id(one.getSeries_id());
+//                one.setCid(one.getSeries_id());
+//            }
+//            list_items2.add(one);
+//        }
+//        JsonArray listItems = getListItemsFromArray(list_items2);
+//
+//        //System.out.println("#LIST_ITEMS:"+list_items.toString());
+//
+//        int maxPage = countItems / pageSize + 1;
+//
+//        Map<String, Object> listPaging = CommonUtil.getPaginationJump(countItems, pageSize, pageno, 10);
+//        List<String> listActive = null;
+//        List<Integer> listPage = null;
+//        if (listPaging != null) {
+//            listActive = (List<String>) listPaging.get("listActive");
+//            listPage = (List<Integer>) listPaging.get("listPage");
+//        }
+//        JsonArray listPageArr = JsonUtil.convertIntegerListToJsonArray(listPage);
+//        JsonArray listActiveArr = JsonUtil.convertListToJsonArray(listActive);
+//
+//        result.addProperty("MAXPAGE", maxPage);
+//        result.addProperty("SEARCHTYPE", searchType);
+//        result.addProperty("SEARCHSTAT", searchStat);
+//        result.addProperty("SEARCHSDATE", searchSdate);
+//        result.addProperty("SEARCHEDATE", searchEdate);
+//        result.addProperty("SEARCHKEYWORD", searchKeyword);
+//        result.addProperty("SEARCHPARTS", searchParts);
+//        result.addProperty("PRECONDITION",_precondition);
+//        JsonObject countsSearch = getCountSearch(countAll, reqIt);
+////        countsSearch.addProperty("COUNT_ALL", countAll);
+//        countsSearch.addProperty("COUNT_ALL", countItems);
+//
+//        result.add("COUNTS_SEARCH", countsSearch);
+//
+//        result.addProperty("PAGESIZE", pageSize);
+//        result.addProperty("PAGENO", pageno);
+//        result.add("LIST_PAGING", listPageArr);
+//        result.add("LIST_PAGING_ACTIVE", listActiveArr);
+//        result.add("LIST_ITEMS", listItems);
+
+        return result;
+    }
+
+    @Override
     public JsonObject getItemsSearch(
             int pageSize, int pageno
             , String searchType
@@ -555,6 +721,8 @@ public class ApiService implements ApiServiceImpl {
             , String searchEdate
             , String searchKeyword
             , String searchParts
+            , String resultSearch
+            , String precondition
     ) {
         if(pageSize < 1) pageSize = 50;
         if ("".equals(searchKeyword.trim())) searchParts = "";
@@ -651,7 +819,7 @@ public class ApiService implements ApiServiceImpl {
         result.addProperty("SEARCHEDATE", searchEdate);
         result.addProperty("SEARCHKEYWORD", searchKeyword);
         result.addProperty("SEARCHPARTS", searchParts);
-
+        result.addProperty("PRECONDITION",precondition);
         JsonObject countsSearch = getCountSearch(countAll, reqIt);
 //        countsSearch.addProperty("COUNT_ALL", countAll);
         countsSearch.addProperty("COUNT_ALL", countItems);

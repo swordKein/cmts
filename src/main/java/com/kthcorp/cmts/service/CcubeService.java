@@ -226,10 +226,22 @@ public class CcubeService implements CcubeServiceImpl {
 
         List<String> origTypes = new ArrayList();
         origTypes.add("METASWHEN");
+        origTypes.add("METASWHENERA");
+        origTypes.add("METASWHENHIS");
+        origTypes.add("METASWHENETC");
+
         origTypes.add("METASWHERE");
+        origTypes.add("METASWHERENATION");
+        origTypes.add("METASWHERECITY");
+        origTypes.add("METASWHERESIGHTS");
+        origTypes.add("METASWHEREETC");
+
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+
+        origTypes.add("METASINT");
+
         origTypes.add("LIST_SUBGENRE");
         origTypes.add("LIST_SEARCHKEYWORDS");
         origTypes.add("METASCHARACTER");
@@ -668,12 +680,24 @@ public class CcubeService implements CcubeServiceImpl {
         origTypes.add("CONTENT_ID");
         origTypes.add("META_CONTENT_TITLE");
         origTypes.add("META_WHEN");
+        origTypes.add("META_WHENERA");
+        origTypes.add("META_WHENHIS");
+        origTypes.add("META_WHENETC");
+
         origTypes.add("META_WHERE");
+        origTypes.add("META_WHERENATION");
+        origTypes.add("META_WHERECITY");
+        origTypes.add("META_WHERESIGHTS");
+        origTypes.add("META_WHEREETC");
+
         origTypes.add("META_WHAT");
         origTypes.add("META_WHO");
         origTypes.add("META_EMOTION");
         origTypes.add("META_SUBGENRE");
         origTypes.add("META_SEARCH");
+
+        origTypes.add("META_INT");
+
         origTypes.add("META_CHARACTER");
         origTypes.add("META_RECO_TARGET");
         origTypes.add("META_RECO_SITUATION");
@@ -687,12 +711,24 @@ public class CcubeService implements CcubeServiceImpl {
         origTypes.add("SERIES_ID");
         origTypes.add("META_SERIES_TITLE");
         origTypes.add("META_WHEN");
+        origTypes.add("META_WHENERA");
+        origTypes.add("META_WHENHIS");
+        origTypes.add("META_WHENETC");
+
         origTypes.add("META_WHERE");
+        origTypes.add("META_WHERENATION");
+        origTypes.add("META_WHERECITY");
+        origTypes.add("META_WHERESIGHTS");
+        origTypes.add("META_WHEREETC");
+
         origTypes.add("META_WHAT");
         origTypes.add("META_WHO");
         origTypes.add("META_EMOTION");
         origTypes.add("META_SUBGENRE");
         origTypes.add("META_SEARCH");
+
+        origTypes.add("META_INT");
+
         origTypes.add("META_CHARACTER");
         origTypes.add("META_RECO_TARGET");
         origTypes.add("META_RECO_SITUATION");

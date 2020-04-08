@@ -29,6 +29,8 @@ public class ItemsTags extends Paging{
     private String meta_orig;
     private Integer cnt;
 
+    private Integer position;
+
     public Integer getCnt() {
         return cnt;
     }
@@ -132,4 +134,9 @@ public class ItemsTags extends Paging{
     public void setRegid(String regid) {
         this.regid = regid;
     }
+
+    public int getPosition() { return position; }
+
+    public void setPosition(int position) { this.position = position; }
+
 }

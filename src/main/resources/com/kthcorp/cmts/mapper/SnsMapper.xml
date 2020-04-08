@@ -34,10 +34,10 @@
 
     <select id="getSnsTopWords2Rank" resultType="map" parameterType="map">
         /* getSnsTopWords2Rank  */
-        select target, date1, word, rank from sns_top_words2
+        select target, date1, word, `rank` from sns_top_words2
         where target=#{target}
         and date1 <![CDATA[ >= ]]> #{sdate} and date1 <![CDATA[ <= ]]> #{edate}
-        order by date1 asc, rank asc
+        order by date1 asc, `rank` asc
     </select>
 
     <select id="getMaxDateStr" resultType="java.lang.String">
@@ -47,10 +47,10 @@
 
     <select id="getSnsTopWords2RankByWord" resultType="map" parameterType="map">
         /* getSnsTopWords2Rank  */
-        select target, date1, word, rank from sns_top_words2
+        select target, date1, word, `rank` from sns_top_words2
         where target=#{target}
         and date1 <![CDATA[ >= ]]> #{sdate} and date1 <![CDATA[ <= ]]> #{edate}
         and word = #{word}
-        order by date1 asc, rank asc
+        order by date1 asc, `rank` asc
     </select>
 </mapper>

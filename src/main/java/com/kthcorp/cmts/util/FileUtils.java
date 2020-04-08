@@ -7,9 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.kthcorp.cmts.model.MovieCine21;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 

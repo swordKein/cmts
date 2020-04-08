@@ -353,10 +353,13 @@ public class ApiController {
 			, @RequestParam(value = "searchedate", required = false, defaultValue = "") String searchEdate
 			, @RequestParam(value = "searchkeyword", required = false, defaultValue = "") String searchKeyword
 			, @RequestParam(value = "searchparts", required = false, defaultValue = "") String searchParts
+			, @RequestParam(value = "resultSearch", required = false, defaultValue = "") String resultSearch
+			, @RequestParam(value = "precondition", required = false, defaultValue = "") String precondition
+
 	) {
 		logger.info("#CLOG:API/item/list get /pageSize:"+spagesize+"/pageno:"+spageno
 		+"/type:"+searchType+"/stat:"+searchStat+"/sdate:"+searchSdate+"/edate:"+searchEdate
-		+"/keyword:"+searchKeyword+"/parts:"+searchParts);
+		+"/keyword:"+searchKeyword+"/parts:"+searchParts +"/precondition"+precondition);
 		if("".equals(searchKeyword.trim())) searchParts = "";
 		searchKeyword = CommonUtil.removeAllSpec2(searchKeyword);
 
@@ -379,7 +382,9 @@ public class ApiController {
 										, searchSdate
 										, searchEdate
 										, searchKeyword
-										, searchParts);
+										, searchParts
+										, resultSearch
+										, precondition);
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {
@@ -605,7 +610,7 @@ public class ApiController {
 					rtmsg = "Items's metas is null!";
 				}
 			} else {
-				rtmsg = apiService.getRtmsg(rtcode);
+					rtmsg = apiService.getRtmsg(rtcode);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

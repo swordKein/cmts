@@ -846,6 +846,9 @@ public class DicService implements DicServiceImpl {
                 rt = this.insDicFilterWords(reqf);
                 break;
             case "WHEN": case "WHERE": case "WHO": case "WHAT": case "EMOTION":
+            case "WHENERA" : case "WHENHIS" : case "WHENETC" :
+            case "WHERENATION" : case "WHERECITY" : case "WHERESIGHTS" : case "WHEREETC" :
+            case "INT" :
                 DicKeywords reqk = new DicKeywords();
                 reqk.setKeyword(newword);
                 reqk.setOldword(oldword);

@@ -44,6 +44,20 @@ public interface ApiServiceImpl {
 
     String getChangedMtypes(String searchParts);
 
+
+    JsonObject getItemsReSearch(
+            int pageSize, int pageno
+            , String searchType
+            , String searchStat
+            , String searchSdate
+            , String searchEdate
+            , String searchKeyword
+            , String searchParts
+            , String resultSearch
+            , String[] precondition
+            , String _precondition
+    );
+
     JsonObject getItemsSearch(
             int pageSize, int pageno
             , String searchType
@@ -52,6 +66,8 @@ public interface ApiServiceImpl {
             , String searchEdate
             , String searchKeyword
             , String searchParts
+            , String resultSearch
+            , String precondition
     );
 
     JsonArray getListItemsFromArray(List<Items> itemsList);

@@ -2,6 +2,7 @@ package com.kthcorp.cmts.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kthcorp.cmts.model.Items;
 import com.kthcorp.cmts.util.FileUtils;
 import org.junit.Test;
@@ -54,9 +55,45 @@ public class ApiServiceTest {
 
 		//JsonObject result = apiService.getItemsSearch(50, 1, "ALL", "ALL"
 		//		, "2018-02-03", "2019-05-15", "모두 다 따를 것이다", "title");
+		String str = "{\"searchtype\":\"ALL\",\"searchstat\":\"ALL\",\"searchsdate\":\"2019-12-27\",\"searchedate\":\"2020-03-26\",\"searchkeyword\":\"2\",\"PRECONDITION\":\"{\\\"searchtype\\\":\\\"ALL\\\",\\\"searchstat\\\":\\\"ALL\\\",\\\"searchsdate\\\":\\\"2019-12-31\\\",\\\"searchedate\\\":\\\"2020-03-26\\\",\\\"searchkeyword\\\":\\\"2\\\",\\\"PRECONDITION\\\":\\\"{\\\\\\\"searchtype\\\\\\\":\\\\\\\"ALL\\\\\\\",\\\\\\\"searchstat\\\\\\\":\\\\\\\"ALL\\\\\\\",\\\\\\\"searchsdate\\\\\\\":\\\\\\\"2019-12-27\\\\\\\",\\\\\\\"searchedate\\\\\\\":\\\\\\\"2020-03-26\\\\\\\",\\\\\\\"searchkeyword\\\\\\\":\\\\\\\"1\\\\\\\",\\\\\\\"PRECONDITION\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"searchtype\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"ALL\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"searchstat\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"ALL\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"searchsdate\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2019-12-27\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"searchedate\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2020-03-26\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"searchkeyword\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"PRECONDITION\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"searchparts\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"title\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"resultSearch\\\\\\\\\\\\\\\":false,\\\\\\\\\\\\\\\"pageno\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"1\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"searchparts\\\\\\\":\\\\\\\"title\\\\\\\",\\\\\\\"resultSearch\\\\\\\":false,\\\\\\\"pageno\\\\\\\":\\\\\\\"1\\\\\\\"}\\\",\\\"searchparts\\\":\\\"title\\\",\\\"resultSearch\\\":false,\\\"pageno\\\":\\\"1\\\"}\",\"searchparts\":\"title\",\"resultSearch\":false,\"pageno\":\"1\"}";
+		JsonParser jsonParser = new JsonParser();
+		//JsonArray metas = new Gson().fromJson(it.getMeta(), new TypeToken<List<MetasType>>(){}.getType());
+		JsonObject metas = (JsonObject) jsonParser.parse(str);
+//		str = metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1)
+//				.replace("\\\"","\"").replace("\\\\","\\");
+//		System.out.println(str);
+//		metas = (JsonObject) jsonParser.parse(str);
+//		str = metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1)
+//				.replace("\\\"","\"").replace("\\\\","\\");
+//		System.out.println(str);
+		String ori_str = metas.get("PRECONDITION").toString();
 
-		JsonObject result = apiService.getItemsSearch(50, 1, "ALL", ""
-				, "", "", "프렌즈 시즌 4", "title");
+//		metas = (JsonObject) jsonParser.parse(metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1).replace("\\\"","\""));
+//		System.out.println(metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1).replace("\\\"","\""));
+		List<String> precondition  = new ArrayList<>();
+		while(metas.get("PRECONDITION")!=null || metas.get("PRECONDITION").toString()!="" ) {
+			str = metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1)
+					.replace("\\\"","\"").replace("\\\\","\\");
+			System.out.println(str);
+
+			try {
+				precondition.add(str);
+				metas = (JsonObject) jsonParser.parse(str);
+			} catch (Exception e) {
+				break;
+			}
+		}
+		String[] array = precondition.toArray(new String[precondition.size()]);
+
+		JsonObject result = apiService.getItemsReSearch(50, 1,
+				"ALL",
+				""
+				, "",
+				"",
+				"프렌즈 시즌 4",
+				"title",
+				"",
+				array,ori_str);
 
 		System.out.println("#result:"+result.toString());
 	}
