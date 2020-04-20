@@ -655,9 +655,21 @@ public class CcubeService implements CcubeServiceImpl {
         List<String> origTypes = new ArrayList();
         origTypes.add("WHAT");
         origTypes.add("WHERE");
+        origTypes.add("WHERENATION");
+        origTypes.add("WHERECITY");
+        origTypes.add("WHERESIGHTS");
+        origTypes.add("WHEREETC");
+
         origTypes.add("WHO");
+
         origTypes.add("WHEN");
+        origTypes.add("WHENERA");
+        origTypes.add("WHENHIS");
+        origTypes.add("WHENETC");
+
         origTypes.add("EMOTION");
+
+        origTypes.add("INT");
 
         System.out.println("## req JsonObject::"+req.toString());
 

@@ -846,10 +846,22 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public JsonObject getItemsMetasByItemIdxForInsert(int itemIdx) {
         ArrayList<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
+        origTypes.add("METASWHENERA");
+        origTypes.add("METASWHENHIS");
+        origTypes.add("METASWHENETC");
+
         origTypes.add("METASWHERE");
+        origTypes.add("METASWHERENATION");
+        origTypes.add("METASWHERECITY");
+        origTypes.add("METASWHERESIGHTS");
+        origTypes.add("METASWHEREETC");
+
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+
+        origTypes.add("METASINT");
+
         origTypes.add("LIST_NOT_MAPPED");
         origTypes.add("WORDS_GENRE");
         origTypes.add("WORDS_SNS");
@@ -2481,10 +2493,21 @@ public class ItemsTagsService implements ItemsTagsServiceImpl {
     public JsonArray getMetaSubgenre(Integer itemid, String reqJsonObjStr) throws Exception {
         List<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
+        origTypes.add("METASWHENERA");
+        origTypes.add("METASWHENHIS");
+        origTypes.add("METASWHENETC");
+
         origTypes.add("METASWHERE");
+        origTypes.add("METASWHERENATION");
+        origTypes.add("METASWHERECITY");
+        origTypes.add("METASWHERESIGHTS");
+        origTypes.add("METASWHEREETC");
+
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+
+        origTypes.add("METASINT");
 
         // request param 蹂�議� metawho -> who
         reqJsonObjStr = StringUtil.removeMetaTag(reqJsonObjStr);

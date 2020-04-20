@@ -475,8 +475,18 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         dicTypes.add("EMOTION");
         dicTypes.add("WHAT");
         dicTypes.add("WHEN");
+        dicTypes.add("WHENERA");
+        dicTypes.add("WHENHIS");
+        dicTypes.add("WHENETC");
+
         dicTypes.add("WHERE");
+        dicTypes.add("WHERENATION");
+        dicTypes.add("WHERECITY");
+        dicTypes.add("WHERESIGHTS");
+        dicTypes.add("WHEREETC");
+
         dicTypes.add("WHO");
+        dicTypes.add("INT");
         return dicTypes;
     }
 

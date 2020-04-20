@@ -24,10 +24,24 @@ public class StringUtil {
         req = req.toUpperCase();
 
         req = req.replace("WHO","METASWHO");
+
         req = req.replace("WHEN","METASWHEN");
+        req = req.replace("WHENERA","METASWHENERA");
+        req = req.replace("WHENHIS","METASWHENHIS");
+        req = req.replace("WHENETC","METASWHENETC");
+
         req = req.replace("WHAT","METASWHAT");
         req = req.replace("WHERE","METASWHERE");
+
+        req = req.replace("WHERENATION","METASWHERENATION");
+        req = req.replace("WHERECITY","METASWHERECITY");
+        req = req.replace("WHERESIGHTS","METASWHERESIGHTS");
+        req = req.replace("WHEREETC","METASWHEREETC");
+
         req = req.replace("EMOTION","METASEMOTION");
+
+        req = req.replace("INT","METASINT");
+
         req = req.replace("CHARACTER","METASCHARACTER");
         req = req.replace("SUBGENRE","LIST_SUBGENRE");
 

@@ -904,6 +904,10 @@ public class DicService implements DicServiceImpl {
                 rt = this.uptDicFilterWordsByWord(reqf);
                 break;
             case "WHEN": case "WHERE": case "WHO": case "WHAT": case "EMOTION":
+            case "WHENERA" : case "WHENHIS" : case "WHENETC" :
+            case "WHERENATION" : case "WHERECITY" : case "WHERESIGHTS" : case "WHEREETC" :
+            case "INT" :
+
                 DicKeywords reqk = new DicKeywords();
                 reqk.setKeyword(newword);
                 reqk.setOldword(oldword);
@@ -957,6 +961,9 @@ public class DicService implements DicServiceImpl {
                 rt = this.delDicFilterWordsByWord(reqf);
                 break;
             case "WHEN": case "WHERE": case "WHO": case "WHAT": case "EMOTION":
+            case "WHENERA" : case "WHENHIS" : case "WHENETC" :
+            case "WHERENATION" : case "WHERECITY" : case "WHERESIGHTS" : case "WHEREETC" :
+            case "INT" :
                 DicKeywords reqk = new DicKeywords();
                 reqk.setKeyword(newword);
                 reqk.setOldword(oldword);
@@ -1504,7 +1511,10 @@ public class DicService implements DicServiceImpl {
     	Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         
-		String[] types = {"WHEN","WHERE","WHAT","WHO","CHARACTER","EMOTION"};
+		String[] types = {"WHEN","WHENERA","WHENHIS","WHENETC"
+                ,"WHERE","WHERENATION","WHERECITY","WHERESIGHTS","WHEREETC"
+                ,"WHAT","WHO","CHARACTER","EMOTION"
+		        ,"INT"};
 		String strFilePath = "";
 		
 		//파일관련

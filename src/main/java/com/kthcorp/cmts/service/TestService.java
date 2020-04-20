@@ -753,6 +753,40 @@ public class TestService implements TestServiceImpl {
                                     cnts[4]++;
                                     break;
 
+                                case  "시간적연대" :
+                                    dics = "WHENERA";
+                                    cnts[5]++;
+                                    break;
+                                case  "시간적사건" :
+                                    dics = "WHENHIS";
+                                    cnts[6]++;
+                                    break;
+                                case  "시간적기타" :
+                                    dics = "WHENETC";
+                                    cnts[7]++;
+                                    break;
+
+                                case  "공간적국가" :
+                                    dics = "WHERENATION";
+                                    cnts[8]++;
+                                    break;
+                                case  "공간적도시" :
+                                    dics = "WHERECITY";
+                                    cnts[9]++;
+                                    break;
+                                case  "공간적명소" :
+                                    dics = "WHERESIGHTS";
+                                    cnts[10]++;
+                                    break;
+                                case  "공간적기타" :
+                                    dics = "WHEREETC";
+                                    cnts[11]++;
+                                    break;
+                                case  "통합키워드" :
+                                    dics = "INT";
+                                    cnts[12]++;
+                                    break;
+
 
                             }
                             //newMap.put(s.trim(), word);
@@ -1007,14 +1041,32 @@ public class TestService implements TestServiceImpl {
         switch(type) {
             case "WHEN" :
                 typeStr = "시간적 배경"; break;
+            case "WHENERA" :
+                typeStr = "시간적연대"; break;
+            case "WHENHIS" :
+                typeStr = "시간적사건"; break;
+            case "WHENETC" :
+                typeStr = "시간적기타"; break;
+
             case "WHERE" :
+                typeStr = "공간적국가"; break;
+            case "WHERENATION" :
                 typeStr = "공간적 배경"; break;
+            case "WHERECITY" :
+                typeStr = "공간적도시"; break;
+            case "WHERESIGHTS" :
+                typeStr = "공간적명소"; break;
+            case "WHEREETC" :
+                typeStr = "공간적기타"; break;
+
             case "WHAT" :
                 typeStr = "주제/소재"; break;
             case "WHO" :
                 typeStr = "인물/캐릭터"; break;
             case "EMOTION" :
                 typeStr = "감성/분위기"; break;
+            case "INT" :
+                typeStr = "통합키워드"; break;
         }
         if(whenList != null) {
             for(String s : whenList) {
@@ -1047,14 +1099,26 @@ public class TestService implements TestServiceImpl {
 
             // 시간적 배경
             allKeywords = getAllKeywordMapByType(allKeywords, "WHEN", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENERA", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENHIS", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENETC", resObj);
+
             // 공간적 배경
             allKeywords = getAllKeywordMapByType(allKeywords, "WHERE", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERENATION", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERECITY", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERESIGHTS", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHEREETC", resObj);
+
             // 주제/소재
             allKeywords = getAllKeywordMapByType(allKeywords, "WHAT", resObj);
             // 인물/캐릭터
             allKeywords = getAllKeywordMapByType(allKeywords, "WHO", resObj);
             // 감성/분위기
             allKeywords = getAllKeywordMapByType(allKeywords, "EMOTION", resObj);
+
+            allKeywords = getAllKeywordMapByType(allKeywords, "INT", resObj);
+
 
             JsonObject notmapObj = resObj.get("notKeywordMappingResult").getAsJsonObject();
             List<String> notmapList = JsonUtil.convertJsonObjectToArrayList(notmapObj, 100);
@@ -1208,14 +1272,26 @@ public class TestService implements TestServiceImpl {
 
             // 시간적 배경
             allKeywords = getAllKeywordMapByType(allKeywords, "WHEN", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENERA", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENHIS", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHENETC", resObj);
+
             // 공간적 배경
             allKeywords = getAllKeywordMapByType(allKeywords, "WHERE", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERENATION", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERECITY", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHERESIGHTS", resObj);
+            allKeywords = getAllKeywordMapByType(allKeywords, "WHEREETC", resObj);
+
             // 주제/소재
             allKeywords = getAllKeywordMapByType(allKeywords, "WHAT", resObj);
             // 인물/캐릭터
             allKeywords = getAllKeywordMapByType(allKeywords, "WHO", resObj);
             // 감성/분위기
             allKeywords = getAllKeywordMapByType(allKeywords, "EMOTION", resObj);
+
+            allKeywords = getAllKeywordMapByType(allKeywords, "INT", resObj);
+
 
             JsonObject notmapObj = resObj.get("notKeywordMappingResult").getAsJsonObject();
             List<String> notmapList = JsonUtil.convertJsonObjectToArrayList(notmapObj, 100);
@@ -2812,8 +2888,19 @@ public class TestService implements TestServiceImpl {
                 words = words.replace("주제/소재", "METASWHAT");
                 words = words.replace("감성/분위기", "METASEMOTION");
                 words = words.replace("인물/캐릭터", "METASWHO");
+
                 words = words.replace("공간적배경", "METASWHERE");
+                words = words.replace("공간적국가","METASWHERENATION");
+                words = words.replace("공간적도시","METASWHERECITY");
+                words = words.replace("공간적명소","METASWHERESIGHTS");
+                words = words.replace("공간적기타","METASWHEREETC");
+
                 words = words.replace("시간적배경", "METASWHEN");
+                words = words.replace("시간적연대", "METASWHENERA");
+                words = words.replace("시간적사건", "METASWHENHIS");
+                words = words.replace("시간적기타", "METASWHENETC");
+
+                words = words.replace("통합키워드","METASINT");
 
                 System.out.println("#RE::" + purity_title + "__" + title2 + "___" + yj_id + "__" + words);
 
@@ -2918,12 +3005,28 @@ public class TestService implements TestServiceImpl {
         switch (req) {
             case "공간적배경" : result = "WHERE"; break;
             case "공간적 배경" : result = "WHERE"; break;
+            case "공간적국가" : case "공간적 국가" : result = "WHERENATION"; break;
+            case "공간적도시" : case "공간적 도시" : result = "WHERECITY"; break;
+            case "공간적명소" : case "공간적 명소" :result = "WHERESIGHTS"; break;
+            case "공간적기타" : case "공간적 기타" :result = "WHEREETC"; break;
+
+
             case "시간적배경" : result = "WHEN"; break;
             case "시간적 배경" : result = "WHEN"; break;
+
+            case "시간적연대" : case "시간적 연대" : result = "WHENERA"; break;
+            case "시간적사건" : case "시간적 사건" : result = "WHENHIS"; break;
+            case "시간적기타" : case "시간적 기타" : result = "WHENETC"; break;
+
+
             case "주제/소재" : result = "WHAT"; break;
             case "인물/캐릭터" : result = "WHO"; break;
             case "감성/분위기" : result = "EMOTION"; break;
             case "캐릭터명" : result = "CHARACTER"; break;
+
+            case "통합키워드" : case "통합 키워드" : result = "INT"; break;
+
+
             default : result = req; break;
         }
 
@@ -4384,10 +4487,22 @@ public class TestService implements TestServiceImpl {
 
         List<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
+        origTypes.add("METASWHENERA");
+        origTypes.add("METASWHENHIS");
+        origTypes.add("METASWHENETC");
+
         origTypes.add("METASWHERE");
+        origTypes.add("METASWHERENATION");
+        origTypes.add("METASWHERECITY");
+        origTypes.add("METASWHERESIGHTS");
+        origTypes.add("METASWHEREETC");
+
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+
+        origTypes.add("METASINT");
+
         //origTypes.add("METASCHARACTER");
 
         long itemIdx0 = (long) 0;
@@ -4526,10 +4641,20 @@ public class TestService implements TestServiceImpl {
 
         List<String> origTypes = new ArrayList<String>();
         origTypes.add("METASWHEN");
+        origTypes.add("METASWHENERA");
+        origTypes.add("METASWHENHIS");
+        origTypes.add("METASWHENETC");
+
         origTypes.add("METASWHERE");
+        origTypes.add("METASWHERENATION");
+        origTypes.add("METASWHERECITY");
+        origTypes.add("METASWHERESIGHTS");
+        origTypes.add("METASWHEREETC");
+
         origTypes.add("METASWHO");
         origTypes.add("METASWHAT");
         origTypes.add("METASEMOTION");
+        origTypes.add("METASINT");
         //origTypes.add("METASCHARACTER");
 
         long itemIdx0 = (long) 0;
@@ -5042,9 +5167,22 @@ public class TestService implements TestServiceImpl {
         List<String> dicTypes = new ArrayList();
         //dicTypes.add("METASEMOTION");
         dicTypes.add("METASWHAT");
+
         dicTypes.add("METASWHEN");
+        dicTypes.add("METASWHENERA");
+        dicTypes.add("METASWHENHIS");
+        dicTypes.add("METASWHENETC");
+
         dicTypes.add("METASWHERE");
+        dicTypes.add("METASWHERENATION");
+        dicTypes.add("METASWHERECITY");
+        dicTypes.add("METASWHERESIGHTS");
+        dicTypes.add("METASWHEREETC");
+
         dicTypes.add("METASWHO");
+
+        dicTypes.add("METASINT");
+
         return dicTypes;
     }
 
@@ -5398,6 +5536,10 @@ public class TestService implements TestServiceImpl {
             String meta_reco_situation = "";
             String meta_award = "";
 
+            String meta_whenera = "" , meta_whenhis  = "",meta_whenetc="";
+            String meta_wherenation = "", meta_wherecity="", meta_wheresights="", meta_whereetc="";
+            String meta_int = "";
+
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
@@ -5446,14 +5588,34 @@ public class TestService implements TestServiceImpl {
                 if (jo != null) {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
                     item.put("meta_when", meta_when);
+                    meta_whenera = (jo.get("META_WHENERA") != null ? jo.get("META_WHENERA").getAsString() : "");
+                    item.put("meta_whenera", meta_whenera);
+                    meta_whenhis = (jo.get("META_WHENHIS") != null ? jo.get("META_WHENHIS").getAsString() : "");
+                    item.put("meta_whenhis", meta_whenhis);
+                    meta_whenetc = (jo.get("META_WHENETC") != null ? jo.get("META_WHENETC").getAsString() : "");
+                    item.put("meta_whenetc", meta_whenetc);
+
                     meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
                     item.put("meta_where", meta_where);
+                    meta_wherenation = (jo.get("META_WHERENATION") != null ? jo.get("META_WHERENATION").getAsString() : "");
+                    item.put("meta_wherenation", meta_wherenation);
+                    meta_wherecity = (jo.get("META_WHERECITY") != null ? jo.get("META_WHERECITY").getAsString() : "");
+                    item.put("meta_wherecity", meta_wherecity);
+                    meta_wheresights = (jo.get("META_WHERESIGHTS") != null ? jo.get("META_WHERESIGHTS").getAsString() : "");
+                    item.put("meta_wheresights", meta_wheresights);
+                    meta_whereetc = (jo.get("META_WHEREETC") != null ? jo.get("META_WHEREETC").getAsString() : "");
+                    item.put("meta_whereetc", meta_whereetc);
+
                     meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
                     item.put("meta_what", meta_what);
                     meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
+
+                    meta_int = (jo.get("META_INT") != null ? jo.get("META_INT").getAsString() : "");
+                    item.put("meta_int", meta_int);
+
                     meta_subgenre = (jo.get("LIST_SUBGENRE") != null ? jo.get("LIST_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
                     meta_search = (jo.get("LIST_SEARCH") != null ? jo.get("LIST_SEARCH").getAsString() : "");
@@ -5569,6 +5731,10 @@ public class TestService implements TestServiceImpl {
             String meta_reco_situation = "";
             String meta_award = "";
 
+            String meta_whenera = "" , meta_whenhis  = "",meta_whenetc="";
+            String meta_wherenation = "", meta_wherecity="", meta_wheresights="", meta_whereetc="";
+            String meta_int = "";
+
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
@@ -5577,14 +5743,34 @@ public class TestService implements TestServiceImpl {
                 if (jo != null) {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
                     item.put("meta_when", meta_when);
+                    meta_whenera = (jo.get("META_WHENERA") != null ? jo.get("META_WHENERA").getAsString() : "");
+                    item.put("meta_whenera", meta_whenera);
+                    meta_whenhis = (jo.get("META_WHENHIS") != null ? jo.get("META_WHENHIS").getAsString() : "");
+                    item.put("meta_whenhis", meta_whenhis);
+                    meta_whenetc = (jo.get("META_WHENETC") != null ? jo.get("META_WHENETC").getAsString() : "");
+                    item.put("meta_whenetc", meta_whenetc);
+
                     meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
                     item.put("meta_where", meta_where);
+                    meta_wherenation = (jo.get("META_WHERENATION") != null ? jo.get("META_WHERENATION").getAsString() : "");
+                    item.put("meta_wherenation", meta_wherenation);
+                    meta_wherecity = (jo.get("META_WHERECITY") != null ? jo.get("META_WHERECITY").getAsString() : "");
+                    item.put("meta_wherecity", meta_wherecity);
+                    meta_wheresights = (jo.get("META_WHERESIGHTS") != null ? jo.get("META_WHERESIGHTS").getAsString() : "");
+                    item.put("meta_wheresights", meta_wheresights);
+                    meta_whereetc = (jo.get("META_WHEREETC") != null ? jo.get("META_WHEREETC").getAsString() : "");
+                    item.put("meta_whereetc", meta_whereetc);
+
                     meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
                     item.put("meta_what", meta_what);
                     meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
+
+                    meta_int = (jo.get("META_INT") != null ? jo.get("META_INT").getAsString() : "");
+                    item.put("meta_int", meta_int);
+
                     meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
                     meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
@@ -5701,6 +5887,10 @@ public class TestService implements TestServiceImpl {
             String meta_reco_situation = "";
             String meta_award = "";
 
+            String meta_whenera = "" , meta_whenhis  = "",meta_whenetc="";
+            String meta_wherenation = "", meta_wherecity="", meta_wheresights="", meta_whereetc="";
+            String meta_int = "";
+
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             contents = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
@@ -5710,15 +5900,34 @@ public class TestService implements TestServiceImpl {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
                     item.put("meta_when", meta_when);
                     System.out.println("#meta_when : "+meta_when);
+                    meta_whenera = (jo.get("META_WHENERA") != null ? jo.get("META_WHENERA").getAsString() : "");
+                    item.put("meta_whenera", meta_whenera);
+                    meta_whenhis = (jo.get("META_WHENHIS") != null ? jo.get("META_WHENHIS").getAsString() : "");
+                    item.put("meta_whenhis", meta_whenhis);
+                    meta_whenetc = (jo.get("META_WHENETC") != null ? jo.get("META_WHENETC").getAsString() : "");
+                    item.put("meta_whenetc", meta_whenetc);
 
                     meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
                     item.put("meta_where", meta_where);
+                    meta_wherenation = (jo.get("META_WHERENATION") != null ? jo.get("META_WHERENATION").getAsString() : "");
+                    item.put("meta_wherenation", meta_wherenation);
+                    meta_wherecity = (jo.get("META_WHERECITY") != null ? jo.get("META_WHERECITY").getAsString() : "");
+                    item.put("meta_wherecity", meta_wherecity);
+                    meta_wheresights = (jo.get("META_WHERESIGHTS") != null ? jo.get("META_WHERESIGHTS").getAsString() : "");
+                    item.put("meta_wheresights", meta_wheresights);
+                    meta_whereetc = (jo.get("META_WHEREETC") != null ? jo.get("META_WHEREETC").getAsString() : "");
+                    item.put("meta_whereetc", meta_whereetc);
+
                     meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
                     item.put("meta_what", meta_what);
                     meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
+
+                    meta_int = (jo.get("META_INT") != null ? jo.get("META_INT").getAsString() : "");
+                    item.put("meta_int", meta_int);
+
                     meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
                     meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
@@ -5822,6 +6031,10 @@ public class TestService implements TestServiceImpl {
             String meta_reco_situation = "";
             String meta_award = "";
 
+            String meta_whenera = "" , meta_whenhis  = "",meta_whenetc="";
+            String meta_wherenation = "", meta_wherecity="", meta_wheresights="", meta_whereetc="";
+            String meta_int = "";
+
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             Series = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
@@ -5830,14 +6043,34 @@ public class TestService implements TestServiceImpl {
                 if (jo != null) {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
                     item.put("meta_when", meta_when);
+                    meta_whenera = (jo.get("META_WHENERA") != null ? jo.get("META_WHENERA").getAsString() : "");
+                    item.put("meta_whenera", meta_whenera);
+                    meta_whenhis = (jo.get("META_WHENHIS") != null ? jo.get("META_WHENHIS").getAsString() : "");
+                    item.put("meta_whenhis", meta_whenhis);
+                    meta_whenetc = (jo.get("META_WHENETC") != null ? jo.get("META_WHENETC").getAsString() : "");
+                    item.put("meta_whenetc", meta_whenetc);
+
                     meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
                     item.put("meta_where", meta_where);
+                    meta_wherenation = (jo.get("META_WHERENATION") != null ? jo.get("META_WHERENATION").getAsString() : "");
+                    item.put("meta_wherenation", meta_wherenation);
+                    meta_wherecity = (jo.get("META_WHERECITY") != null ? jo.get("META_WHERECITY").getAsString() : "");
+                    item.put("meta_wherecity", meta_wherecity);
+                    meta_wheresights = (jo.get("META_WHERESIGHTS") != null ? jo.get("META_WHERESIGHTS").getAsString() : "");
+                    item.put("meta_wheresights", meta_wheresights);
+                    meta_whereetc = (jo.get("META_WHEREETC") != null ? jo.get("META_WHEREETC").getAsString() : "");
+                    item.put("meta_whereetc", meta_whereetc);
+
                     meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
                     item.put("meta_what", meta_what);
                     meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
+
+                    meta_int = (jo.get("META_INT") != null ? jo.get("META_INT").getAsString() : "");
+                    item.put("meta_int", meta_int);
+
                     meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
                     meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
@@ -5935,6 +6168,10 @@ public class TestService implements TestServiceImpl {
             String meta_reco_situation = "";
             String meta_award = "";
 
+            String meta_whenera = "" , meta_whenhis  = "",meta_whenetc="";
+            String meta_wherenation = "", meta_wherecity="", meta_wheresights="", meta_whereetc="";
+            String meta_int = "";
+
             System.out.println("#RES:: idx:"+idx+"/ title:"+content_title);
 
             Series = ccubeService.getJsonArrayForCcubeOutput(null, type, item);
@@ -5943,14 +6180,37 @@ public class TestService implements TestServiceImpl {
                 if (jo != null) {
                     meta_when = (jo.get("META_WHEN") != null ? jo.get("META_WHEN").getAsString() : "");
                     item.put("meta_when", meta_when);
+                    meta_whenera = (jo.get("META_WHENERA") != null ? jo.get("META_WHENERA").getAsString() : "");
+                    item.put("meta_whenera", meta_whenera);
+                    meta_whenhis = (jo.get("META_WHENHIS") != null ? jo.get("META_WHENHIS").getAsString() : "");
+                    item.put("meta_whenhis", meta_whenhis);
+                    meta_whenetc = (jo.get("META_WHENETC") != null ? jo.get("META_WHENETC").getAsString() : "");
+                    item.put("meta_whenetc", meta_whenetc);
+
+
                     meta_where = (jo.get("META_WHERE") != null ? jo.get("META_WHERE").getAsString() : "");
                     item.put("meta_where", meta_where);
+                    meta_wherenation = (jo.get("META_WHERENATION") != null ? jo.get("META_WHERENATION").getAsString() : "");
+                    item.put("meta_wherenation", meta_wherenation);
+                    meta_wherecity = (jo.get("META_WHERECITY") != null ? jo.get("META_WHERECITY").getAsString() : "");
+                    item.put("meta_wherecity", meta_wherecity);
+                    meta_wheresights = (jo.get("META_WHERESIGHTS") != null ? jo.get("META_WHERESIGHTS").getAsString() : "");
+                    item.put("meta_wheresights", meta_wheresights);
+                    meta_whereetc = (jo.get("META_WHEREETC") != null ? jo.get("META_WHEREETC").getAsString() : "");
+                    item.put("meta_whereetc", meta_whereetc);
+
+
                     meta_what = (jo.get("META_WHAT") != null ? jo.get("META_WHAT").getAsString() : "");
                     item.put("meta_what", meta_what);
                     meta_who = (jo.get("META_WHO") != null ? jo.get("META_WHO").getAsString() : "");
                     item.put("meta_who", meta_who);
                     meta_emotion = (jo.get("META_EMOTION") != null ? jo.get("META_EMOTION").getAsString() : "");
                     item.put("meta_emotion", meta_emotion);
+
+                    meta_int = (jo.get("META_INT") != null ? jo.get("META_INT").getAsString() : "");
+                    item.put("meta_int", meta_int);
+
+
                     meta_subgenre = (jo.get("META_SUBGENRE") != null ? jo.get("META_SUBGENRE").getAsString() : "");
                     item.put("meta_subgenre", meta_subgenre);
                     meta_search = (jo.get("META_SEARCH") != null ? jo.get("META_SEARCH").getAsString() : "");
@@ -6181,8 +6441,20 @@ public class TestService implements TestServiceImpl {
         types.add("EMOTION");
         types.add("WHAT");
         types.add("WHEN");
+        types.add("WHENERA");
+        types.add("WHENHIS");
+        types.add("WHENETC");
+
         types.add("WHERE");
+        types.add("WHERENATION");
+        types.add("WHERECITY");
+        types.add("WHERESIGHTS");
+        types.add("WHEREETC");
+
         types.add("WHO");
+
+        types.add("INT");
+
 
         String seperator = "\t";
         String lineFeed = System.getProperty("line.separator");
@@ -6715,10 +6987,24 @@ public class TestService implements TestServiceImpl {
 
         List<String> origTypes = new ArrayList<String>();
         origTypes.add("WHEN");
+        origTypes.add("WHENERA");
+        origTypes.add("WHENHIS");
+        origTypes.add("WHENETC");
+
+
         origTypes.add("WHERE");
+        origTypes.add("WHERENATION");
+        origTypes.add("WHERECITY");
+        origTypes.add("WHERESIGHTS");
+        origTypes.add("WHEREETC");
+
+
         origTypes.add("WHO");
         origTypes.add("WHAT");
         origTypes.add("EMOTION");
+        origTypes.add("INT");
+
+
 
         for (String otype : origTypes) {
             ItemsTags req = new ItemsTags();
@@ -6809,10 +7095,22 @@ public class TestService implements TestServiceImpl {
         types.add("METASEMOTION");
         types.add("METASWHAT");
         types.add("METASWHEN");
+        types.add("METASWHENERA");
+        types.add("METASWHENHIS");
+        types.add("METASWHENETC");
+
         types.add("METASWHERE");
+        types.add("METASWHERENATION");
+        types.add("METASWHERECITY");
+        types.add("METASWHERESIGHTS");
+        types.add("METASWHEREETC");
+
         types.add("METASWHO");
 
         types.add("METASCHARACTER");
+
+        types.add("METASINT");
+
         types.add("LIST_RECO_SITUATION");
         types.add("LIST_RECO_TARGET");
         //types.add("LIST_SEARCHKEYWORDS");
@@ -8453,11 +8751,24 @@ public class TestService implements TestServiceImpl {
         Map<String, Object> resMapArr = new HashMap();
         List<String> types = new ArrayList();
         types.add("WHEN");
+        types.add("WHENERA");
+        types.add("WHENHIS");
+        types.add("WHENETC");
+
+
         types.add("WHERE");
+        types.add("WHERENATION");
+        types.add("WHERECITY");
+        types.add("WHERESIGHTS");
+        types.add("WHEREETC");
+
+
         types.add("WHAT");
         types.add("WHO");
         types.add("EMOTION");
         types.add("CHARACTER");
+
+        types.add("INT");
 
         try {
             reqMapArr = this.loadMetasByCsv(fileName);

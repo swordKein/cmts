@@ -40,7 +40,7 @@ public interface ItemsMapper {
     ItemsContent getMovieCine21ByTitle(String title);
 
     List<Items> searchItemsPaging(Items req);
-
+    List<Items> searchListItemsPaging(Map<String,Object> map);
     // 승인완료,승인불가 조회를 위한 쿼리
     List<Items> searchItemsPagingByStatDate(Items req);
 

@@ -2,6 +2,7 @@ package com.kthcorp.cmts.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kthcorp.cmts.model.AuthUser;
 import com.kthcorp.cmts.model.DicKeywords;
 import com.kthcorp.cmts.model.Items;
@@ -385,6 +386,97 @@ public class ApiController {
 										, searchParts
 										, resultSearch
 										, precondition);
+				if(result1 != null) {
+					rtmsg = "SUCCESS";
+				} else {
+					rtcode = -1;
+					rtmsg = "Items's search-result is null!";
+				}
+			} else {
+				rtmsg = apiService.getRtmsg(rtcode);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtcode = -999;
+			rtmsg = (e.getCause() != null) ? e.getCause().toString(): "Service got exceptions!";
+		}
+
+		JsonObject result_all = new JsonObject();
+		result_all.addProperty("RT_CODE", rtcode);
+		result_all.addProperty("RT_MSG", rtmsg);
+		result_all.add("RESULT", result1);
+
+
+		return result_all.toString();
+	}
+
+
+	// #6
+	@RequestMapping(value = "/item/relist", method = RequestMethod.POST)
+	@ResponseBody
+	public String post__item_relist(Map<String, Object> model
+			, @RequestParam(value = "custid", required = false, defaultValue = "ollehmeta") String custid
+			, @RequestParam(value = "hash", required = false, defaultValue = "hash") String hash
+			, @RequestParam(value = "pagesize", required = false, defaultValue = "50") String spagesize
+			, @RequestParam(value = "pageno", required = false, defaultValue = "1") String spageno
+
+			, @RequestParam(value = "searchtype", required = false, defaultValue = "") String searchType
+			, @RequestParam(value = "searchstat", required = false, defaultValue = "") String searchStat
+			, @RequestParam(value = "searchsdate", required = false, defaultValue = "") String searchSdate
+			, @RequestParam(value = "searchedate", required = false, defaultValue = "") String searchEdate
+			, @RequestParam(value = "searchkeyword", required = false, defaultValue = "") String searchKeyword
+			, @RequestParam(value = "searchparts", required = false, defaultValue = "") String searchParts
+			, @RequestParam(value = "resultSearch", required = false, defaultValue = "") String resultSearch
+			, @RequestParam(value = "precondition", required = false, defaultValue = "") String precondition
+
+	) {
+		logger.info("#CLOG:API/item/relist get /pageSize:"+spagesize+"/pageno:"+spageno
+				+"/type:"+searchType+"/stat:"+searchStat+"/sdate:"+searchSdate+"/edate:"+searchEdate
+				+"/keyword:"+searchKeyword+"/parts:"+searchParts +"/precondition"+precondition);
+		if("".equals(searchKeyword.trim())) searchParts = "";
+		searchKeyword = CommonUtil.removeAllSpec2(searchKeyword);
+
+		int pageSize = 0;
+		if(!"".equals(spagesize)) pageSize = Integer.parseInt(spagesize);
+		int pageNo = 1;
+		if(!"".equals(spageno)) pageNo = Integer.parseInt(spageno);
+
+		int rtcode = -1;
+		String rtmsg = "";
+
+		JsonObject result1 = null;
+		JsonParser jsonParser = new JsonParser();
+		String str = precondition;
+		JsonObject metas = (JsonObject) jsonParser.parse(str);
+
+		List<String> _precondition  = new ArrayList<>();
+		while(metas.get("PRECONDITION")!=null || metas.get("PRECONDITION").toString()!="" ) {
+			str = metas.get("PRECONDITION").toString().substring(1, metas.get("PRECONDITION").toString().length()-1)
+					.replace("\\\"","\"").replace("\\\\","\\");
+
+
+			try {
+				_precondition.add(str);
+				metas = (JsonObject) jsonParser.parse(str);
+			} catch (Exception e) {
+				break;
+			}
+		}
+		String[] array = _precondition.toArray(new String[_precondition.size()]);
+
+
+		try {
+			rtcode = apiService.checkAuthByHashCode(custid, hash);
+			if (rtcode == 1) {
+				result1 = apiService.getItemsReSearch(pageSize, pageNo
+						, searchType
+						, searchStat
+						, searchSdate
+						, searchEdate
+						, searchKeyword
+						, searchParts
+						, resultSearch
+						, array ,precondition);
 				if(result1 != null) {
 					rtmsg = "SUCCESS";
 				} else {
