@@ -669,7 +669,7 @@ public class CcubeService implements CcubeServiceImpl {
 
         origTypes.add("EMOTION");
 
-        origTypes.add("INT");
+//        origTypes.add("INT");
 
         System.out.println("## req JsonObject::"+req.toString());
 

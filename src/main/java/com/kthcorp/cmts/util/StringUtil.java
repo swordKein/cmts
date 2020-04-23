@@ -13,8 +13,20 @@ public class StringUtil {
     public static String removeMetaTag(String req) {
         req = req.replace("metawho","who");
         req = req.replace("metawhen","when");
+        req = req.replace("metawhenera","whenera");
+        req = req.replace("metawhenhis","whenhis");
+        req = req.replace("metawhenetc","metawhenetc");
+
         req = req.replace("metawhat","what");
+
         req = req.replace("metawhere","where");
+        req = req.replace("metawherenation","wherenation");
+        req = req.replace("metawherecity","wherecity");
+        req = req.replace("metawheresights","wheresights");
+        req = req.replace("metawhereetc","whereetc");
+
+        req = req.replace("metaint","int");
+
         req = req.replace("metaemotion","emotion");
 
         return req;

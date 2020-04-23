@@ -486,7 +486,7 @@ public class AnalyzeService implements AnalyzeServiceImpl {
         dicTypes.add("WHEREETC");
 
         dicTypes.add("WHO");
-        dicTypes.add("INT");
+//        dicTypes.add("INT");
         return dicTypes;
     }
 

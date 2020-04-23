@@ -753,11 +753,11 @@ public class TestService implements TestServiceImpl {
                                     cnts[4]++;
                                     break;
 
-                                case  "시간적연대" :
+                                case  "연대" :
                                     dics = "WHENERA";
                                     cnts[5]++;
                                     break;
-                                case  "시간적사건" :
+                                case  "사건" :
                                     dics = "WHENHIS";
                                     cnts[6]++;
                                     break;
@@ -766,15 +766,15 @@ public class TestService implements TestServiceImpl {
                                     cnts[7]++;
                                     break;
 
-                                case  "공간적국가" :
+                                case  "국가" :
                                     dics = "WHERENATION";
                                     cnts[8]++;
                                     break;
-                                case  "공간적도시" :
+                                case  "도시" :
                                     dics = "WHERECITY";
                                     cnts[9]++;
                                     break;
-                                case  "공간적명소" :
+                                case  "명소" :
                                     dics = "WHERESIGHTS";
                                     cnts[10]++;
                                     break;
@@ -1042,20 +1042,20 @@ public class TestService implements TestServiceImpl {
             case "WHEN" :
                 typeStr = "시간적 배경"; break;
             case "WHENERA" :
-                typeStr = "시간적연대"; break;
+                typeStr = "연대"; break;
             case "WHENHIS" :
-                typeStr = "시간적사건"; break;
+                typeStr = "사건"; break;
             case "WHENETC" :
                 typeStr = "시간적기타"; break;
 
             case "WHERE" :
-                typeStr = "공간적국가"; break;
-            case "WHERENATION" :
                 typeStr = "공간적 배경"; break;
+            case "WHERENATION" :
+                typeStr = "국가"; break;
             case "WHERECITY" :
-                typeStr = "공간적도시"; break;
+                typeStr = "도시"; break;
             case "WHERESIGHTS" :
-                typeStr = "공간적명소"; break;
+                typeStr = "명소"; break;
             case "WHEREETC" :
                 typeStr = "공간적기타"; break;
 
@@ -2890,14 +2890,14 @@ public class TestService implements TestServiceImpl {
                 words = words.replace("인물/캐릭터", "METASWHO");
 
                 words = words.replace("공간적배경", "METASWHERE");
-                words = words.replace("공간적국가","METASWHERENATION");
-                words = words.replace("공간적도시","METASWHERECITY");
-                words = words.replace("공간적명소","METASWHERESIGHTS");
+                words = words.replace("국가","METASWHERENATION");
+                words = words.replace("도시","METASWHERECITY");
+                words = words.replace("명소","METASWHERESIGHTS");
                 words = words.replace("공간적기타","METASWHEREETC");
 
                 words = words.replace("시간적배경", "METASWHEN");
-                words = words.replace("시간적연대", "METASWHENERA");
-                words = words.replace("시간적사건", "METASWHENHIS");
+                words = words.replace("연대", "METASWHENERA");
+                words = words.replace("사건", "METASWHENHIS");
                 words = words.replace("시간적기타", "METASWHENETC");
 
                 words = words.replace("통합키워드","METASINT");
@@ -3005,17 +3005,17 @@ public class TestService implements TestServiceImpl {
         switch (req) {
             case "공간적배경" : result = "WHERE"; break;
             case "공간적 배경" : result = "WHERE"; break;
-            case "공간적국가" : case "공간적 국가" : result = "WHERENATION"; break;
-            case "공간적도시" : case "공간적 도시" : result = "WHERECITY"; break;
-            case "공간적명소" : case "공간적 명소" :result = "WHERESIGHTS"; break;
+            case "국가" : case "공간적 국가" : result = "WHERENATION"; break;
+            case "도시" : case "공간적 도시" : result = "WHERECITY"; break;
+            case "명소" : case "공간적 명소" :result = "WHERESIGHTS"; break;
             case "공간적기타" : case "공간적 기타" :result = "WHEREETC"; break;
 
 
             case "시간적배경" : result = "WHEN"; break;
             case "시간적 배경" : result = "WHEN"; break;
 
-            case "시간적연대" : case "시간적 연대" : result = "WHENERA"; break;
-            case "시간적사건" : case "시간적 사건" : result = "WHENHIS"; break;
+            case "연대" : case "시간적 연대" : result = "WHENERA"; break;
+            case "사건" : case "시간적 사건" : result = "WHENHIS"; break;
             case "시간적기타" : case "시간적 기타" : result = "WHENETC"; break;
 
 
@@ -5181,7 +5181,7 @@ public class TestService implements TestServiceImpl {
 
         dicTypes.add("METASWHO");
 
-        dicTypes.add("METASINT");
+//        dicTypes.add("METASINT");
 
         return dicTypes;
     }
