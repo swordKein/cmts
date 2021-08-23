@@ -41,7 +41,7 @@
 		<commons-code.version>1.10</commons-code.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<commons-io.version>2.5</commons-io.version>
-		<jsoup.version>1.10.3</jsoup.version>
+		<jsoup.version>1.14.2</jsoup.version>
 		<!-- search -->
 		<elasticsearch.version>5.5.2</elasticsearch.version>
 		<!-- benchmark -->
