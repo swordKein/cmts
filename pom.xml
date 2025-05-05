@@ -46,7 +46,7 @@
 		<elasticsearch.version>5.5.2</elasticsearch.version>
 		<!-- benchmark -->
 		<jmh.version>1.19</jmh.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.2.13</logback.version>
 	</properties>
 
 	<dependencies>
